@@ -569,7 +569,7 @@ AN.comp =
 						{
 							$.getData(nodA.href, function(strHTML)
 							{
-								nodA.replaceWith('<span>' + strHTML + '</span>');
+								$(nodA).replaceWith('<span>' + strHTML + '</span>');
 							});
 						}
 					});

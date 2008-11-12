@@ -78,7 +78,7 @@ AN.init = {};
 
 AN.init.addPlugins = function()
 {
-	$.ajaxSetup({ cache: true });
+	//$.ajaxSetup({ cache: true });
 
 /*
 	$.getScript('http://jquery-ui.googlecode.com/svn/tags/1.6rc2/ui/ui.core.min.js', function()
@@ -220,6 +220,17 @@ AN.init.extend = function()
 				});
 				return objTemp;
 			}
+		},
+
+		getData: function(strUrl, funToCall)
+		{
+			var strDataName = strUrl.match(/[^\/.]+(?=\.[^\/.]+$)/)[0];
+
+			$.getScript(strUrl, function()
+			{
+				funToCall(AN.data[strDataName]);
+				//delete AN.data[strDataName];
+			});
 		}
 	});
 
@@ -375,7 +386,7 @@ AN.helper =
 
 			objReply.strUserId = $(this).find('a:first').attr('href').replace(/^[^=]+=/, '');
 			objReply.strUserName = $(this).find('a:first').html();
-			objReply.nodContent = $(this).find('table:eq(2) td:first');
+			objReply.nodContent = $(this).find('table:eq(1) td:first');
 
 			AN.data.arrReplys.push(objReply);
 		});
@@ -554,14 +565,14 @@ AN.comp =
 				{
 					$(objReply.nodContent).find('a').each(function(i, nodA)
 					{
-						if(nodA.href.indexOf('http://helianthus-annuus.googlecode.com/svn/json/') >= 0)
+						if(nodA.href.indexOf('http://helianthus-annuus\.googlecode\.com/svn/json/') >= 0)
 						{
-							$.getJSON(nodA.href + '?callback=?'), function(objData)
+							$.getData(nodA.href, function(strHTML)
 							{
-								nodA.replaceWith(objData.text);
-							}
+								nodA.replaceWith('<span>' + strHTML + '</span>');
+							});
 						}
-					})
+					});
 				}
 			});
 		}

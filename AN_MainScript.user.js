@@ -519,6 +519,14 @@ AN.comp =
 				alert('Helianthus.Annuus\nversion: 2.x.x_alpha\nauthor: 向日');
 			});
 		}
+	},
+
+	loadJsonData:
+	{
+		page: ['view'],
+		fn: function()
+		{
+		}
 	}
 }
 

@@ -360,6 +360,26 @@ AN.helper =
 	getOptions: function(strOptionName)
 	{
 		return AN.data.settings2[strOptionName];
+	},
+
+	getReplys: function()
+	{
+		if(AN.data.arrReplys) return AN.data.arrReplys;
+
+		AN.data.arrReplys = [];
+
+		$('.repliers')
+		.each(function()
+		{
+			var objReply = {};
+
+			objReply.strUserId = $(this).find('a:first').attr('href').replace(/^[^=]+=/, '');
+			objReply.strUserName = $(this).find('a:first').html();
+			objReply.nodContent = $(this).find('table:eq(2) td:first');
+
+			AN.data.arrReplys.push(objReply);
+		});
+		return AN.data.arrReplys;
 	}
 }
 
@@ -521,11 +541,29 @@ AN.comp =
 		}
 	},
 
-	loadJsonData:
+	convertJsonData:
 	{
 		page: ['view'],
 		fn: function()
 		{
+			var arrMatch;
+
+			$.each(AN.helper.getReplys(), function(i, objReply)
+			{
+				if(objReply.strUserId == '148720') // me :P
+				{
+					$(objReply.nodContent).find('a').each(function(i, nodA)
+					{
+						if(nodA.href.indexOf('http://helianthus-annuus.googlecode.com/svn/json/') >= 0)
+						{
+							$.getJSON(nodA.href + '?callback=?'), function(objData)
+							{
+								nodA.replaceWith(objData.text);
+							}
+						}
+					})
+				}
+			});
 		}
 	}
 }

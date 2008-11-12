@@ -229,7 +229,7 @@ AN.init.extend = function()
 			$.getScript(strUrl, function()
 			{
 				funToCall(AN.data[strDataName]);
-				//delete AN.data[strDataName];
+				delete AN.data[strDataName];
 			});
 		}
 	});
@@ -316,7 +316,7 @@ AN.init.start = function()
 	{
 		settings1: $.convertObj(AN.util.cookie('AN_settings1')) || {},
 		settings2: $.convertObj(AN.util.cookie('AN_settings2')) || {},
-		strCurPage: $('#aspnetForm').attr('action').match(/[^.]+/).toString().toLowerCase()
+		strCurPage: ($('#aspnetForm')) ? $('#aspnetForm').attr('action').match(/[^.]+/).toString().toLowerCase() : 'special'
 	}
 
 	// Seperate settings getting & execution into two operations because one option could be used by more than one function
@@ -552,7 +552,7 @@ AN.comp =
 		}
 	},
 
-	convertJsonData:
+	convertData:
 	{
 		page: ['view'],
 		fn: function()
@@ -565,11 +565,11 @@ AN.comp =
 				{
 					$(objReply.nodContent).find('a').each(function(i, nodA)
 					{
-						if(nodA.href.indexOf('http://helianthus-annuus\.googlecode\.com/svn/json/') >= 0)
+						if(nodA.href.indexOf('http://helianthus-annuus.googlecode.com/svn/data/') >= 0)
 						{
 							$.getData(nodA.href, function(strHTML)
 							{
-								$(nodA).replaceWith('<span>' + strHTML + '</span>');
+								$(nodA).replaceWith(strHTML);
 							});
 						}
 					});
@@ -611,7 +611,7 @@ AN.main =
 		}
 	},
 
-	optimizeForumLinks:
+	optimiseForumLinks:
 	{
 		disp: '美化論壇連結',
 		type: 5,
@@ -649,11 +649,11 @@ AN.main =
 		id: 4,
 		fn: function()
 		{
-			$('#ctl00_ContentPlaceHolder1_HotPeoples').remove();
+			$('#ctl00_ContentPlaceHolder1_HotPeoples').prev('br:first').andSelf().remove();
 		}
 	},
 
-	betterFavicon:
+	useBetterFavicon:
 	{
 		disp: '採用更好的favicon (may not work)',
 		type: 5,
@@ -663,6 +663,19 @@ AN.main =
 		fn: function()
 		{
 			$('head').append('<link rel="shortcut icon" href="http://supergolden.m2.googlepages.com/hkg.ico" />');
+		}
+	},
+
+	optimisePageLinks:
+	{
+		disp: '優化上下頁連結地址',
+		type: 2,
+		page: ['view'],
+		defaultOn: true,
+		id: 6,
+		fn: function()
+		{
+			$('a').each(function(){ this.href = this.href.replace(/&highlight_id=0/i, '') });
 		}
 	}
 }

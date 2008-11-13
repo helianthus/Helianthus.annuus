@@ -319,11 +319,11 @@ AN.init.start = function()
 
 		if(!this.options) return; // continue
 
-		$.each(this.options, function(strOptionName, strOptionValue)
+		$.each(this.options, function(strOptionName)
 		{
 			if(AN.data.settings2[strOptionName] === undefined)
 			{
-				AN.data.settings2[strOptionName] = strOptionValue;
+				AN.data.settings2[strOptionName] = this.defaultValue;
 			}
 		});
 	});
@@ -483,8 +483,7 @@ AN.comp =
 					AN.data.settingsStructure[this.page[i]][this.type][this.id] =
 					{
 						disp: this.disp,
-						switchedOn: AN.data.settings1[this.page[i] + this.id],
-						options: null // to be worked on
+						options: this.options
 					}
 				}
 			});
@@ -499,11 +498,31 @@ AN.comp =
 					arrDivHTML.push($.sprintf('<fieldset><legend>%s</legend><ul>', objTypeMap[strType]));
 					$.each(this, function(strFnId)
 					{
-						var strSwitchId = 'AN_inputSwitch_' + strFnId;
-						var strChecked = (this.switchedOn) ? 'checked="checked"' : '';
+						var strSwitchId = 'AN_switch_' + strFnId;
+						var strChecked = (AN.data.settings1[strPageName + strFnId]) ? 'checked="checked"' : '';
 
 						arrDivHTML.push($.sprintf('<li><input type="checkbox" id="%s" %s />', strSwitchId, strChecked));
-						arrDivHTML.push($.sprintf('<label for="%s">%s</label></li>', strSwitchId, this.disp));
+						arrDivHTML.push($.sprintf('<label for="%s">%s</label>', strSwitchId, this.disp));
+
+						if(this.options)
+						{
+							arrDivHTML.push('&nbsp;&nbsp;&nbsp;[&nbsp;')
+
+							$.each(this.options, function(strOptionName)
+							{
+								if(this.type == 'boolean')
+								{
+									var strOptionId = 'AN_option_' + strOptionName;
+									var strOptionValue = (AN.data.settings2[strOptionName].toString() == 'true') ? 'checked="checked"' : '';
+
+									arrDivHTML.push($.sprintf('<input type="checkbox" id="%s" %s />', strOptionId, strOptionValue));
+									arrDivHTML.push($.sprintf('<label for="%s">%s</label>', strSwitchId, this.disp));
+								}
+							});
+
+							arrDivHTML.push('&nbsp;]</li>');
+						}
+
 					});
 					arrDivHTML.push('</ul></fieldset>');
 				});
@@ -534,7 +553,7 @@ AN.comp =
 			.append('<div id="AN_divOkButton">確定</div><div id="AN_divCancelButton">取消</div>')
 			.children(':first-child').click(function()
 			{
-				var objCookieToSave = {};
+				var objSettings1 = {};
 
 				$('#AN_divAccordion > div').each(function()
 				{
@@ -542,11 +561,19 @@ AN.comp =
 
 					$.each($(this).find(':checkbox'), function()
 					{
-						objCookieToSave[strPageId + this.id.replace('AN_inputSwitch_', '')] = (this.checked) ? 1 : 0;
+						objSettings1[strPageId + this.id.replace('AN_switch_', '')] = (this.checked) ? 1 : 0;
 					});
 				});
+				AN.util.cookie('AN_settings1', objSettings1);
 
-				AN.util.cookie('AN_settings1', objCookieToSave);
+				var objSettings2 = {};
+
+				$('#AN_divAccordion :checkbox').each(function()
+				{
+					objSettings1[this.id.replace('AN_option_', '')] = (this.checked) ? 1 : 0;
+				});
+				AN.util.cookie('AN_settings2', objSettings2);
+
 				location.reload();
 			})
 			.next().click(function()
@@ -640,8 +667,8 @@ AN.main =
 		{
 			$('td').each(function()
 			{
-				//if($(this).html() == '最近刊登的文章')
-				if($(this).css('fontWeight') == 'bold' && $(this).css('fontSize') == '8pt')
+				if($(this).html() == '最近刊登的文章')
+				//if($(this).css('fontWeight') == 'bold' && $(this).css('fontSize') == '8pt')
 				{
 					$(this).parents('tr:eq(1)').remove();
 					return false; // break;
@@ -657,10 +684,10 @@ AN.main =
 		page: ['all'],
 		defaultOn: true,
 		id: 3,
-		options: { color_forumLinks: '#1066d2' },
+		options: { strLinkColor: { disp: '設定連結顏色', defaultValue: '#1066d2', type: 'color' } },
 		fn: function()
 		{
-			var strLinkColor = AN.data.settings2.color_forumLinks;
+			var strLinkColor = AN.data.settings2.strLinkColor;
 			AN.shared.addStyle('a:link { color: ' + strLinkColor + '}');
 
 			$('a').filter(function()
@@ -775,7 +802,8 @@ AN.main =
 		page: ['view'],
 		defaultOn: false,
 		id: 10,
-		options: { boo_outerOnly: true },
+		options:
+		{ booOuterOnly: { disp: '只顯示最外層的引用', defaultValue: true, type: 'boolean' } },
 		fn: function()
 		{
 			AN.data.toggleAllQuotes = function(nodB)
@@ -833,7 +861,7 @@ AN.main =
 				}
 			});
 
-			if(AN.data.settings2.boo_outerOnly) AN.data.toggleAllQuotes();
+			if(AN.data.settings2.booOuterOnly) AN.data.toggleAllQuotes();
 		}
 	}
 }

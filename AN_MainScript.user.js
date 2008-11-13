@@ -63,7 +63,7 @@ AN.init = {};
 
 (function()
 {
-	if(!$window.$) return setTimeout(arguments.callee, 500);
+	if(!$window.$) return setTimeout(arguments.callee, 500);;
 
 	if(typeof unsafeWindow != 'undefined')
 	{
@@ -336,13 +336,17 @@ AN.init.start = function()
 		}
 	});
 
+	AN.data.benchmark = [];
+
 	$.each(AN.main, function()
 	{
 		if(this.page[0] == 'all' || $.inArray(AN.data.strCurPage, this.page) != -1)
 		{
 			if(AN.data.settings1['all' + this.id] || AN.data.settings1[AN.data.strCurPage + this.id])
 			{
+				var numTime = $.time();
 				this.fn.call(this);
+				AN.data.benchmark.push($.sprintf('\n%s: %d ms', this.disp, ($.time() - numTime)));
 			}
 		}
 	});
@@ -432,15 +436,27 @@ AN.shared =
 
 AN.comp =
 {
-	addSettings:
+	addRightDiv:
 	{
 		page: ['all'],
 		fn: function()
 		{
 			AN.shared.addStyle(' \
 			#AN_divRight { position: fixed; top: 15%; right: 0; text-align: right; } \
-			#AN_divRight div { width: 70px; color: gray; border-bottom: 1px solid gray; padding: 10px 5px 3px 0; cursor: pointer; } \
+			#AN_divRight div { 80px; color: gray; border-bottom: 1px solid gray; padding: 10px 5px 3px 0; cursor: pointer; } \
 			#AN_divRight div:hover { color: YellowGreen; } \
+			');
+
+			$('body').append('<div id="AN_divRight" />');
+		}
+	},
+
+	addSettings:
+	{
+		page: ['all'],
+		fn: function()
+		{
+			AN.shared.addStyle(' \
 			#AN_divGrayLayer { display: none; z-index: 1; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: gray; opacity: 0.7; filter: alpha(opacity=70); } \
 			#AN_divSettingsFrame { display: none; z-index: 2; position: fixed; top: 50%; left: 50%; width: 800px; height: 600px; margin: -300px 0 0 -400px; background-color: #F3F2F1; border: 1px solid black; } \
 			#AN_divAccordion { overflow: hidden; height: 550px; border-bottom: 1px solid black; } \
@@ -454,7 +470,7 @@ AN.comp =
 			#AN_divCancelButton { right: 280px; } \
 			');
 
-			$('<div id="AN_divRight"><div>Settings</div></div>').appendTo('body').children().click(function()
+			$('<div>Settings</div>').appendTo('#AN_divRight').click(function()
 			{
 				//$('html').css('overflow', 'hidden');
 				$('#AN_divGrayLayer').show().fadeTo('slow', 0.7);
@@ -613,6 +629,18 @@ AN.comp =
 				//$('html').css('overflow', '');
 				$('#AN_divGrayLayer').fadeOut('slow');
 				$('#AN_divSettingsFrame').fadeOut('slow');
+			});
+		}
+	},
+
+	addBenchmarkResult:
+	{
+		page: ['all'],
+		fn: function()
+		{
+			$('<div>Benchmark</div>').appendTo('#AN_divRight').click(function()
+			{
+				alert(AN.data.benchmark);
 			});
 		}
 	},

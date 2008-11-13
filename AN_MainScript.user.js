@@ -358,11 +358,6 @@ AN.shared =
 		$('<style type="text/css">' + strStyle + '</style>').prependTo('head');
 	},
 
-	getOptions: function(strOptionName)
-	{
-		return AN.data.settings2[strOptionName];
-	},
-
 	getReplys: function()
 	{
 		if(AN.data.arrReplys) return AN.data.arrReplys;
@@ -376,7 +371,7 @@ AN.shared =
 			{
 				strUserId: $(this).find('a:first').attr('href').replace(/^[^=]+=/, ''),
 				strUserName: $(this).find('a:first').html(),
-				nodContent: $(this).find('table:eq(1) td:first')
+				$tdContent: $(this).find('table:eq(1) td:first')
 			}
 			AN.data.arrReplys.push(objReply);
 		});
@@ -599,7 +594,7 @@ AN.comp =
 			{
 				if(objReply.strUserId == '148720') // me :P
 				{
-					$(objReply.nodContent).find('a').each(function(i, nodA)
+					objReply.$tdContent.find('a').each(function(i, nodA)
 					{
 						if(nodA.href.indexOf('http://helianthus-annuus.googlecode.com/svn/data/') >= 0)
 						{
@@ -643,7 +638,7 @@ AN.main =
 		id: 2,
 		fn: function()
 		{
-			$.each($('td'), function()
+			$('td').each(function()
 			{
 				//if($(this).html() == '最近刊登的文章')
 				if($(this).css('fontWeight') == 'bold' && $(this).css('fontSize') == '8pt')
@@ -665,7 +660,7 @@ AN.main =
 		options: { color_forumLinks: '#1066d2' },
 		fn: function()
 		{
-			var strLinkColor = AN.shared.getOptions('color_forumLinks');
+			var strLinkColor = AN.data.settings2.color_forumLinks;
 			AN.shared.addStyle('a:link { color: ' + strLinkColor + '}');
 
 			$('a').filter(function()
@@ -770,6 +765,75 @@ AN.main =
 			{
 				this.$trTopicRow.find('a:last').attr('href', '/search.aspx?st=A&searchstring=' + escape(this.strUserName));
 			});
+		}
+	},
+
+	changeQuoteStyle:
+	{
+		disp: '改變引用風格',
+		type: 1,
+		page: ['view'],
+		defaultOn: false,
+		id: 10,
+		options: { boo_outerOnly: true },
+		fn: function()
+		{
+			AN.data.toggleAllQuotes = function(nodB)
+			{
+				var booShow = (nodB) ? ($(nodB).next().html() == '+') : false;
+				$('.AN_outermostFirstB').next().each(function(){ AN.data.toggleThisQuote({ nodB: this, booShow: booShow }) });
+			}
+
+			AN.data.toggleThisQuote = function(objData)
+			{
+				$b = $(objData.nodB);
+				var $divToToggle = $b.parents('blockquote:first').find('blockquote:first');
+
+				var booShow = (objData.booShow === undefined) ? ($b.html() == '+') : objData.booShow;
+
+				if(booShow)
+				{
+					$divToToggle.show();
+					$b.html('-');
+					$b.parents('div:first').css('marginBottom', '2px');
+				}
+				else
+				{
+					$divToToggle.hide();
+					$b.html('+');
+					$b.parents('div:first').css('marginBottom', '5px');
+				}
+			}
+
+			AN.shared.addStyle(' \
+			blockquote { margin: 5px 0 5px 0; border: 1px solid black; } \
+			blockquote blockquote { margin-top: 0; border-right: 0; } \
+			blockquote div { padding: 0 0 5px 2px; } \
+			.AN_quoteHeader { padding: 0 5px; color: white; font-size: 12px; background-color: #336699; border-bottom: 1px solid black; margin-bottom: 2px; } \
+			.AN_quoteHeader span { display: inline-block; width: 49.8%; } \
+			.AN_quoteHeader b { font-family: "Courier New"; cursor: pointer; margin-left: 3px; } \
+			');
+
+			$('blockquote').each(function()
+			{
+				$quote = $(this);
+
+				$quote.children().children(':first').next('br').remove();
+				$quote.next('br').remove();
+
+				$quote.prepend('<div class="AN_quoteHeader"><span>引用:</span><span style="text-align:right"><b style="display:none" onclick="AN.data.toggleAllQuotes(this)">O</b><b onclick="AN.data.toggleThisQuote({nodB:this})">-</b></span>');
+
+				if($quote.parent().attr('nodeName').toLowerCase() != 'div') // outermost
+				{
+					$quote.find('b:first').show().addClass('AN_outermostFirstB')
+				}
+				if($quote.find('blockquote').length == 0) // innermost or single-layer
+				{
+					$quote.find('b:last').css('visibility', 'hidden');
+				}
+			});
+
+			if(AN.data.settings2.boo_outerOnly) AN.data.toggleAllQuotes();
 		}
 	}
 }

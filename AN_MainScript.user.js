@@ -165,19 +165,6 @@ AN.init.extend = function()
 		{
 			alert(this.length);
 			return this;
-		},
-
-		goup: function(strName, numTimes)
-		{
-			return this.map(function()
-			{
-				var nodTarget = this;
-				for(var i=0;i<numTimes;i++)
-				{
-					while((nodTarget = nodTarget.parentNode).nodeName.toLowerCase() != strName);
-				}
-				return nodTarget;
-			});
 		}
 	});
 
@@ -658,7 +645,8 @@ AN.main =
 		{
 			$.each($('td'), function()
 			{
-				if($(this).html() == '最近刊登的文章')
+				//if($(this).html() == '最近刊登的文章')
+				if($(this).css('fontWeight') == 'bold' && $(this).css('fontSize') == '8pt')
 				{
 					$(this).parents('tr:eq(1)').remove();
 					return false; // break;

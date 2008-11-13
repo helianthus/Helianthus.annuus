@@ -656,7 +656,6 @@ AN.main =
 		id: 2,
 		fn: function()
 		{
-			$('td').filter(function(){ return $(this).html() == '最近刊登的文章' }).parents('tr:eq(1)').remove();
 			$.each($('td'), function()
 			{
 				if($(this).html() == '最近刊登的文章')

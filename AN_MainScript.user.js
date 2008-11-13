@@ -196,9 +196,9 @@ AN.init.extend = function()
 				$.each(objToConvert, function(i, strValue)
 				{
 					var arrSplit = strValue.split(':');
-					if(Number(arrSplit[1]) != NaN)
+					if(!isNaN(arrSplit[1]))
 					{
-						objTemp[arrSplit[0]] = Number(arrSplit[1]);
+						objTemp[arrSplit[0]] = new Number(arrSplit[1]);
 					}
 					else
 					{
@@ -358,6 +358,28 @@ AN.shared =
 		$('<style type="text/css">' + strStyle + '</style>').prependTo('head');
 	},
 
+	getOption: function(strOptionName)
+	{
+		var objOptionValue = AN.data.settings2[strOptionName];
+
+		if(objOptionValue == 'true')
+		{
+			return true;
+		}
+		else if(objOptionValue == 'false')
+		{
+			return false;
+		}
+		else if(!isNaN(objOptionValue))
+		{
+			return new Number(objOptionValue);
+		}
+		else
+		{
+			return objOptionValue;
+		}
+	},
+
 	getReplys: function()
 	{
 		if(AN.data.arrReplys) return AN.data.arrReplys;
@@ -501,26 +523,31 @@ AN.comp =
 						var strSwitchId = 'AN_switch_' + strFnId;
 						var strChecked = (AN.data.settings1[strPageName + strFnId]) ? 'checked="checked"' : '';
 
-						arrDivHTML.push($.sprintf('<li><input type="checkbox" id="%s" %s />', strSwitchId, strChecked));
+						arrDivHTML.push($.sprintf('<li><input class="AN_switch" type="checkbox" id="%s" %s />', strSwitchId, strChecked));
 						arrDivHTML.push($.sprintf('<label for="%s">%s</label>', strSwitchId, this.disp));
 
 						if(this.options)
 						{
-							arrDivHTML.push('&nbsp;&nbsp;&nbsp;[&nbsp;')
+							arrDivHTML.push('&nbsp;&nbsp;&nbsp;[&nbsp;');
 
 							$.each(this.options, function(strOptionName)
 							{
+								var strOptionId = 'AN_option_' + strOptionName;
 								if(this.type == 'boolean')
 								{
-									var strOptionId = 'AN_option_' + strOptionName;
 									var strOptionValue = (AN.data.settings2[strOptionName].toString() == 'true') ? 'checked="checked"' : '';
 
-									arrDivHTML.push($.sprintf('<input type="checkbox" id="%s" %s />', strOptionId, strOptionValue));
-									arrDivHTML.push($.sprintf('<label for="%s">%s</label>', strSwitchId, this.disp));
+									arrDivHTML.push($.sprintf('<input class="AN_option" type="checkbox" id="%s" %s />', strOptionId, strOptionValue));
+									arrDivHTML.push($.sprintf('<label for="%s">%s</label>&nbsp;', strOptionId, this.disp));
+								}
+								else if(this.type == 'string')
+								{
+									var strOptionValue = AN.data.settings2[strOptionName];
+									arrDivHTML.push($.sprintf('%s: <input class="AN_option" type="text" id="%s" value="%s" />', this.disp, strOptionId, strOptionValue));
 								}
 							});
 
-							arrDivHTML.push('&nbsp;]</li>');
+							arrDivHTML.push(']</li>');
 						}
 
 					});
@@ -559,7 +586,7 @@ AN.comp =
 				{
 					var strPageId = this.id.replace(/AN_div_/, '');
 
-					$.each($(this).find(':checkbox'), function()
+					$.each($(this).find('.AN_switch'), function()
 					{
 						objSettings1[strPageId + this.id.replace('AN_switch_', '')] = (this.checked) ? 1 : 0;
 					});
@@ -568,9 +595,14 @@ AN.comp =
 
 				var objSettings2 = {};
 
-				$('#AN_divAccordion :checkbox').each(function()
+				$('#AN_divAccordion .AN_option').each(function()
 				{
-					objSettings1[this.id.replace('AN_option_', '')] = (this.checked) ? 1 : 0;
+					var objOptionMap =
+					{
+						checkbox: this.checked,
+						text: this.value
+					}
+					objSettings2[this.id.replace('AN_option_', '')] = objOptionMap[this.type];
 				});
 				AN.util.cookie('AN_settings2', objSettings2);
 
@@ -687,7 +719,7 @@ AN.main =
 		options: { strLinkColor: { disp: '設定連結顏色', defaultValue: '#1066d2', type: 'color' } },
 		fn: function()
 		{
-			var strLinkColor = AN.data.settings2.strLinkColor;
+			var strLinkColor = AN.shared.getOption('strLinkColor');
 			AN.shared.addStyle('a:link { color: ' + strLinkColor + '}');
 
 			$('a').filter(function()
@@ -802,8 +834,7 @@ AN.main =
 		page: ['view'],
 		defaultOn: false,
 		id: 10,
-		options:
-		{ booOuterOnly: { disp: '只顯示最外層的引用', defaultValue: true, type: 'boolean' } },
+		options: { booOuterOnly: { disp: '只顯示最外層的引用', defaultValue: true, type: 'boolean' } },
 		fn: function()
 		{
 			AN.data.toggleAllQuotes = function(nodB)
@@ -861,7 +892,69 @@ AN.main =
 				}
 			});
 
-			if(AN.data.settings2.booOuterOnly) AN.data.toggleAllQuotes();
+			if(AN.shared.getOption('booOuterOnly')) AN.data.toggleAllQuotes();
+		}
+	},
+
+	optimiseImageResizing:
+	{
+		disp: '優化圖片縮放',
+		type: 2,
+		page: ['view'],
+		defaultOn: true,
+		id: 11,
+		options: { numImageWidth: { disp: '設定圖片最大闊度', defaultValue: 600, type: 'string' } },
+		fn: function()
+		{
+			$window.DrawImage = function(nodImg)
+			{
+				nodImg.setAttribute('onload','');
+				nodImg.alt = '[AN]DEADIMAGE'; // old: for FF3, no spaces due to strange bug on message=1153683&page=4 with forceOneImagePerLine switched on
+
+				var imgTemp = new Image();
+				imgTemp.src = nodImg.src;
+				if(!imgTemp.width) return; //  for FF3
+
+				try // FF3 bug? message=1352216 & IE7 bug? message=1360706
+				{
+					var numMaxWidth = AN.shared.getOption('numImageWidth');
+					var numMaxWidthAllowed = parseInt($(nodImg.offsetParent).width()) - nodImg.offsetLeft - 5;
+					if(numMaxWidth > numMaxWidthAllowed) numMaxWidth = numMaxWidthAllowed;
+				}
+				catch(err)
+				{
+					var numMaxWidth = 300;
+				}
+				var numFixedHeight = Math.round(imgTemp.height * numMaxWidth / imgTemp.width);
+
+				if(imgTemp.width > 99) nodImg.style.display = 'block';
+
+				if(imgTemp.height / imgTemp.width > 7)
+				{
+					nodImg.width = 30;
+					nodImg.height = 30;
+					nodImg.title = '[AN] 金鋼棒已被壓成廢鐵!';
+					return;
+				}
+				else if(imgTemp.width <= numMaxWidth) // && imgTemp.height <= numMaxHeight)
+				{
+					nodImg.width = imgTemp.width;
+					nodImg.height = imgTemp.height;
+					nodImg.title = '[AN] ori:' + imgTemp.width + 'x' + imgTemp.height + ' now: the same';
+					return;
+				}
+				else // if(numFixedWidth >= numMaxWidth)
+				{
+					nodImg.width = numMaxWidth;
+					nodImg.height = numFixedHeight;
+				}
+				nodImg.title = '[AN] ori:' + imgTemp.width + 'x' + imgTemp.height + ' now:' + nodImg.width + 'x' + nodImg.height;
+			}
+
+			$('img').each(function()
+			{
+				if(this.complete && this.getAttribute('onload')) $window.DrawImage(this);
+			});
 		}
 	}
 }

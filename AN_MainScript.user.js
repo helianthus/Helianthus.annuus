@@ -322,9 +322,12 @@ AN.init.start = function()
 	// Seperate settings getting & execution into two operations because one option could be used by more than one function
 	$.each(AN.main, function()
 	{
-		if(AN.data.settings1[this.id] === undefined)
+		for(var i in this.page)
 		{
-			AN.data.settings1[this.id] = (this.defaultOn) ? 1 : 0;
+			if(AN.data.settings1[this.page[i] + this.id] === undefined)
+			{
+				AN.data.settings1[this.page[i] + this.id] = this.defaultOn;
+			}
 		}
 
 		if(!this.options) return; // continue
@@ -350,7 +353,7 @@ AN.init.start = function()
 	{
 		if(this.page[0] == 'all' || $.inArray(AN.data.strCurPage, this.page) != -1)
 		{
-			if(AN.data.settings1[this.id])
+			if(AN.data.settings1['all' + this.id] || AN.data.settings1[AN.data.strCurPage + this.id])
 			{
 				this.fn.call(this);
 			}
@@ -359,9 +362,9 @@ AN.init.start = function()
 }
 
 /////////////////// END OF - [Initialization] ///////////////////
-/////////////////// START OF - [Helper Functions] ///////////////////
+/////////////////// START OF - [Shared Functions] ///////////////////
 
-AN.helper =
+AN.shared =
 {
 	addStyle: function(strStyle)
 	{
@@ -382,19 +385,45 @@ AN.helper =
 		$('.repliers')
 		.each(function()
 		{
-			var objReply = {};
-
-			objReply.strUserId = $(this).find('a:first').attr('href').replace(/^[^=]+=/, '');
-			objReply.strUserName = $(this).find('a:first').html();
-			objReply.nodContent = $(this).find('table:eq(1) td:first');
-
+			var objReply =
+			{
+				strUserId: $(this).find('a:first').attr('href').replace(/^[^=]+=/, ''),
+				strUserName: $(this).find('a:first').html(),
+				nodContent: $(this).find('table:eq(1) td:first')
+			}
 			AN.data.arrReplys.push(objReply);
 		});
 		return AN.data.arrReplys;
+	},
+
+	getTopicRows: function()
+	{
+		if(AN.data.arrTopicRows) return AN.data.arrTopicRows;
+
+		AN.data.arrTopicRows = [];
+
+		$('td').each(function()
+		{
+			if($(this).html().match(/^\s*最後回應時間$/))
+			{
+				$.each($(this).parent().nextAll('tr'), function()
+				{
+					var objRow =
+					{
+						$trTopicRow: $(this),
+						strLinkId: $(this).find('a:first').attr('href').match(/\d+$/)[0],
+						strUserName: $(this).find('a:last').html()
+					}
+					AN.data.arrTopicRows.push(objRow);
+				});
+				return false; // break;
+			}
+		});
+		return AN.data.arrTopicRows;
 	}
 }
 
-/////////////////// END OF - [Helper Functions] ///////////////////
+/////////////////// END OF - [Shared Functions] ///////////////////
 /////////////////// START OF - [Compulsory Functions] ///////////////////
 
 AN.comp =
@@ -404,7 +433,7 @@ AN.comp =
 		page: ['all'],
 		fn: function()
 		{
-			AN.helper.addStyle(' \
+			AN.shared.addStyle(' \
 			#AN_divRight { position: fixed; top: 15%; right: 0; text-align: right; } \
 			#AN_divRight div { width: 70px; color: gray; border-bottom: 1px solid gray; padding: 10px 5px 3px 0; cursor: pointer; } \
 			#AN_divRight div:hover { color: YellowGreen; } \
@@ -441,6 +470,7 @@ AN.comp =
 				view: '帖子頁',
 				profilepage: '用戶資料頁',
 				search: '搜尋頁',
+				newmessages: '最新貼文頁',
 				'default': '主論壇頁',
 				special: '特殊頁'
 			}
@@ -471,8 +501,8 @@ AN.comp =
 					AN.data.settingsStructure[this.page[i]][this.type][this.id] =
 					{
 						disp: this.disp,
-						switchedOn: AN.data.settings1[this.id],
-						options: AN.data.settings2[this.id]
+						switchedOn: AN.data.settings1[this.page[i] + this.id],
+						options: null // to be worked on
 					}
 				}
 			});
@@ -522,13 +552,19 @@ AN.comp =
 			.append('<div id="AN_divOkButton">確定</div><div id="AN_divCancelButton">取消</div>')
 			.children(':first-child').click(function()
 			{
-				$('#AN_divAccordion :checkbox')
-				.each(function()
+				var objCookieToSave = {};
+
+				$('#AN_divAccordion > div').each(function()
 				{
-					AN.data.settings1[this.id.replace('AN_inputSwitch_', '')] = (this.checked) ? 1 : 0;
+					var strPageId = this.id.replace(/AN_div_/, '');
+
+					$.each($(this).find(':checkbox'), function()
+					{
+						objCookieToSave[strPageId + this.id.replace('AN_inputSwitch_', '')] = (this.checked) ? 1 : 0;
+					});
 				});
 
-				AN.util.cookie('AN_settings1', AN.data.settings1);
+				AN.util.cookie('AN_settings1', objCookieToSave);
 				location.reload();
 			})
 			.next().click(function()
@@ -552,6 +588,19 @@ AN.comp =
 		}
 	},
 
+	addLeftDiv:
+	{
+		page: ['all'],
+		fn: function()
+		{
+			AN.shared.addStyle(' \
+			#AN_divLeft { position: fixed; top: 50%; left: 0; margin-top: -25%; } \
+			');
+
+			$('body').append('<div id="AN_divLeft" />');
+		}
+	},
+
 	convertData:
 	{
 		page: ['view'],
@@ -559,7 +608,7 @@ AN.comp =
 		{
 			var arrMatch;
 
-			$.each(AN.helper.getReplys(), function(i, objReply)
+			$.each(AN.shared.getReplys(), function(i, objReply)
 			{
 				if(objReply.strUserId == '148720') // me :P
 				{
@@ -621,8 +670,8 @@ AN.main =
 		options: { color_forumLinks: '#1066d2' },
 		fn: function()
 		{
-			var strLinkColor = AN.helper.getOptions('color_forumLinks');
-			AN.helper.addStyle('a:link { color: ' + strLinkColor + '}');
+			var strLinkColor = AN.shared.getOptions('color_forumLinks');
+			AN.shared.addStyle('a:link { color: ' + strLinkColor + '}');
 
 			$('a').filter(function()
 			{
@@ -662,7 +711,7 @@ AN.main =
 		id: 5,
 		fn: function()
 		{
-			$('head').append('<link rel="shortcut icon" href="http://supergolden.m2.googlepages.com/hkg.ico" />');
+			$('head').append('<link rel="shortcut icon" href="http://helianthus-annuus.googlecode.com/files/hkg.ico" />');
 		}
 	},
 
@@ -675,7 +724,57 @@ AN.main =
 		id: 6,
 		fn: function()
 		{
-			$('a').each(function(){ this.href = this.href.replace(/&highlight_id=0/i, '') });
+			$('a').each(function()
+			{
+				this.href = $(this).attr('href').replace(/&highlight_id=0/i, '') // using jQuery to fix an IE 7 bug
+			});
+		}
+	},
+
+	removeRedHotRecord:
+	{
+		disp: '移除紅人榜記錄',
+		type: 4,
+		page: ['profilepage'],
+		defaultOn: false,
+		id: 7,
+		fn: function()
+		{
+			$('#ctl00_ContentPlaceHolder1_HotPeoples').next().andSelf().remove();
+		}
+	},
+
+	searchOnNewPage:
+	{
+		disp: '搜尋開新頁',
+		type: 2,
+		page: ['topics', 'search', 'newmessages'],
+		defaultOn: true,
+		id: 8,
+		fn: function()
+		{
+			$window.Search = function()
+			{
+				var strType = $('#st option:selected').val();
+				window.open('search.aspx?st=' + strType + '&searchstring=' + escape($('#searchstring').val()), '_blank');
+				$('#searchstring').val('');
+			}
+		}
+	},
+
+	fixSearchLink:
+	{
+		disp: '修正會員文章搜尋連結',
+		type: 2,
+		page: ['topics', 'search', 'newmessages', 'profilepage'],
+		defaultOn: true,
+		id: 9,
+		fn: function()
+		{
+			$.each(AN.shared.getTopicRows(), function()
+			{
+				this.$trTopicRow.find('a:last').attr('href', '/search.aspx?st=A&searchstring=' + escape(this.strUserName));
+			});
 		}
 	}
 }

@@ -656,7 +656,15 @@ AN.main =
 		id: 2,
 		fn: function()
 		{
-			$('td:contains("最近刊登的文章"):last').goup('tr',2).remove();
+			$('td').filter(function(){ return $(this).html() == '最近刊登的文章' }).parents('tr:eq(1)').remove();
+			$.each($('td'), function()
+			{
+				if($(this).html() == '最近刊登的文章')
+				{
+					$(this).parents('tr:eq(1)').remove();
+					return false; // break;
+				}
+			});
 		}
 	},
 

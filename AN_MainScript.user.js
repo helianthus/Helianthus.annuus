@@ -316,7 +316,7 @@ AN.init.start = function()
 	{
 		settings1: $.convertObj(AN.util.cookie('AN_settings1')) || {},
 		settings2: $.convertObj(AN.util.cookie('AN_settings2')) || {},
-		strCurPage: ($('#aspnetForm')) ? $('#aspnetForm').attr('action').match(/[^.]+/).toString().toLowerCase() : 'special'
+		strCurPage: ($('#aspnetForm').get(0)) ? $('#aspnetForm').attr('action').match(/[^.]+/).toString().toLowerCase() : 'special'
 	}
 
 	// Seperate settings getting & execution into two operations because one option could be used by more than one function

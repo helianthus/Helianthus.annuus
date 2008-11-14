@@ -905,13 +905,13 @@ AN.main =
 			{
 				$quote = $(this);
 
-				while(this.nextSibling.nodeName.toLowerCase() == 'br') $quote.next().remove();
-
 				if($quote.children().children('blockquote:only-child').length) // has inner quotes, is aempty quote
 				{
 					$quote.replaceWith($quote.children().children().get(0));
 					return;
 				}
+
+				while(this.nextSibling && this.nextSibling.nodeName.toLowerCase() == 'br') $quote.next().remove();
 
 				$quote.prepend('<div class="AN_quoteHeader"><span>引用:</span><span style="text-align:right"><b title="Toggle all outermost quotes" style="display:none" onclick="AN.data.toggleAllQuotes(this)">O</b><b style="Toggle this" onclick="AN.data.toggleThisQuote({nodB:this})">-</b></span>');
 
@@ -996,7 +996,7 @@ AN.main =
 
 	addQuickLinkToTopicsPage:
 	{
-		disp: '加入前往吹水台的連結',
+		disp: '加入前往吹水台的快速連結',
 		type: 3,
 		page: ['all'],
 		defaultOn: true,
@@ -1074,7 +1074,61 @@ AN.main =
 				$('#AN_divToToggle:hidden').show();
 			}
 		}
+	},
+
+	convertSmileys:
+	{
+		disp: '轉換表情碼為圖片',
+		type: 1,
+		page: ['topics', 'search', 'newmessages', 'profilepage'],
+		defaultOn: true,
+		id: 15,
+		fn: function()
+		{
+			var regSmiley = /([#[](hehe|love|ass|sosad|good|hoho|kill|bye|adore|banghead|bouncer|bouncy|censored|flowerface|shocking|photo|fire|yipes|369|bomb|slick|no|kill2|offtopic)[]#])/g;
+
+			var arrConvertMap =
+			[
+				{ regex: /(O:-\))/g, result: 'angel' },
+				{ regex: /(xx\()/g, result: 'dead' },
+				{ regex: /(:\))/g, result: 'smile' },
+				{ regex: /(:o\))/g, result: 'clown' },
+				{ regex: /(:-\()/g, result: 'frown' },
+				{ regex: /(:~\()/g, result: 'cry' },
+				{ regex: /(;-\))/g, result: 'wink' },
+				{ regex: /(:-\[)/g, result: 'angry' },
+				{ regex: /(:-])/g, result: 'devil' },
+				{ regex: /(:D)/g, result: 'biggrin' },
+				{ regex: /(:O)/g, result: 'oh' },
+				{ regex: /(:P)/g, result: 'tongue' },
+				{ regex: /(^3^)/g, result: 'kiss' },
+				{ regex: /(\?_\?)/g, result: 'wonder' },
+				{ regex: /(#yup#)/g, result: 'agree' },
+				{ regex: /(#ng#)/g, result: 'donno' },
+				{ regex: /(#oh#)/g, result: 'surprise' },
+				{ regex: /(#cn#)/g, result: 'chicken' },
+				{ regex: /(Z_Z)/g, result: 'z' },
+				{ regex: /(@_@)/g, result: '@' },
+				{ regex: /(\?\?\?)/g, result: 'wonder2' },
+				{ regex: /(fuck)/g, result: 'fuck' }
+			]
+
+			$.each(AN.shared.getTopicRows(), function()
+			{
+				var $a = this.$trTopicRow.find('td:eq(1) a:first');
+				var strTemp = $a.html();
+
+				strTemp = strTemp.replace(regSmiley, '<img style="border-width:0px;vertical-align:middle" src="/faces/$2.gif" alt="$1" />');
+
+				$.each(arrConvertMap, function()
+				{
+					strTemp = strTemp.replace(this.regex, '<img style="border-width:0px;vertical-align:middle" src="/faces/' + this.result + '.gif" alt="$1" />');
+				});
+
+				$a.html(strTemp);
+			});
+		}
 	}
 }
 
-/////////////////// END OF - [Execute Functions] ///////////////////
+///////////// END OF - [Execute Fuctions] ///////////////////

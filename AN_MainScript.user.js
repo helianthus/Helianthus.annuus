@@ -452,7 +452,7 @@ AN.comp =
 			#AN_divLeft { position: fixed; top: 50%; left: 0; text-align: right; } \
 			#AN_divRight { position: fixed; top: 15%; right: 0; text-align: left; } \
 			#AN_divLeft div { border: 0 solid gray; padding: 5px 0; } \
-			#AN_divLeftMiddle { display: none; border-width: 1px 0 !important; text-align: center; } \
+			#AN_divLeftMiddle { display: none; border-width: 1px 0 !important; } \
 			#AN_divRight div { border-bottom: 1px solid gray; padding: 10px 5px 3px 0; } \
 			#AN_divLeft div, #AN_divRight div { width: 80px; color: gray; cursor: pointer; } \
 			#AN_divLeft div:hover, #AN_divRight div:hover { color: YellowGreen; } \
@@ -896,7 +896,7 @@ AN.main =
 			blockquote { margin: 5px 0 5px 0; border: 1px solid black; } \
 			blockquote blockquote { margin-top: 0; border-right: 0; } \
 			blockquote div { padding: 0 0 5px 2px; } \
-			.AN_quoteHeader { padding: 0 0 0 5px; color: white; font-size: 12px; background-color: #336699; border-bottom: 1px solid black; margin-bottom: 2px; } \
+			.AN_quoteHeader { padding: 0 0 0 3px; color: white; font-size: 12px; background-color: #336699; border-bottom: 1px solid black; margin-bottom: 2px; } \
 			.AN_quoteHeader span { display: inline-block; width: 49.8%; } \
 			.AN_quoteHeader b { font-family: "Courier New"; cursor: pointer; margin-right: 3px; } \
 			');
@@ -1043,7 +1043,36 @@ AN.main =
 		{
 			if(!AN.shared.isLoggedIn()) return;
 
+			var $divQR = $('#newmessage');
 
+			$divQR
+			.prevAll('br:lt(2)').remove()
+			.end()
+			.find('table:eq(2) tr:lt(2)').remove()
+			.end()
+			.css(
+			{
+				position: 'fixed',
+				width: '806px',
+				filter: 'alpha(opacity=70)',
+				opacity: '0.7',
+				left: ($('html').outerWidth() - $divQR.outerWidth()) / 2 + 'px',
+				bottom: '0'
+			})
+			.find('tr:eq(2)').attr('id', 'AN_divToToggle').hide()
+			.end()
+			.find('td:eq(1)')
+			.css({ textAlign: 'center', cursor: 'pointer' })
+			.text('點擊顯示/隱藏快速回覆')
+			.click(function(){ $('#AN_divToToggle').toggle(); });
+
+			//$('#ctl00_ContentPlaceHolder1_messagetext').css('max-width', '95%');
+
+			$window.OnQuoteSucceeded = function(result)
+			{
+				$('#ctl00_ContentPlaceHolder1_messagetext').val(unescape(result) + '\n');
+				$('#AN_divToToggle:hidden').show();
+			}
 		}
 	}
 }

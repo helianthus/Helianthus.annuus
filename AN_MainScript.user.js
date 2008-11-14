@@ -775,7 +775,7 @@ AN.main =
 		id: 4,
 		fn: function()
 		{
-			$('#ctl00_ContentPlaceHolder1_HotPeoples').prev('br:first').andSelf().remove();
+			$('#ctl00_ContentPlaceHolder1_HotPeoples').prev().andSelf().remove();
 		}
 	},
 
@@ -905,7 +905,7 @@ AN.main =
 			{
 				$quote = $(this);
 
-				while($quote.next('br').length) $quote.next().remove();
+				while(this.nextSibling.nodeName.toLowerCase() == 'br') $quote.next().remove();
 
 				if($quote.children().children('blockquote:only-child').length) // has inner quotes, is aempty quote
 				{

@@ -899,7 +899,7 @@ AN.main =
 				$quote = $(this);
 
 				while($quote.next('br').length) $quote.next().remove();
-				while($quote.children().length == 1) $quote.replaceWith($quote.children());
+				//while($quote.children().length == 1) $quote.replaceWith($quote.children());
 
 				$quote.prepend('<div class="AN_quoteHeader"><span>引用:</span><span style="text-align:right"><b style="display:none" onclick="AN.data.toggleAllQuotes(this)">O</b><b onclick="AN.data.toggleThisQuote({nodB:this})">-</b></span>');
 

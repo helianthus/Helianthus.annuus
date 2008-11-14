@@ -1062,8 +1062,8 @@ AN.main =
 			.find('tr:eq(2)').attr('id', 'AN_divToToggle').hide()
 			.end()
 			.find('td:eq(1)')
+			.fn(function(){ this.get(0).lastChild.nodeValue = '點擊顯示/隱藏快速回覆'; return this; })
 			.css({ textAlign: 'center', cursor: 'pointer' })
-			.text('點擊顯示/隱藏快速回覆')
 			.click(function(){ $('#AN_divToToggle').toggle(); });
 
 			//$('#ctl00_ContentPlaceHolder1_messagetext').css('max-width', '95%');

@@ -794,9 +794,9 @@ AN.main =
 		id: 6,
 		fn: function()
 		{
-			$('a').each(function()
+			$('a[href*=&highlight_id=0]').each(function()
 			{
-				if(this.href.match(/&highlight_id=0/i)) this.href = $(this).attr('href').replace(RegExp.lastMatch, '') // using jQuery to fix an IE 7 bug
+				this.href = $(this).attr('href').replace(/&highlight_id=0/i, '') // using jQuery to fix an IE 7 bug
 			});
 		}
 	},
@@ -899,7 +899,11 @@ AN.main =
 				$quote = $(this);
 
 				while($quote.next('br').length) $quote.next().remove();
-				//while($quote.children().length == 1) $quote.replaceWith($quote.children());
+				if($quote.children().children().length == 1)
+				{
+					$quote.replaceWith($quote.children().children().get(0));
+					return;
+				}
 
 				$quote.prepend('<div class="AN_quoteHeader"><span>引用:</span><span style="text-align:right"><b style="display:none" onclick="AN.data.toggleAllQuotes(this)">O</b><b onclick="AN.data.toggleThisQuote({nodB:this})">-</b></span>');
 
@@ -907,7 +911,7 @@ AN.main =
 				{
 					$quote.find('b:first').show().addClass('AN_outermostFirstB')
 				}
-				if($quote.find('blockquote').length) // innermost or single-layer
+				if(!$quote.find('blockquote').length) // innermost or single-layer
 				{
 					$quote.find('b:last').css('visibility', 'hidden');
 				}

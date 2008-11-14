@@ -565,7 +565,7 @@ AN.comp =
 								else if(this.type == 'string')
 								{
 									var strOptionValue = AN.data.settings2[strOptionName];
-									arrDivHTML.push($.sprintf('%s: <input class="AN_option" type="text" id="%s" value="%s" />', this.disp, strOptionId, strOptionValue));
+									arrDivHTML.push($.sprintf('%s: <input class="AN_option" type="text" id="%s" value="%s" />&nbsp;', this.disp, strOptionId, strOptionValue));
 								}
 							});
 

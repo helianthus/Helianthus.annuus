@@ -744,7 +744,7 @@ AN.main =
 		page: ['all'],
 		defaultOn: true,
 		id: 3,
-		options: { strLinkColor: { disp: '設定連結顏色', defaultValue: '#1066d2', type: 'color' } },
+		options: { strLinkColor: { disp: '設定連結顏色(#RRGGBB)', defaultValue: '#1066d2', type: 'string' } }, // to be improved
 		fn: function()
 		{
 			var strLinkColor = AN.shared.getOption('strLinkColor');

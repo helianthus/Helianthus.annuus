@@ -889,9 +889,9 @@ AN.main =
 			blockquote { margin: 5px 0 5px 0; border: 1px solid black; } \
 			blockquote blockquote { margin-top: 0; border-right: 0; } \
 			blockquote div { padding: 0 0 5px 2px; } \
-			.AN_quoteHeader { padding: 0 5px; color: white; font-size: 12px; background-color: #336699; border-bottom: 1px solid black; margin-bottom: 2px; } \
+			.AN_quoteHeader { padding: 0 0 0 5px; color: white; font-size: 12px; background-color: #336699; border-bottom: 1px solid black; margin-bottom: 2px; } \
 			.AN_quoteHeader span { display: inline-block; width: 49.8%; } \
-			.AN_quoteHeader b { font-family: "Courier New"; cursor: pointer; margin-left: 3px; } \
+			.AN_quoteHeader b { font-family: "Courier New"; cursor: pointer; margin-right: 3px; } \
 			');
 
 			$('blockquote').each(function()

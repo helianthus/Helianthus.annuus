@@ -803,7 +803,7 @@ AN.main =
 		{
 			$('a').each(function()
 			{
-				this.href = $(this).attr('href').replace(/&highlight_id=0/i, '') // using jQuery to fix an IE 7 bug
+				if(this.href.match(/&highlight_id=0/i)) this.href = $(this).attr('href').replace(RegExp.lastMatch, '') // using jQuery to fix an IE 7 bug
 			});
 		}
 	},
@@ -905,16 +905,15 @@ AN.main =
 			{
 				$quote = $(this);
 
-				$quote.children().children(':first').next('br').remove();
-				$quote.next('br').remove();
+				while($quote.next('br').length) $quote.next().remove();
 
 				$quote.prepend('<div class="AN_quoteHeader"><span>引用:</span><span style="text-align:right"><b style="display:none" onclick="AN.data.toggleAllQuotes(this)">O</b><b onclick="AN.data.toggleThisQuote({nodB:this})">-</b></span>');
 
-				if($quote.parent().attr('nodeName').toLowerCase() != 'div') // outermost
+				if($quote.parent('div').length) // outermost
 				{
 					$quote.find('b:first').show().addClass('AN_outermostFirstB')
 				}
-				if($quote.find('blockquote').length == 0) // innermost or single-layer
+				if($quote.find('blockquote').length) // innermost or single-layer
 				{
 					$quote.find('b:last').css('visibility', 'hidden');
 				}
@@ -979,10 +978,12 @@ AN.main =
 				nodImg.title = '[AN] ori:' + imgTemp.width + 'x' + imgTemp.height + ' now:' + nodImg.width + 'x' + nodImg.height;
 			}
 
+			/*
 			$('img').each(function()
 			{
 				if(this.complete && this.getAttribute('onload')) $window.DrawImage(this);
 			});
+			*/
 		}
 	}
 }

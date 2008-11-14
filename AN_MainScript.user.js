@@ -1048,7 +1048,7 @@ AN.main =
 			$divQR
 			.prevAll('br:lt(2)').remove()
 			.end()
-			.find('table:eq(2) tr:lt(2)').remove()
+			.find('table:eq(2) tr:lt(2)').hide()
 			.end()
 			.css(
 			{
@@ -1062,7 +1062,7 @@ AN.main =
 			.find('tr:eq(2)').attr('id', 'AN_divToToggle').hide()
 			.end()
 			.find('td:eq(1)')
-			.fn(function(){ this.get(0).lastChild.nodeValue = '點擊顯示/隱藏快速回覆'; return this; })
+			.text('點擊顯示/隱藏快速回覆')
 			.css({ textAlign: 'center', cursor: 'pointer' })
 			.click(function(){ $('#AN_divToToggle').toggle(); });
 

@@ -1034,7 +1034,7 @@ AN.main =
 
 	changeQuickReplyStyle:
 	{
-		disp: '改變快速回覆的風格',
+		disp: '改變快速回覆的風格(未完成)',
 		type: 1,
 		page: ['view'],
 		defaultOn: false,
@@ -1042,6 +1042,8 @@ AN.main =
 		fn: function()
 		{
 			if(!AN.shared.isLoggedIn()) return;
+
+
 		}
 	}
 }

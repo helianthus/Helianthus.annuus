@@ -436,18 +436,23 @@ AN.shared =
 
 AN.comp =
 {
-	addRightDiv:
+	addLeftRightDiv:
 	{
 		page: ['all'],
 		fn: function()
 		{
 			AN.shared.addStyle(' \
-			#AN_divRight { position: fixed; top: 15%; right: 0; text-align: right; } \
-			#AN_divRight div { 80px; color: gray; border-bottom: 1px solid gray; padding: 10px 5px 3px 0; cursor: pointer; } \
-			#AN_divRight div:hover { color: YellowGreen; } \
+			#AN_divLeft { position: fixed; top: 50%; left: 0; text-align: right; } \
+			#AN_divRight { position: fixed; top: 15%; right: 0; text-align: left; } \
+			#AN_divLeft div { border: 0 solid gray; padding: 5px 0; } \
+			#AN_divRight div { border-bottom: 1px solid gray; padding: 10px 5px 3px 0; } \
+			#AN_divLeft div, #AN_divRight div { width: 80px; color: gray; cursor: pointer; } \
+			#AN_divLeft div:hover, #AN_divRight div:hover { color: YellowGreen; } \
+			#AN_divLeft a, #AN_divRight a { color: gray; text-decoration: none; } \
+			#AN_divLeft a:hover, #AN_divRight a:hover { color: YellowGreen; } \
 			');
 
-			$('body').append('<div id="AN_divRight" />');
+			$('body').append('<div id="AN_divLeft" /><div id="AN_divRight" />');
 		}
 	},
 
@@ -654,19 +659,6 @@ AN.comp =
 			{
 				alert('Helianthus.Annuus\nversion: 2.x.x_alpha\nauthor: 向日');
 			});
-		}
-	},
-
-	addLeftDiv:
-	{
-		page: ['all'],
-		fn: function()
-		{
-			AN.shared.addStyle(' \
-			#AN_divLeft { position: fixed; top: 50%; left: 0; margin-top: -25%; } \
-			');
-
-			$('body').append('<div id="AN_divLeft" />');
 		}
 	},
 
@@ -909,7 +901,7 @@ AN.main =
 
 				$quote.prepend('<div class="AN_quoteHeader"><span>引用:</span><span style="text-align:right"><b style="display:none" onclick="AN.data.toggleAllQuotes(this)">O</b><b onclick="AN.data.toggleThisQuote({nodB:this})">-</b></span>');
 
-				if($quote.parent('div').length) // outermost
+				if(!$quote.parent('div').length) // outermost
 				{
 					$quote.find('b:first').show().addClass('AN_outermostFirstB')
 				}
@@ -984,6 +976,43 @@ AN.main =
 				if(this.complete && this.getAttribute('onload')) $window.DrawImage(this);
 			});
 			*/
+		}
+	},
+
+	addQuickLinkToTopicsPage:
+	{
+		disp: '加入前往吹水台的連結',
+		type: 3,
+		page: ['all'],
+		defaultOn: true,
+		id: 12,
+		fn: function()
+		{
+			$('#AN_divLeft')
+			.append('<div style="border-width: 1px 0;"><a href="/topics.aspx?type=BW">Topics</a></div>')
+			.fn(function()
+			{
+				this.css('margin-top', -(this.outerHeight() / 2));
+			});
+		}
+	},
+
+	addGoToLinks:
+	{
+		disp: '加入前往最頂/底的按扭',
+		type: 3,
+		page: ['view'],
+		defaultOn: true,
+		id: 13,
+		fn: function()
+		{
+			$('#AN_divLeft')
+			.prepend('<div onclick="scrollTo(0,0)">Top</div>')
+			.append('<div onclick="scrollTo(0,99999)">Bottom</div>')
+			.fn(function()
+			{
+				this.css('margin-top', -(this.outerHeight() / 2));
+			});
 		}
 	}
 }

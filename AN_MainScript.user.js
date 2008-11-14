@@ -485,7 +485,7 @@ AN.comp =
 
 			$('<div>Settings</div>').appendTo('#AN_divRight').click(function()
 			{
-				//$('html').css('overflow', 'hidden');
+				$('html').css('overflow', 'hidden');
 				$('#AN_divGrayLayer').show().fadeTo('slow', 0.7);
 				$('#AN_divSettingsFrame').fadeIn('slow');
 			});
@@ -639,7 +639,7 @@ AN.comp =
 			})
 			.next().click(function()
 			{
-				//$('html').css('overflow', '');
+				$('html').css('overflow', '');
 				$('#AN_divGrayLayer').fadeOut('slow');
 				$('#AN_divSettingsFrame').fadeOut('slow');
 			});
@@ -1034,7 +1034,7 @@ AN.main =
 
 	changeQuickReplyStyle:
 	{
-		disp: '改變快速回覆的風格(未完成)',
+		disp: '改變快速回覆的風格',
 		type: 1,
 		page: ['view'],
 		defaultOn: false,

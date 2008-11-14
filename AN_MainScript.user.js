@@ -899,21 +899,22 @@ AN.main =
 				$quote = $(this);
 
 				while($quote.next('br').length) $quote.next().remove();
-				if($quote.children().children().length == 1)
+
+				if($quote.children().children('blockquote:only-child').length) // has inner quotes, is aempty quote
 				{
 					$quote.replaceWith($quote.children().children().get(0));
 					return;
 				}
 
-				$quote.prepend('<div class="AN_quoteHeader"><span>引用:</span><span style="text-align:right"><b style="display:none" onclick="AN.data.toggleAllQuotes(this)">O</b><b onclick="AN.data.toggleThisQuote({nodB:this})">-</b></span>');
+				$quote.prepend('<div class="AN_quoteHeader"><span>引用:</span><span style="text-align:right"><b title="Toggle all outermost quotes" style="display:none" onclick="AN.data.toggleAllQuotes(this)">O</b><b style="Toggle this" onclick="AN.data.toggleThisQuote({nodB:this})">-</b></span>');
 
-				if(!$quote.parent('div').length) // outermost
-				{
-					$quote.find('b:first').show().addClass('AN_outermostFirstB')
-				}
 				if(!$quote.find('blockquote').length) // innermost or single-layer
 				{
 					$quote.find('b:last').css('visibility', 'hidden');
+				}
+				if(!$quote.parent('div').length) // outermost
+				{
+					$quote.find('b:first').show().addClass('AN_outermostFirstB')
 				}
 			});
 

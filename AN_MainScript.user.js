@@ -198,7 +198,7 @@ AN.init.extend = function()
 					var arrSplit = strValue.split(':');
 					if(!isNaN(arrSplit[1]))
 					{
-						objTemp[arrSplit[0]] = new Number(arrSplit[1]);
+						objTemp[arrSplit[0]] = Number(arrSplit[1]);
 					}
 					else
 					{
@@ -376,7 +376,7 @@ AN.shared =
 		}
 		else if(!isNaN(objOptionValue))
 		{
-			return new Number(objOptionValue);
+			return Number(objOptionValue);
 		}
 		else
 		{
@@ -428,6 +428,13 @@ AN.shared =
 			}
 		});
 		return AN.data.arrTopicRows;
+	},
+
+	isLoggedIn: function()
+	{
+		if(AN.data.booIsLoggedIn) return AN.data.booIsLoggedIn;
+
+		return AN.booIsLoggedIn = ($('#ctl00_ContentPlaceHolder1_lb_UserName a:first').attr('href').indexOf('login.aspx') == -1);
 	}
 }
 
@@ -445,7 +452,7 @@ AN.comp =
 			#AN_divLeft { position: fixed; top: 50%; left: 0; text-align: right; } \
 			#AN_divRight { position: fixed; top: 15%; right: 0; text-align: left; } \
 			#AN_divLeft div { border: 0 solid gray; padding: 5px 0; } \
-			#AN_divLeftMiddle { display: none; border-width: 1px 0; } \
+			#AN_divLeftMiddle { display: none; border-width: 1px 0 !important; text-align: center; } \
 			#AN_divRight div { border-bottom: 1px solid gray; padding: 10px 5px 3px 0; } \
 			#AN_divLeft div, #AN_divRight div { width: 80px; color: gray; cursor: pointer; } \
 			#AN_divLeft div:hover, #AN_divRight div:hover { color: YellowGreen; } \
@@ -997,7 +1004,7 @@ AN.main =
 		fn: function()
 		{
 			$('#AN_divLeft')
-			.find('#AN_divLeftMiddle').show().css('border-width', '1px 0').append('<a href="/topics.aspx?type=BW">Topics</a>')
+			.find('#AN_divLeftMiddle').show().append('<a href="/topics.aspx?type=BW">Topics</a>')
 			.end().fn(function()
 			{
 				this.css('margin-top', -(this.outerHeight() / 2));
@@ -1022,6 +1029,19 @@ AN.main =
 				if($('#AN_divLeftMiddle:hidden').length) this.children(':first').css('border-bottom-width', '1px');
 				this.css('margin-top', -(this.outerHeight() / 2));
 			});
+		}
+	},
+
+	changeQuickReplyStyle:
+	{
+		disp: '改變快速回覆的風格',
+		type: 1,
+		page: ['view'],
+		defaultOn: false,
+		id: 14,
+		fn: function()
+		{
+			if(!AN.shared.isLoggedIn()) return;
 		}
 	}
 }

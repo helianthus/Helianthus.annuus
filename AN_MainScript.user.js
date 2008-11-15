@@ -1268,16 +1268,13 @@ AN.main =
 		{
 			var booHasNaturalWidth = ((new Image()).naturalWidth == 0);
 
-			$.each(AN.shared.getReplys(), function()
+			$('img[alt=Logo]')
+			.filter(function()
 			{
-				$(this).find('table:first img')
-				.filter(function()
-				{
-					if(booHasNaturalWidth) return (this.naturalWidth == 0);
-					else return !(this.complete);
-				})
-				.remove();
-			});
+				if(booHasNaturalWidth) return (this.naturalWidth == 0);
+				else return !(this.complete);
+			})
+			.parents('tr:first').remove();
 		}
 	},
 

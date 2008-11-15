@@ -146,7 +146,8 @@ AN.init.extend = function()
 
 		outer: function()
 		{
-			return $('<div />').append(this.eq(0).clone()).html();
+			if(this.get(0).outerHTML) return this.get(0).outerHTML;
+			else return $('<div />').append(this.eq(0).clone()).html();
 		},
 
 		alert: function(strToEval)
@@ -1085,7 +1086,7 @@ AN.main =
 		id: 15,
 		fn: function()
 		{
-			var regSmiley = /([#[](hehe|love|ass|sosad|good|hoho|kill|bye|adore|banghead|bouncer|bouncy|censored|flowerface|shocking|photo|fire|yipes|369|bomb|slick|no|kill2|offtopic)[]#])/g;
+			var regSmiley = /([#[](hehe|love|ass|sosad|good|hoho|kill|bye|adore|banghead|bouncer|bouncy|censored|flowerface|shocking|photo|fire|yipes|369|bomb|slick|no|kill2|offtopic)[\]#])/g;
 
 			var arrConvertMap =
 			[
@@ -1127,6 +1128,53 @@ AN.main =
 
 				$a.html(strTemp);
 			});
+		}
+	},
+
+	removeForumList:
+	{
+		disp: '移除討論區選單',
+		type: 4,
+		page: ['topics', 'search', 'newmessages'],
+		defaultOn: true,
+		id: 16,
+		fn: function()
+		{
+			$('#forum_list').parents('table:first').remove();
+		}
+	},
+
+	optimiseSearchRow:
+	{
+		disp: '優化搜尋列',
+		type: 4,
+		page: ['topics', 'search', 'newmessages'],
+		defaultOn: true,
+		id: 17,
+		fn: function()
+		{
+			$('#aspnetForm').css('margin', '0'); // for IE 7
+
+			$('#searchstring').parents('td:first').fn(function()
+			{
+				this.css('text-align', 'right').find('img').css('vertical-align', 'bottom')
+
+				if(this.find('p').length) this.html(this.find('p').html()) // topics & newmessages
+				else this.parent().next().remove(); // search
+			});
+		}
+	},
+
+	optimiseSelectBoxPosition:
+	{
+		disp: '修正下方選單位置 (IE Only)',
+		type: 4,
+		page: ['topics', 'search', 'newmessages'],
+		defaultOn: false,
+		id: 18,
+		fn: function()
+		{
+			$('#filter').css({ position: 'relative', top: '9px' });
 		}
 	}
 }

@@ -1196,6 +1196,45 @@ AN.main =
 				$(this).find('span:last').append($.sprintf(' <span class="AN_inlineBox">#%d</span>', numFloorNum++));
 			});
 		}
+	},
+
+	alertOnSuspiciousLinks:
+	{
+		disp: '提示可疑連結',
+		type: 1,
+		page: ['view'],
+		defaultOn: true,
+		id: 20,
+		fn: function()
+		{
+			AN.shared.addStyle('#AN_divAlertBox { display: none; position: absolute; background-color: white; color: red; border: 1px solid red; padding: 1px 2px; }');
+
+			$('body').append('<div id="AN_divAlertBox">test</div>');
+
+			$.each(AN.shared.getReplys(), function()
+			{
+				this.$tdContent.find('a').each(function()
+				{
+					if(this.href.match(/[?&](?:r(?:ef)?|uid)=|logout|shortlink|tinyurl|urlpire/i))
+					{
+						$(this).data('keyword', RegExp.lastMatch).hover(
+							function()
+							{
+								var $this = $(this);
+								$('#AN_divAlertBox')
+								.css({ top: ($this.offset().top - $this.height() - 10), left: $this.offset().left })
+								.text('發現可疑連結! keyword: ' + $this.data('keyword'))
+								.fadeIn();
+							},
+							function()
+							{
+								$('#AN_divAlertBox').fadeOut();
+							}
+						);
+					}
+				});
+			});
+		}
 	}
 }
 

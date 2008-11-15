@@ -1165,7 +1165,7 @@ AN.main =
 			{
 				this.css('text-align', 'right').find('img').css('vertical-align', 'bottom')
 
-				if(this.find('p').length) this.get(0).innerHTML = this.find('p').html(); // topics & newmessages // we have a problem here becoz of form id=frmSearch
+				if(this.find('p').length) this.get(0).innerHTML = this.find('p').html(); // topics & newmessages // we have a problem here on IE 7 becoz of form id=frmSearch
 				else this.parent().next().remove(); // search
 			});
 		}

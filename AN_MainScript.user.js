@@ -1255,6 +1255,43 @@ AN.main =
 			if(!AN.data.strCurPage.match(/^(?:topics|view|search|newmessages|default)$/)) return;
 			$('table,td').filter(function(){ return this.width.match(/^(?:955|937|806)$/); }).width('100%');
 		}
+	},
+
+	removeDeadAvatar:
+	{
+		disp: '移除高級會員頭像死圖',
+		type: 4,
+		page: ['view'],
+		defaultOn: true,
+		id: 22,
+		fn: function()
+		{
+			var booHasNaturalWidth = ((new Image()).naturalWidth == 0);
+
+			$.each(AN.shared.getReplys(), function()
+			{
+				$(this).find('table:first img')
+				.filter(function()
+				{
+					if(booHasNaturalWidth) return (this.naturalWidth == 0);
+					else return !(this.complete);
+				})
+				.remove();
+			});
+		}
+	},
+
+	removeMainBGTopRow:
+	{
+		disp: '移除繁簡轉換及分享這頁',
+		type: 4,
+		page: ['all'],
+		defaultOn: false,
+		id: 23,
+		fn: function()
+		{
+			$('#ctl00_TraditionalLink').parents('td:eq(1)').html('&nbsp;');
+		}
 	}
 }
 

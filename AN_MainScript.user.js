@@ -745,7 +745,7 @@ AN.main =
 		page: ['all'],
 		defaultOn: true,
 		id: 3,
-		options: { strLinkColor: { disp: '設定連結顏色(#RRGGBB)', defaultValue: '#1066d2', type: 'string' } }, // to be improved
+		options: { strLinkColor: { disp: '連結顏色(#RRGGBB)', defaultValue: '#1066d2', type: 'string' } }, // to be improved
 		fn: function()
 		{
 			var strLinkColor = AN.shared.getOption('strLinkColor');
@@ -937,9 +937,15 @@ AN.main =
 		page: ['view'],
 		defaultOn: true,
 		id: 11,
-		options: { numImageWidth: { disp: '設定圖片最大闊度', defaultValue: 600, type: 'string' } },
+		options:
+		{
+			numImageWidth: { disp: '最大闊度', defaultValue: 600, type: 'string' },
+			numMaxRatio: { disp: '最大長闊比例 (1:X)', defaultValue: 7, type: 'string' }
+		},
 		fn: function()
 		{
+			AN.shared.addStyle('.AN_spanLine { color: gray; border-bottom: 1px solid dotted }');
+
 			$window.DrawImage = function(nodImg)
 			{
 				nodImg.setAttribute('onload','');
@@ -963,11 +969,11 @@ AN.main =
 
 				if(imgTemp.width > 99) nodImg.style.display = 'block';
 
-				if(imgTemp.height / imgTemp.width > 7)
+				if(imgTemp.height / imgTemp.width > AN.shared.getOption('numMaxRatio'))
 				{
 					nodImg.width = 30;
 					nodImg.height = 30;
-					nodImg.title = '[AN] 金鋼棒已被壓成廢鐵!';
+					$(nodImg).parent().after($.sprintf('<span class="AN_spanLine">圖片長闊比例 &gt; %d, 金鋼棒已被壓成廢鐵!</span>', AN.shared.getOption('numMaxRatio')));
 					return;
 				}
 				else if(imgTemp.width <= numMaxWidth) // && imgTemp.height <= numMaxHeight)

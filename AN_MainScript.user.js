@@ -944,7 +944,7 @@ AN.main =
 		},
 		fn: function()
 		{
-			AN.shared.addStyle('.AN_spanLine { color: gray; border-bottom: 1px solid dotted }');
+			AN.shared.addStyle('.AN_spanLine { color: gray; border-bottom: 1px solid dotted; }');
 
 			$window.DrawImage = function(nodImg)
 			{
@@ -1288,6 +1288,22 @@ AN.main =
 		fn: function()
 		{
 			$('#ctl00_TraditionalLink').parents('td:eq(1)').html('&nbsp;');
+		}
+	},
+
+	forceLineBreak:
+	{
+		disp: '強制換行',
+		type: 1,
+		page: ['view'],
+		defaultOn: true,
+		id: 24,
+		fn: function()
+		{
+			$.each(AN.shared.getReplys(), function()
+			{
+				this.$tdContent.css({ wordWrap: 'break-word', overflow: 'hidden' }).parents('table:first').css('table-layout', 'fixed');
+			});
 		}
 	}
 }

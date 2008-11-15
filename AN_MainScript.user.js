@@ -398,7 +398,7 @@ AN.shared =
 			{
 				strUserId: $(this).find('a:first').attr('href').replace(/^[^=]+=/, ''),
 				strUserName: $(this).find('a:first').html(),
-				$tdContent: $(this).find('table:eq(1) td:first')
+				$tdContent: $(this).find('table:last td:first')
 			}
 			AN.data.arrReplys.push(objReply);
 		});
@@ -1147,7 +1147,7 @@ AN.main =
 	optimiseSearchRow:
 	{
 		disp: '優化搜尋列',
-		type: 4,
+		type: 2,
 		page: ['topics', 'search', 'newmessages'],
 		defaultOn: true,
 		id: 17,
@@ -1168,13 +1168,33 @@ AN.main =
 	optimiseSelectBoxPosition:
 	{
 		disp: '修正下方選單位置 (IE Only)',
-		type: 4,
+		type: 2,
 		page: ['topics', 'search', 'newmessages'],
 		defaultOn: false,
 		id: 18,
 		fn: function()
 		{
 			$('#filter').css({ position: 'relative', top: '9px' });
+		}
+	},
+
+	addFloorNumber:
+	{
+		disp: '加入樓層編號',
+		type: 3,
+		page: ['view'],
+		defaultOn: true,
+		id: 19,
+		fn: function()
+		{
+			AN.shared.addStyle('.AN_inlineBox { display: inline-block; color: gray; border: 1px solid gray; padding: 1px 2px; }');
+
+			var numPageNum = (location.search.match(/page=\d+/i)) ? Number(RegExp.lastMatch.replace(/page=/i,'')) : 1;
+			var numFloorNum = (numPageNum == 1) ? 0 : 50 * (numPageNum - 1) + 1;
+			$('.repliers').each(function()
+			{
+				$(this).find('span:last').append($.sprintf(' <span class="AN_inlineBox">#%d</span>', numFloorNum++));
+			});
 		}
 	}
 }

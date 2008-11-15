@@ -1165,7 +1165,7 @@ AN.main =
 			{
 				this.css('text-align', 'right').find('img').css('vertical-align', 'bottom')
 
-				if(this.find('p').length) this.html(this.find('p').html()) // topics & newmessages
+				if(this.find('p').length) this.get(0).innerHTML = this.find('p').html(); // topics & newmessages // we have a problem here becoz of form id=frmSearch
 				else this.parent().next().remove(); // search
 			});
 		}
@@ -1240,6 +1240,20 @@ AN.main =
 					}
 				});
 			});
+		}
+	},
+
+	enableWideScreen:
+	{
+		disp: '拉闊頁面',
+		type: 1,
+		page: ['all'],
+		defaultOn: false,
+		id: 21,
+		fn: function()
+		{
+			if(!AN.data.strCurPage.match(/^(?:topics|view|search|newmessages|default)$/)) return;
+			$('table,td').filter(function(){ return this.width.match(/^(?:955|937|806)$/); }).width('100%');
 		}
 	}
 }

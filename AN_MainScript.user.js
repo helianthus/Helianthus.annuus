@@ -728,8 +728,8 @@ AN.main =
 		{
 			$('td').each(function()
 			{
-				if($(this).html() == '最近刊登的文章')
-				//if($(this).css('fontWeight') == 'bold' && $(this).css('fontSize') == '8pt')
+				//if($(this).html() == '最近刊登的文章')
+				if($(this).css('fontWeight') == 'bold' && $(this).css('fontSize') == '8pt')
 				{
 					$(this).parents('tr:eq(1)').remove();
 					return false; // break;

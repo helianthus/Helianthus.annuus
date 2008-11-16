@@ -20,6 +20,7 @@
 // @namespace http://forum.hkgolden.com/
 // @description version 2.x.x_alpha by 向日
 // @include http://forum*.hkgolden.com/*
+// @require http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js
 // ==/UserScript==
 
 /*	Some notes for developers:
@@ -31,28 +32,9 @@
  *
  */
 
-/////////////////// START OF - [Main Object Declaration] ///////////////////
-
-// Will be merged with Initialization section
-var $window, AN;
-
-if(typeof unsafeWindow != 'undefined')
-{
-	$window = unsafeWindow;
-	AN = unsafeWindow.AN = {};
-}
-else
-{
-	$window = window;
-	AN = {};
-}
-
-AN.init = {};
-
-/////////////////// END OF - [Main Object Declaration] ///////////////////
 /////////////////// START OF - [jQuery] ///////////////////
 
-// The code in this section will be changed into the content of jQuery once this project becomes stable
+/*
 (function()
 {
 	var nodScript = document.createElement('script');
@@ -60,17 +42,29 @@ AN.init = {};
 	nodScript.src = 'http://jqueryjs.googlecode.com/files/jquery-1.2.6.pack.js';
 	document.documentElement.firstChild.appendChild(nodScript);
 })();
+*/
+
+AN = { init: {} };
 
 (function()
 {
-	if(!$window.$) return setTimeout(arguments.callee, 500);;
+	if(typeof jQuery == 'undefined')
+	{
+		return setTimeout(arguments.callee, 500);
+	}
 
 	if(typeof unsafeWindow != 'undefined')
 	{
-		$ = unsafeWindow.$;
-		AN.init.addPlugins();
+		$window = unsafeWindow;
+		$window.$ = jQuery;
+		$window.AN = AN;
 	}
-	else $(AN.init.addPlugins);
+	else
+	{
+		$window = window;
+	}
+
+	$(function(){ AN.init.addPlugins() });
 })();
 
 /////////////////// END OF - [jQuery] ///////////////////
@@ -226,6 +220,64 @@ AN.init.extend = function()
 }
 
 /////////////////// END OF - [jQuery Extension] ///////////////////
+/////////////////// START OF - [Initialization] ///////////////////
+
+AN.init.start = function()
+{
+	AN.data =
+	{
+		settings1: $.convertObj(AN.util.cookie('AN_settings1')) || {},
+		settings2: $.convertObj(AN.util.cookie('AN_settings2')) || {},
+		strCurPage: ($('#aspnetForm').get(0)) ? $('#aspnetForm').attr('action').match(/[^.]+/).toString().toLowerCase() : 'special'
+	}
+
+	// Seperate settings getting & execution into two operations because one option could be used by more than one function
+	$.each(AN.main, function()
+	{
+		for(var i in this.page)
+		{
+			if(AN.data.settings1[this.page[i] + this.id] === undefined)
+			{
+				AN.data.settings1[this.page[i] + this.id] = this.defaultOn;
+			}
+		}
+
+		if(!this.options) return; // continue
+
+		$.each(this.options, function(strOptionName)
+		{
+			if(AN.data.settings2[strOptionName] === undefined)
+			{
+				AN.data.settings2[strOptionName] = this.defaultValue;
+			}
+		});
+	});
+
+	$.each(AN.comp, function()
+	{
+		if(this.page[0] == 'all' || $.inArray(AN.data.strCurPage, this.page) != -1)
+		{
+			this.fn();
+		}
+	});
+
+	AN.data.benchmark = [];
+
+	$.each(AN.main, function()
+	{
+		if(this.page[0] == 'all' || $.inArray(AN.data.strCurPage, this.page) != -1)
+		{
+			if(AN.data.settings1['all' + this.id] || AN.data.settings1[AN.data.strCurPage + this.id])
+			{
+				var numTime = $.time();
+				this.fn.call(this);
+				AN.data.benchmark.push($.sprintf('\n%s: %d ms', this.disp, ($.time() - numTime)));
+			}
+		}
+	});
+}
+
+/////////////////// END OF - [Initialization] ///////////////////
 /////////////////// START OF - [Utility Functions] ///////////////////
 
 AN.util =
@@ -296,64 +348,6 @@ AN.util =
 }
 
 /////////////////// END OF - [Utility Functions] ///////////////////
-/////////////////// START OF - [Initialization] ///////////////////
-
-AN.init.start = function()
-{
-	AN.data =
-	{
-		settings1: $.convertObj(AN.util.cookie('AN_settings1')) || {},
-		settings2: $.convertObj(AN.util.cookie('AN_settings2')) || {},
-		strCurPage: ($('#aspnetForm').get(0)) ? $('#aspnetForm').attr('action').match(/[^.]+/).toString().toLowerCase() : 'special'
-	}
-
-	// Seperate settings getting & execution into two operations because one option could be used by more than one function
-	$.each(AN.main, function()
-	{
-		for(var i in this.page)
-		{
-			if(AN.data.settings1[this.page[i] + this.id] === undefined)
-			{
-				AN.data.settings1[this.page[i] + this.id] = this.defaultOn;
-			}
-		}
-
-		if(!this.options) return; // continue
-
-		$.each(this.options, function(strOptionName)
-		{
-			if(AN.data.settings2[strOptionName] === undefined)
-			{
-				AN.data.settings2[strOptionName] = this.defaultValue;
-			}
-		});
-	});
-
-	$.each(AN.comp, function()
-	{
-		if(this.page[0] == 'all' || $.inArray(AN.data.strCurPage, this.page) != -1)
-		{
-			this.fn();
-		}
-	});
-
-	AN.data.benchmark = [];
-
-	$.each(AN.main, function()
-	{
-		if(this.page[0] == 'all' || $.inArray(AN.data.strCurPage, this.page) != -1)
-		{
-			if(AN.data.settings1['all' + this.id] || AN.data.settings1[AN.data.strCurPage + this.id])
-			{
-				var numTime = $.time();
-				this.fn.call(this);
-				AN.data.benchmark.push($.sprintf('\n%s: %d ms', this.disp, ($.time() - numTime)));
-			}
-		}
-	});
-}
-
-/////////////////// END OF - [Initialization] ///////////////////
 /////////////////// START OF - [Shared Functions] ///////////////////
 
 AN.shared =
@@ -940,7 +934,7 @@ AN.main =
 		options:
 		{
 			numImageWidth: { disp: '最大闊度', defaultValue: 600, type: 'string' },
-			numMaxRatio: { disp: '最大長闊比例 (1:X)', defaultValue: 7, type: 'string' }
+			numMaxRatio: { disp: '最大長闊比例(1:X)', defaultValue: 7, type: 'string' }
 		},
 		fn: function()
 		{

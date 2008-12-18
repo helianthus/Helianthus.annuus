@@ -56,6 +56,16 @@ AN.init.collectData = function()
 	AN.data.settings1 = $.convertObj(AN.util.cookie('AN_settings1')) || {};
 	AN.data.settings2 = $.convertObj(AN.util.cookie('AN_settings2')) || {};
 
+	var oData = $.convertObj(AN.util.cookie('AN_data'));
+	if(oData)
+	{
+		$.each(oData, function(sName)
+		{
+			if(this == 'undefined') delete oData[sName];
+		});
+		AN.util.cookie('AN_data', oData);
+	}
+
 	$.each(AN.main, function()
 	{
 		for(var i in this.page)
@@ -493,7 +503,7 @@ AN.comp =
 						{
 							if(!this.type || this.type == 'boolean')
 							{
-								var strSwitchId = 'AN_switch_' + strFnId;
+								var strSwitchId = 'AN_switch_' + strPageName + strFnId;
 								var strChecked = (AN.data.settings1[strPageName + strFnId]) ? 'checked="checked"' : '';
 								var sDisabled = (this.disabled) ? 'disabled="disabled"' : '';
 								arrDivHTML.push($.sprintf('<li><input class="AN_switch" type="checkbox" id="%s" %s %s />', strSwitchId, strChecked, sDisabled));
@@ -580,11 +590,9 @@ AN.comp =
 
 					$('#AN_divAccordion > div').each(function()
 					{
-						var strPageId = this.id.replace(/AN_div_/, '');
-
 						$.each($(this).find('.AN_switch'), function()
 						{
-							objSettings1[strPageId + this.id.replace('AN_switch_', '')] = (this.checked) ? 1 : 0;
+							objSettings1[this.id.replace('AN_switch_', '')] = (this.checked) ? 1 : 0;
 						});
 					});
 					AN.util.cookie('AN_settings1', objSettings1);
@@ -1026,6 +1034,7 @@ AN.main =
 	removeRedHotRanking:
 	{
 		disp: '移除紅人榜',
+		disabled: true,
 		type: 4,
 		page: ['topics'],
 		defaultOn: false,
@@ -2165,6 +2174,20 @@ AN.main =
 		infinite: function()
 		{
 			this.find('img[alt=Logo]').remove();
+		}
+	},
+
+	changeUpperLogo:
+	{
+		disp: '更換Logo',
+		type: 1,
+		page: ['all'],
+		defaultOn: false,
+		id: 43,
+		options: { sLogoSrc: { disp: '圖片網址', defaultValue: 'http:\/\/i3.6.cn/cvbnm/93/04/af/f1cb3700665e79e2d73a6392b585ef19.jpg', type: 'string' } },
+		once: function()
+		{
+			$('#ctl00_TopBarHomeImage').attr('src', AN.shared.getOption('sLogoSrc'));
 		}
 	}
 }

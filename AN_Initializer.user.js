@@ -31,7 +31,7 @@ AN = { init: {}, func: {} };
 {
 	if(typeof jQuery == 'undefined')
 	{
-		return setTimeout(arguments.callee, 500);
+		return setTimeout(arguments.callee, 50);
 	}
 
 	if(typeof unsafeWindow != 'undefined')

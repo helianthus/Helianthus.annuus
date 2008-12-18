@@ -42,7 +42,7 @@ if(typeof unsafeWindow != 'undefined')
 
 (function()
 {
-	if(!AN.data) return setTimeout(arguments.callee, 500);
+	if(!AN.data) return setTimeout(arguments.callee, 50);
 	AN.data.jCache = {};
 	AN.init.collectData();
 	AN.init.execFunc(true);

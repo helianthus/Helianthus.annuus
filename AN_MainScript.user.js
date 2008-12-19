@@ -1137,7 +1137,8 @@ AN.main =
 
 			AN.func.toggleQuote = function(oData)
 			{
-				var bOuterOnly = (oData.bOuterOnly === undefined) ? (oData.jTarget.html() == '+') : oData.bOuterOnly;
+				var bOuterOnly = (oData.bOuterOnly === undefined) ? (oData.jTarget.html() == '-') : oData.bOuterOnly;
+
 				if(bOuterOnly)
 				{
 					oData.jTarget.each(function()
@@ -1202,7 +1203,7 @@ AN.main =
 					break;
 				}
 
-				$quote.prepend('<div class="AN_quoteHeader"><span>引用:</span><span style="text-align:right"><b style="Toggle this" onclick="AN.func.toggleQuote($(\'this\'))">-</b></span>');
+			$quote.prepend('<div class="AN_quoteHeader"><span>引用:</span><span style="text-align:right"><b style="Toggle this" onclick="AN.func.toggleQuote({ jTarget: $(this) })">-</b></span>');
 
 				if(!$quote.find('blockquote').length) // innermost or single-layer
 				{

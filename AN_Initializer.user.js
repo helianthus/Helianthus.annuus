@@ -157,7 +157,7 @@ AN.init.extend = function()
 				var arrTemp = [];
 				$.each(objToConvert, function(strObjName, strValue)
 				{
-					arrTemp.push(strObjName + '::=' + strValue);
+					if(strValue !== undefined) arrTemp.push(strObjName + '::=' + strValue);
 				});
 				return arrTemp;
 			}

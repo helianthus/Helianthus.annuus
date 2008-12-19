@@ -43,7 +43,6 @@ if(typeof unsafeWindow != 'undefined')
 (function()
 {
 	if(!AN.data) return setTimeout(arguments.callee, 50);
-	AN.data.jCache = {};
 	AN.init.collectData();
 	AN.init.execFunc(true);
 })();
@@ -55,16 +54,6 @@ AN.init.collectData = function()
 {
 	AN.data.settings1 = $.convertObj(AN.util.cookie('AN_settings1')) || {};
 	AN.data.settings2 = $.convertObj(AN.util.cookie('AN_settings2')) || {};
-
-	var oData = $.convertObj(AN.util.cookie('AN_data'));
-	if(oData)
-	{
-		$.each(oData, function(sName)
-		{
-			if(this == 'undefined') delete oData[sName];
-		});
-		AN.util.cookie('AN_data', oData);
-	}
 
 	$.each(AN.main, function()
 	{
@@ -93,6 +82,16 @@ AN.init.collectData = function()
 		{
 			AN.data.settings1['other' + this.id] = this.defaultOn;
 		}
+
+		if(!this.options) return; // continue
+
+		$.each(this.options, function(strOptionName)
+		{
+			if(AN.data.settings2[strOptionName] === undefined)
+			{
+				AN.data.settings2[strOptionName] = this.defaultValue;
+			}
+		});
 	});
 }
 
@@ -126,7 +125,6 @@ AN.init.execFunc = function(booIsFirstTime, jDoc)
 			{
 				try
 				{
-					AN.shared.debug('excuting ' + this.disp);
 					var numTime = $.time();
 					if(booIsFirstTime && this.once) this.once();
 					if(this.infinite) this.infinite.call(AN.temp.jDoc);
@@ -200,7 +198,7 @@ AN.shared =
 
 		AN.temp.arrReplys = [];
 
-		AN.temp.jDoc.find('.repliers')
+		AN.temp.jDoc.find('.repliers').add(AN.temp.jDoc.filter('.repliers'))
 		.each(function()
 		{
 			var $this = $(this), $a = $this.find('a:first');
@@ -287,7 +285,6 @@ AN.shared =
 			$.get('/view.aspx?message=' + $window.messageid, function(strHTML)
 			{
 				var $html = $(strHTML);
-				AN.data.jCache[1] = $html;
 				var $a = $html.find('.repliers:first a:first');
 				AN.data.openerInfo = { sId: $a.attr('href').replace(/^[^=]+=/, ''), sName: $a.html() };
 				fToExec(AN.data.openerInfo);
@@ -685,9 +682,9 @@ AN.comp =
 				$('<div>' + strLog + '</div>').prependTo('#AN_divLogContent').slideDown('slow');
 			}
 
-			AN.shared.debug = function(strLog)
+			AN.shared.log2 = function(strLog)
 			{
-				if(AN.data.settings1.other2) AN.shared.log('debug: ' + strLog);
+				if(AN.shared.getOption('bDetailedLog')) AN.shared.log(strLog);
 			}
 
 			$.fn.debug = function(strToEval)
@@ -792,16 +789,11 @@ AN.settings =
 		disp: '自動顯示記錄視窗 (log)',
 		type: 'boolean',
 		defaultOn: true,
-		id: 1
+		id: 1,
+		options: { bDetailedLog: { disp: '顯示詳細記錄', defaultValue: true, type: 'boolean' } }
 	},
 
-	enableDebugLog:
-	{
-		disp: '顯示除錯資訊 (developer專用)',
-		type: 'boolean',
-		defaultOn: false,
-		id: 2
-	},
+	// id 2 is empty
 
 	importSettings1:
 	{
@@ -1131,30 +1123,42 @@ AN.main =
 		options: { booOuterOnly: { disp: '只顯示最外層的引用', defaultValue: true, type: 'boolean' } },
 		once: function()
 		{
+			AN.data.bOuterOnly = {};
+
 			$('<div id="AN_divToggleAllQuotes">Toggle Outer Quotes</div>').appendTo('#AN_divTopLeft').click(function()
 			{
-				$('.AN_bOutermost').each(function(){ AN.func.toggleQuote({ nodB: this, booShow: AN.data.bShowQuotes }) });
-				AN.data.bToShow = !AN.data.bToShow;
+				var nCurPageNo = AN.shared.getCurPageNo();
+				var bOuterOnly = !AN.data.bOuterOnly[nCurPageNo]
+
+				AN.data.bOuterOnly[nCurPageNo] = bOuterOnly;
+
+				AN.func.toggleQuote({ jTarget: $('.AN_bOutermost'), bOuterOnly: bOuterOnly });
 			});
 
-			AN.func.toggleQuote = function(objData)
+			AN.func.toggleQuote = function(oData)
 			{
-				$b = $(objData.nodB);
-				var $divToToggle = $b.parents('blockquote:first').children('div:last').children('blockquote');
-
-				var booShow = (objData.booShow === undefined) ? ($b.html() == '+') : objData.booShow;
-
-				if(booShow)
+				var bOuterOnly = (oData.bOuterOnly === undefined) ? (oData.jTarget.html() == '+') : oData.bOuterOnly;
+				if(bOuterOnly)
 				{
-					$divToToggle.show();
-					$b.html('-');
-					$b.parents('div:first').css('marginBottom', '2px');
+					oData.jTarget.each(function()
+					{
+						$(this)
+						.html('+')
+						.parents('div:first').css('marginBottom', '5px')
+						.end()
+						.parents('blockquote:first').children('div:last').children('blockquote').hide();
+					});
 				}
 				else
 				{
-					$divToToggle.hide();
-					$b.html('+');
-					$b.parents('div:first').css('marginBottom', '5px');
+					oData.jTarget.each(function()
+					{
+						$(this)
+						.html('-')
+						.parents('div:first').css('marginBottom', '2px')
+						.end()
+						.parents('blockquote:first').children('div:last').children('blockquote').show();
+					});
 				}
 			}
 
@@ -1198,7 +1202,7 @@ AN.main =
 					break;
 				}
 
-				$quote.prepend('<div class="AN_quoteHeader"><span>引用:</span><span style="text-align:right"><b style="Toggle this" onclick="AN.func.toggleQuote({nodB:this})">-</b></span>');
+				$quote.prepend('<div class="AN_quoteHeader"><span>引用:</span><span style="text-align:right"><b style="Toggle this" onclick="AN.func.toggleQuote($(\'this\'))">-</b></span>');
 
 				if(!$quote.find('blockquote').length) // innermost or single-layer
 				{
@@ -1211,12 +1215,12 @@ AN.main =
 				}
 			});
 
-			if(AN.shared.getOption('booOuterOnly'))
+			var nCurPageNo = AN.shared.getCurPageNo();
+			if(AN.data.bOuterOnly[nCurPageNo] === undefined)
 			{
-				$('.AN_bOutermost').each(function(){ AN.func.toggleQuote({ nodB: this, booShow: false }) });
-				AN.data.bToShow = true;
+				AN.data.bOuterOnly[nCurPageNo] = AN.shared.getOption('booOuterOnly');
+				if(AN.data.bOuterOnly[nCurPageNo]) AN.func.toggleQuote({ jTarget: $('.AN_bOutermost'), bOuterOnly: true });
 			}
-			else AN.data.bToShow = false;
 		}
 	},
 
@@ -1510,11 +1514,18 @@ AN.main =
 		id: 19,
 		infinite: function()
 		{
-			var numPageNo = AN.shared.getCurPageNo();
-			var numFloorNum = (numPageNo == 1) ? 0 : 50 * (numPageNo - 1) + 1;
+			var nCurPageNo = AN.shared.getCurPageNo();
+			if(!AN.data.oFloor || AN.data.oFloor.nPageNo != nCurPageNo)
+			{
+				AN.data.oFloor =
+				{
+					nPageNo: nCurPageNo,
+					nFloorNo: (nCurPageNo == 1) ? 0 : 50 * (nCurPageNo - 1) + 1
+				}
+			}
 			$.each(AN.shared.getReplies(), function()
 			{
-				this.$repliers.find('span:last').append($.sprintf(' <span class="AN_spanBox">#%s</span>', numFloorNum++));
+				this.$repliers.find('span:last').append($.sprintf(' <span class="AN_spanBox">#%s</span>', AN.data.oFloor.nFloorNo++));
 			});
 		}
 	},
@@ -1707,7 +1718,7 @@ AN.main =
 
 	ajaxifyPageLoading:
 	{
-		disp: 'Ajax化頁面讀取 (freeze on FF!)',
+		disp: 'Ajax化頁面讀取',
 		type: 1,
 		page: ['view'],
 		defaultOn: false,
@@ -1715,51 +1726,13 @@ AN.main =
 		options: { booShowPageNo: { disp: '顯示資料: 本頁頁數', defaultValue: true, type: 'boolean' } },
 		once: function()
 		{
-			AN.func.changeReplies = function($html, numPageNo)
+			AN.func.updatePageBox = function(jDoc)
 			{
-				AN.data.jPages[numPageNo] = $('<div />').append($html.find('select[name=page]:first').parents('table:eq(2)').prev().nextAll('table'));
-				AN.data.jPages[AN.shared.getCurPageNo()].after(AN.data.jPages[numPageNo]).remove();
-				AN.init.execFunc(false);
-			}
-
-			AN.func.afterPageChanging = function(numCurPageNo)
-			{
-				$('#AN_spanCurPage').attr('href', AN.shared.getURL(numCurPageNo)).html(numCurPageNo);
-				AN.func.addEvents();
-				scrollTo(0,0);
-				AN.shared.log($.sprintf('Successfully changed to page %s.', numCurPageNo));
-				clearTimeout(AN.data.timeGetPage);
-				AN.data.timeGetPage = setTimeout(function(){ AN.func.getPage(); }, 30000);
-			}
-
-			AN.func.goToPage = function(event, numPageNo)
-			{
-				event.preventDefault();
-
-				AN.shared.log($.sprintf('Changing to page %s, please wait...', numPageNo));
-
-				if(!AN.data.jPages[numPageNo])
+				var jPageBox = jDoc.find('select[name=page]').parents('tr:first');
+				$('select[name=page]').each(function()
 				{
-					if(AN.data.jCache[numPageNo])
-					{
-						AN.func.changeReplies(AN.data.jCache[numPageNo], numPageNo);
-						//AN.data.jCache[numPageNo] = null;
-						AN.func.afterPageChanging(numPageNo);
-					}
-					else
-					{
-						$.get(AN.shared.getURL(numPageNo), function(strHTML)
-						{
-							AN.func.changeReplies($(strHTML), numPageNo);
-							AN.func.afterPageChanging(numPageNo);
-						});
-					}
-				}
-				else
-				{
-					AN.data.jPages[AN.shared.getCurPageNo()].after(AN.data.jPages[numPageNo]).remove();
-					AN.func.afterPageChanging(numPageNo);
-				}
+					$(this).parents('tr:first').replaceWith(jPageBox.clone());
+				});
 			}
 
 			$window.changePage = function(){};
@@ -1775,83 +1748,170 @@ AN.main =
 					$(this).change(function(event)
 					{
 						var numSelected = Number($(this).children(':selected').val());
-						var numCurPageNo = $('select[name=page]').not(this).children(':selected').val();
-						$(this).children().eq(numCurPageNo - 1).attr('selected', true);
 						AN.func.goToPage(event, numSelected);
 					});
 				});
 			}
 
-			/// cacheNextPage & autoAddReplies ///
-			AN.func.getPage = function()
+			AN.func.goToPage = function(event, nPageNo)
 			{
-				var numCurPageNo = AN.shared.getCurPageNo();
-				var booHasNextPage = $('select[name=page]:first :selected').next().length;
+				clearTimeout(AN.data.tGetPage);
+				AN.shared.log2($.sprintf('Changing to page %s, please wait...', nPageNo));
+				event.preventDefault();
 
-				if(!booHasNextPage)
+				$.get(AN.shared.getURL(nPageNo), function(sHTML)
 				{
-					if(numCurPageNo == 21) return; // 1001
+					var jDoc = $(sHTML);
+					var sNewStrong = jDoc.find('strong:first').text();
+
+					var changeReplies = function()
+					{
+						var nCurPageNo = AN.shared.getCurPageNo();
+						$('.repliers').each(function(i)
+						{
+							if(i == 0 && nCurPageNo == 1) $(this).remove();
+							else $(this).next().andSelf().remove();
+						});
+
+						var jCurStrong = $('strong:first');
+						var jReplies = AN.data.jReplies[nPageNo];
+
+						if(nPageNo == 1)
+						{
+							jCurStrong.parents('table:first').before(jReplies.eq(0));
+							jReplies.filter(':gt(0)').each(function()
+							{
+								AN.data.jEndTable.before(this).before(AN.data.jEmptyTable.clone());
+							});
+						}
+						else
+						{
+							jReplies.each(function()
+							{
+								AN.data.jEndTable.before(this).before(AN.data.jEmptyTable.clone());
+							});
+						}
+
+						jCurStrong.text(sNewStrong);
+
+						AN.func.updatePageBox(jDoc);
+
+						$('select[name=page]').each(function()
+						{
+							$(this).children().eq(nPageNo - 1).attr('selected', true);
+						});
+					}
+
+					var afterPageChanging = function()
+					{
+						$('#AN_spanCurPage').attr('href', AN.shared.getURL(nPageNo)).html(nPageNo);
+						AN.func.addEvents();
+						scrollTo(0,0);
+						AN.shared.log2($.sprintf('Successfully changed to page %s.', nPageNo));
+
+						if(Math.ceil(sNewStrong / 50) == nPageNo) AN.func.getPage();
+						else AN.data.tGetPage = setTimeout(function(){ AN.func.getPage(); }, 30000);
+					}
+
+					if(!AN.data.jReplies[nPageNo])
+					{
+						AN.data.jReplies[nPageNo] = jDoc.find('.repliers');
+						changeReplies();
+						AN.init.execFunc(false, AN.data.jReplies[nPageNo].add(AN.data.aPageBoxes));
+					}
+					else
+					{
+						changeReplies();
+						AN.init.execFunc(false, $(AN.data.aPageBoxes));
+					}
+					afterPageChanging();
+				});
+			}
+
+			AN.func.getPage = function(bIsManual)
+			{
+				var nCurPageNo = AN.shared.getCurPageNo();
+
+				if(!$('select[name=page]:first :selected').next().length)
+				{
+					if(nCurPageNo == 21) return; // 1001
 
 					AN.shared.log('Querying lastest replies...');
-					$.get(AN.shared.getURL(numCurPageNo), function(strHTML)
+					$.get(AN.shared.getURL(nCurPageNo), function(sHTML)
 					{
 						var
-						$html = $(strHTML),
-						numRepliesLength = $('.repliers').length,
-						booIsRepliesMax = (numCurPageNo == 1) ? (numRepliesLength == 51) : (numRepliesLength == 50),
-						$select = $html.find('select[name=page]:first'),
-						booHasNextPage_new = $select.find(':selected').next().length;
+						nRepliesLength = $('.repliers').length,
+						bIsRepliesMax = (nCurPageNo == 1) ? (nRepliesLength == 51) : (nRepliesLength == 50),
+						sCurStrong = $('strong:first').text(),
 
-						if($html.find('strong:first').text() != $('strong:first').text() || (booIsRepliesMax && booHasNextPage_new))
+						jDoc = $(sHTML),
+						sNewStrong = jDoc.find('strong:first').text()
+
+						if(sCurStrong != sNewStrong)
 						{
-							var $temp = $('<div />').append($select.parents('table:eq(2)').prev().nextAll('table'));
-							AN.data.jPages[numCurPageNo].after($temp).remove();
-							AN.data.jPages[numCurPageNo] = $temp;
+							$('strong:first').text(sNewStrong);
 
-							AN.init.execFunc(false);
-							AN.func.addEvents();
-
-							if(booHasNextPage_new)
+							if(!bIsRepliesMax)
 							{
-								if(!booIsRepliesMax) AN.shared.log('New reply(s) added.');
-								AN.shared.log('Found next page, page links added.');
+								var jReplies = jDoc.find('.repliers');
+								AN.data.jReplies[nCurPageNo] = jReplies;
+
+								var jNewReplies = jReplies.filter(':gt(' + (nRepliesLength - 1) + ')')
+
+								jNewReplies.each(function()
+								{
+									AN.data.jEndTable.before(this).before(AN.data.jEmptyTable.clone());
+								});
+
+								AN.init.execFunc(false, jNewReplies.add(AN.data.aPageBoxes));
+
+								AN.shared.log('New reply(s) added.');
+							}
+							if(Math.ceil(sNewStrong / 50) > Math.ceil(sCurStrong / 50))
+							{
+								AN.func.updatePageBox(jDoc);
+								AN.shared.log('Found next page, page boxes updated.');
 								return;
 							}
-							else AN.shared.log('New reply(s) added, query again in 30s...');
 						}
-						else if(booIsRepliesMax) AN.shared.log('Next page not found, query again in 30s...');
-						else AN.shared.log('No new replies, query again in 30s...');
-
-						clearTimeout(AN.data.timeGetPage);
-						AN.data.timeGetPage = setTimeout(function(){ AN.func.getPage(); }, 30000);
+						else
+						{
+							AN.shared.log2('No new replies.');
+						}
+						AN.shared.log2('Query again in 30s...');
+						AN.data.tGetPage = setTimeout(function(){ AN.func.getPage(); }, 30000);
 					});
 				}
 				else
 				{
-					var numPageToGet = numCurPageNo + 1;
-
-					if(AN.data.jPages[numPageToGet] || AN.data.jCache[numPageToGet]) return AN.shared.log('Next page is already in cache, no caching needed.');
-					AN.shared.log('Querying next page for caching...');
-					$.get(AN.shared.getURL(numPageToGet), function(strHTML)
-					{
-						AN.data.jCache[numPageToGet] = $(strHTML);
-						AN.shared.log($.sprintf('Next page (%s) is cached.', numPageToGet));
-					});
+					if(bIsManual) AN.shared.log('Refresh is not needed.');
 				}
 			}
 
-			var numCurPageNo = AN.shared.getCurPageNo();
 			$.ajaxSetup({ cache: false });
-			AN.data.jPages = {};
-			AN.data.jPages[numCurPageNo] = $('select[name=page]:first').parents('table:eq(2)').prev().nextAll('table').wrapAll('<div />').parent();
+
+			var nCurPageNo = AN.shared.getCurPageNo();
+			var jReplies = $('.repliers');
+
+			AN.data.jReplies = {};
+			AN.data.jEmptyTable = $('<table><tr><td></td></tr></table>');
+			AN.data.jReplies[nCurPageNo] = jReplies;
+			AN.data.jEndTable = jReplies.filter(':last').next().next();
+			AN.data.aPageBoxes = [];
+			$('select[name=page]').each(function()
+			{
+				AN.data.aPageBoxes.push($(this).parents('table:first').get(0));
+			});
+
 			AN.func.addEvents();
-			AN.data.timeGetPage = setTimeout(function(){ AN.func.getPage(); }, 30000);
-			if(AN.shared.getOption('booShowPageNo')) AN.shared.addInfo($.sprintf('Page: <a id="AN_spanCurPage" href="%s">%s</a>', location.href, numCurPageNo));
+			AN.data.tGetPage = setTimeout(function(){ AN.func.getPage(); }, 30000);
+
+			if(AN.shared.getOption('booShowPageNo')) AN.shared.addInfo($.sprintf('Page: <a id="AN_spanCurPage" href="%s">%s</a>', location.href, nCurPageNo));
 
 			$('<div id="AN_divAjaxRefresh">Refresh Now</div>').appendTo('#AN_divTopLeft').click(function()
 			{
-				clearTimeout(AN.data.timeGetPage);
-				AN.func.getPage();
+				clearTimeout(AN.data.tGetPage);
+				AN.func.getPage(true);
 			});
 		}
 	},
@@ -2091,7 +2151,7 @@ AN.main =
 				AN.shared.blockScreen(true);
 
 				$('#AN_divAjaxRefresh').remove();
-				clearTimeout(AN.data.timeGetPage);
+				clearTimeout(AN.data.tGetPage);
 
 				$(this).remove();
 
@@ -2135,21 +2195,11 @@ AN.main =
 						AN.init.execFunc(false);
 						AN.shared.blockScreen();
 					}
-					else if(AN.data.jCache[nPageNo])
-					{
-						AN.data.jCache[nPageNo].find('.repliers').each(function()
-						{
-							if($(this).find('a:first').html() == oInfo.sName) aReplies.push($(this).clone());
-						});
-						nPageNo++;
-						fSearch();
-					}
 					else
 					{
 						$.get(AN.shared.getURL(nPageNo), function(sHTML)
 						{
-							AN.data.jCache[nPageNo] = $(sHTML);
-							AN.data.jCache[nPageNo].find('.repliers').each(function()
+							$(sHTML).find('.repliers').each(function()
 							{
 								if($(this).find('a:first').html() == sName) aReplies.push($(this).clone());
 							});
@@ -2177,17 +2227,41 @@ AN.main =
 		}
 	},
 
-	changeUpperLogo:
+	changeLogo:
 	{
 		disp: '更換Logo',
 		type: 1,
 		page: ['all'],
 		defaultOn: false,
 		id: 43,
-		options: { sLogoSrc: { disp: '圖片網址', defaultValue: 'http:\/\/i3.6.cn/cvbnm/93/04/af/f1cb3700665e79e2d73a6392b585ef19.jpg', type: 'string' } },
+		options: { sLogoSrc: { disp: '圖片網址', defaultValue: 'http:\//i3.6.cn/cvbnm/93/04/af/f1cb3700665e79e2d73a6392b585ef19.jpg', type: 'string' } },
 		once: function()
 		{
 			$('#ctl00_TopBarHomeImage').attr('src', AN.shared.getOption('sLogoSrc'));
+		}
+	},
+
+	removeQuickReplyComponents:
+	{
+		disp: '移除快速回覆組件',
+		type: 4,
+		page: ['view'],
+		defaultOn: false,
+		id: 44,
+		options:
+		{
+			bRemoveSmileys: { disp: '移除表情圖示列', defaultValue: false, type: 'boolean' },
+			bRemoveXMasSmileys: { disp: '移除聖誕表情圖示列', defaultValue: false, type: 'boolean' },
+			bRemovePreview: { disp: '移除預覽列', defaultValue: false, type: 'boolean' }
+		},
+		once: function()
+		{
+			if(!AN.shared.isLoggedIn()) return;
+
+			var jTbody = $('#ctl00_ContentPlaceHolder1_QuickReplyTable tbody:eq(2)');
+			if(AN.shared.getOption('bRemoveSmileys')) jTbody.children('tr:eq(3)').remove();
+			if(AN.shared.getOption('bRemoveXMasSmileys')) jTbody.find('td:contains(聖誕表情圖示:)').parent().next().andSelf().remove();
+			if(AN.shared.getOption('bRemovePreview')) jTbody.children('tr:last').remove();
 		}
 	}
 }

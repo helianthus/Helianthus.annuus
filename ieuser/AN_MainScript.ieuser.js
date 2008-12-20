@@ -274,12 +274,10 @@ AN.shared =
 		}
 		else
 		{
-			AN.data.openerInfo = {};
-			$.get('/view.aspx?message=' + $window.messageid, function(strHTML)
+			$.get('/view.aspx?message=' + $window.messageid, function(sHTML)
 			{
-				var $html = $(strHTML);
-				var $a = $html.find('.repliers:first a:first');
-				AN.data.openerInfo = { sId: $a.attr('href').replace(/^[^=]+=/, ''), sName: $a.html() };
+				var $a = $(sHTML).find('.repliers:first a:first');
+				AN.data.openerInfo = { sId: $a.attr('href').replace(/[=]+=/, ''), sName: $a.html() };
 				fToExec(AN.data.openerInfo);
 			});
 		}
@@ -290,7 +288,7 @@ AN.shared =
 		var $gray = $('#AN_divGrayLayer');
 		if($gray.is(':hidden'))
 		{
-			$('html').css('overflow', 'hidden');
+			if(!$.browser.opera) $('html').css('overflow', 'hidden');
 			$gray.show().fadeTo('fast', 0.7);
 			if(oOption)
 			{
@@ -307,7 +305,7 @@ AN.shared =
 		}
 		else
 		{
-			$('html').css('overflow', '');
+			if(!$.browser.opera) $('html').css('overflow', '');
 			$gray.add('#AN_divLoading').add($(oOption)).fadeOut('slow');
 		}
 	}
@@ -342,10 +340,10 @@ AN.comp =
 			.AN_spanClickBox { cursor: pointer; } \
 			.AN_spanClickBox:hover { color: YellowGreen; } \
 			.AN_spanLine { display: inline-block; color: gray; border-bottom: 1px dotted gray; margin-bottom: 3px; font-size: 10px; font-style: italic; cursor: pointer } \
-			.AN_divBox { display: none; z-index: 2; position: fixed; background-color: #F3F2F1; border: 1px solid black; } \
+			.AN_divBox { display: none; z-index: 3; position: fixed; background-color: #F3F2F1; border: 1px solid black; } \
 			.AN_divBoxHeader { padding-left: 3px; background-color: #336699; border-bottom: 1px solid black; color: white; } \
 			\
-			#AN_divGrayLayer { display: none; z-index: 1; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: gray; opacity: 0.7; filter: alpha(opacity=70); } \
+			#AN_divGrayLayer { display: none; z-index: 2; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: gray; opacity: 0.7; filter: alpha(opacity=70); } \
 			\
 			#AN_divLoading { top: 50%; left: 50%; width: 300px; height: 40px; margin: -25px 0 0 -150px; } \
 			#AN_divLoadingHeader { height: 10px; } \
@@ -559,7 +557,7 @@ AN.comp =
 				$('#AN_divAccordion')
 				.fn(function()
 				{
-					var numFrameH = $(window).height() * 0.9;
+					var numFrameH = (window.outerHeight) ? window.innerHeight * 0.9 : $(window).height() * 0.9;
 
 					this.height(numFrameH - 50);
 					this.children('div').height(numFrameH - 50 - 10 - (25 + 1) * this.children('h3').length)
@@ -644,7 +642,7 @@ AN.comp =
 		{
 			AN.shared.addInfo = function(strInfo, booPutAtTop)
 			{
-				if(AN.data.settings1.other3) $('#AN_divInfo:hidden').fadeIn('fast');
+				if(AN.data.settings1.other1) $('#AN_divInfo:hidden').fadeIn('fast');
 				$('<div>' + strInfo + '</div>').fn(function()
 				{
 					(booPutAtTop) ? this.prependTo('#AN_divInfoContent > :first') : this.appendTo('#AN_divInfoContent > :last');
@@ -671,7 +669,7 @@ AN.comp =
 		{
 			AN.shared.log = function(strLog)
 			{
-				if(AN.data.settings1.other1) $('#AN_divLog:hidden').fadeIn('fast');
+				if(AN.data.settings1.other2) $('#AN_divLog:hidden').fadeIn('fast');
 				$('<div>' + strLog + '</div>').prependTo('#AN_divLogContent').slideDown('slow');
 			}
 
@@ -747,14 +745,6 @@ AN.comp =
 				}
 			});
 		}
-	},
-
-	removeTextAd:
-	{
-		page: ['all'],
-		once: function()
-		{
-		}
 	}
 };
 
@@ -768,7 +758,7 @@ AN.settings =
 		disp: '自動顯示資料視窗 (info)',
 		type: 'boolean',
 		defaultOn: true,
-		id: 3
+		id: 1
 	},
 
 	autoShowLog:
@@ -776,28 +766,48 @@ AN.settings =
 		disp: '自動顯示記錄視窗 (log)',
 		type: 'boolean',
 		defaultOn: true,
-		id: 1,
+		id: 2,
 		options: { bDetailedLog: { disp: '顯示詳細記錄', defaultValue: true, type: 'boolean' } }
 	},
 
-	// id 2 is empty
+	exportSettings1:
+	{
+		disp: '現時的功能開關設置',
+		type: 'string',
+		id: 3,
+		fn: function()
+		{
+			return AN.util.cookie('AN_settings1') || '請先儲存一次設定';
+		}
+	},
+
+	exportSettings2:
+	{
+		disp: '現時的功能特殊設置',
+		type: 'string',
+		id: 4,
+		fn: function()
+		{
+			return AN.util.cookie('AN_settings2') || '請先儲存一次設定';
+		}
+	},
 
 	importSettings1:
 	{
 		disp: '匯入功能開關設置',
 		type: 'button',
-		id: 4,
+		id: 5,
 		fn: function()
 		{
-			var strCookie = prompt('輸入功能開關設置', '');
-			if(strCookie)
+			var sCookie = prompt('輸入功能開關設置', '');
+			if(sCookie)
 			{
-				var objCookie = $.convertObj(strCookie);
-				$.each(AN.data.settings1, function(strFnId)
+				var oCookie = $.convertObj(sCookie.split(','));
+				$.each(oCookie, function(sFnId)
 				{
-					if(objCookie[strFnId] !== undefined) AN.data.settings1[strFnId] = objCookie[strFnId];
+					if(AN.data.settings1[sFnId] === undefined) delete oCookie[sFnId];
 				});
-				AN.util.cookie('AN_settings1', AN.data.settings1);
+				AN.util.cookie('AN_settings1', oCookie);
 				location.reload();
 			}
 		}
@@ -807,42 +817,50 @@ AN.settings =
 	{
 		disp: '匯入功能特殊設置',
 		type: 'button',
-		id: 5,
+		id: 6,
 		fn: function()
 		{
-			var strCookie = prompt('輸入功能特殊設置', '');
-			if(strCookie)
+			var sCookie = prompt('輸入功能特殊設置', '');
+			if(sCookie)
 			{
-				var objCookie = $.convertObj(strCookie);
-				$.each(AN.data.settings2, function(strFnId)
+				var oCookie = $.convertObj(sCookie.split(','));
+				$.each(oCookie, function(sName)
 				{
-					if(objCookie[strFnId] !== undefined) AN.data.settings2[strFnId] = objCookie[strFnId];
+					if(AN.data.settings2[sName] === undefined) delete oCookie[sName];
 				});
-				AN.util.cookie('AN_settings2', AN.data.settings2);
+				AN.util.cookie('AN_settings2', oCookie);
 				location.reload();
 			}
 		}
 	},
 
-	exportSettings1:
+	deleteSettings1:
 	{
-		disp: '現時的功能開關設置',
-		type: 'string',
-		id: 6,
-		fn: function()
-		{
-			return AN.util.cookie('AN_settings1');
-		}
-	},
-
-	exportSettings2:
-	{
-		disp: '現時的功能特殊設置',
-		type: 'string',
+		disp: '移除功能開關設置並回復到預設值',
+		type: 'button',
 		id: 7,
 		fn: function()
 		{
-			return AN.util.cookie('AN_settings2');
+			if(confirm('確定移除?'))
+			{
+				AN.util.cookie('AN_settings1', null);
+				location.reload();
+			}
+		}
+	},
+
+	deleteSettings2:
+	{
+		disp: '移除功能特殊設置並回復到預設值',
+		type: 'button',
+		id: 8,
+		fn: function()
+		{
+			if(confirm('確定移除?'))
+			{
+				AN.util.cookie('AN_settings2', null);
+				location.reload();
+			}
 		}
 	}
 };
@@ -913,10 +931,10 @@ AN.main =
 		{
 			$('td').each(function()
 			{
-				//if($(this).html() == '最近刊登的文章')
-				if($(this).css('fontWeight') == 'bold' && $(this).css('fontSize') == '8pt')
+				var jThis = $(this);
+				if(jThis.css('fontSize') == '8pt')
 				{
-					$(this).parents('tr:eq(1)').remove();
+					jThis.parents('tr:eq(1)').remove();
 					return false; // break;
 				}
 			});
@@ -941,7 +959,6 @@ AN.main =
 
 					if($.inArray(this.src, arrSrcs) == -1) arrSrcs.push(this.src);
 					else $(this).parent().css('text-decoration', 'none').html('<span class="AN_spanLine">重複圖片已被移除</span>');
-					//else $(this).parent().after('<span class="AN_spanLine">重複圖片已被移除</span>').remove();
 				});
 			});
 		}
@@ -1048,7 +1065,7 @@ AN.main =
 
 	removeRedHotRanking:
 	{
-		disp: '移除紅人榜',
+		disp: '移除紅人榜 (Admin已移除)',
 		disabled: true,
 		type: 4,
 		page: ['topics'],
@@ -1229,7 +1246,6 @@ AN.main =
 				if(!$quote.parent('div').length) // outermost
 				{
 					$quote.find('b').addClass('AN_bOutermost');
-					//$quote.find('b').before('<b title="Toggle all outermost quotes" class="AN_outermostFirstB" onclick="AN.func.toggleAllQuotes(this)">O</b>');
 				}
 			});
 
@@ -1406,8 +1422,6 @@ AN.main =
 					);
 				}
 			});
-
-			//$('#ctl00_ContentPlaceHolder1_messagetext').css('max-width', '95%');
 
 			$window.OnQuoteSucceeded = function(result)
 			{
@@ -1731,7 +1745,7 @@ AN.main =
 
 	ajaxifyPageLoading:
 	{
-		disp: 'Ajax化頁面讀取',
+		disp: 'Ajax化頁面讀取 (暫不適用於Chrome)',
 		type: 1,
 		page: ['view'],
 		defaultOn: false,

@@ -1224,7 +1224,7 @@ AN.main =
 
 				if(!$quote.find('blockquote').length) // innermost or single-layer
 				{
-					$quote.find('span:last').remove();
+					$quote.find('div:first > span:last').remove();
 				}
 				if(!$quote.parent('div').length) // outermost
 				{

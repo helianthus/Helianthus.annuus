@@ -25,20 +25,28 @@
 /*	Some notes for developers:
  *
  *	jQuery - with plugins: jQuery UI, (v)sprintf
- *	Cross-brower - Theoretically. For now I have only tested it on {Maxthon 2 w/ IE 7} & {FF 3}, please let me know if there is a way to use scripts on other browsers
+ *	Cross-brower - Theoretically. For now I have only tested it on:
+    > Maxthon 2 w/ IE 7
+    > FF 3 w/ Greasemonkey
+    > IE 7 w/ IE7Pro
+    > Opera 9.6+
+    > Google Chrome 1.0.154.36+ w/ Greasemetal 0.2+
+    Please let me know if there is a way to use scripts on other browsers
  *	No base64 encoded data - Not supported by IE 7- [sosad]
  *	Used unsafeWindow on GM - A lot easier for me to write the script
  *
  */
 
+(function()
+{
 /////////////////// START OF - [Preperation] ///////////////////
 
-if(typeof unsafeWindow != 'undefined')
-{
-	$window = unsafeWindow;
-	$ = $window.$;
-	AN = $window.AN;
-}
+var $window = (typeof unsafeWindow != 'undefined') ? unsafeWindow : window;
+
+if(!$window.AN || !$window.AN.initialized) return setTimeout(arguments.callee, 50);
+
+var $ = $window.$;
+var AN = $window.AN;
 
 /////////////////// END OF - [Preperation] ///////////////////
 /////////////////// START OF - [Data Collection] ///////////////////
@@ -112,7 +120,7 @@ AN.execFunc = function(booIsFirstTime, jDoc)
 
 	$.each(AN.main, function()
 	{
-		if((AN.data.settings1['all' + this.id] || AN.data.settings1[AN.data.strCurPage + this.id]) && !this.disabled)
+		if(((AN.data.settings1['all' + this.id] && AN.data.strCurPage != 'special')  || AN.data.settings1[AN.data.strCurPage + this.id]) && !this.disabled)
 		{
 			if((booIsFirstTime && this.once) || this.infinite)
 			{
@@ -194,46 +202,56 @@ AN.shared =
 		AN.temp.jDoc.find('.repliers').add(AN.temp.jDoc.filter('.repliers'))
 		.each(function()
 		{
-			var $this = $(this), $a = $this.find('a:first');
-			if(!$a.length) return;
+			var jThis = $(this), jA = jThis.find('a:first');
+			if(!jA.length) return;
 
 			AN.temp.arrReplys.push(
 			{
-				strUserId: $a.attr('href').replace(/^[^=]+=/, ''),
-				strUserName: $a.html(),
-				$tdContent: $this.find('table:last td:first'),
-				$repliers: $this
+				sUserId: jA.attr('href').replace(/^[^=]+=/, ''),
+				sUserName: jA.html(),
+				jTdContent: jThis.find('table:last td:first'),
+				jThis: jThis
 			});
 		});
+
 		return AN.temp.arrReplys;
 	},
 
-	getTopicRows: function()
+	getTopicRows: function(jDoc)
 	{
-		if(AN.temp.arrTopicRows) return AN.temp.arrTopicRows;
+		var aTopics = [];
 
-		AN.temp.arrTopicRows = [];
+		if(!jDoc)
+		{
+			if(AN.temp.aTopicRows) return AN.temp.aTopicRows;
 
-		AN.temp.jDoc.find('td').each(function()
+			jDoc = AN.temp.jDoc;
+			AN.temp.aTopicRows = aTopics;
+		}
+
+		jDoc.find('td').each(function()
 		{
 			if($(this).html().match(/^\s*最後回應時間$/))
 			{
 				$.each($(this).parent().nextAll('tr'), function()
 				{
-					var $this = $(this), $a = $this.find('a');
-					if($this.find('script').length) return;
+					var jThis = $(this), jA = jThis.find('a');
 
-					AN.temp.arrTopicRows.push(
+					if(jThis.children().length == 1) return;
+
+					aTopics.push(
 					{
-						$trTopicRow: $this,
-						strLinkId: $a.eq(0).attr('href').match(/\d+$/)[0],
-						strUserName: $a.filter(':last').html()
+						jThis: jThis,
+						sLinkId: jA.eq(0).attr('href').match(/\d+$/)[0],
+						sUserName: jA.filter(':last').html()
 					});
 				});
-				return false; // break;
+
+				return false;
 			}
 		});
-		return AN.temp.arrTopicRows;
+
+		return aTopics;
 	},
 
 	getCurPageNo: function()
@@ -269,14 +287,14 @@ AN.shared =
 		else if(AN.shared.getCurPageNo() == 1)
 		{
 			var objReply = AN.shared.getReplies()[0];
-			AN.data.openerInfo = { sId: objReply.strUserId, sName: objReply.strUserName };
+			AN.data.openerInfo = { sId: objReply.sUserId, sName: objReply.sUserName };
 			fToExec(AN.data.openerInfo);
 		}
 		else
 		{
 			$.get('/view.aspx?message=' + $window.messageid, function(sHTML)
 			{
-				var $a = $(sHTML).find('.repliers:first a:first');
+				var $a = $.doc(sHTML).find('.repliers:first a:first');
 				AN.data.openerInfo = { sId: $a.attr('href').replace(/[=]+=/, ''), sName: $a.html() };
 				fToExec(AN.data.openerInfo);
 			});
@@ -648,7 +666,7 @@ AN.comp =
 					(booPutAtTop) ? this.prependTo('#AN_divInfoContent > :first') : this.appendTo('#AN_divInfoContent > :last');
 					this.fadeIn('slow');
 				});
-			}
+			};
 
 			$('<div>Info</div>').appendTo('#AN_divRight').click(function()
 			{
@@ -671,18 +689,18 @@ AN.comp =
 			{
 				if(AN.data.settings1.other2) $('#AN_divLog:hidden').fadeIn('fast');
 				$('<div>' + strLog + '</div>').prependTo('#AN_divLogContent').slideDown('slow');
-			}
+			};
 
 			AN.shared.log2 = function(strLog)
 			{
 				if(AN.shared.getOption('bDetailedLog')) AN.shared.log(strLog);
-			}
+			};
 
 			$.fn.debug = function(strToEval)
 			{
 				AN.shared.log('debug: ' + eval('(' + strToEval + ')'));
 				return this;
-			}
+			};
 
 			$('<div>Log</div>').appendTo('#AN_divRight').click(function()
 			{
@@ -730,9 +748,9 @@ AN.comp =
 
 			$.each(AN.shared.getReplies(), function(i, objReply)
 			{
-				if(objReply.strUserId == '148720') // me :P
+				if(objReply.sUserId == '148720') // me :P
 				{
-					objReply.$tdContent.find('a').each(function(i, nodA)
+					objReply.jTdContent.find('a').each(function(i, nodA)
 					{
 						if(nodA.href.indexOf('http://helianthus-annuus.googlecode.com/svn/data/') >= 0)
 						{
@@ -935,7 +953,7 @@ AN.main =
 				if(jThis.css('fontSize') == '8pt')
 				{
 					jThis.parents('tr:eq(1)').remove();
-					return false; // break;
+					return false;
 				}
 			});
 		}
@@ -953,7 +971,7 @@ AN.main =
 			$.each(AN.shared.getReplies(), function()
 			{
 				var arrSrcs = [];
-				this.$tdContent.find('img[onLoad]').each(function()
+				this.jTdContent.find('img[onLoad]').each(function()
 				{
 					if($(this).width() <= 100) return;
 
@@ -982,7 +1000,7 @@ AN.main =
 			AN.temp.testImages = [];
 			$.each(AN.shared.getReplies(), function()
 			{
-				this.$tdContent.find('img[onLoad]').each(function()
+				this.jTdContent.find('img[onLoad]').each(function()
 				{
 					AN.temp.testImages.push($(imgTemp).clone(true).data('nodTarget', $(this)).attr('src', this.src));
 				});
@@ -1013,7 +1031,7 @@ AN.main =
 
 			$.each(AN.shared.getReplies(), function()
 			{
-				this.$tdContent
+				this.jTdContent
 				.find('img[onLoad]').hide().after('<span class="AN_spanClickBox">點擊顯示圖片</span>')
 				.parent().addClass('AN_maskedLink').one('click', function(event)
 				{
@@ -1133,7 +1151,7 @@ AN.main =
 				var strType = $('#st option:selected').val();
 				window.open('search.aspx?st=' + strType + '&searchstring=' + escape($('#searchstring').val()), '_blank');
 				$('#searchstring').val('');
-			}
+			};
 		}
 	},
 
@@ -1148,7 +1166,7 @@ AN.main =
 		{
 			$.each(AN.shared.getTopicRows(), function()
 			{
-				this.$trTopicRow.find('a:last').attr('href', '/search.aspx?st=A&searchstring=' + escape(this.strUserName));
+				this.jThis.find('a:last').attr('href', '/search.aspx?st=A&searchstring=' + escape(this.sUserName));
 			});
 		}
 	},
@@ -1203,9 +1221,9 @@ AN.main =
 			blockquote { margin: 5px 0 5px 0; border: 1px solid black; } \
 			blockquote blockquote { margin-top: 0; border-right: 0; } \
 			blockquote div { padding: 0 0 5px 2px; } \
-			.AN_quoteHeader { padding: 0 0 0 3px; color: white; font-size: 12px; background-color: #336699; border-bottom: 1px solid black; margin-bottom: 2px; } \
-			.AN_quoteHeader span { display: inline-block; width: 49.8%; } \
-			.AN_quoteHeader b { font-family: "Courier New"; cursor: pointer; margin-right: 3px; } \
+			.AN_quoteHeader { padding: 0 3px; color: white; font-size: 12px; background-color: #336699; border-bottom: 1px solid black; margin-bottom: 2px; } \
+			.AN_quoteHeader span { display: inline-block; width: 49.9%; } \
+			.AN_quoteHeader b { cursor: pointer; } \
 			');
 		},
 		infinite: function()
@@ -1237,7 +1255,7 @@ AN.main =
 					break;
 				}
 
-				$quote.prepend('<div class="AN_quoteHeader"><span>引用:</span><span style="text-align:right"><b style="Toggle this" onclick="AN.func.toggleQuote({ jTarget: $(this) })">-</b></span>');
+				$quote.prepend('<div class="AN_quoteHeader"><span>引用:</span><span style="text-align:right;"><b onclick="AN.func.toggleQuote({ jTarget: $(this) })">-</b></span>');
 
 				if(!$quote.find('blockquote').length) // innermost or single-layer
 				{
@@ -1249,7 +1267,7 @@ AN.main =
 				}
 			});
 
-			if(AN.shared.getOption('booOuterOnly')) AN.func.toggleQuote({ jTarget: $('.AN_bOutermost'), bOuterOnly: true });
+			if(AN.shared.getOption('booOuterOnly')) AN.func.toggleQuote({ jTarget: this.find('.AN_bOutermost'), bOuterOnly: true });
 		}
 	},
 
@@ -1317,7 +1335,7 @@ AN.main =
 					nodImg.height = Math.round(numHeight * numMaxWidth / numWidth);
 					nodImg.title = '[AN] ori:' + numWidth + 'x' + numHeight + ' now:' + nodImg.width + 'x' + nodImg.height;
 				}
-			}
+			};
 		},
 		infinite: function()
 		{
@@ -1325,7 +1343,7 @@ AN.main =
 
 			$.each(AN.shared.getReplies(), function()
 			{
-				this.$tdContent.find('img[onLoad]').each(function()
+				this.jTdContent.find('img[onLoad]').each(function()
 				{
 					if(this.complete) $window.DrawImage(this, true);
 					else this.alt = 'DEADIMAGE';
@@ -1427,7 +1445,7 @@ AN.main =
 			{
 				$('#ctl00_ContentPlaceHolder1_messagetext').val(unescape(result) + '\n');
 				$('#AN_divToToggle').show();
-			}
+			};
 		}
 	},
 
@@ -1466,11 +1484,11 @@ AN.main =
 				{ regex: /(@_@)/g, result: '@' },
 				{ regex: /(\?\?\?)/g, result: 'wonder2' },
 				{ regex: /(fuck)/g, result: 'fuck' }
-			]
+			];
 
 			$.each(AN.shared.getTopicRows(), function()
 			{
-				var $a = this.$trTopicRow.find('td:eq(1) a:first');
+				var $a = this.jThis.find('td:eq(1) a:first');
 				var strTemp = $a.html();
 
 				strTemp = strTemp.replace(regSmiley, '<img style="border-width:0px;vertical-align:middle" src="/faces/$2.gif" alt="$1" />');
@@ -1550,9 +1568,10 @@ AN.main =
 					nFloorNo: (nCurPageNo == 1) ? 0 : 50 * (nCurPageNo - 1) + 1
 				}
 			}
+
 			$.each(AN.shared.getReplies(), function()
 			{
-				this.$repliers.find('span:last').append($.sprintf(' <span class="AN_spanBox">#%s</span>', AN.data.oFloor.nFloorNo++));
+				this.jThis.find('span:last').append($.sprintf(' <span class="AN_spanBox">#%s</span>', AN.data.oFloor.nFloorNo++));
 			});
 		}
 	},
@@ -1572,7 +1591,7 @@ AN.main =
 		{
 			$.each(AN.shared.getReplies(), function()
 			{
-				this.$tdContent.find('a').each(function()
+				this.jTdContent.find('a').each(function()
 				{
 					if(this.href.match(/[?&](?:r(?:ef(?:er[^=]+)?)?|uid)=|logout|shortlink|(?:tinyurl|urlpire|linkbucks|seriousurls|qvvo|viraldatabase|youfap)\.com/i))
 					{
@@ -1605,7 +1624,6 @@ AN.main =
 		id: 21,
 		once: function()
 		{
-			//if(!AN.data.strCurPage.match(/^(?:topics|view|search|newmessages|default)$/)) return;
 			$('table,td').filter(function(){ return this.width.match(/^(?:955|937|806|800|792)$/); }).width('100%');
 		}
 	},
@@ -1656,7 +1674,7 @@ AN.main =
 		{
 			$.each(AN.shared.getReplies(), function()
 			{
-				this.$tdContent.css({ wordWrap: 'break-word', overflow: 'hidden' }).parents('table:first').css('table-layout', 'fixed');
+				this.jTdContent.css({ wordWrap: 'break-word', overflow: 'hidden' }).parents('table:first').css('table-layout', 'fixed');
 			});
 		}
 	},
@@ -1681,7 +1699,7 @@ AN.main =
 				$(nodToWrap)
 				.wrap($.sprintf('<a href="%s" />', strHref))
 				.parent().before('<span style="cursor: default; color: gray; margin-right: 2px" title="Characters Linkified">[L]</span>');
-			}
+			};
 
 			var funSearch = function(nodToTest)
 			{
@@ -1695,11 +1713,11 @@ AN.main =
 				}
 
 				if(nodToTest.nextSibling) funSearch(nodToTest.nextSibling);
-			}
+			};
 
 			$.each(AN.shared.getReplies(), function()
 			{
-				funSearch(this.$tdContent.get(0).firstChild);
+				funSearch(this.jTdContent.get(0).firstChild);
 			});
 		}
 	},
@@ -1715,7 +1733,7 @@ AN.main =
 		{
 			$.each(AN.shared.getReplies(), function()
 			{
-				this.$tdContent.find('a').each(function()
+				this.jTdContent.find('a').each(function()
 				{
 					if(this.hostname.match(/forum\d*.hkgolden\.com/i) && this.firstChild.nodeName.toLowerCase() != 'img' && RegExp.lastMatch != location.hostname)
 					{
@@ -1745,7 +1763,7 @@ AN.main =
 
 	ajaxifyPageLoading:
 	{
-		disp: 'Ajax化頁面讀取 (暫不適用於Chrome)',
+		disp: 'Ajax化頁面讀取',
 		type: 1,
 		page: ['view'],
 		defaultOn: false,
@@ -1760,7 +1778,7 @@ AN.main =
 				{
 					$(this).parents('tr:first').replaceWith(jPageBox.clone());
 				});
-			}
+			};
 
 			$window.changePage = function(){};
 
@@ -1778,7 +1796,7 @@ AN.main =
 						AN.func.goToPage(event, numSelected);
 					});
 				});
-			}
+			};
 
 			AN.func.goToPage = function(event, nPageNo)
 			{
@@ -1788,7 +1806,7 @@ AN.main =
 
 				$.get(AN.shared.getURL(nPageNo), function(sHTML)
 				{
-					var jDoc = $(sHTML);
+					var jDoc = $.doc(sHTML);
 					var sNewStrong = jDoc.find('strong:first').text();
 
 					var changeReplies = function()
@@ -1827,7 +1845,7 @@ AN.main =
 						{
 							$(this).children().eq(nPageNo - 1).attr('selected', true);
 						});
-					}
+					};
 
 					var afterPageChanging = function()
 					{
@@ -1838,7 +1856,7 @@ AN.main =
 
 						if(Math.ceil(sNewStrong / 50) == nPageNo) AN.func.getPage();
 						else AN.data.tGetPage = setTimeout(function(){ AN.func.getPage(); }, 30000);
-					}
+					};
 
 					if(!AN.data.jReplies[nPageNo])
 					{
@@ -1853,7 +1871,7 @@ AN.main =
 					}
 					afterPageChanging();
 				});
-			}
+			};
 
 			AN.func.getPage = function(bIsManual)
 			{
@@ -1871,7 +1889,7 @@ AN.main =
 						bIsRepliesMax = (nCurPageNo == 1) ? (nRepliesLength == 51) : (nRepliesLength == 50),
 						sCurStrong = $('strong:first').text(),
 
-						jDoc = $(sHTML),
+						jDoc = $.doc(sHTML),
 						sNewStrong = jDoc.find('strong:first').text()
 
 						if(sCurStrong != sNewStrong)
@@ -1913,9 +1931,7 @@ AN.main =
 				{
 					if(bIsManual) AN.shared.log('Refresh is not needed.');
 				}
-			}
-
-			$.ajaxSetup({ cache: false });
+			};
 
 			var nCurPageNo = AN.shared.getCurPageNo();
 			var jReplies = $('.repliers');
@@ -1995,7 +2011,7 @@ AN.main =
 		{
 			$.each(AN.shared.getReplies(), function()
 			{
-				this.$repliers.find('a:last').remove();
+				this.jThis.find('a:last').remove();
 			});
 		}
 	},
@@ -2017,7 +2033,7 @@ AN.main =
 
 			$.each(AN.shared.getReplies(), function()
 			{
-				this.$repliers.find('a:last').prev().andSelf().remove();
+				this.jThis.find('a:last').prev().andSelf().remove();
 			});
 		}
 	},
@@ -2047,17 +2063,17 @@ AN.main =
 
 			$.each(AN.shared.getReplies(), function()
 			{
-				var numOriHeight = this.$tdContent.height();
+				var numOriHeight = this.jTdContent.height();
 				if(numOriHeight < numMaxReplyHeight) return;
 
-				var $box = $($.sprintf('<div style="text-align: right; margin-bottom: 5px;"><span style="font-size: 10px" class="AN_spanClickBox">原始高度: %spx</span></div>', numOriHeight)).click(function()
+				var $box = $($.sprintf('<div style="text-align: right; margin-bottom: 5px;"><span style="font-size: 10px;" class="AN_spanClickBox">原始高度: %spx</span></div>', numOriHeight)).click(function()
 				{
 					var $wrapper = $(this).siblings('.AN_divWrapper');
 					if($wrapper.css('max-height') == 'none') $wrapper.css('max-height', AN.shared.getOption('numMaxReplyHeight')).scrollTop(9999999);
 					else $wrapper.css('max-height', 'none').scrollTop(0);
 				});
 
-				this.$tdContent
+				this.jTdContent
 				.wrapInner($.sprintf('<div class="AN_divWrapper" style="overflow: hidden; max-height: %spx" />', numMaxReplyHeight))
 				.prepend($box.clone(true)).append($box)
 				.children('.AN_divWrapper').scrollTop(9999999);
@@ -2154,8 +2170,6 @@ AN.main =
 				var strCumulated = (numCumulatedTime / 60000).toFixed(2) + ' minutes';
 			}
 
-			//if($('#AN_onlineTime').length) $('#AN_onlineTime').html(strCumulated);
-			//else
 			AN.shared.addInfo($.sprintf('Time Spent: <span id="AN_onlineTime">%s</span>', strCumulated), true);
 
 			AN.shared.data('numLastOnTime', $.time());
@@ -2179,7 +2193,7 @@ AN.main =
 				AN.shared.blockScreen(true);
 
 				$('#AN_divAjaxRefresh').remove();
-				$('#AN_spanCurPage').remove();
+				$('#AN_spanCurPage').parent().remove();
 				$(this).remove();
 
 				AN.shared.getOpenerInfo(function(oInfo)
@@ -2214,22 +2228,29 @@ AN.main =
 					{
 						$.get(AN.shared.getURL(nPageNo), function(sHTML)
 						{
-							$(sHTML).find('.repliers').each(function()
+							$.doc(sHTML).find('.repliers').each(function()
 							{
 								if($(this).find('a:first').html() == sName) jEndTable.before(this).before('<table><tr><td></td></tr></table>');
 							})
 							.end().fn(function()
 							{
-								if(this.find('select[name=page] > :last-child').val() >= nPageNo++) recurseOnPages();
+								if(this.find('select[name=page] > :last-child').val() >= ++nPageNo) recurseOnPages();
 								else
 								{
+									$('<div>Return To Topic</div>').appendTo('#AN_divTopLeft').click(function()
+									{
+										location.assign(AN.shared.getURL(--nPageNo));
+										$(this).remove();
+									});
+									if(AN.data.oFloor) AN.data.oFloor.nFloorNo = 1;
 									AN.execFunc(false);
 									AN.shared.blockScreen();
 									AN.shared.log2($.sprintf('Time used: %s s', ($.time() - nTime) / 1000));
 								}
 							});
 						});
-					}
+					};
+
 					recurseOnPages();
 				});
 			});
@@ -2285,19 +2306,87 @@ AN.main =
 			if(AN.shared.getOption('bRemoveXMasSmileys')) jTbody.find('td:contains(聖誕表情圖示:)').parent().next().andSelf().remove();
 			if(AN.shared.getOption('bRemovePreview')) jTbody.children('tr:last').remove();
 		}
-	}
+	},
 
 	// id 45 is moved up
+
+	ajaxifyTopicsRefreshing:
+	{
+		disp: 'ajax化重新整理',
+		type: 1,
+		page: ['topics'],
+		defaultOn: true,
+		id: 46,
+		options:
+		{
+			nTimeOut: { disp: '自動重新整理間隔(秒, < 30等於停用)', defaultValue: 0, type: 'string' }
+		},
+		once: function()
+		{
+			AN.func.refreshTopics = function()
+			{
+				clearTimeout(AN.data.tRefresh);
+				AN.shared.log2('Querying lastest topics...');
+
+				$.get(location.href, function(sHTML)
+				{
+					var aTopics = AN.shared.getTopicRows($.doc(sHTML));
+
+					$.each(AN.shared.getTopicRows(), function(i)
+					{
+						this.jThis.replaceWith(aTopics[i].jThis);
+					});
+
+					AN.execFunc(false, aTopics[0].jThis.parent());
+
+					AN.shared.log('Topics table updated.');
+
+					var nTimeOut = AN.shared.getOption('nTimeOut');
+					if(nTimeOut >= 30)
+					{
+						AN.shared.log2($.sprintf('Query again in %ss...', nTimeOut));
+						AN.data.tRefresh = setTimeout(function(){ AN.func.refreshTopics(); }, nTimeOut * 1000);
+					}
+				});
+			};
+
+			$('<div id="AN_divRefreshTopics">Refresh Topics</div>').appendTo('#AN_divTopLeft').click(function(){ AN.func.refreshTopics(); });
+
+			var nTimeOut = AN.shared.getOption('nTimeOut');
+			if(nTimeOut >= 30) AN.data.tRefresh = setTimeout(function(){ AN.func.refreshTopics(); }, nTimeOut * 1000);
+		}
+	},
+
+	checkServerStatus:
+	{
+		disabled: true,
+		disp: '檢查伺服器狀態',
+		type: 1,
+		page: ['all', 'special'],
+		defaultOn: true,
+		id: 47,
+		once: function()
+		{
+		}
+	}
 };
 
 ///////////// END OF - [Main Fuctions] ///////////////////
-/////////////////// START OF - [Initialization] ///////////////////
+///////////// START OF - [Initialization] ///////////////////
 
-(function()
+if(typeof unsafeWindow != 'undefined')
 {
-	if(!AN.done) return setTimeout(arguments.callee, 50);
 	AN.collectData();
 	AN.execFunc(true);
-})();
+}
+else
+{
+	$(function()
+	{
+		AN.collectData();
+		AN.execFunc(true);
+	});
+}
 
-/////////////////// END OF - [Initialization] ///////////////////
+///////////// END OF - [Initialization] ///////////////////
+})();

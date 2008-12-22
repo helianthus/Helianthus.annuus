@@ -22,19 +22,22 @@
 // @include http://forum*.hkgolden.com/*
 // ==/UserScript==
 
+(function()
+{
 /////////////////// START OF - [Preperation] ///////////////////
 
-AN = { init: {}, func: {} };
+var $window = (typeof unsafeWindow != 'undefined') ? unsafeWindow : window;
 
-if(typeof unsafeWindow != 'undefined')
-{
-	$window = unsafeWindow;
-	$window.AN = AN;
-}
-else
-{
-	$window = window;
-}
+if(!$window.$) return setTimeout(arguments.callee, 50);
+
+var $ = $window.$;
+var AN = { init: {}, func: {} };
+
+$window.AN = AN;
+
+if(!$('head').length) $('html').prepend('<head></head>'); // chrome
+$.ajaxSetup({ cache: false });
+$($window).unload(function(){ AN = null; });
 
 /////////////////// END OF - [Preperation] ///////////////////
 /////////////////// START OF - [jQuery Plugins] ///////////////////
@@ -127,6 +130,13 @@ AN.init.extend = function()
 		time: function()
 		{
 			return (new Date()).getTime();
+		},
+
+		doc: function(sHTML)
+		{
+			var eDiv = document.createElement('div');
+			eDiv.innerHTML = sHTML;
+			return $(eDiv);
 		},
 
 		convertObj: function(objToConvert)
@@ -271,39 +281,29 @@ AN.init.buildUtil = function()
 
 AN.init.end = function()
 {
-	AN.done = true;
-	delete AN.init;
+	AN.initialized = true;
 };
 
 /////////////////// END OF - [Finishing] ///////////////////
-/////////////////// START OF - [Initialization] ///////////////////
+///////////// START OF - [Initialization] ///////////////////
 
-(function()
+if(typeof unsafeWindow != 'undefined')
 {
-	if(typeof $window.$ == 'undefined')
+	$.each(AN.init, function()
 	{
-		return setTimeout(arguments.callee, 50);
-	}
-
-	if(typeof unsafeWindow != 'undefined' || $.browser.opera)
+		this();
+	});
+}
+else
+{
+	$(function()
 	{
 		$.each(AN.init, function()
 		{
 			this();
 		});
-	}
-	else
-	{
-		$(function()
-		{
-			$.each(AN.init, function()
-			{
-				this();
-			});
-		});
-	}
+	});
+}
 
-	$($window).unload(function(){ AN = null; });
+///////////// END OF - [Initialization] ///////////////////
 })();
-
-/////////////////// END OF - [Initialization] ///////////////////

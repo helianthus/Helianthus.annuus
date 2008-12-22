@@ -22,14 +22,16 @@
 // @include http://forum*.hkgolden.com/*
 // ==/UserScript==
 
+(function()
+{
 /////////////////// START OF - [Preperation] ///////////////////
 
-if(typeof unsafeWindow != 'undefined')
-{
-	$window = unsafeWindow;
-	$ = $window.$;
-	AN = $window.AN;
-}
+var $window = (typeof unsafeWindow != 'undefined') ? unsafeWindow : window;
+
+if(!$window.AN || !$window.AN.initialized) return setTimeout(arguments.callee, 50);
+
+var $ = $window.$;
+var AN = $window.AN;
 
 /////////////////// END OF - [Preperation] ///////////////////
 /////////////////// START OF - [Rubbish Removal] ///////////////////
@@ -72,12 +74,19 @@ AN.removeRubbish = function()
 };
 
 /////////////////// END OF - [Rubbish Removal] ///////////////////
-/////////////////// START OF - [Initialization] ///////////////////
+///////////// START OF - [Initialization] ///////////////////
 
-(function()
+if(typeof unsafeWindow != 'undefined')
 {
-	if(!AN.done) return setTimeout(arguments.callee, 50);
 	AN.removeRubbish();
-})();
+}
+else
+{
+	$(function()
+	{
+		AN.removeRubbish();
+	});
+}
 
-/////////////////// END OF - [Initialization] ///////////////////
+///////////// END OF - [Initialization] ///////////////////
+})();

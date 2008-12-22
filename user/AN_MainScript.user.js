@@ -48,6 +48,8 @@ if(!$window.AN || !$window.AN.initialized) return setTimeout(arguments.callee, 5
 var $ = $window.$;
 var AN = $window.AN;
 
+var nStart = $.time();
+
 /////////////////// END OF - [Preperation] ///////////////////
 /////////////////// START OF - [Data Collection] ///////////////////
 
@@ -103,7 +105,6 @@ AN.execFunc = function(booIsFirstTime, jDoc)
 {
 	AN.temp = { jDoc: jDoc || $() };
 	AN.data.benchmark = [];
-	var nStart = $.time();
 
 	if(booIsFirstTime)
 	{
@@ -144,8 +145,6 @@ AN.execFunc = function(booIsFirstTime, jDoc)
 			}
 		}
 	});
-
-	AN.data.benchmark.push(['Total', ($.time() - nStart)]);
 };
 
 /////////////////// END OF - [Functions Excuation] ///////////////////
@@ -694,7 +693,7 @@ AN.comp =
 		{
 			$('<div>Benchmark</div>').appendTo('#AN_divRight').click(function()
 			{
-				var arrHTML = ['<table><tr style="background-color: #336699; font-weight: bold"><td style="color: white">功能</td><td style="color: white; border-left-width: 1px; text-align: right">執行時間</td></tr>'];
+				var aHTML = ['<table><tr style="background-color: #336699; font-weight: bold"><td style="color: white">功能</td><td style="color: white; border-left-width: 1px; text-align: right">執行時間</td></tr>'];
 				var aResult = AN.data.benchmark;
 				var nLast = aResult.length - 1;
 				var nSum = 0;
@@ -702,17 +701,17 @@ AN.comp =
 				$.each(aResult, function(i)
 				{
 					if(i != nLast) nSum += this[1];
-					var objSec = (this[1] == 0) ? 'ε' : this[1];
-					arrHTML.push($.sprintf('<tr><td>%s</td><td style="border-left-width: 1px; text-align: right">%s ms</td></tr>', this[0], objSec));
+					var sec = (this[1] == 0) ? 'ε' : this[1];
+					aHTML.push($.sprintf('<tr><td>%s</td><td style="border-left-width: 1px; text-align: right">%s ms</td></tr>', this[0], sec));
 				});
-				arrHTML.push($.sprintf('<tr><td>Sum</td><td style="border-left-width: 1px; text-align: right">%s ms</td></tr>', nSum));
-				arrHTML.push($.sprintf('<tr><td>Difference</td><td style="border-left-width: 1px; text-align: right">%s ms</td></tr>', aResult[nLast] - nSum));
-				arrHTML.push('</table>');
+				aHTML.push($.sprintf('<tr><td>Sum</td><td style="border-left-width: 1px; text-align: right">%s ms</td></tr>', nSum));
+				aHTML.push($.sprintf('<tr><td>Difference</td><td style="border-left-width: 1px; text-align: right">%s ms</td></tr>', aResult[nLast][1] - nSum));
+				aHTML.push('</table>');
 
 				$('#AN_divMiddleBox')
 				.children(':first').html('Benchmark Result')
 				.end()
-				.children(':last').html(arrHTML.join(''));
+				.children(':last').html(aHTML.join(''));
 
 				AN.shared.blockScreen('#AN_divMiddleBox');
 			});
@@ -1670,16 +1669,21 @@ AN.main =
 			{
 				this.jTdContent.find('a').each(function()
 				{
-					if(this.href.match(/[?&](?:r(?:ef(?:er[^=]+)?)?|uid)=|logout|shortlink|(?:tinyurl|urlpire|linkbucks|seriousurls|qvvo|viraldatabase|youfap)\.com/i))
+					var aMatch = this.href.match(/[?&](?:r(?:ef(?:er[^=]+)?)?|uid)=|logout|shortlink|(?:tinyurl|urlpire|linkbucks|seriousurls|qvvo|viraldatabase|youfap)\.com/i);
+					if(aMatch)
 					{
-						$(this).data('keyword', RegExp.lastMatch).hover(
+						$(this).data('keyword', aMatch[0]).hover(
 							function()
 							{
-								var $this = $(this);
-								$('#AN_divAlertBox')
-								.css({ top: ($this.offset().top - $this.height() - 10), left: $this.offset().left })
-								.html('發現可疑連結! keyword: <span style="color: black">' + $this.data('keyword') + '</span>')
-								.show();
+								var jThis = $(this);
+								var oOffset = jThis.offset();
+								$('#AN_divAlertBox').fn(function()
+								{
+									this
+									.html('發現可疑連結! keyword: <span style="color: black">' + jThis.data('keyword') + '</span>')
+									.show()
+									.css({ top: (oOffset.top - this.height() - 5), left: oOffset.left });
+								});
 							},
 							function()
 							{
@@ -1767,12 +1771,12 @@ AN.main =
 		{
 			var regLink = /(?:(h\w{2}ps?[:\/]+?)|[\w-]+?@)?((?:(?:\d{1,3}\.){3}\d{1,3}|(?:[\w-]+?\.){0,4}[\w-]{2,}\.(?:biz|cn|cc|co(?=\.)|com|de|eu|gov|hk|info|jp(?!g)|net|org|ru|tk|us)(?:\.[a-z]{2,3})?)(?::\d{1,5})?(?:\/[\w~./%?&=#+:-]*)?)/i;
 
-			var funWrap = function(nodToWrap)
+			var funWrap = function(nodToWrap, aMatch)
 			{
-				nodToWrap.splitText(RegExp.leftContext.length + RegExp.lastMatch.length);
+				nodToWrap.splitText(RegExp.leftContext.length + aMatch[0].length);
 				nodToWrap = nodToWrap.splitText(RegExp.leftContext.length);
 
-				var strHref = (RegExp.$1 || 'http://') + RegExp.$2;
+				var strHref = (aMatch[1] || 'http://') + aMatch[2];
 				$(nodToWrap)
 				.wrap($.sprintf('<a href="%s" />', strHref))
 				.parent().before('<span style="cursor: default; color: gray; margin-right: 2px" title="Characters Linkified">[L]</span>');
@@ -1782,7 +1786,8 @@ AN.main =
 			{
 				if(nodToTest.nodeType == 3)
 				{
-					if(nodToTest.nodeValue.match(regLink)) funWrap(nodToTest);
+					var aMatch = nodToTest.nodeValue.match(regLink);
+					if(aMatch) funWrap(nodToTest, aMatch);
 				}
 				else if(nodToTest.firstChild && !$(nodToTest).is('a,button,script,style'))
 				{
@@ -1812,7 +1817,8 @@ AN.main =
 			{
 				this.jTdContent.find('a').each(function()
 				{
-					if(this.hostname.match(/forum\d*.hkgolden\.com/i) && this.firstChild.nodeName.toLowerCase() != 'img' && RegExp.lastMatch != location.hostname)
+					var aMatch = this.hostname.match(/forum\d*.hkgolden\.com/i);
+					if(aMatch && $(this).children('img').length == 0 && aMatch[0] != location.hostname)
 					{
 						this.hostname = location.hostname;
 						$(this).before('<span style="cursor: default; color: gray; margin-right: 2px" title="Server No. Converted">[C]</span>');
@@ -2193,9 +2199,10 @@ AN.main =
 				$.each([$('#ctl00_ContentPlaceHolder1_txt_subject'),$('#ctl00_ContentPlaceHolder1_messagetext')], function()
 				{
 					var strValue = this.val();
-					while(strValue.match(/&#(\d+);/))
+					var aMatch;
+					while(aMatch = strValue.match(/&#(\d+);/))
 					{
-						strValue = strValue.replace(RegExp.lastMatch, String.fromCharCode(RegExp.lastParen));
+						strValue = strValue.replace(aMatch[0], String.fromCharCode(aMatch[1]));
 					}
 					this.val(strValue);
 				});
@@ -2479,6 +2486,8 @@ else
 		AN.execFunc(true);
 	});
 }
+
+AN.data.benchmark.push(['Total', ($.time() - nStart)]);
 
 ///////////// END OF - [Initialization] ///////////////////
 })();

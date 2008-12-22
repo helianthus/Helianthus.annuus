@@ -35,7 +35,7 @@ var AN = { init: {}, func: {} };
 
 $window.AN = AN;
 
-if(!$('head').length) $('html').prepend('<head></head>'); // chrome
+if(!$('head').length) $('html').prepend(document.createElement('head')); // chrome
 $.ajaxSetup({ cache: false });
 $($window).unload(function(){ AN = null; });
 

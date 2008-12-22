@@ -133,10 +133,13 @@ AN.execFunc = function(booIsFirstTime, jDoc)
 				}
 				catch(err)
 				{
-					AN.shared.log('Please inform the author about this error.');
-					AN.shared.log('Error message: ' + err.message);
-					if(err.lineNumber) AN.shared.log('Line number: ' + err.lineNumber);
-					AN.shared.log('An error occured: ' + this.disp);
+					if(AN.data.strCurPage != 'special')
+					{
+						AN.shared.log('Please inform the author about this error.');
+						AN.shared.log('Error message: ' + err.message);
+						if(err.lineNumber) AN.shared.log('Line number: ' + err.lineNumber);
+						AN.shared.log('An error occured: ' + this.disp);
+					}
 				}
 			}
 		}
@@ -301,31 +304,86 @@ AN.shared =
 		}
 	},
 
-	blockScreen: function(oOption)
+	blockScreen: function(sId)
 	{
-		var $gray = $('#AN_divGrayLayer');
-		if($gray.is(':hidden'))
+		var jGray = $('#AN_divGrayLayer');
+		if(jGray.is(':hidden'))
 		{
 			if(!$.browser.opera) $('html').css('overflow', 'hidden');
-			$gray.show().fadeTo('fast', 0.7);
-			if(oOption)
+			jGray.show().fadeTo('fast', 0.7);
+			if(sId)
 			{
-				if(oOption === true) oOption = '#AN_divLoading';
+				if(sId === true) sId = '#AN_divLoading';
 				else
 				{
-					$gray.one('click', function()
+					jGray.one('click', function()
 					{
-						AN.shared.blockScreen(oOption);
+						AN.shared.blockScreen(sId);
 					});
 				}
-				$(oOption).fadeIn('slow');
+				$(sId).fadeIn('slow');
 			}
 		}
 		else
 		{
 			if(!$.browser.opera) $('html').css('overflow', '');
-			$gray.add('#AN_divLoading').add($(oOption)).fadeOut('slow');
+			jGray.add('#AN_divLoading').add($(sId)).fadeOut('slow');
 		}
+	},
+
+	checkServer: function()
+	{
+		var aHTML = ['<table id="AN_tableStatus" style="width:100%; text-align: center;"><tr style="background-color: #336699; font-weight: bold"><td style="width: 50%; color: white">伺服器</td><td style="color: white; border-left-width: 1px;">回應時間</td></tr>'];
+
+		for(var i=1;i<=8;i++)
+		{
+			aHTML.push($.sprintf(
+			'<tr><td><a style="color: black; text-decoration: none;" href="%s">Forum %s</a></td><td id="AN_tdServer%s" style="border-left-width: 1px;">querying...</td></tr>',
+			location.href.replace(/forum\d/i, 'forum' + i), i, i
+			));
+		};
+
+		aHTML.push('</table>');
+
+		$('#AN_divMiddleBox')
+		.children(':first').html('Server Status')
+		.end()
+		.children(':last').html(aHTML.join(''));
+
+		AN.shared.blockScreen('#AN_divMiddleBox');
+
+		$('#AN_tableStatus').fn(function()
+		{
+			this.css('margin-top', (259 - this.outerHeight()) / 2);
+		});
+
+		var jImg = $(new Image())
+		.load(function()
+		{
+			var jThis = $(this);
+			$('#AN_tdServer' + jThis.data('nServer')).html('~' + ($.time() - jThis.data('nTime')) + ' ms');
+			jThis.data('bDone', true);
+		})
+		.error(function()
+		{
+			var jThis = $(this);
+			$('#AN_tdServer' + jThis.data('nServer')).html('DEAD');
+			jThis.data('bDone', true);
+		});
+
+		AN.data.aServer = [];
+		for(var i=0;i<8;i++)
+		{
+			AN.data.aServer[i] = jImg.clone(true).data('nServer', i+1).data('nTime', $.time()).attr('src', $.sprintf('http://forum%s.hkgolden.com/images/spacer.gif', i+1));
+		}
+
+		setTimeout(function()
+		{
+			$.each(AN.data.aServer, function()
+			{
+				if(!this.data('bDone')) $('#AN_tdServer' + this.data('nServer')).html('Probably DEAD');
+			});
+		}, 10000);
 	}
 };
 
@@ -636,11 +694,18 @@ AN.comp =
 			$('<div>Benchmark</div>').appendTo('#AN_divRight').click(function()
 			{
 				var arrHTML = ['<table><tr style="background-color: #336699; font-weight: bold"><td style="color: white">功能</td><td style="color: white; border-left-width: 1px; text-align: right">執行時間</td></tr>'];
-				$.each(AN.data.benchmark, function()
+				var aResult = AN.data.benchmark;
+				var nLast = aResult.length - 1;
+				var nSum = 0;
+
+				$.each(aResult, function(i)
 				{
+					if(i != nLast) nSum += this[1];
 					var objSec = (this[1] == 0) ? 'ε' : this[1];
 					arrHTML.push($.sprintf('<tr><td>%s</td><td style="border-left-width: 1px; text-align: right">%s ms</td></tr>', this[0], objSec));
 				});
+				arrHTML.push($.sprintf('<tr><td>Sum</td><td style="border-left-width: 1px; text-align: right">%s ms</td></tr>', nSum));
+				arrHTML.push($.sprintf('<tr><td>Difference</td><td style="border-left-width: 1px; text-align: right">%s ms</td></tr>', aResult[nLast] - nSum));
 				arrHTML.push('</table>');
 
 				$('#AN_divMiddleBox')
@@ -1149,8 +1214,11 @@ AN.main =
 			$window.Search = function()
 			{
 				var strType = $('#st option:selected').val();
-				window.open('search.aspx?st=' + strType + '&searchstring=' + escape($('#searchstring').val()), '_blank');
-				$('#searchstring').val('');
+				if(strType !== '')
+				{
+					window.open('search.aspx?st=' + strType + '&searchstring=' + escape($('#searchstring').val()), '_blank');
+					$('#searchstring').val('');
+				}
 			};
 		}
 	},
@@ -2277,7 +2345,7 @@ AN.main =
 		page: ['all'],
 		defaultOn: false,
 		id: 43,
-		options: { sLogoSrc: { disp: '圖片網址', defaultValue: 'http:\//i3.6.cn/cvbnm/93/04/af/f1cb3700665e79e2d73a6392b585ef19.jpg', type: 'string' } },
+		options: { sLogoSrc: { disp: '圖片網址', defaultValue: 'http://i3.6.cn/cvbnm/93/04/af/f1cb3700665e79e2d73a6392b585ef19.jpg', type: 'string' } },
 		once: function()
 		{
 			$('#ctl00_TopBarHomeImage').attr('src', AN.shared.getOption('sLogoSrc'));
@@ -2357,16 +2425,29 @@ AN.main =
 		}
 	},
 
-	checkServerStatus:
+	addServerCheckingButton:
 	{
-		disabled: true,
-		disp: '檢查伺服器狀態',
-		type: 1,
-		page: ['all', 'special'],
+		disp: '加入伺服器狀態檢查按扭',
+		type: 3,
+		page: ['all'],
 		defaultOn: true,
 		id: 47,
 		once: function()
 		{
+			$('<div>Check Server Status</div>').appendTo('#AN_divTopLeft').click(function(){ AN.shared.checkServer(); });
+		}
+	},
+
+	checkServerStatus:
+	{
+		disp: '自動顯示伺服器狀態檢查視窗 (M2, Opera無法使用)',
+		type: 1,
+		page: ['special'],
+		defaultOn: true,
+		id: 48,
+		once: function()
+		{
+			AN.shared.checkServer();
 		}
 	}
 };

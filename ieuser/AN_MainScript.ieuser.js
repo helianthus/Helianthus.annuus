@@ -32,7 +32,7 @@
     > Opera 9.6+
     > Google Chrome 1.0.154.36+ w/ Greasemetal 0.2+
     Please let me know if there is a way to use scripts on other browsers
- *	No base64 encoded data - Not supported by IE 7- [sosad]
+ *	No base64 encoded data - Not supported by IE 7 [sosad]
  *	Used unsafeWindow on GM - A lot easier for me to write the script
  *
  */
@@ -416,6 +416,7 @@ AN.comp =
 			.AN_spanClickBox { cursor: pointer; } \
 			.AN_spanClickBox:hover { color: YellowGreen; } \
 			.AN_spanLine { display: inline-block; color: gray; border-bottom: 1px dotted gray; margin-bottom: 3px; font-size: 10px; font-style: italic; cursor: pointer } \
+			\
 			.AN_divBox { display: none; z-index: 3; position: fixed; background-color: #F3F2F1; border: 1px solid black; } \
 			.AN_divBoxHeader { padding-left: 3px; background-color: #336699; border-bottom: 1px solid black; color: white; } \
 			\
@@ -1329,9 +1330,10 @@ AN.main =
 				{
 					$quote.find('div:first > span:last').remove();
 				}
-				if(!$quote.parent('div').length) // outermost
+				if(!$quote.parent('div').length) // outermost or single-layer
 				{
-					$quote.find('b').addClass('AN_bOutermost');
+
+					$quote.find('div:first').css('margin-bottom', '5px').find('b').addClass('AN_bOutermost');
 				}
 			});
 
@@ -2440,7 +2442,7 @@ AN.main =
 
 	checkServerStatus:
 	{
-		disp: '自動顯示伺服器狀態檢查視窗 (部份頁面M2, Opera無法使用)',
+		disp: '自動顯示伺服器狀態檢查視窗 (部份頁面IE7, M2 w/ IE7, Opera無法使用)',
 		type: 1,
 		page: ['special'],
 		defaultOn: true,

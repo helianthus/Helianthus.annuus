@@ -2440,7 +2440,7 @@ AN.main =
 
 	checkServerStatus:
 	{
-		disp: '自動顯示伺服器狀態檢查視窗 (M2, Opera無法使用)',
+		disp: '自動顯示伺服器狀態檢查視窗 (部份頁面M2, Opera無法使用)',
 		type: 1,
 		page: ['special'],
 		defaultOn: true,

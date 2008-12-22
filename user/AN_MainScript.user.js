@@ -754,7 +754,14 @@ AN.comp =
 			AN.shared.log = function(strLog)
 			{
 				if(AN.data.settings1.other2) $('#AN_divLog:hidden').fadeIn('fast');
-				$('<div>' + strLog + '</div>').prependTo('#AN_divLogContent').slideDown('slow');
+
+				var dDate = new Date();
+				var hour = dDate.getHours();
+				if(hour < 10) hour = '0' + hour;
+				var min = dDate.getMinutes();
+				if(min < 10) min = '0' + min;
+
+				$($.sprintf('<div>%s:%s %s</div>', hour, min, strLog)).prependTo('#AN_divLogContent').slideDown('slow');
 			};
 
 			AN.shared.log2 = function(strLog)
@@ -1978,16 +1985,18 @@ AN.main =
 									AN.data.jEndTable.before(this).before('<table><tr><td></td></tr></table>');
 								});
 
-								AN.execFunc(false, jNewReplies.add(AN.data.aPageBoxes));
-
 								AN.shared.log('New reply(s) added.');
 							}
+
 							if(Math.ceil(sNewStrong / 50) > Math.ceil(sCurStrong / 50))
 							{
 								AN.func.updatePageBox(jDoc);
+								AN.execFunc(false, jNewReplies.add(AN.data.aPageBoxes));
 								AN.shared.log('Found next page, page boxes updated.');
 								return;
 							}
+
+							AN.execFunc(false, jNewReplies.add(AN.data.aPageBoxes));
 						}
 						else
 						{

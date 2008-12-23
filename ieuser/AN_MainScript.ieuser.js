@@ -360,12 +360,13 @@ AN.shared =
 	checkServer: function()
 	{
 		var aHTML = ['<table id="AN_tableStatus" style="width:100%; text-align: center;"><tr style="background-color: #336699; font-weight: bold"><td style="width: 50%; color: white">伺服器</td><td style="color: white; border-left-width: 1px;">回應時間</td></tr>'];
+		var sURL = (location.href.indexOf('aspxerrorpath=')) ? $.sprintf('http://%s/topics.aspx?type=BW', location.hostname) : location.href;
 
 		for(var i=1;i<=8;i++)
 		{
 			aHTML.push($.sprintf(
 			'<tr><td><a style="color: black; text-decoration: none;" href="%s">Forum %s</a></td><td id="AN_tdServer%s" style="border-left-width: 1px;">querying...</td></tr>',
-			location.href.replace(/forum\d/i, 'forum' + i), i, i
+			sURL.replace(/forum\d/i, 'forum' + i), i, i
 			));
 		};
 
@@ -2026,6 +2027,7 @@ AN.main =
 							{
 								AN.func.updatePageBox(jDoc);
 								AN.execFunc(false, $(AN.data.aPageBoxes));
+								AN.func.addEvents();
 								AN.shared.log('Found next page, page boxes updated.');
 							}
 						}

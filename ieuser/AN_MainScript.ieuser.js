@@ -179,19 +179,46 @@ AN.shared =
 		}
 	},
 
-	data: function(strDataName, objValue)
+	data: function(sName, uValue)
 	{
-		var objData = $.convertObj(AN.util.cookie('AN_data'));
+		var oData = $.convertObj(AN.util.cookie('AN_data'));
 
-		if(objValue === undefined)
+		if(uValue === undefined)
 		{
-			return (objData && objData[strDataName]) ? objData[strDataName] : null;
+			if(oData && oData[sName])
+			{
+				return oData[sName];
+			}
+			return null;
 		}
 		else
 		{
-			if(!objData) objData = {};
-			objData[strDataName] = objValue;
-			AN.util.cookie('AN_data', objData);
+			if(!oData) oData = {};
+
+			if(uValue === null || uValue === '')
+			{
+				delete oData[sName];
+			}
+			else
+			{
+				oData[sName] = uValue;
+			}
+
+			AN.util.cookie('AN_data', oData);
+		}
+	},
+
+	dataArray: function(sName, uValue)
+	{
+		if(uValue === undefined)
+		{
+			var sData = AN.shared.data(sName);
+			return (sData) ? sData.split('&AN&') : [];
+		}
+		else
+		{
+			if(uValue !== null) uValue = uValue.join('&AN&');
+			AN.shared.data(sName, uValue);
 		}
 	},
 
@@ -373,7 +400,7 @@ AN.shared =
 		AN.data.aServer = [];
 		for(var i=0;i<8;i++)
 		{
-			AN.data.aServer[i] = jImg.clone(true).data('nServer', i+1).data('nTime', $.time()).attr('src', $.sprintf('http://forum%s.hkgolden.com/images/spacer.gif', i+1));
+			AN.data.aServer[i] = jImg.clone(true).data('nServer', i+1).data('nTime', $.time()).attr('src', $.sprintf('http://forum%s.hkgolden.com/images/spacer.gif?tId=%s', i+1, $.time()));
 		}
 
 		setTimeout(function()
@@ -976,7 +1003,7 @@ AN.main =
 
 	tempFunctions:
 	{
-		disp: '暫存功能:',
+		disp: '暫存功能',
 		type: 1,
 		page: ['all'],
 		defaultOn: true,
@@ -1938,7 +1965,7 @@ AN.main =
 						AN.shared.log2($.sprintf('Successfully changed to page %s.', nPageNo));
 
 						if(Math.ceil(sNewStrong / 50) == nPageNo) AN.func.getPage();
-						else AN.data.tGetPage = setTimeout(function(){ AN.func.getPage(); }, 30000);
+						else if(!AN.data.noAutoRefresh) AN.data.tGetPage = setTimeout(function(){ AN.func.getPage(); }, 30000);
 					};
 
 					if(!AN.data.jReplies[nPageNo])
@@ -1991,25 +2018,27 @@ AN.main =
 									AN.data.jEndTable.before(this).before('<table><tr><td></td></tr></table>');
 								});
 
+								AN.execFunc(false, jNewReplies)
 								AN.shared.log('New reply(s) added.');
 							}
 
 							if(Math.ceil(sNewStrong / 50) > Math.ceil(sCurStrong / 50))
 							{
 								AN.func.updatePageBox(jDoc);
-								AN.execFunc(false, jNewReplies.add(AN.data.aPageBoxes));
+								AN.execFunc(false, $(AN.data.aPageBoxes));
 								AN.shared.log('Found next page, page boxes updated.');
-								return;
 							}
-
-							AN.execFunc(false, jNewReplies.add(AN.data.aPageBoxes));
 						}
 						else
 						{
 							AN.shared.log2('No new replies.');
 						}
-						AN.shared.log2('Query again in 30s...');
-						AN.data.tGetPage = setTimeout(function(){ AN.func.getPage(); }, 30000);
+
+						if(!AN.data.noAutoRefresh)
+						{
+							AN.data.tGetPage = setTimeout(function(){ AN.func.getPage(); }, 30000);
+							AN.shared.log2('Query again in 30s...');
+						}
 					});
 				}
 				else
@@ -2039,6 +2068,22 @@ AN.main =
 			{
 				clearTimeout(AN.data.tGetPage);
 				AN.func.getPage(true);
+			});
+
+			$('<div id="AN_divToggleAutoRefresh">Disable Auto Refresh</div>').appendTo('#AN_divTopLeft').toggle(
+			function()
+			{
+				clearTimeout(AN.data.tGetPage);
+				AN.data.noAutoRefresh = true;
+				$(this).html('Enable Auto Refresh');
+				AN.shared.log2('Auto refresh disabled.');
+			},
+			function()
+			{
+				AN.data.tGetPage = setTimeout(function(){ AN.func.getPage(); }, 30000);
+				AN.data.noAutoRefresh = false;
+				$(this).html('Disable Auto Refresh');
+				AN.shared.log2('Auto refresh enabled.');
 			});
 		}
 	},
@@ -2265,7 +2310,7 @@ AN.main =
 
 	addShowOpenerPostsOnlyButton:
 	{
-		disp: '加入只顯示樓主發言按扭 (頁數過多時FF3會發生錯誤)',
+		disp: '加入只顯示樓主發言按扭',
 		type: 3,
 		page: ['view'],
 		defaultOn: false,
@@ -2278,9 +2323,7 @@ AN.main =
 
 				AN.shared.blockScreen(true);
 
-				$('#AN_divAjaxRefresh').remove();
-				$('#AN_spanCurPage').parent().remove();
-				$(this).remove();
+				$(this).add('#AN_divAjaxRefresh, #AN_divToggleAutoRefresh').add($('#AN_spanCurPage').parent()).remove();
 
 				AN.shared.getOpenerInfo(function(oInfo)
 				{
@@ -2425,6 +2468,8 @@ AN.main =
 
 					AN.execFunc(false, aTopics[0].jThis.parent());
 
+					$('#AN_divTopicFunctions').slideUp('fast', function(){ $(this).remove(); });
+
 					AN.shared.log('Topics table updated.');
 
 					var nTimeOut = AN.shared.getOption('nTimeOut');
@@ -2466,6 +2511,99 @@ AN.main =
 		once: function()
 		{
 			AN.shared.checkServer();
+		}
+	},
+
+	addTopicFunctions:
+	{
+		disp: '加入帖子功能按扭',
+		type: 3,
+		page: ['topics'],
+		defaultOn: true,
+		id: 49,
+		once: function()
+		{
+			AN.func.updateButtons = function(nTopicIndex)
+			{
+				if(!$('#AN_divTopicFunctions').length)
+				{
+					$('<div id="AN_divTopicFunctions"><div id="AN_divTopicNo" /></div>').appendTo('#AN_divTopLeft');
+
+					$('<div id="AN_divBlock" />').appendTo('#AN_divTopicFunctions').click(function()
+					{
+						var aBlocked = AN.shared.dataArray('aBlockedTopics');
+						var sTarget = AN.data.selectedTopic.sUserName;
+						var nIndex = $.inArray(sTarget, aBlocked);
+						var sBlockMsg;
+
+						if(nIndex == -1)
+						{
+							aBlocked.push(sTarget);
+							AN.func.blockTopics(true);
+							sBlockMsg = 'Unblock ';
+						}
+						else
+						{
+							aBlocked.splice(nIndex, 1);
+							AN.func.blockTopics(false);
+							sBlockMsg = 'Block ';
+						}
+
+						AN.shared.dataArray('aBlockedTopics', aBlocked);
+						$('#AN_divBlock').html(sBlockMsg + sTarget);
+					});
+				}
+
+				$('<div id="AN_divSticky" />').appendTo('#AN_divTopicFunctions').click(function()
+				{
+				});
+
+				var oTopic = AN.shared.getTopicRows()[nTopicIndex];
+				AN.data.selectedTopic = oTopic;
+				var sUserName = oTopic.sUserName;
+
+				$('#AN_divTopicNo').html('Topic #' + (nTopicIndex + 1) + ':');
+
+				var sBlockMsg = ($.inArray(sUserName, AN.shared.dataArray('aBlockedTopics')) != -1) ? 'Unblock ' : 'Block ';
+				$('#AN_divBlock').html(sBlockMsg + oTopic.sUserName);
+			};
+
+			AN.func.blockTopics = function(bToBlock, sTarget)
+			{
+				if(!sTarget) sTarget = AN.data.selectedTopic.sUserName;
+
+				$.each(AN.shared.getTopicRows(), function()
+				{
+					if(this.sUserName == sTarget)
+					{
+						var jTitleTd = this.jThis.children(':eq(1)');
+
+						if(bToBlock)
+						{
+							jTitleTd.data('sOri', jTitleTd.html()).html('<span style="color: gray; font-style: italic;">This user is blocked.</span>');
+						}
+						else
+						{
+							jTitleTd.html(jTitleTd.data('sOri'));
+						}
+					}
+				});
+			};
+		},
+		infinite: function()
+		{
+			$.each(AN.shared.getTopicRows(), function(i)
+			{
+				this.jThis.children(':first').css('cursor', 'pointer').click(function()
+				{
+					AN.func.updateButtons(i);
+				});
+			});
+
+			$.each(AN.shared.dataArray('aBlockedTopics'), function()
+			{
+				AN.func.blockTopics(true, this);
+			});
 		}
 	}
 };

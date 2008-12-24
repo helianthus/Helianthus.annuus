@@ -130,6 +130,7 @@ AN.execFunc = function(booIsFirstTime, jDoc)
 					var numTime = $.time();
 					if(booIsFirstTime && this.once) this.once();
 					if(this.infinite) this.infinite.call(AN.temp.jDoc);
+					if(booIsFirstTime && this.once2) this.once2();
 					AN.data.benchmark.push([this.disp, ($.time() - numTime)]);
 				}
 				catch(err)
@@ -213,7 +214,7 @@ AN.shared =
 		if(uValue === undefined)
 		{
 			var sData = AN.shared.data(sName);
-			return (sData) ? sData.split('&AN&') : [];
+			return (sData) ? sData.toString().split('&AN&') : [];
 		}
 		else
 		{
@@ -262,7 +263,7 @@ AN.shared =
 		{
 			if($(this).html().match(/^\s*最後回應時間$/))
 			{
-				$.each($(this).parent().nextAll('tr'), function()
+				$.each($(this).parent().nextAll('tr:not(.AN_trSticky)'), function()
 				{
 					var jThis = $(this), jA = jThis.find('a');
 
@@ -271,8 +272,9 @@ AN.shared =
 					aTopics.push(
 					{
 						jThis: jThis,
-						sLinkId: jA.eq(0).attr('href').match(/\d+$/)[0],
-						sUserName: jA.filter(':last').html()
+						sTopicId: jA.eq(0).attr('href').match(/\d+$/)[0],
+						sUserName: jA.filter(':last').html(),
+						sTitle: jA.eq(0).html()
 					});
 				});
 
@@ -310,7 +312,7 @@ AN.shared =
 			}
 			else
 			{
-				setTimeout(function(){ arguments.callee(fToExec); }, 500);
+				setTimeout(function(){ AN.shared.getOpenerInfo(fToExec); }, 1000);
 			}
 		}
 		else if(AN.shared.getCurPageNo() == 1)
@@ -321,6 +323,8 @@ AN.shared =
 		}
 		else
 		{
+			AN.data.openerInfo = {};
+
 			$.get('/view.aspx?message=' + $window.messageid, function(sHTML)
 			{
 				var $a = $.doc(sHTML).find('.repliers:first a:first');
@@ -360,7 +364,7 @@ AN.shared =
 	checkServer: function()
 	{
 		var aHTML = ['<table id="AN_tableStatus" style="width:100%; text-align: center;"><tr style="background-color: #336699; font-weight: bold"><td style="width: 50%; color: white">伺服器</td><td style="color: white; border-left-width: 1px;">回應時間</td></tr>'];
-		var sURL = (location.href.indexOf('aspxerrorpath=')) ? $.sprintf('http://%s/topics.aspx?type=BW', location.hostname) : location.href;
+		var sURL = (location.href.indexOf('aspxerrorpath=') > 0) ? $.sprintf('http://%s/topics.aspx?type=BW', location.hostname) : location.href;
 
 		for(var i=1;i<=8;i++)
 		{
@@ -430,14 +434,14 @@ AN.comp =
 			#AN_menuCollection a { color: gray !important; text-decoration: none; } \
 			\
 			#AN_divTopLeft { position: fixed; top: 50px; left: 0; padding-left: 5px; } \
-			#AN_divTopLeft div { border-left: 5px solid gray; padding: 3px 0 3px 5px; font-style: italic; } \
+			#AN_divTopLeft div { border-left: 5px solid gray; padding: 3px 0 3px 5px; font-style: italic; font-size: 12px; } \
 			\
 			#AN_divLeft { position: fixed; top: 50%; left: 0; text-align: right; } \
-			#AN_divLeft div { border: 0 solid gray; padding: 5px 0; } \
-			#AN_divLeftMiddle { display: none; border-width: 1px 0 !important; padding: 10px 0 !important; } \
+			#AN_divLeft div { border: 0 solid gray; padding: 5px 0; font-size: 12px; } \
+			#AN_divLeftMiddle { display: none; border-width: 1px 0 !important; padding: 7px 0 !important; } \
 			\
 			#AN_divRight { position: fixed; top: 15%; right: 0; text-align: left; } \
-			#AN_divRight div { border-bottom: 1px solid gray; padding: 10px 5px 3px 0; } \
+			#AN_divRight div { border-bottom: 1px solid gray; padding: 10px 5px 3px 0; font-size: 12px; } \
 			\
 			.AN_spanBox, .AN_spanClickBox { display: inline-block; color: gray; border: 1px solid gray; padding: 1px 2px; cursor: default; } \
 			.AN_spanClickBox { cursor: pointer; } \
@@ -1025,6 +1029,7 @@ AN.main =
 					if(nodSpan.firstChild.nodeType == 3) nodSpan.removeChild(nodSpan.firstChild);
 				});
 			}
+/*
 			if(AN.shared.getOption('bFixDeadSmileys'))
 			{
 				$($window).load(function()
@@ -1035,6 +1040,7 @@ AN.main =
 					});
 				});
 			}
+*/
 		}
 	},
 
@@ -1797,14 +1803,18 @@ AN.main =
 		id: 25,
 		infinite: function()
 		{
+/*
 			var regLink = /(?:(h\w{2}ps?[:\/]+?)|[\w-]+?@)?((?:(?:\d{1,3}\.){3}\d{1,3}|(?:[\w-]+?\.){0,4}[\w-]{2,}\.(?:biz|cn|cc|co(?=\.)|com|de|eu|gov|hk|info|jp(?!g)|net|org|ru|tk|us)(?:\.[a-z]{2,3})?)(?::\d{1,5})?(?:\/[\w~./%?&=#+:-]*)?)/i;
+*/
+
+			var regLink = /(?:ftp|https?):\/\/[\w!#$&'()*+,./:;=?@~-]+/i;
 
 			var funWrap = function(nodToWrap, aMatch)
 			{
 				nodToWrap.splitText(RegExp.leftContext.length + aMatch[0].length);
 				nodToWrap = nodToWrap.splitText(RegExp.leftContext.length);
 
-				var strHref = (aMatch[1] || 'http://') + aMatch[2];
+				var strHref = aMatch[0];//(aMatch[1] || 'http://') + aMatch[2];
 				$(nodToWrap)
 				.wrap($.sprintf('<a href="%s" />', strHref))
 				.parent().before('<span style="cursor: default; color: gray; margin-right: 2px" title="Characters Linkified">[L]</span>');
@@ -1846,7 +1856,7 @@ AN.main =
 				this.jTdContent.find('a').each(function()
 				{
 					var aMatch = this.hostname.match(/forum\d*.hkgolden\.com/i);
-					if(aMatch && $(this).children('img').length == 0 && aMatch[0] != location.hostname)
+					if(aMatch && $(this).children().length == 0 && aMatch[0] != location.hostname)
 					{
 						this.hostname = location.hostname;
 						$(this).before('<span style="cursor: default; color: gray; margin-right: 2px" title="Server No. Converted">[C]</span>');
@@ -1877,9 +1887,14 @@ AN.main =
 		disp: 'Ajax化頁面讀取',
 		type: 1,
 		page: ['view'],
-		defaultOn: false,
+		defaultOn: true,
 		id: 28,
-		options: { booShowPageNo: { disp: '顯示資料: 本頁頁數', defaultValue: true, type: 'boolean' } },
+		options:
+		{
+			booShowPageNo: { disp: '顯示資料: 本頁頁數', defaultValue: true, type: 'boolean' },
+			bAutoRefreshPage: { disp: '自動重新整理', defaultValue: true, type: 'boolean' },
+			bAjaxifyReplying: { disp: 'ajax化回覆', defaultValue: true, type: 'boolean' }
+		},
 		once: function()
 		{
 			AN.func.updatePageBox = function(jDoc)
@@ -1966,7 +1981,7 @@ AN.main =
 						AN.shared.log2($.sprintf('Successfully changed to page %s.', nPageNo));
 
 						if(Math.ceil(sNewStrong / 50) == nPageNo) AN.func.getPage();
-						else if(!AN.data.noAutoRefresh) AN.data.tGetPage = setTimeout(function(){ AN.func.getPage(); }, 30000);
+						else if(AN.data.bAutoRefreshPage) AN.data.tGetPage = setTimeout(function(){ AN.func.getPage(); }, 30000);
 					};
 
 					if(!AN.data.jReplies[nPageNo])
@@ -1993,17 +2008,21 @@ AN.main =
 					if(nCurPageNo == 21) return; // 1001
 
 					AN.shared.log('Querying lastest replies...');
+
 					$.get(AN.shared.getURL(nCurPageNo), function(sHTML)
 					{
 						var
 						nRepliesLength = $('.repliers').length,
 						bIsRepliesMax = (nCurPageNo == 1) ? (nRepliesLength == 51) : (nRepliesLength == 50),
 						sCurStrong = $('strong:first').text(),
-
 						jDoc = $.doc(sHTML),
 						sNewStrong = jDoc.find('strong:first').text()
 
-						if(sCurStrong != sNewStrong)
+						if(!sNewStrong)
+						{
+							AN.shared.log('Error on query, maybe reply is unsuccessful.')
+						}
+						else if(sCurStrong != sNewStrong)
 						{
 							$('strong:first').text(sNewStrong);
 
@@ -2036,7 +2055,7 @@ AN.main =
 							AN.shared.log2('No new replies.');
 						}
 
-						if(!AN.data.noAutoRefresh)
+						if(AN.data.bAutoRefreshPage)
 						{
 							AN.data.tGetPage = setTimeout(function(){ AN.func.getPage(); }, 30000);
 							AN.shared.log2('Query again in 30s...');
@@ -2062,7 +2081,27 @@ AN.main =
 			});
 
 			AN.func.addEvents();
-			AN.data.tGetPage = setTimeout(function(){ AN.func.getPage(); }, 30000);
+			AN.data.bAutoRefreshPage = AN.shared.getOption('bAutoRefreshPage');
+			if(AN.data.bAutoRefreshPage) AN.data.tGetPage = setTimeout(function(){ AN.func.getPage(); }, 30000);
+
+			if(AN.shared.getOption('bAjaxifyReplying'))
+			{
+				$('#aspnetForm').submit(function(event)
+				{
+					event.preventDefault();
+					clearTimeout(AN.data.tGetPage);
+					AN.shared.log('Posting reply...');
+
+					var sData = $('#aspnetForm').serialize() + '&ctl00%24ContentPlaceHolder1%24btn_Submit.x=0&ctl00%24ContentPlaceHolder1%24btn_Submit.y=0';
+					$.post(location.href, sData, function()
+					{
+						$('#ctl00_ContentPlaceHolder1_messagetext').val('');
+						$('#AN_divToToggle').hide();
+						AN.shared.log('Reply completed.');
+						AN.func.getPage(false);
+					});
+				});
+			}
 
 			if(AN.shared.getOption('booShowPageNo')) AN.shared.addInfo($.sprintf('Page: <a id="AN_spanCurPage" href="%s">%s</a>', location.href, nCurPageNo));
 
@@ -2076,14 +2115,14 @@ AN.main =
 			function()
 			{
 				clearTimeout(AN.data.tGetPage);
-				AN.data.noAutoRefresh = true;
+				AN.data.bAutoRefreshPage = false;
 				$(this).html('Enable Auto Refresh');
 				AN.shared.log2('Auto refresh disabled.');
 			},
 			function()
 			{
 				AN.data.tGetPage = setTimeout(function(){ AN.func.getPage(); }, 30000);
-				AN.data.noAutoRefresh = false;
+				AN.data.bAutoRefreshPage = true;
 				$(this).html('Disable Auto Refresh');
 				AN.shared.log2('Auto refresh enabled.');
 			});
@@ -2183,22 +2222,31 @@ AN.main =
 		options: { numMaxReplyHeight: { disp: '回覆最長許可值(px)', defaultValue: 5000, type: 'string' } },
 		once: function()
 		{
-			$('<div>Restore Posts\' States</div>').appendTo('#AN_divTopLeft').click(function()
+			$('<div>Restore Posts\' Length</div>').appendTo('#AN_divTopLeft').toggle(
+			function()
 			{
 				$('.AN_divWrapper').css('max-height', 'none').scrollTop(0);
-				AN.shared.log('All replies are restored to original states.');
+				$(this).html('Shorten All Posts');
+				AN.shared.log('Posts length restored.');
+			},
+			function()
+			{
+				var nMaxReplyHeight = AN.shared.getOption('numMaxReplyHeight');
+				$('.AN_divWrapper').css('max-height', nMaxReplyHeight).scrollTop(9999999);
+				$(this).html('Restore Posts\' Length');
+				AN.shared.log($.sprintf('All posts shortened to %spx or less.', nMaxReplyHeight));
 			});
 		},
 		infinite: function()
 		{
-			var numMaxReplyHeight = AN.shared.getOption('numMaxReplyHeight');
+			var nMaxReplyHeight = AN.shared.getOption('numMaxReplyHeight');
 
 			$.each(AN.shared.getReplies(), function()
 			{
-				var numOriHeight = this.jTdContent.height();
-				if(numOriHeight < numMaxReplyHeight) return;
+				var nOriHeight = this.jTdContent.height();
+				if(nOriHeight <= nMaxReplyHeight) return;
 
-				var $box = $($.sprintf('<div style="text-align: right; margin-bottom: 5px;"><span style="font-size: 10px;" class="AN_spanClickBox">原始高度: %spx</span></div>', numOriHeight)).click(function()
+				var $box = $($.sprintf('<div style="text-align: right; margin-bottom: 5px;"><span style="font-size: 10px;" class="AN_spanClickBox">原始高度: %spx</span></div>', nOriHeight)).click(function()
 				{
 					var $wrapper = $(this).siblings('.AN_divWrapper');
 					if($wrapper.css('max-height') == 'none') $wrapper.css('max-height', AN.shared.getOption('numMaxReplyHeight')).scrollTop(9999999);
@@ -2206,7 +2254,7 @@ AN.main =
 				});
 
 				this.jTdContent
-				.wrapInner($.sprintf('<div class="AN_divWrapper" style="overflow: hidden; max-height: %spx" />', numMaxReplyHeight))
+				.wrapInner($.sprintf('<div class="AN_divWrapper" style="overflow: hidden; max-height: %spx" />', nMaxReplyHeight))
 				.prepend($box.clone(true)).append($box)
 				.children('.AN_divWrapper').scrollTop(9999999);
 			});
@@ -2470,7 +2518,7 @@ AN.main =
 
 					AN.execFunc(false, aTopics[0].jThis.parent());
 
-					$('#AN_divTopicFunctions').slideUp('fast', function(){ $(this).remove(); });
+					$('#AN_divTopicFunctions').slideUp('slow', function(){ $(this).remove(); });
 
 					AN.shared.log('Topics table updated.');
 
@@ -2518,71 +2566,117 @@ AN.main =
 
 	addTopicFunctions:
 	{
-		disp: '加入帖子功能按扭',
+		disp: '加入帖子功能按扭 (暫不適用於FF)',
 		type: 3,
 		page: ['topics'],
-		defaultOn: true,
+		defaultOn: false,
 		id: 49,
 		once: function()
 		{
-			AN.func.updateButtons = function(nTopicIndex)
+			AN.func.updateButtons = function(s)
 			{
+				var oTopic = AN.temp.oSelectedTopic;
+				if(!oTopic) return $('#AN_divTopicFunctions').slideUp('slow', function(){ $(this).remove(); });
+
 				if(!$('#AN_divTopicFunctions').length)
 				{
-					$('<div id="AN_divTopicFunctions"><div id="AN_divTopicNo" /></div>').appendTo('#AN_divTopLeft');
-
-					$('<div id="AN_divBlock" />').appendTo('#AN_divTopicFunctions').click(function()
-					{
-						var aBlocked = AN.shared.dataArray('aBlockedTopics');
-						var sTarget = AN.data.selectedTopic.sUserName;
-						var nIndex = $.inArray(sTarget, aBlocked);
-						var sBlockMsg;
-
-						if(nIndex == -1)
-						{
-							aBlocked.push(sTarget);
-							AN.func.blockTopics(true);
-							sBlockMsg = 'Unblock ';
-						}
-						else
-						{
-							aBlocked.splice(nIndex, 1);
-							AN.func.blockTopics(false);
-							sBlockMsg = 'Block ';
-						}
-
-						AN.shared.dataArray('aBlockedTopics', aBlocked);
-						$('#AN_divBlock').html(sBlockMsg + sTarget);
-					});
+					AN.func.addButtons();
 				}
 
-				$('<div id="AN_divSticky" />').appendTo('#AN_divTopicFunctions').click(function()
-				{
-				});
-
-				var oTopic = AN.shared.getTopicRows()[nTopicIndex];
-				AN.data.selectedTopic = oTopic;
+				var sTopicId = oTopic.sTopicId;
 				var sUserName = oTopic.sUserName;
+				var sTitle = oTopic.sTitle;
+				var sData = $.sprintf('%s&DATA&%s&DATA&%s', sTopicId, sUserName, sTitle);
 
-				$('#AN_divTopicNo').html('Topic #' + (nTopicIndex + 1) + ':');
+				var sHeader = (AN.temp.nSelectedIndex !== null) ? 'Topic #' + (AN.temp.nSelectedIndex + 1) + ':' : 'Sticky:';
+				$('#AN_divTopicNo').html(sHeader);
 
-				var sBlockMsg = ($.inArray(sUserName, AN.shared.dataArray('aBlockedTopics')) != -1) ? 'Unblock ' : 'Block ';
-				$('#AN_divBlock').html(sBlockMsg + oTopic.sUserName);
+				var sStickyPrefix = ($.inArray(sData, AN.shared.dataArray('aStickiedTopics')) != -1) ? 'Unsticky #' : 'Sticky #';
+				$('#AN_divSticky').html(sStickyPrefix + sTopicId);
+
+				var sBlockPrefix = ($.inArray(sUserName, AN.shared.dataArray('aBlockedTopics')) != -1) ? 'Unblock ' : 'Block ';
+				$('#AN_divBlock').html(sBlockPrefix + sUserName);
 			};
 
-			AN.func.blockTopics = function(bToBlock, sTarget)
+			AN.func.addButtons = function()
 			{
-				if(!sTarget) sTarget = AN.data.selectedTopic.sUserName;
+				$('<div id="AN_divTopicFunctions"><div id="AN_divTopicNo" style="padding: 0 0 6px 5px" /></div>').appendTo('#AN_divTopLeft');
+
+				$('<div id="AN_divBlock" style="padding: 0 0 0 5px" />').appendTo('#AN_divTopicFunctions').click(function()
+				{
+					var aBlocked = AN.shared.dataArray('aBlockedTopics');
+					var sUserName = AN.temp.oSelectedTopic.sUserName;
+					var nIndex = $.inArray(sUserName, aBlocked);
+
+					if(nIndex == -1)
+					{
+						aBlocked.push(sUserName);
+						AN.func.blockTopics(true, sUserName);
+					}
+					else
+					{
+						aBlocked.splice(nIndex, 1);
+						AN.func.blockTopics(false, sUserName);
+					}
+
+					AN.shared.dataArray('aBlockedTopics', aBlocked);
+					AN.func.updateButtons();
+				});
+
+				$('<div id="AN_divSticky" style="padding: 0 0 0 5px" />').appendTo('#AN_divTopicFunctions').click(function()
+				{
+					var aSticked = AN.shared.dataArray('aStickiedTopics');
+					var sTopicId = AN.temp.oSelectedTopic.sTopicId;
+					var sUserName = AN.temp.oSelectedTopic.sUserName;
+					var sTitle = AN.temp.oSelectedTopic.sTitle;
+					var sData = $.sprintf('%s&DATA&%s&DATA&%s', sTopicId, sUserName, sTitle);
+					var nIndex = $.inArray(sData, aSticked);
+
+					if(nIndex == -1)
+					{
+						aSticked.push(sData);
+						AN.func.stickyTopic(true, sData);
+					}
+					else
+					{
+						aSticked.splice(nIndex, 1);
+						AN.func.stickyTopic(false, sData);
+						AN.temp.oSelectedTopic = null;
+					}
+
+					AN.shared.dataArray('aStickiedTopics', aSticked);
+					AN.func.updateButtons();
+				});
+			};
+
+			AN.func.blockTopics = function(bToBlock, sUserName)
+			{
+				var jToggle =
+				$('<span>[ :) ] </span>')
+				.appendTo('<span style="color: gray;" />')
+				.after('<span>此用戶已被封鎖</span>')
+				.css('cursor', 'pointer')
+				.toggle(
+				function()
+				{
+					var jThis = $(this);
+					jThis.html('[ :( ] ').next().html(jThis.parent().parent().data('sOri'));
+				},
+				function()
+				{
+					$(this).html('[ :) ] ').next().html('此用戶已被封鎖');
+				})
+				.parent();
 
 				$.each(AN.shared.getTopicRows(), function()
 				{
-					if(this.sUserName == sTarget)
+					if(this.sUserName == sUserName)
 					{
 						var jTitleTd = this.jThis.children(':eq(1)');
 
 						if(bToBlock)
 						{
-							jTitleTd.data('sOri', jTitleTd.html()).html('<span style="color: gray; font-style: italic;">This user is blocked.</span>');
+							jTitleTd.data('sOri', jTitleTd.html()).html(jToggle.clone(true));
 						}
 						else
 						{
@@ -2591,14 +2685,108 @@ AN.main =
 					}
 				});
 			};
+
+			AN.func.stickyTopic = function(bToSticky, sData)
+			{
+				var aData = sData.split('&DATA&');
+				var sTopicId = aData[0];
+				var sUserName = aData[1];
+				var sTitle = aData[2];
+
+				if(bToSticky)
+				{
+					var jTr;
+
+					if(AN.temp.oSelectedTopic !== undefined)
+					{
+						var jOriTr = AN.temp.oSelectedTopic.jThis;
+						jTr = jOriTr.clone();
+
+						var sOri = jOriTr.children(':eq(1)').data('sOri');
+						if(sOri) jTr.children(':eq(1)').html(sOri);
+					}
+					else
+					{
+						var jOriTr = AN.shared.getTopicRows()[0].jThis;
+						jTr = jOriTr.clone();
+
+						var sOri = jOriTr.children(':eq(1)').data('sOri');
+						if(sOri) jTr.children(':eq(1)').html(sOri);
+
+						var jATopic = jTr.find('a:first');
+						var jASearch = jTr.children(':eq(2)').children('a:first');
+
+						jTr
+						.children(':eq(1)').fn(function()
+						{
+							this
+							.empty()
+							.append(jATopic.attr('href', 'view.aspx?message=' + sTopicId).html(sTitle))
+							.append(' ');
+/*
+							for(var i=2;i<sPageNo;i++)
+							{
+								this
+								.append('[')
+								.append(jATopic.clone().attr('href', $.sprintf('view.aspx?message=%s&page=%s', sTopicId, i)).html(i))
+								.append('] ');
+							}
+*/
+							return this;
+						})
+						.next().html(jASearch.attr('href', $.sprintf('search.aspx?st=A&searchstring=%s', escape(sUserName))).html(sUserName))
+						.next().html('置頂項目')
+						.next().html('?');
+					}
+
+					jTr
+					.insertBefore(AN.shared.getTopicRows()[0].jThis)
+					.data('sTopicId', sTopicId)
+					.data('sUserName', sUserName)
+					.data('sTitle', sTitle)
+					.addClass('AN_trSticky')
+					.children(':first').css('cursor', 'pointer').click(function()
+					{
+						var jTr = $(this).parent();
+						AN.temp.oSelectedTopic =
+						{
+							sTopicId: jTr.data('sTopicId'),
+							sUserName: jTr.data('sUserName'),
+							sTitle: jTr.data('sTitle')
+						};
+						AN.temp.nSelectedIndex = null;
+						AN.func.updateButtons();
+					})
+					.next().prepend('<span style="color: gray;">[ ^ ] </span>');
+				}
+				else
+				{
+					$('.AN_trSticky').each(function()
+					{
+						var jThis = $(this);
+						if(jThis.data('sTopicId') == sTopicId)
+						{
+							jThis.remove();
+							return false;
+						}
+					});
+				}
+			};
+
+			$.each(AN.shared.dataArray('aStickiedTopics'), function()
+			{
+				AN.func.stickyTopic(true, this);
+			});
 		},
 		infinite: function()
 		{
 			$.each(AN.shared.getTopicRows(), function(i)
 			{
-				this.jThis.children(':first').css('cursor', 'pointer').click(function()
+				this.jThis.children(':first').data('nIndex', i).css('cursor', 'pointer').click(function()
 				{
-					AN.func.updateButtons(i);
+					AN.temp.nSelectedIndex = $(this).data('nIndex');
+					AN.temp.oSelectedTopic = AN.shared.getTopicRows()[AN.temp.nSelectedIndex];
+					AN.func.updateButtons();
 				});
 			});
 
@@ -2606,6 +2794,64 @@ AN.main =
 			{
 				AN.func.blockTopics(true, this);
 			});
+		}
+	},
+
+	addStickyButton:
+	{
+		disp: '加入置頂按扭 (須配合"加入帖子功能按扭"使用)',
+		type: 3,
+		page: ['view'],
+		defaultOn: false,
+		id: 50,
+		once: function()
+		{
+			AN.shared.getOpenerInfo(function(oInfo)
+			{
+				var sTopicId = $window.messageid;
+				var sUserName = oInfo.sName;
+				var sTitle = AN.shared.getReplies()[0].jThis.find('td:eq(1)').html();
+				AN.data.sStickyData = $.sprintf('%s&DATA&%s&DATA&%s', sTopicId, sUserName, sTitle);
+				var sMsg = ($.inArray(AN.data.sStickyData, AN.shared.dataArray('aStickiedTopics')) != -1) ? 'Unsticky' : 'Sticky';
+
+				$($.sprintf('<div>%s This Topic</div>', sMsg)).appendTo('#AN_divTopLeft').click(function()
+				{
+					var aData = AN.shared.dataArray('aStickiedTopics');
+					var nIndex = $.inArray(AN.data.sStickyData, aData);
+					var sMsg;
+
+					if(nIndex != -1)
+					{
+						aData.splice(nIndex, 1);
+						sMsg = 'Sticky';
+					}
+					else
+					{
+						aData.push(AN.data.sStickyData);
+						sMsg = 'Unsticky';
+					}
+
+					AN.shared.dataArray('aStickiedTopics', aData);
+					$(this).html(sMsg + ' This Topic');
+				});
+			});
+		}
+	},
+
+	fixProfilePageChange:
+	{
+		disp: '轉頁後再次運行功能',
+		type: 1,
+		page: ['profilepage'],
+		defaultOn: true,
+		id: 51,
+		once: function()
+		{
+			$window.Profile_ShowGoogleAds = function()
+			{
+				AN.execFunc(false);
+				$('[id^=MsgInLineAd]').each(function(){ $(this).parents('tr:first').remove(); });
+			};
 		}
 	}
 };

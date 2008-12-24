@@ -288,7 +288,8 @@ AN.shared =
 			{
 				if($(this).html().match(/^\s*最後回應時間$/))
 				{
-					addToArray($(this).parent().nextAll('tr:not(.AN_trSticky)'));
+					//addToArray($(this).parent().nextAll('tr:not(.AN_trSticky)'));
+					addToArray($(this).parent().nextAll('tr'));
 					return false;
 				}
 			});

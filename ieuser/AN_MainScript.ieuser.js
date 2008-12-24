@@ -1163,6 +1163,226 @@ AN.main =
 		}
 	},
 
+	addTopicFunctions:
+	{
+		disp: '加入帖子功能按扭 (暫不適用於FF)',
+		type: 3,
+		page: ['topics'],
+		defaultOn: false,
+		id: 49,
+		once: function()
+		{
+			AN.func.updateButtons = function(s)
+			{
+				var oTopic = AN.temp.oSelectedTopic;
+				if(!oTopic) return $('#AN_divTopicFunctions').slideUp('slow', function(){ $(this).remove(); });
+
+				if(!$('#AN_divTopicFunctions').length)
+				{
+					AN.func.addButtons();
+				}
+
+				var sTopicId = oTopic.sTopicId;
+				var sUserName = oTopic.sUserName;
+				var sTitle = oTopic.sTitle;
+				var sData = $.sprintf('%s&DATA&%s&DATA&%s', sTopicId, sUserName, sTitle);
+
+				var sHeader = (AN.temp.nSelectedIndex !== null) ? 'Topic #' + (AN.temp.nSelectedIndex + 1) + ':' : 'Sticky:';
+				$('#AN_divTopicNo').html(sHeader);
+
+				var sStickyPrefix = ($.inArray(sData, AN.shared.dataArray('aStickiedTopics')) != -1) ? 'Unsticky #' : 'Sticky #';
+				$('#AN_divSticky').html(sStickyPrefix + sTopicId);
+
+				var sBlockPrefix = ($.inArray(sUserName, AN.shared.dataArray('aBlockedTopics')) != -1) ? 'Unblock ' : 'Block ';
+				$('#AN_divBlock').html(sBlockPrefix + sUserName);
+			};
+
+			AN.func.addButtons = function()
+			{
+				$('<div id="AN_divTopicFunctions"><div id="AN_divTopicNo" style="padding: 0 0 6px 5px" /></div>').appendTo('#AN_divTopLeft');
+
+				$('<div id="AN_divBlock" style="padding: 0 0 0 5px" />').appendTo('#AN_divTopicFunctions').click(function()
+				{
+					var aBlocked = AN.shared.dataArray('aBlockedTopics');
+					var sUserName = AN.temp.oSelectedTopic.sUserName;
+					var nIndex = $.inArray(sUserName, aBlocked);
+
+					if(nIndex == -1)
+					{
+						aBlocked.push(sUserName);
+						AN.func.blockTopics(true, sUserName);
+					}
+					else
+					{
+						aBlocked.splice(nIndex, 1);
+						AN.func.blockTopics(false, sUserName);
+					}
+
+					AN.shared.dataArray('aBlockedTopics', aBlocked);
+					AN.func.updateButtons();
+				});
+
+				$('<div id="AN_divSticky" style="padding: 0 0 0 5px" />').appendTo('#AN_divTopicFunctions').click(function()
+				{
+					var aSticked = AN.shared.dataArray('aStickiedTopics');
+					var sTopicId = AN.temp.oSelectedTopic.sTopicId;
+					var sUserName = AN.temp.oSelectedTopic.sUserName;
+					var sTitle = AN.temp.oSelectedTopic.sTitle;
+					var sData = $.sprintf('%s&DATA&%s&DATA&%s', sTopicId, sUserName, sTitle);
+					var nIndex = $.inArray(sData, aSticked);
+
+					if(nIndex == -1)
+					{
+						aSticked.push(sData);
+						AN.func.stickyTopic(true, sData);
+					}
+					else
+					{
+						aSticked.splice(nIndex, 1);
+						AN.func.stickyTopic(false, sData);
+						AN.temp.oSelectedTopic = null;
+					}
+
+					AN.shared.dataArray('aStickiedTopics', aSticked);
+					AN.func.updateButtons();
+				});
+			};
+
+			AN.func.blockTopics = function(bToBlock, sUserName)
+			{
+				var jToggle =
+				$('<span>[ :) ] </span>')
+				.appendTo('<span style="color: gray;" />')
+				.after('<span>此用戶已被封鎖</span>')
+				.css('cursor', 'pointer')
+				.toggle(
+				function()
+				{
+					var jThis = $(this);
+					jThis.html('[ :( ] ').next().html(jThis.parent().parent().data('sOri'));
+				},
+				function()
+				{
+					$(this).html('[ :) ] ').next().html('此用戶已被封鎖');
+				})
+				.parent();
+
+				$.each(AN.shared.getTopicRows(), function()
+				{
+					if(this.sUserName == sUserName)
+					{
+						var jTitleTd = this.jThis.children(':eq(1)');
+
+						if(bToBlock)
+						{
+							jTitleTd.data('sOri', jTitleTd.html()).html(jToggle.clone(true));
+						}
+						else
+						{
+							jTitleTd.html(jTitleTd.data('sOri'));
+						}
+					}
+				});
+			};
+
+			AN.func.stickyTopic = function(bToSticky, sData)
+			{
+				var aData = sData.split('&DATA&');
+				var sTopicId = aData[0];
+				var sUserName = aData[1];
+				var sTitle = aData[2];
+
+				if(bToSticky)
+				{
+					var jTr;
+
+					if(AN.temp.oSelectedTopic !== undefined)
+					{
+						var jOriTr = AN.temp.oSelectedTopic.jThis;
+						jTr = jOriTr.clone();
+
+						var sOri = jOriTr.children(':eq(1)').data('sOri');
+						if(sOri) jTr.children(':eq(1)').html(sOri);
+					}
+					else
+					{
+						var jOriTr = AN.shared.getTopicRows()[0].jThis;
+						jTr = jOriTr.clone();
+
+						var sOri = jOriTr.children(':eq(1)').data('sOri');
+						if(sOri) jTr.children(':eq(1)').html(sOri);
+
+						jTr
+						.children(':eq(1)').fn(function()
+						{
+							// to be improved
+							this.html($.sprintf('<a class="AN_aClean" href="view.aspx?message=%s">%s</a> ', sTopicId, sTitle));
+							return this;
+						})
+						.next().html($.sprintf('<a style="color: black;" href="search.aspx?st=A&searchstring=%s">%s</a>', sUserName, sUserName))
+						.next().html('置頂項目')
+						.next().html('?');
+					}
+
+					jTr
+					.insertBefore(AN.shared.getTopicRows()[0].jThis)
+					.data('sTopicId', sTopicId)
+					.data('sUserName', sUserName)
+					.data('sTitle', sTitle)
+					.addClass('AN_trSticky')
+					.children(':first').css('cursor', 'pointer').click(function()
+					{
+						var jTr = $(this).parent();
+						AN.temp.oSelectedTopic =
+						{
+							sTopicId: jTr.data('sTopicId'),
+							sUserName: jTr.data('sUserName'),
+							sTitle: jTr.data('sTitle')
+						};
+						AN.temp.nSelectedIndex = null;
+						AN.func.updateButtons();
+						AN.execFunc(false, jTr);
+					})
+					.next().prepend('<span style="color: gray;">[ ^ ] </span>');
+				}
+				else
+				{
+					$('.AN_trSticky').each(function()
+					{
+						var jThis = $(this);
+						if(jThis.data('sTopicId') == sTopicId)
+						{
+							jThis.remove();
+							return false;
+						}
+					});
+				}
+			};
+
+			$.each(AN.shared.dataArray('aStickiedTopics'), function()
+			{
+				AN.func.stickyTopic(true, this);
+			});
+		},
+		infinite: function()
+		{
+			$.each(AN.shared.getTopicRows(), function(i)
+			{
+				this.jThis.children(':first').data('nIndex', i).css('cursor', 'pointer').click(function()
+				{
+					AN.temp.nSelectedIndex = $(this).data('nIndex');
+					AN.temp.oSelectedTopic = AN.shared.getTopicRows()[AN.temp.nSelectedIndex];
+					AN.func.updateButtons();
+				});
+			});
+
+			$.each(AN.shared.dataArray('aBlockedTopics'), function()
+			{
+				AN.func.blockTopics(true, this);
+			});
+		}
+	},
+
 	optimiseForumLinks:
 	{
 		disp: '美化論壇連結',
@@ -2576,225 +2796,7 @@ AN.main =
 		}
 	},
 
-	addTopicFunctions:
-	{
-		disp: '加入帖子功能按扭 (暫不適用於FF)',
-		type: 3,
-		page: ['topics'],
-		defaultOn: false,
-		id: 49,
-		once: function()
-		{
-			AN.func.updateButtons = function(s)
-			{
-				var oTopic = AN.temp.oSelectedTopic;
-				if(!oTopic) return $('#AN_divTopicFunctions').slideUp('slow', function(){ $(this).remove(); });
-
-				if(!$('#AN_divTopicFunctions').length)
-				{
-					AN.func.addButtons();
-				}
-
-				var sTopicId = oTopic.sTopicId;
-				var sUserName = oTopic.sUserName;
-				var sTitle = oTopic.sTitle;
-				var sData = $.sprintf('%s&DATA&%s&DATA&%s', sTopicId, sUserName, sTitle);
-
-				var sHeader = (AN.temp.nSelectedIndex !== null) ? 'Topic #' + (AN.temp.nSelectedIndex + 1) + ':' : 'Sticky:';
-				$('#AN_divTopicNo').html(sHeader);
-
-				var sStickyPrefix = ($.inArray(sData, AN.shared.dataArray('aStickiedTopics')) != -1) ? 'Unsticky #' : 'Sticky #';
-				$('#AN_divSticky').html(sStickyPrefix + sTopicId);
-
-				var sBlockPrefix = ($.inArray(sUserName, AN.shared.dataArray('aBlockedTopics')) != -1) ? 'Unblock ' : 'Block ';
-				$('#AN_divBlock').html(sBlockPrefix + sUserName);
-			};
-
-			AN.func.addButtons = function()
-			{
-				$('<div id="AN_divTopicFunctions"><div id="AN_divTopicNo" style="padding: 0 0 6px 5px" /></div>').appendTo('#AN_divTopLeft');
-
-				$('<div id="AN_divBlock" style="padding: 0 0 0 5px" />').appendTo('#AN_divTopicFunctions').click(function()
-				{
-					var aBlocked = AN.shared.dataArray('aBlockedTopics');
-					var sUserName = AN.temp.oSelectedTopic.sUserName;
-					var nIndex = $.inArray(sUserName, aBlocked);
-
-					if(nIndex == -1)
-					{
-						aBlocked.push(sUserName);
-						AN.func.blockTopics(true, sUserName);
-					}
-					else
-					{
-						aBlocked.splice(nIndex, 1);
-						AN.func.blockTopics(false, sUserName);
-					}
-
-					AN.shared.dataArray('aBlockedTopics', aBlocked);
-					AN.func.updateButtons();
-				});
-
-				$('<div id="AN_divSticky" style="padding: 0 0 0 5px" />').appendTo('#AN_divTopicFunctions').click(function()
-				{
-					var aSticked = AN.shared.dataArray('aStickiedTopics');
-					var sTopicId = AN.temp.oSelectedTopic.sTopicId;
-					var sUserName = AN.temp.oSelectedTopic.sUserName;
-					var sTitle = AN.temp.oSelectedTopic.sTitle;
-					var sData = $.sprintf('%s&DATA&%s&DATA&%s', sTopicId, sUserName, sTitle);
-					var nIndex = $.inArray(sData, aSticked);
-
-					if(nIndex == -1)
-					{
-						aSticked.push(sData);
-						AN.func.stickyTopic(true, sData);
-					}
-					else
-					{
-						aSticked.splice(nIndex, 1);
-						AN.func.stickyTopic(false, sData);
-						AN.temp.oSelectedTopic = null;
-					}
-
-					AN.shared.dataArray('aStickiedTopics', aSticked);
-					AN.func.updateButtons();
-				});
-			};
-
-			AN.func.blockTopics = function(bToBlock, sUserName)
-			{
-				var jToggle =
-				$('<span>[ :) ] </span>')
-				.appendTo('<span style="color: gray;" />')
-				.after('<span>此用戶已被封鎖</span>')
-				.css('cursor', 'pointer')
-				.toggle(
-				function()
-				{
-					var jThis = $(this);
-					jThis.html('[ :( ] ').next().html(jThis.parent().parent().data('sOri'));
-				},
-				function()
-				{
-					$(this).html('[ :) ] ').next().html('此用戶已被封鎖');
-				})
-				.parent();
-
-				$.each(AN.shared.getTopicRows(), function()
-				{
-					if(this.sUserName == sUserName)
-					{
-						var jTitleTd = this.jThis.children(':eq(1)');
-
-						if(bToBlock)
-						{
-							jTitleTd.data('sOri', jTitleTd.html()).html(jToggle.clone(true));
-						}
-						else
-						{
-							jTitleTd.html(jTitleTd.data('sOri'));
-						}
-					}
-				});
-			};
-
-			AN.func.stickyTopic = function(bToSticky, sData)
-			{
-				var aData = sData.split('&DATA&');
-				var sTopicId = aData[0];
-				var sUserName = aData[1];
-				var sTitle = aData[2];
-
-				if(bToSticky)
-				{
-					var jTr;
-
-					if(AN.temp.oSelectedTopic !== undefined)
-					{
-						var jOriTr = AN.temp.oSelectedTopic.jThis;
-						jTr = jOriTr.clone();
-
-						var sOri = jOriTr.children(':eq(1)').data('sOri');
-						if(sOri) jTr.children(':eq(1)').html(sOri);
-					}
-					else
-					{
-						var jOriTr = AN.shared.getTopicRows()[0].jThis;
-						jTr = jOriTr.clone();
-
-						var sOri = jOriTr.children(':eq(1)').data('sOri');
-						if(sOri) jTr.children(':eq(1)').html(sOri);
-
-						jTr
-						.children(':eq(1)').fn(function()
-						{
-							// to be improved
-							this.html($.sprintf('<a class="AN_aClean" href="view.aspx?message=%s">%s</a> ', sTopicId, sTitle));
-							return this;
-						})
-						.next().html($.sprintf('<a style="color: black;" href="search.aspx?st=A&searchstring=%s">%s</a>', sUserName, sUserName))
-						.next().html('置頂項目')
-						.next().html('?');
-					}
-
-					jTr
-					.insertBefore(AN.shared.getTopicRows()[0].jThis)
-					.data('sTopicId', sTopicId)
-					.data('sUserName', sUserName)
-					.data('sTitle', sTitle)
-					.addClass('AN_trSticky')
-					.children(':first').css('cursor', 'pointer').click(function()
-					{
-						var jTr = $(this).parent();
-						AN.temp.oSelectedTopic =
-						{
-							sTopicId: jTr.data('sTopicId'),
-							sUserName: jTr.data('sUserName'),
-							sTitle: jTr.data('sTitle')
-						};
-						AN.temp.nSelectedIndex = null;
-						AN.func.updateButtons();
-						AN.execFunc(false, jTr);
-					})
-					.next().prepend('<span style="color: gray;">[ ^ ] </span>');
-				}
-				else
-				{
-					$('.AN_trSticky').each(function()
-					{
-						var jThis = $(this);
-						if(jThis.data('sTopicId') == sTopicId)
-						{
-							jThis.remove();
-							return false;
-						}
-					});
-				}
-			};
-
-			$.each(AN.shared.dataArray('aStickiedTopics'), function()
-			{
-				AN.func.stickyTopic(true, this);
-			});
-		},
-		infinite: function()
-		{
-			$.each(AN.shared.getTopicRows(), function(i)
-			{
-				this.jThis.children(':first').data('nIndex', i).css('cursor', 'pointer').click(function()
-				{
-					AN.temp.nSelectedIndex = $(this).data('nIndex');
-					AN.temp.oSelectedTopic = AN.shared.getTopicRows()[AN.temp.nSelectedIndex];
-					AN.func.updateButtons();
-				});
-			});
-
-			$.each(AN.shared.dataArray('aBlockedTopics'), function()
-			{
-				AN.func.blockTopics(true, this);
-			});
-		}
-	},
+	// #49 is moved up
 
 	addStickyButton:
 	{

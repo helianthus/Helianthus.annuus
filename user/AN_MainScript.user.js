@@ -259,28 +259,40 @@ AN.shared =
 			AN.temp.aTopicRows = aTopics;
 		}
 
-		jDoc.find('td').each(function()
+		var addToArray = function(jTrs)
 		{
-			if($(this).html().match(/^\s*最後回應時間$/))
+			$.each(jTrs, function()
 			{
-				$.each($(this).parent().nextAll('tr:not(.AN_trSticky)'), function()
+				var jThis = $(this), jA = jThis.find('a');
+
+				if(jThis.children().length == 1) return;
+
+				aTopics.push(
 				{
-					var jThis = $(this), jA = jThis.find('a');
-
-					if(jThis.children().length == 1) return;
-
-					aTopics.push(
-					{
-						jThis: jThis,
-						sTopicId: jA.eq(0).attr('href').match(/\d+$/)[0],
-						sUserName: jA.filter(':last').html(),
-						sTitle: jA.eq(0).html()
-					});
+					jThis: jThis,
+					sTopicId: jA.eq(0).attr('href').match(/\d+$/)[0],
+					sUserName: jA.filter(':last').html(),
+					sTitle: jA.eq(0).html()
 				});
+			});
+		};
 
-				return false;
-			}
-		});
+		var jStickies = jDoc.filter('.AN_trSticky');
+		if(jStickies.length)
+		{
+			addToArray(jStickies);
+		}
+		else
+		{
+			jDoc.find('td').each(function()
+			{
+				if($(this).html().match(/^\s*最後回應時間$/))
+				{
+					addToArray($(this).parent().nextAll('tr:not(.AN_trSticky)'));
+					return false;
+				}
+			});
+		}
 
 		return aTopics;
 	},
@@ -1181,7 +1193,7 @@ AN.main =
 			.addClass('aForumLink')
 			.filter(function()
 			{
-				return (this.href.match(/javascript:|(?:blog|default|newmessages|topics)\.aspx/i) && !this.href.match(/redhotpage=|fanti=/i));
+				return ((this.href.match(/javascript:|(?:blog|default|newmessages|topics)\.aspx/i) && !this.href.match(/redhotpage=|fanti=/i)) || $(this).hasClass('AN_aClean'));
 			})
 			.css('color', strLinkColor);
 		}
@@ -2713,28 +2725,14 @@ AN.main =
 						var sOri = jOriTr.children(':eq(1)').data('sOri');
 						if(sOri) jTr.children(':eq(1)').html(sOri);
 
-						var jATopic = jTr.find('a:first');
-						var jASearch = jTr.children(':eq(2)').children('a:first');
-
 						jTr
 						.children(':eq(1)').fn(function()
 						{
-							this
-							.empty()
-							.append(jATopic.attr('href', 'view.aspx?message=' + sTopicId).html(sTitle))
-							.append(' ');
-/*
-							for(var i=2;i<sPageNo;i++)
-							{
-								this
-								.append('[')
-								.append(jATopic.clone().attr('href', $.sprintf('view.aspx?message=%s&page=%s', sTopicId, i)).html(i))
-								.append('] ');
-							}
-*/
+							// to be improved
+							this.html($.sprintf('<a class="AN_aClean" href="view.aspx?message=%s">%s</a> ', sTopicId, sTitle));
 							return this;
 						})
-						.next().html(jASearch.attr('href', $.sprintf('search.aspx?st=A&searchstring=%s', escape(sUserName))).html(sUserName))
+						.next().html($.sprintf('<a style="color: black;" href="search.aspx?st=A&searchstring=%s">%s</a>', sUserName, sUserName))
 						.next().html('置頂項目')
 						.next().html('?');
 					}
@@ -2756,6 +2754,7 @@ AN.main =
 						};
 						AN.temp.nSelectedIndex = null;
 						AN.func.updateButtons();
+						AN.execFunc(false, jTr);
 					})
 					.next().prepend('<span style="color: gray;">[ ^ ] </span>');
 				}

@@ -36,7 +36,13 @@ var AN = { init: {}, func: {} };
 $window.AN = AN;
 
 if(!$('head').length) $('html').prepend(document.createElement('head')); // chrome
-$.ajaxSetup({ cache: false });
+
+$.ajaxSetup(
+{
+	cache: false,
+	contentType: 'application/x-www-form-urlencoded; charset=UTF-8'
+});
+
 $($window).unload(function(){ AN = null; });
 
 /////////////////// END OF - [Preperation] ///////////////////

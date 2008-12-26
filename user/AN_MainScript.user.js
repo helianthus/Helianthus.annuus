@@ -1959,14 +1959,15 @@ AN.main =
 
 					var changeReplies = function()
 					{
-						var nCurPageNo = AN.shared.getCurPageNo();
+						var jCurStrong = $('strong:first');
+						var jStrongTable = jCurStrong.parents('table:first');
+						var bCurIsFirstPage = (jStrongTable.prev().hasClass('repliers')) ? true : false;
 						$('.repliers').each(function(i)
 						{
-							if(i == 0 && nCurPageNo == 1) $(this).remove();
+							if(i == 0 && bCurIsFirstPage) $(this).remove();
 							else $(this).next().andSelf().remove();
 						});
 
-						var jCurStrong = $('strong:first');
 						var jReplies = AN.data.jReplies[nPageNo];
 
 						if(nPageNo == 1)

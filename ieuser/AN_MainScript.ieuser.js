@@ -250,7 +250,8 @@ AN.shared =
 				sUserId: jA.attr('href').replace(/^[^=]+=/, ''),
 				sUserName: jA.html(),
 				jTdContent: jThis.find('table:last td:first'),
-				jThis: jThis
+				jThis: jThis,
+				jLabel: jThis.find('table:first img:last')
 			});
 		});
 
@@ -1024,7 +1025,8 @@ AN.main =
 		once: function()
 		{
 			if(document.referrer.indexOf('/login.aspx') > 0) location.replace('/topics.aspx?type=BW');
-			else if(!location.pathname.match(/^\/(?:default.aspx)?$/i)) location.replace(location.href); // not using location.reload() because an error would occur on IE 7
+			//else if(!location.pathname.match(/^\/(?:default.aspx)?$/i)) location.replace(location.href); // not using location.reload() because an error would occur on IE 7
+			else if(!location.pathname.match(/^\/(?:default.aspx)?$/i)) location.reload();
 		}
 	},
 
@@ -1725,7 +1727,7 @@ AN.main =
 			{
 				this.jTdContent.find('a').each(function()
 				{
-					var aMatch = this.href.match(/[?&](?:r(?:ef(?:er[^=]+)?)?|uid)=|logout|shortlink|(?:tinyurl|urlpire|linkbucks|seriousurls|qvvo|viraldatabase|youfap)\.com/i);
+					var aMatch = this.href.match(/[?&](?:r(?:ef(?:er[^=]+)?)?|uid)=|logout|shortlink|(?:tinyurl|urlpire|linkbucks|seriousurls|qvvo|viraldatabase|youfap)\.com|qkzone\.com\/t\?/i);
 					if(aMatch)
 					{
 						$(this).data('keyword', aMatch[0]).hover(
@@ -1829,7 +1831,7 @@ AN.main =
 			var regLink = /(?:(h\w{2}ps?[:\/]+?)|[\w-]+?@)?((?:(?:\d{1,3}\.){3}\d{1,3}|(?:[\w-]+?\.){0,4}[\w-]{2,}\.(?:biz|cn|cc|co(?=\.)|com|de|eu|gov|hk|info|jp(?!g)|net|org|ru|tk|us)(?:\.[a-z]{2,3})?)(?::\d{1,5})?(?:\/[\w~./%?&=#+:-]*)?)/i;
 */
 
-			var regLink = /(?:ftp|https?):\/\/[\w!#$&'()*+,./:;=?@~-]+/i;
+			var regLink = /(?:ftp|https?):\/\/[\w,./?:;~!@#$%^&*()+=-]+/i;
 
 			var funWrap = function(nodToWrap, aMatch)
 			{
@@ -2112,7 +2114,35 @@ AN.main =
 
 			AN.func.addEvents();
 			AN.data.bAutoRefreshPage = AN.shared.getOption('bAutoRefreshPage');
-			if(AN.data.bAutoRefreshPage) AN.data.tGetPage = setTimeout(function(){ AN.func.getPage(); }, 30000);
+
+			$('<div id="AN_divToggleAutoRefresh"></div>').appendTo('#AN_divTopLeft').click(
+			function()
+			{
+				if(AN.data.bAutoRefreshPage)
+				{
+					clearTimeout(AN.data.tGetPage);
+					AN.data.bAutoRefreshPage = false;
+					$(this).html('Enable Auto Refresh');
+					AN.shared.log2('Auto refresh disabled.');
+				}
+				else
+				{
+					AN.data.tGetPage = setTimeout(function(){ AN.func.getPage(); }, 30000);
+					AN.data.bAutoRefreshPage = true;
+					$(this).html('Disable Auto Refresh');
+					AN.shared.log2('Auto refresh enabled.');
+				}
+			});
+
+			if(AN.data.bAutoRefreshPage)
+			{
+				$('#AN_divToggleAutoRefresh').html('Disable Auto Refresh');
+				AN.data.tGetPage = setTimeout(function(){ AN.func.getPage(); }, 30000);
+			}
+			else
+			{
+				$('#AN_divToggleAutoRefresh').html('Enable Auto Refresh');
+			}
 
 			if(AN.shared.getOption('bAjaxifyReplying'))
 			{
@@ -2140,22 +2170,6 @@ AN.main =
 			{
 				clearTimeout(AN.data.tGetPage);
 				AN.func.getPage(true);
-			});
-
-			$('<div id="AN_divToggleAutoRefresh">Disable Auto Refresh</div>').appendTo('#AN_divTopLeft').toggle(
-			function()
-			{
-				clearTimeout(AN.data.tGetPage);
-				AN.data.bAutoRefreshPage = false;
-				$(this).html('Enable Auto Refresh');
-				AN.shared.log2('Auto refresh disabled.');
-			},
-			function()
-			{
-				AN.data.tGetPage = setTimeout(function(){ AN.func.getPage(); }, 30000);
-				AN.data.bAutoRefreshPage = true;
-				$(this).html('Disable Auto Refresh');
-				AN.shared.log2('Auto refresh enabled.');
 			});
 		}
 	},
@@ -2875,6 +2889,98 @@ AN.main =
 				AN.execFunc(false);
 				$('[id^=MsgInLineAd]').each(function(){ $(this).parents('tr:first').remove(); });
 			};
+		}
+	},
+
+	addUserFunctions:
+	{
+		disp: '加入用戶功能按扭',
+		type: 3,
+		page: ['view'],
+		defaultOn: true,
+		id: 52,
+		once: function()
+		{
+			AN.func.updateUserButtons = function(s)
+			{
+				var oUser = AN.temp.oSelectedUser;
+				if(!oUser) return $('#AN_divUserFunctions').slideUp('slow', function(){ $(this).remove(); });
+
+				if(!$('#AN_divUserFunctions').length)
+				{
+					AN.func.addUserButtons();
+				}
+
+				$('#AN_divUserNo').html(oUser.sUserName + ':');
+
+				var sBlockMsg = ($.inArray(oUser.sUserId, AN.shared.dataArray('aBlockedUsers')) != -1) ? 'Unblock ' : 'Block ';
+				$('#AN_divUserBlock').html(sBlockMsg);
+			};
+
+			AN.func.addUserButtons = function()
+			{
+				$('<div id="AN_divUserFunctions"><div id="AN_divUserNo" style="padding: 0 0 6px 5px" /></div>').appendTo('#AN_divTopLeft');
+
+				$('<div id="AN_divUserBlock" style="padding: 0 0 0 5px" />').appendTo('#AN_divUserFunctions').click(function()
+				{
+					var aBlocked = AN.shared.dataArray('aBlockedUsers');
+					var sUserId = AN.temp.oSelectedUser.sUserId;
+					var nIndex = $.inArray(sUserId, aBlocked);
+
+					if(nIndex == -1)
+					{
+						aBlocked.push(sUserId);
+						AN.func.blockUser(true, sUserId);
+					}
+					else
+					{
+						aBlocked.splice(nIndex, 1);
+						AN.func.blockUser(false, sUserId);
+					}
+
+					AN.shared.dataArray('aBlockedUsers', aBlocked);
+					AN.func.updateUserButtons();
+				});
+			};
+
+			AN.func.blockUser = function(bToBlock, sUserId)
+			{
+				$.each(AN.shared.getReplies(), function()
+				{
+					if(this.sUserId == sUserId)
+					{
+						if(bToBlock)
+						{
+							this.jTdContent.hide().after('<td valign="top"><span style="color: gray;">BLOCKED</span><br /><br /></td>');
+						}
+						else
+						{
+							this.jTdContent.show().next().remove();
+						}
+					}
+				});
+			};
+		},
+		infinite: function()
+		{
+			$.each(AN.shared.getReplies(), function()
+			{
+				this.jLabel.css('cursor', 'pointer').click(function()
+				{
+					var jLink = $(this).parents('table:first').find('a:first');
+					AN.temp.oSelectedUser =
+					{
+						sUserName: jLink.html(),
+						sUserId: jLink.attr('href').match(/\d+$/)[0]
+					}
+					AN.func.updateUserButtons();
+				});
+			});
+
+			$.each(AN.shared.dataArray('aBlockedUsers'), function()
+			{
+				AN.func.blockUser(true, this);
+			});
 		}
 	}
 };

@@ -167,7 +167,7 @@ AN.temp.push(function()
 
 'd563af32-bd37-4c67-8bd7-0721c0ab0b36':
 {
-	desc: '優化頁數跳轉連結地址 [IE頗慢..]',
+	desc: '優化頁數跳轉連結地址',
 	page: { 32: false },
 	type: 4,
 	once: function()
@@ -193,7 +193,7 @@ AN.temp.push(function()
 
 'b6b232c8-1f26-449e-bb0d-2b7826bf95ef':
 {
-	desc: '優化圖片縮放 [IE8 beta2運行極慢#fuck#]',
+	desc: '優化圖片縮放',
 	page: { 32: true },
 	type: 4,
 	options:
@@ -347,7 +347,7 @@ AN.temp.push(function()
 '9e181e79-153b-44d5-a482-5ccc6496a172':
 {
 	desc: '顯示資料: 累計在線時間',
-	page: { 65534: true },
+	page: { 65534: false },
 	type: 5,
 	once: function()
 	{
@@ -474,7 +474,7 @@ AN.temp.push(function()
 'e24ec5f6-5734-4c2c-aa54-320ca29a3932':
 {
 	desc: '移除死圖',
-	page: { 32: true },
+	page: { 32: false },
 	type: 6,
 	defer: 1, // after all images are created
 	once: function()

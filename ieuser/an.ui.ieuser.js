@@ -842,7 +842,14 @@ AN.temp.push(function()
 			#an-links-bottom li { border-top-width: 1px; } \
 			', AN.util.getOptions('bAutoShowLinks') ? '' : 'display: none;'));
 
-			return $('<div id="an-links" class="an-mod"><ul id="an-links-top" class="an-menu"></ul><ul id="an-links-middle" class="an-menu"></ul><ul id="an-links-bottom" class="an-menu"></ul></div>').appendTo('#an-ui');
+			var jMod = $('<div id="an-links" class="an-mod"><ul id="an-links-top" class="an-menu"></ul><ul id="an-links-middle" class="an-menu"></ul><ul id="an-links-bottom" class="an-menu"></ul></div>').appendTo('#an-ui');
+
+			jDoc.defer(1, '調整連結元件位置', function() // after all links are added
+			{
+				jMod.css('margin-top', - jMod.height() / 2);
+			});
+
+			return jMod;
 		};
 
 		if(AN.util.getOptions('bAddLinksButton'))
@@ -863,12 +870,6 @@ AN.temp.push(function()
 				$('<li><a href="javascript:">' + sDec + '</a></li>').click(uExtra)
 			);
 		};
-
-		jDoc.defer(1, '修正連結元件位置', function() // after all links are added
-		{
-			var jDiv = $('#an-links');
-			jDiv.css('margin-top', - jDiv.height() / 2);
-		});
 	}
 },
 

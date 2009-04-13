@@ -81,18 +81,6 @@ $.extend(
 		return (uTarget === undefined || uTarget === null || uTarget === NaN);
 	},
 
-	DOMLoad: function(fToExec) // yeah i know, but userjs is a different case, glad to know any better ways
-	{
-		if(typeof unsafeWindow != 'undefined' || (window.opera && window.opera.addEventListener) || navigator.userAgent.indexOf('Chrome/2') != -1)
-		{
-			fToExec();
-		}
-		else
-		{
-			$(fToExec);
-		}
-	},
-
 	getLength: function(uTarget)
 	{
 		if(length in uTarget) return uTarget.length;
@@ -748,7 +736,7 @@ AN.mod['Kernel'] =
 'a599dafa-b550-4b28-921a-019c72f481e5':
 {
 	desc: '除錯模式',
-	page: { 65535: true },
+	page: { 65535: false },
 	type: 1,
 	once: function(jDoc)
 	{
@@ -949,17 +937,15 @@ AN.mod['Kernel'] =
 $.each(AN.temp, function(){ this(); });
 delete AN.temp;
 
-$.DOMLoad(function()
+// right now no browser need a DOMLoad event, but this may change in the future
+AN.box.eLSO = $('<div id="an"></div>').appendTo('body').addFlash('http://helianthus-annuus.googlecode.com/svn/other/lso.swf', { id: 'an-lso', width: 0, height: 0 }, { allowscriptaccess: 'always' })[0];
+(function()
 {
-	AN.box.eLSO = $('<div id="an"></div>').appendTo('body').addFlash('http://helianthus-annuus.googlecode.com/svn/other/lso.swf', { id: 'an-lso', width: 0, height: 0 }, { allowscriptaccess: 'always' })[0];
-	(function()
-	{
-		if(!AN.box.eLSO.get) return setTimeout(arguments.callee, 1);
+	if(!AN.box.eLSO.get) return setTimeout(arguments.callee, 1);
 
-		AN.modFn.getDB();
-		AN.modFn.execMods();
-	})();
-});
+	AN.modFn.getDB();
+	AN.modFn.execMods();
+})();
 
 //////////////////// END OF - [Initialization] ////////////////////
 

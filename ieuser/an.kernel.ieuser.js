@@ -735,51 +735,17 @@ AN.mod['Kernel'] =
 
 'a599dafa-b550-4b28-921a-019c72f481e5':
 {
-	desc: '除錯模式',
+	desc: '除錯模式 [除錯按扭、更準確評測結果等]',
 	page: { 65535: false },
 	type: 1,
 	once: function(jDoc)
 	{
 		AN.box.debugMode = true;
 
-		AN.box.oSwitches['Kernel']['669a9d58-f0a8-426f-b743-39e55cc0a1e2'] = [65534];
-
 		AN.util.getOptions();
 		AN.box.oPageOptions['bAutoShowLog'] = true;
 		AN.box.oPageOptions['bShowDetailLog'] = true;
 
-		jDoc.defer(1, '加入除錯按扭', function() // after UI
-		{
-			AN.shared('addButton', '移除儲存資料', function()
-			{
-				if(confirm('確定移除儲存資料?'))
-				{
-					AN.util.storage(null);
-					location.reload();
-				}
-			});
-			AN.shared('addButton', '顯示儲存資料', function()
-			{
-					if(!$('#an-savedsettings').length)
-					{
-						AN.shared('box', 'an-savedsettings', '儲存資料', null, 'max');
-						AN.util.addStyle('#an-savedsettings { padding: 0 2em; } #an-savedsettings code { display: block; white-space: pre; margin: 1em 0; font-family: Consolas; }');
-						$('#an-savedsettings').append('<code></code>');
-					}
-					$('#an-savedsettings code').text(AN.util.storage().replace(/{[^{]*},?/g, function(sMatch){ return sMatch.replace(/,/g, ',\n'); }));
-					AN.shared('gray', true, 'an-savedsettings');
-			});
-		});
-	}
-},
-
-'669a9d58-f0a8-426f-b743-39e55cc0a1e2':
-{
-	desc: '預載變量 [使評測結果更為準確]',
-	page: { 65535: false },
-	type: 1,
-	infinite: function(jDoc)
-	{
 		if(AN.box.nCurPage & 92)
 		{
 			jDoc.topics();
@@ -788,8 +754,6 @@ AN.mod['Kernel'] =
 		{
 			jDoc.replies();
 		}
-
-		AN.util.getOptions();
 	}
 },
 

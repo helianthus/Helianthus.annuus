@@ -748,6 +748,8 @@ AN.temp.push(function()
 		{
 			var jLog = getMod();
 
+			if(!sLog) return;
+
 			if(AN.util.getOptions('bAutoShowLog')) jLog.fadeIn('fast');
 
 			var dDate = new Date();
@@ -812,7 +814,9 @@ AN.temp.push(function()
 
 		AN.shared.addButton = function(sDesc, fHandler)
 		{
-			getMod().find('ul').append($('<li><a href="javascript:">' + sDesc + '</a></li>').click(fHandler));
+			var jButtons = getMod();
+			if(!sDesc) return;
+			jButtons.find('ul').append($('<li><a href="javascript:">' + sDesc + '</a></li>').click(fHandler));
 		};
 	}
 },
@@ -864,7 +868,11 @@ AN.temp.push(function()
 		{
 			if(nPos === undefined) nPos = 1;
 
-			getMod().children().eq(nPos).append(
+			var jLinks = getMod();
+
+			if(!sDec) return;
+
+			jLinks.children().eq(nPos).append(
 				(typeof uExtra == 'string') ?
 				$.sprintf('<li><a href="%s">%s</a></li>', uExtra, sDec) :
 				$('<li><a href="javascript:">' + sDec + '</a></li>').click(uExtra)
@@ -912,6 +920,7 @@ AN.temp.push(function()
 		AN.shared.addInfo = function(sInfo)
 		{
 			getMod();
+			if(!sInfo) return;
 			$('<li>' + sInfo + '</li>').appendTo('#an-info-content').fadeIn('slow');
 		};
 	}
@@ -964,6 +973,41 @@ AN.temp.push(function()
 			}
 
 			AN.shared.gray(true, 'an-about');
+		});
+	}
+},
+
+'0b587724-a3a7-41be-95d8-96c726d38343':
+{
+	desc: '除錯模式(續)',
+	page: { 65535: 'comp' },
+	type: 1,
+	once: function()
+	{
+		if(!AN.box.debugMode) return;
+
+		AN.shared('log');
+		AN.shared('addInfo');
+		AN.shared('addLink');
+
+		AN.shared('addButton', '移除儲存資料', function()
+		{
+			if(confirm('確定移除儲存資料?'))
+			{
+				AN.util.storage(null);
+				location.reload();
+			}
+		});
+		AN.shared('addButton', '顯示儲存資料', function()
+		{
+				if(!$('#an-savedsettings').length)
+				{
+					AN.shared('box', 'an-savedsettings', '儲存資料', null, 'max');
+					AN.util.addStyle('#an-savedsettings { padding: 0 2em; } #an-savedsettings code { display: block; white-space: pre; margin: 1em 0; font-family: Consolas; }');
+					$('#an-savedsettings').append('<code></code>');
+				}
+				$('#an-savedsettings code').text(AN.util.storage().replace(/{[^{]*},?/g, function(sMatch){ return sMatch.replace(/,/g, ',\n'); }));
+				AN.shared('gray', true, 'an-savedsettings');
 		});
 	}
 }

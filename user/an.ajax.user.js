@@ -197,7 +197,7 @@ AN.temp.push(function()
 		if(AN.util.getOptions('bAjaxifyPageChange_R')) addEvents();
 		if(AN.util.getOptions('bShowPageNo')) AN.shared('addInfo', $.sprintf('本頁頁數: <a id="an-info-curpage" href="%s">%s</a>', location.href, nCurPageNo));
 
-		if(AN.util.getOptions('bAddGetBtn_R')) AN.shared('addButton', '讀取最新回覆', function(){ getReplies(true); });
+		if(AN.util.getOptions('bAddGetBtn_R')) jDoc.defer(2, '加入讀取按扭', function(){ AN.shared('addButton', '讀取最新回覆', function(){ getReplies(true); }); });
 
 		var tRefresh;
 		var bAutoRefresh = AN.util.getOptions('bAutoRefresh_R');
@@ -252,7 +252,7 @@ AN.temp.push(function()
 		bAddToggleAutoBtn_T: { desc: '加入切換自動更新按扭', defaultValue: false, type: 'checkbox' },
 		nRefreshInterval_T: { desc: '自動更新間隔(秒)', defaultValue: 30, type: 'text' }
 	},
-	once: function()
+	once: function(jDoc)
 	{
 		var refreshTopics = function(bRetry)
 		{
@@ -293,7 +293,7 @@ AN.temp.push(function()
 			tRefresh = setTimeout(refreshTopics, nInterval * 1000);
 		};
 
-		if(AN.util.getOptions('bAddGetBtn_T')) AN.shared('addButton', '更新列表', function(){ refreshTopics(); });
+		if(AN.util.getOptions('bAddGetBtn_T')) jDoc.defer(2, '加入讀取按扭', function(){ AN.shared('addButton', '更新列表', function(){ refreshTopics(); }); });
 
 		var tRefresh;
 		var bAutoRefresh = AN.util.getOptions('bAutoRefresh_T');

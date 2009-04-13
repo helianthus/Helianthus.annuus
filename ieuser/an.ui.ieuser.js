@@ -401,12 +401,12 @@ AN.temp.push(function()
 					if(jTarget.hasClass('an-settings-switch'))
 					{
 						aInfo = jTarget.attr('id').replace(/an-settings-switch-/, '').split(sSep);
-						oInfo = { page: Number(aInfo[0]), mod: aInfo[1], id: aInfo[2] };
+						oInfo = { page: aInfo[0] * 1, mod: aInfo[1], id: aInfo[2] };
 					}
 					else
 					{
 						aInfo = jTarget.attr('id').replace(/an-settings-option-/, '').split(sSep);
-						oInfo = { page: Number(aInfo[0]), name: aInfo[1], type: jTarget.attr('type') || jTarget[0].nodeName };
+						oInfo = { page: aInfo[0] * 1, name: aInfo[1], type: jTarget.attr('type') || jTarget[0].nodeName };
 					}
 					jTarget.data('info', oInfo);
 					return oInfo;

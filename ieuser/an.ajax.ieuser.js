@@ -93,7 +93,7 @@ AN.temp.push(function()
 
 				scrollTo(0, 0);
 				$('#an-info-curpage').text(sTarget);
-				nCurPageNo = Number(sTarget);
+				nCurPageNo = sTarget * 1;
 			};
 
 			if(oCache[sTarget])

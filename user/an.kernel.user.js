@@ -54,7 +54,7 @@ $.extend(
 		}
 		else if(!isNaN(sTarget) && sTarget !== '')
 		{
-			return Number(sTarget);
+			return sTarget * 1;
 		}
 		else
 		{
@@ -465,7 +465,7 @@ var AN = $.extend(window.AN,
 
 		getCurPageNo: function()
 		{
-			return Number($('select[name=page]:first').val());
+			return $('select[name=page]:first').val() * 1;
 		},
 
 		getData: function(sFile, fToExec)
@@ -533,7 +533,7 @@ var AN = $.extend(window.AN,
 		getPageNo: function(sURL)
 		{
 			var sExtract = sURL.replace(/.+?page=(\d+).*/i, '$1');
-			return isNaN(sExtract) ? 1 : Number(sExtract);
+			return isNaN(sExtract) ? 1 : sExtract * 1;
 		},
 
 		getURL: function(nPageNo)
@@ -571,7 +571,7 @@ var AN = $.extend(window.AN,
 						oDB.oSwitches[sMod][sId] = [];
 						$.each(oFn.page, function(sPage, uDefault)
 						{
-							if(uDefault === true || uDefault == 'comp') oDB.oSwitches[sMod][sId].push(Number(sPage));
+							if(uDefault === true || uDefault == 'comp') oDB.oSwitches[sMod][sId].push(sPage * 1);
 						});
 					}
 
@@ -608,7 +608,7 @@ var AN = $.extend(window.AN,
 				{
 					$.each(AN.box.oSwitches[sMod][sId], function()
 					{
-						if(oFn.page[this] != 'disabled' && (oFn.page[this] == 'comp' || AN.box.nCurPage & this))
+						if(oFn.page[this] != 'disabled' && (this == 65535 || AN.box.nCurPage & this))
 						{
 							var aHandler = [];
 							if(!AN.box.initialised && oFn.once) aHandler.push(oFn.once);
@@ -723,7 +723,7 @@ AN.mod['Kernel'] =
 		{
 			if(this.action == AN.box.sCurPage)
 			{
-				AN.box.nCurPage = Number(sPage);
+				AN.box.nCurPage = sPage * 1;
 				return false;
 			}
 		});

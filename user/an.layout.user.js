@@ -198,7 +198,7 @@ AN.temp.push(function()
 
 'c73317d9-f2c4-465a-bc56-f0f817f7eaf6':
 {
-	desc: '修正發表按扭位置 [Opera除外的瀏覽器無需啟用]',
+	desc: 'Opera: 修正發表按扭位置',
 	page: { 16: true },
 	type: 3,
 	once: function()

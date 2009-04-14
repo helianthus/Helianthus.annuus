@@ -987,7 +987,7 @@ AN.temp.push(function()
 		if(!AN.box.debugMode) return;
 
 		AN.shared('log');
-		AN.shared('addInfo');
+		//AN.shared('addInfo');
 		AN.shared('addLink');
 
 		AN.shared('addButton', '移除儲存資料', function()

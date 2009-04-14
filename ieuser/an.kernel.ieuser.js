@@ -874,7 +874,7 @@ AN.mod['Kernel'] =
 
 'd0b37f1a-5865-46dd-b73e-e13da90d7893':
 {
-	desc: '試圖修正IE8b2空白bug',
+	desc: 'IE8B2: 試圖修正空白bug',
 	page: { 65534: true },
 	type: 3,
 	defer: 5, // do it at the very end

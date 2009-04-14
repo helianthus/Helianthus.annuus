@@ -110,6 +110,7 @@ AN.temp.push(function()
 		sMaleFontColor: { desc: '男用戶連結顏色', defaultValue: '#0066FF', type: 'text' },
 		sFemaleFontColor: { desc: '女用戶連結字體顏色', defaultValue: '#FF0066', type: 'text' },
 		sQuoteFontColor: { desc: '引用字體顏色', defaultValue: '#0000A0', type: 'text' },
+		sFooterBgColor: { desc: '頁腳横條背景顏色', defaultValue: '#FFCC00', type: 'text' }
 	},
 	once: function()
 	{
@@ -175,6 +176,8 @@ AN.temp.push(function()
 		blockquote > div[style*="color"], blockquote > div[style*="COLOR"] { color: %(sQuoteFontColor)s !important; } \
 		/* profilepage avater */\
 		table[width="150"] { border-color: %(sSecBorderColor)s !important; } \
+		/* footer */\
+		*[bgcolor="#ffcc00"] { background-color: %(sFooterBgColor)s; } \
 		',
 		AN.util.getOptions()
 		));

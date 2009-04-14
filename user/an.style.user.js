@@ -85,11 +85,13 @@ AN.temp.push(function()
 	options:
 	{
 		sLogoBgImage: { desc: '高登Logo圖片', defaultValue: '/images/index_images/logo.jpg', type: 'text' },
-		sLeftTable1BgImage: { desc: '左欄選單一背景圖片', defaultValue: '/images/left_menu/bg_leftm1.png', type: 'text' },
+		sLeftTable1BorderColor: { desc: '左欄選單一邊框顏色', defaultValue: '#CCCCCC', type: 'text' },
+		sLeftTable1BgImage: { desc: '左欄選單一背景圖片', defaultValue: '/images/left_menu/bg_leftm1.jpg', type: 'text' },
 		sLeftTable1FontColor: { desc: '左欄選單一連結顏色', defaultValue: '#333333', type: 'text' },
 		sLeftTable1HoverColor: { desc: '左欄選單一懸浮顏色', defaultValue: '#33AAAA', type: 'text' },
+		sLeftTable2BorderColor: { desc: '左欄選單二邊框顏色', defaultValue: 'transparent', type: 'text' },
 		sLeftTable2BgColor: { desc: '左欄選單二背景顏色', defaultValue: '#CCDDEA', type: 'text' },
-		sLeftTable2BgImage: { desc: '左欄選單二背景圖片', defaultValue: '/images/left_menu/bg_leftm2.png', type: 'text' },
+		sLeftTable2BgImage: { desc: '左欄選單二背景圖片', defaultValue: '/images/left_menu/bg_leftm2.jpg', type: 'text' },
 		sLeftTable2FontColor: { desc: '左欄選單二連結顏色', defaultValue: '#333333', type: 'text' },
 		sLeftTable2HoverColor: { desc: '左欄選單二懸浮顏色', defaultValue: '#33AAAA', type: 'text' },
 		sRedTitleFontColor: { desc: '紅人榜標題字體顏色', defaultValue: '#FFFFFF', type: 'text' },
@@ -113,7 +115,7 @@ AN.temp.push(function()
 		/* global stuff */\
 		body { background-color: %(sMainBgColor)s; } \
 		p, td { color: %(sMainFontColor)s; } \
-		body > table table, body > table td { border-color: %(sMainBorderColor)s !important; } \
+		body > table table[class], body > table td[class] { border-color: %(sMainBorderColor)s; } \
 		body > table table[cellspacing="1"][cellpadding] { background-color: %(sMainBorderColor)s; } \
 		/* non-transparent images */\
 		.bg_top { background: none; } \
@@ -124,11 +126,11 @@ AN.temp.push(function()
 		/* under logo links, footer text, username links */\
 		.encode_link, .txt_11pt_1A3448, *[style*="color: black"], *[style*="COLOR: black"] { color: %(sMainFontColor)s !important; } \
 		/* left table 1 */\
-		.left_table { border: 1px solid %(sMainBorderColor)s; background: %(sSecBgColor)s url(%(sLeftTable1BgImage)s) no-repeat bottom right; } \
+		.left_table { border: 1px solid %(sLeftTable1BorderColor)s; background: %(sSecBgColor)s url(%(sLeftTable1BgImage)s) no-repeat bottom right; } \
 		a.leftmenu_link { color: %(sLeftTable1FontColor)s; } \
 		a.leftmenu_link:hover { color: %(sLeftTable1HoverColor)s; } \
 		/* left table 2 */\
-		.left_table2 { border: 1px solid %(sMainBorderColor)s; background: %(sLeftTable2BgColor)s url(%(sLeftTable2BgImage)s) no-repeat bottom right; } \
+		.left_table2 { border: 1px solid %(sLeftTable2BorderColor)s; background: %(sLeftTable2BgColor)s url(%(sLeftTable2BgImage)s) no-repeat bottom right; } \
 		a.leftmenu_link2 { color: %(sLeftTable2FontColor)s; } \
 		a.leftmenu_link2:hover { color: %(sLeftTable2HoverColor)s; } \
 		\
@@ -141,7 +143,7 @@ AN.temp.push(function()
 		*[style*="0, 51, 102"], *[style*="#003366"] { color: %(sRedHeaderFontColor)s !important; } \
 		.redhot_text, a.redhot_link { color: %(sRedContentFontColor)s; } \
 		/* blue bars & leftover, and main forum page bars */\
-		.title, *[bgcolor="#6ea0c4"], *[style*="rgb(163, 193, 224"] { background-color: %(sBlueBarBgColor)s !important; color: %(sBlueBarFontColor)s; } \
+		.title, *[bgcolor="#6ea0c4"], *[colspan="6"] { background-color: %(sBlueBarBgColor)s !important; color: %(sBlueBarFontColor)s; } \
 		*[bgcolor="#6ea0c4"]:first-child { width: 22px; background-image: url(%(sBlueBarBgImage)s); } \
 		*[src*="/p.jpg"] { display: none; } \
 		/* hot search */\
@@ -151,22 +153,26 @@ AN.temp.push(function()
 		*[bgcolor="#ccddea"], .ajax__tab_tab, #advarea tr:first-child + tr td { background-color: %(sBlueSecBgColor)s !important; } \
 		.p__tab_xp .ajax__tab_tab { color: %(sMainFontColor)s; } \
 		.p__tab_xp .ajax__tab_active .ajax__tab_tab, .p__tab_xp .ajax__tab_hover .ajax__tab_tab { color: %(sMainHoverColor)s; } \
-		/*nearly-white backgrounds */\
+		/* profilepage avater */\
+		table[style*="204"], table[style*="#CCCCCC"], table[style*="#cccccc"] { border-color: %(sMainBorderColor)s !important; } \
+		/* nearly-white backgrounds */\
 		*[style*="rgb(23"], *[style*="rgb(24"], *[style*="#E"], *[style*="#F"], *[style*="#e"], *[style*="#f"] { background-color: %(sSecBgColor)s !important; } \
 		/* hightlight bg */\
 		*[style*="233, 236, 108"], *[style*="#E9EC6C"] { background-color: %(sHighlightBgColor)s !important; } \
 		/* headers */\
 		.repliers_header, *[style*="51, 102, 153"], *[style*="#336699"] { color: %(sMainHeaderFontColor)s !important; background-color: %(sMainHeaderBgColor)s !important; } \
 		/* white table cells */\
-		*[style*="255, 255, 255"], *[style*="#FFFFFF"], *[style*="background-color: white"] { background-color: %(sMainBgColor)s !important; } \
+		*[style*="255, 255, 255"], *[style*="#FFFFFF"], *[style*="background-color: white"], *[style*="BACKGROUND-COLOR: white"] { background-color: %(sMainBgColor)s !important; } \
 		/* time text */\
-		*[style*="128, 0, 0"], *[style*="#800000"], *[style*="color: maroon"] { color: %(sTimeFontColor)s !important; } \
+		*[style*="128, 0, 0"], *[style*="#800000"], *[style*="maroon"] { color: %(sTimeFontColor)s !important; } \
 		/* male name link */\
 		*[style*="0, 102, 255"], *[color="blue"] { color: %(sMaleFontColor)s !important; } \
 		/* female name link */\
 		*[style*="255, 0, 102"], *[color="red"] { color: %(sFemaleFontColor)s !important; } \
 		/* quotes */\
-		blockquote > div { color: %(sQuoteFontColor)s !important; } \
+		blockquote > div[style*="color"], blockquote > div[style*="COLOR"] { color: %(sQuoteFontColor)s !important; } \
+		/* PM Box */\
+		.ListPMText { background-color: %(sMainBorderColor)s; } \
 		',
 		AN.util.getOptions()
 		));

@@ -578,12 +578,15 @@ var AN = $.extend(window.AN,
 
 				$.each(AN.mod[sMod].fn, function(sId, oFn)
 				{
-					$.make('a', oDB.oSwitches[sMod], sId);
-
-					$.each(oFn.page, function(sPage, uDefault)
+					if(!oDB.oSwitches[sMod][sId])
 					{
-						if(uDefault === true || uDefault == 'comp') oDB.oSwitches[sMod][sId].push(sPage * 1);
-					});
+						$.make('a', oDB.oSwitches[sMod], sId);
+
+						$.each(oFn.page, function(sPage, uDefault)
+						{
+							if(uDefault === true || uDefault == 'comp') oDB.oSwitches[sMod][sId].push(sPage * 1);
+						});
+					}
 
 					if(!oFn.options) return;
 
@@ -798,7 +801,7 @@ AN.mod['Kernel'] =
 		\
 		.an-forum, .an-forum textarea { background-color: %(sSecBgColor)s; } \
 		.an-forum, .an-forum h4, .an-forum div, .an-forum td, .an-forum dl, .an-forum dt, .an-forum dd, .an-forum ul, .an-forum li, .an-forum a, .an-forum fieldset, .an-forum hr { border: 0 solid %(sMainBorderColor)s; } \
-		.an-forum a, .an-forum textarea { color: %(sMainFontColor)s; } \
+		.an-forum * { color: %(sMainFontColor)s; } \
 		.an-forum a { text-decoration: none; } \
 		.an-forum a:hover { text-decoration: underline; } \
 		.an-forum table { width: 100%; border-collapse: collapse; } \

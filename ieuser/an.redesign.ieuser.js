@@ -50,7 +50,6 @@ AN.temp.push(function()
 	{
 		oFn.toggleQuote = function(jTarget, bOuterOnly)
 		{
-			if(!jTarget.length) jTarget = $(this);
 			if(bOuterOnly === undefined) bOuterOnly = (jTarget.html() == '-');
 
 			if(bOuterOnly)
@@ -94,7 +93,7 @@ AN.temp.push(function()
 	},
 	infinite: function(jDoc, oFn)
 	{
-		var jTempHeader = $('<div class="an-forum-header an-quoteheader"><span>引用:</span><b>-</b></div>').children('b').click(oFn.toggleQuote).end();
+		var jTempHeader = $('<div class="an-forum-header an-quoteheader"><span>引用:</span><b>-</b></div>').children('b').click(function(){ oFn.toggleQuote($(this)); }).end();
 
 		jDoc.find('blockquote').each(function()
 		{

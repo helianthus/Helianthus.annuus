@@ -50,7 +50,7 @@ AN.temp.push(function()
 	{
 		oFn.toggleQuote = function(jTarget, bOuterOnly)
 		{
-			if(!jTarget) jTarget = $(this);
+			if(!jTarget.length) jTarget = $(this);
 			if(bOuterOnly === undefined) bOuterOnly = (jTarget.html() == '-');
 
 			if(bOuterOnly)

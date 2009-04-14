@@ -58,7 +58,7 @@ AN.temp.push(function()
 			28: function()
 			{
 				$('#ctl00_ContentPlaceHolder1_lb_UserName').up('tr', 1).find('tr:last').remove();
-				$('#HKGBottomGoogleAd').up('table', 1).nextAll('br:lt(2)').andSelf().remove();
+				$('#HKGBottomGoogleAd').up('table', 1).next('br').andSelf().remove();
 			},
 			30: function()
 			{

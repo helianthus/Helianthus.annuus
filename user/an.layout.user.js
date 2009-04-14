@@ -236,7 +236,7 @@ AN.temp.push(function()
 	type: 3,
 	once: function()
 	{
-		$('#ctl00_ContentPlaceHolder1_HotPeoples').prev().andSelf().remove();
+		$('#ctl00_ContentPlaceHolder1_HotPeoples').next('br').andSelf().remove();
 	}
 },
 

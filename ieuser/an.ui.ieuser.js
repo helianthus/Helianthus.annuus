@@ -395,20 +395,23 @@ AN.temp.push(function()
 				getInfo = function(jTarget)
 				{
 					var oInfo = jTarget.data('info');
-					if(oInfo) return oInfo;
 
-					var aInfo;
-					if(jTarget.hasClass('an-settings-switch'))
+					if(!oInfo)
 					{
-						aInfo = jTarget.attr('id').replace(/an-settings-switch-/, '').split(sSep);
-						oInfo = { page: aInfo[0] * 1, mod: aInfo[1], id: aInfo[2] };
+						var aInfo;
+						if(jTarget.hasClass('an-settings-switch'))
+						{
+							aInfo = jTarget.attr('id').replace(/an-settings-switch-/, '').split(sSep);
+							oInfo = { page: aInfo[0] * 1, mod: aInfo[1], id: aInfo[2] };
+						}
+						else
+						{
+							aInfo = jTarget.attr('id').replace(/an-settings-option-/, '').split(sSep);
+							oInfo = { page: aInfo[0] * 1, name: aInfo[1], type: jTarget.attr('type') || jTarget[0].nodeName };
+						}
+						jTarget.data('info', oInfo);
 					}
-					else
-					{
-						aInfo = jTarget.attr('id').replace(/an-settings-option-/, '').split(sSep);
-						oInfo = { page: aInfo[0] * 1, name: aInfo[1], type: jTarget.attr('type') || jTarget[0].nodeName };
-					}
-					jTarget.data('info', oInfo);
+
 					return oInfo;
 				};
 
@@ -419,12 +422,12 @@ AN.temp.push(function()
 					{
 						var jThis = $(this);
 						var oInfo = getInfo(jThis);
-						if(!oSwitches[oInfo.mod]) oSwitches[oInfo.mod] = {};
-						if(!oSwitches[oInfo.mod][oInfo.id]) oSwitches[oInfo.mod][oInfo.id] = [];
+						$.make('a', $.make('o', oSwitches, oInfo.mod), oInfo.id);
 
 						if(jThis.is(':checked')) oSwitches[oInfo.mod][oInfo.id].push(oInfo.page);
 					});
 					AN.util.storage('an_switches', oSwitches);
+					console.log(JSON.stringify(oSwitches));
 
 					var oOptions = {};
 					var bHasQuote = false;
@@ -432,7 +435,7 @@ AN.temp.push(function()
 					{
 						var jThis = $(this);
 						var oInfo = getInfo(jThis);
-						if(!oOptions[oInfo.name]) oOptions[oInfo.name] = {};
+						$.make('o', oOptions, oInfo.name);
 
 						if(oInfo.type == 'checkbox')
 						{
@@ -482,7 +485,7 @@ AN.temp.push(function()
 				fillBoolean = function(bSwitchOn)
 				{
 					var jScope = (bFillAll) ? $('#an-settings-main-panels') : jFieldsets.filter(':visible');
-					jScope.find('an-settings-switch').attr('checked', bSwitchOn)
+					jScope.find('.an-settings-switch').attr('checked', bSwitchOn)
 					jScope.find('.an-settings-option').attr('disabled', !bSwitchOn);
 				};
 
@@ -542,28 +545,24 @@ AN.temp.push(function()
 					jScope.find('.an-settings-switch').each(function()
 					{
 						var jThis = $(this);
-						if(jThis.is(':checked'))
-						{
-							var oInfo = getInfo(jThis);
-							if(!oExport.oSwitches[oInfo.mod]) oExport.oSwitches[oInfo.mod] = {};
-							if(!oExport.oSwitches[oInfo.mod][oInfo.id]) oExport.oSwitches[oInfo.mod][oInfo.id] = [];
-							oExport.oSwitches[oInfo.mod][oInfo.id].push(oInfo.page);
-						}
+						var oInfo = getInfo(jThis);
+						var oFn = $.make('a', $.make('o', oExport.oSwitches, oInfo.mod), oInfo.id);
+						if(jThis.is(':checked')) oFn.push(oInfo.page);
 					});
 
 					jScope.find('.an-settings-option').each(function()
 					{
 						var jThis = $(this);
 						var oInfo = getInfo(jThis);
-						if(!oExport.oOptions[oInfo.name]) oExport.oOptions[oInfo.name] = {};
+						var oFn = $.make('o', oExport.oOptions, oInfo.name);
 
 						if(oInfo.type == 'checkbox')
 						{
-							oExport.oOptions[oInfo.name][oInfo.page] = jThis.is(':checked');
+							oFn[oInfo.page] = jThis.is(':checked');
 						}
 						else if(oInfo.type == 'text' || oInfo.type == 'select')
 						{
-							oExport.oOptions[oInfo.name][oInfo.page] = $.correct(jThis.val());
+							oFn[oInfo.page] = $.correct(jThis.val());
 						}
 					});
 

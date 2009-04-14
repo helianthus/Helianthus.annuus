@@ -18,7 +18,7 @@
 // ==UserScript==
 // @name Helianthus.Annuus 3: Kernel
 // @namespace http://code.google.com/p/helianthus-annuus/
-// @description 1.0.0 by 向日
+// @description by 向日
 // @include http://forum*.hkgolden.com/*
 // ==/UserScript==
 
@@ -665,10 +665,11 @@ var AN = $.extend(window.AN,
 					if(AN.shared.log)
 					{
 						AN.shared.log('請通知作者有關此錯誤');
-						if(err.message) AN.shared.log('Error message: ' + err.message);
-						if(err.type) AN.shared.log('Error type: ' + err.type);
-						if(err.lineNumber) AN.shared.log('Line number: ' + err.lineNumber);
-						AN.shared.log($.sprintf('發生錯誤:%s', oArg.sDesc));
+						if(err.message) AN.shared.log('錯誤訊息: ' + err.message);
+						if(err.type) AN.shared.log('錯誤類型: ' + err.type);
+						if(err.lineNumber) AN.shared.log('錯誤行號: ' + err.lineNumber);
+						AN.shared.log('出現地址: ' + location.href);
+						AN.shared.log($.sprintf('發生錯誤: %s', oArg.sDesc));
 					}
 					else alert($.sprintf('ERROR ON EXECUATION: %s\r\n%s', oArg.sDesc, err.message));
 				}
@@ -788,7 +789,8 @@ AN.mod['Kernel'] =
 		sUIFontColor: { desc: 'UI主顏色', defaultValue: '#808080', type: 'text' },
 		sUIHoverColor: { desc: 'UI連結懸浮顏色', defaultValue: '#9ACD32', type: 'text' },
 		sMainFontColor: { desc: '論壇主要字體顏色', defaultValue: '#000000', type: 'text' },
-		sMainBorderColor: { desc: '論壇邊框顏色', defaultValue: '#000000', type: 'text' },
+		sMainBorderColor: { desc: '論壇主要邊框顏色', defaultValue: '#000000', type: 'text' },
+		sSecBorderColor: { desc: '論壇次要邊框顏色', defaultValue: '#CCCCCC', type: 'text' },
 		sMainBgColor: { desc: '論壇主要背景顏色', defaultValue: '#FFFFFF', type: 'text' },
 		sSecBgColor: { desc: '論壇次要背景顏色', defaultValue: '#F8F8F8', type: 'text' },
 		sMainHeaderFontColor: { desc: '論壇標題字體顏色', defaultValue: '#FFFFFF', type: 'text' },
@@ -800,6 +802,7 @@ AN.mod['Kernel'] =
 		#an, #an legend { color: %(sMainFontColor)s; } \
 		\
 		.an-forum, .an-forum textarea { background-color: %(sSecBgColor)s; } \
+		.an-forum input[type="text"] { background-color: %(sMainBgColor)s; border: 1px solid %(sMainBorderColor)s; } \
 		.an-forum, .an-forum h4, .an-forum div, .an-forum td, .an-forum dl, .an-forum dt, .an-forum dd, .an-forum ul, .an-forum li, .an-forum a, .an-forum fieldset, .an-forum hr { border: 0 solid %(sMainBorderColor)s; } \
 		.an-forum * { color: %(sMainFontColor)s; } \
 		.an-forum a { text-decoration: none; } \

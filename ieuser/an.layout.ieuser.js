@@ -18,7 +18,7 @@
 // ==UserScript==
 // @name Helianthus.Annuus 3: Layout Designer
 // @namespace http://code.google.com/p/helianthus-annuus/
-// @description 1.0.0 by 向日
+// @description by 向日
 // @include http://forum*.hkgolden.com/*
 // @run-at document-start
 // ==/UserScript==
@@ -41,12 +41,12 @@ AN.temp.push(function()
 
 '5e173905-9c47-4f37-8d3f-4c31ea871115':
 {
-	desc: '移除最上方按扭列',
+	desc: '隱藏頂部按扭',
 	page: { 65534: false },
 	type: 3,
 	once: function()
 	{
-		$('body > table > tbody > tr:first').remove();
+		$('.bg_top table:eq(1) tr:first').css('visibility', 'hidden');
 	}
 },
 
@@ -168,7 +168,7 @@ AN.temp.push(function()
 	type: 3,
 	once: function()
 	{
-		$('#ctl00_ContentPlaceHolder1_lb_UserName').up('table', 2).remove();
+		$('#ctl00_ContentPlaceHolder1_lb_UserName').up('table', 2).hide();
 	}
 },
 

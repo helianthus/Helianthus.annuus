@@ -18,7 +18,7 @@
 // ==UserScript==
 // @name Helianthus.Annuus 3: Main Script
 // @namespace http://code.google.com/p/helianthus-annuus/
-// @description 1.0.0 by 向日
+// @description by 向日
 // @include http://forum*.hkgolden.com/*
 // @run-at document-start
 // ==/UserScript==
@@ -221,9 +221,10 @@ AN.temp.push(function()
 				var jImg = $(eImg);
 				var nMaxWidth = jImg.up('td,div').width() - 2;
 
-				if(!nMaxWidth) return alert('no max width!');
+				if(!nMaxWidth) throw('no max width!');
 
 				var nWidth = jImg.removeAttr('width').removeAttr('height')[0].width;
+				var nHeight = eImg.height;
 
 				if(nWidth <= nMaxWidth)
 				{
@@ -305,8 +306,8 @@ AN.temp.push(function()
 
 '6e978310-e87b-4043-9def-076a13377c19':
 {
-	desc: '採用更好的favicon [部份瀏覽器無效]',
-	page: { 65534: true },
+	desc: '更換favicon(小丑icon) [部份瀏覽器無效]',
+	page: { 65534: false },
 	type: 4,
 	once: function()
 	{

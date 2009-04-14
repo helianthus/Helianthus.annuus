@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name Helianthus.Annuus 3: Libraries
 // @namespace http://code.google.com/p/helianthus-annuus/
-// @description 1.3.2 by John Resig and the jQuery Team
+// @description by 向日(以及各library之作者)
 // @include http://forum*.hkgolden.com/*
 // @run-at document-start
 // ==/UserScript==

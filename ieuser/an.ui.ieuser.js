@@ -18,7 +18,7 @@
 // ==UserScript==
 // @name Helianthus.Annuus 3: User Interface
 // @namespace http://code.google.com/p/helianthus-annuus/
-// @description 1.0.0 by 向日
+// @description by 向日
 // @include http://forum*.hkgolden.com/*
 // @run-at document-start
 // ==/UserScript==
@@ -427,7 +427,6 @@ AN.temp.push(function()
 						if(jThis.is(':checked')) oSwitches[oInfo.mod][oInfo.id].push(oInfo.page);
 					});
 					AN.util.storage('an_switches', oSwitches);
-					console.log(JSON.stringify(oSwitches));
 
 					var oOptions = {};
 					var bHasQuote = false;

@@ -18,7 +18,7 @@
 // ==UserScript==
 // @name Helianthus.Annuus 3: Component Redesigner
 // @namespace http://code.google.com/p/helianthus-annuus/
-// @description 1.0.0 by 向日
+// @description by 向日
 // @include http://forum*.hkgolden.com/*
 // @run-at document-start
 // ==/UserScript==

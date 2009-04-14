@@ -726,7 +726,11 @@ AN.mod['Kernel'] =
 			contentType: 'application/x-www-form-urlencoded; charset=UTF-8'
 		});
 
-		if(AN.util.data('AN-version') != 'v3') AN.util.data('AN-version', 'v3');
+		var AN_VER = '3.0_beta';
+		if(AN.util.data('AN-version') != AN_VER)
+		{
+			AN.util.data('AN-version', AN_VER);
+		}
 
 		AN.box.sCurPage = ($('#aspnetForm').length) ?
 			$('#aspnetForm').attr('action').match(/[^.]+/)[0].toLowerCase() :

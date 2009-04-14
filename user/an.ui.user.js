@@ -955,7 +955,7 @@ AN.temp.push(function()
 				$.each(
 				{
 					'名稱': 'Helianthus.Annuus',
-					'版本': 'v3',
+					'版本': AN.util.data('AN-version'),
 					'作者': '<a target="_blank" href="ProfilePage.aspx?userid=148720">向日</a>',
 					'主頁': '<a target="_blank" href="ProfilePage.aspx?userid=148720">http://code.google.com/p/helianthus-annuus/</a>'
 				}, function(sName, sValue)
@@ -968,8 +968,6 @@ AN.temp.push(function()
 				{
 					jList.append($.sprintf('<dd>%s: %s</dd>', sMod, this.ver));
 				});
-
-
 			}
 
 			AN.shared.gray(true, 'an-about');

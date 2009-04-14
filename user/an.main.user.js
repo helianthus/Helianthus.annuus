@@ -479,19 +479,19 @@ AN.temp.push(function()
 	defer: 1, // after all images are created
 	once: function()
 	{
-		AN.box.removeDead = function()
+		this.removeDead = function()
 		{
 			$(this).parent().css('text-decoration', 'none').html('<a href="javascript:" class="an-content-line">死圖已被移除</a>');
 		};
 	},
-	infinite: function(jDoc)
+	infinite: function(jDoc, oFn)
 	{
 		$.each(jDoc.replies(), function()
 		{
 			this.jTdContent.find('img[onLoad]').each(function()
 			{
 				var sSrc = this.src;
-				$(this).error(AN.box.removeDead).attr('src', sSrc);
+				$(this).error(oFn.removeDead).attr('src', sSrc);
 			});
 		});
 	}
@@ -524,29 +524,32 @@ AN.temp.push(function()
 	page: { 32: false },
 	type: 6,
 	defer: 1, // after all images are created
-	once: function()
+	once: function(jDoc, oFn)
 	{
-		AN.box.bToMask = true;
+		oFn.bAreMasked = true;
 
 		AN.shared('addButton', '切換屏蔽圖片', function()
 		{
-			AN.box.bToMask = !AN.box.bToMask;
-			AN.box.bToMask ? $('an-maskimg').fadeOut().next().show() : $('an-maskimg').next().hide().end().fadeIn();
+			(oFn.bAreMasked = !oFn.bAreMasked) ? $('.an-maskimg').fadeOut().next().show() : $('.an-maskimg').next().hide().end().fadeIn();
 		});
 
-		AN.box.maskIt = function()
+		this.unmaskIt = function()
 		{
-			$(this).hide().prev().fadeIn();
-			return false;
+			var jBox = $(this).children('a');
+			if(jBox.is(':visible'))
+			{
+				jBox.hide().prev().fadeIn();
+				return false;
+			}
 		};
 	},
-	infinite: function(jDoc)
+	infinite: function(jDoc, oFn)
 	{
-		if(!AN.box.bToMask) return;
+		if(!this.bAreMasked) return;
 
 		$.each(jDoc.replies(), function()
 		{
-			this.jTdContent.find('img[onLoad]').addClass('an-maskimg').hide().after($('<a href="javascript:" class="an-content-box">點擊顯示圖片</a>').click(AN.box.maskIt));
+			this.jTdContent.find('img[onLoad]').addClass('an-maskimg').hide().after('<a class="an-content-box" href="javascript:">點擊顯示圖片</a>').parent().css('text-decoration', 'none').click(oFn.unmaskIt);
 		});
 	}
 },
@@ -670,7 +673,7 @@ AN.temp.push(function()
 		},
 		sSusColor: { desc: '可疑關鍵字顏色', defaultValue: '#FF0000', type: 'text' }
 	},
-	infinite: function(jDoc)
+	infinite: function(jDoc, oFn)
 	{
 		var addBox = function()
 		{
@@ -685,7 +688,7 @@ AN.temp.push(function()
 
 			$('#an').append('<div id="an-alertbox" class="an-forum"><div class="an-forum-header"></div><p>發現可疑連結! keyword: <span></span></p></div>');
 
-			AN.box.showAlert = function(event)
+			oFn.showAlert = function(event)
 			{
 				$('#an-alertbox').find('span').text($(this).data('an-suskeyword'));
 				$(document).bind('mousemove.an-alert', function(event)
@@ -695,7 +698,7 @@ AN.temp.push(function()
 				});
 			};
 
-			AN.box.hideAlert = function()
+			oFn.hideAlert = function()
 			{
 				$(document).unbind('.an-alert');
 				$('#an-alertbox').fadeOut('fast');
@@ -712,7 +715,7 @@ AN.temp.push(function()
 				if(aMatch = rSus.exec(this.href))
 				{
 					if(!$('#an-alertbox').length) addBox();
-					$(this).data('an-suskeyword', aMatch[0]).hover(AN.box.showAlert, AN.box.hideAlert);
+					$(this).data('an-suskeyword', aMatch[0]).hover(oFn.showAlert, oFn.hideAlert);
 				}
 			});
 		});

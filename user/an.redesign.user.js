@@ -48,8 +48,9 @@ AN.temp.push(function()
 	options: { bOuterOnly: { desc: '只顯示最外層的引用', type: 'checkbox', defaultValue: true } },
 	once: function(jDoc, oFn)
 	{
-		AN.box.toggleQuote = function(jTarget, bOuterOnly)
+		oFn.toggleQuote = function(jTarget, bOuterOnly)
 		{
+			if(!jTarget) jTarget = $(this);
 			if(bOuterOnly === undefined) bOuterOnly = (jTarget.html() == '-');
 
 			if(bOuterOnly)
@@ -77,23 +78,24 @@ AN.temp.push(function()
 		var bOuterOnly = AN.util.getOptions('bOuterOnly');
 		AN.shared('addButton', '切換最外層引用', function()
 		{
-			bOuterOnly = !bOuterOnly;
-			AN.box.toggleQuote($('b.an-outerquote'), bOuterOnly);
+			oFn.toggleQuote($('.an-outerquote'), (bOuterOnly = !bOuterOnly));
 		});
 
 		AN.util.addStyle($.sprintf(' \
 		.repliers blockquote { margin: 5px 0; border: 1px solid %(sMainBorderColor)s; } \
 		.repliers blockquote blockquote { margin-top: 0; border-right: 0; } \
-		.an-quoteheader { padding: 0 3px !important; color: %(sMainHeaderFontColor)s !important; font-size: 12px; background-color: %(sMainHeaderBgColor)s; border-bottom: 1px solid %(sMainBorderColor)s; margin-bottom: 2px; overflow: auto; } \
-		.an-quoteheader > span { float: left; } \
-		.an-quoteheader > b { float: right; cursor: pointer; } \
-		.repliers blockquote > div { padding: 0 0 5px 2px; } \
+		.repliers blockquote div { padding: 0 0 5px 2px; } \
+		.an-quoteheader { padding: 0 3px !important; font-size: 12px; margin-bottom: 2px; overflow: hidden; } \
+		.an-quoteheader span { float: left; } \
+		.an-quoteheader b { float: right; cursor: pointer; } \
 		',
 		AN.util.getOptions()
 		));
 	},
-	infinite: function(jDoc)
+	infinite: function(jDoc, oFn)
 	{
+		var jTempHeader = $('<div class="an-forum-header an-quoteheader"><span>引用:</span><b>-</b></div>').children('b').click(oFn.toggleQuote).end();
+
 		jDoc.find('blockquote').each(function()
 		{
 			jQuote = $(this);
@@ -117,7 +119,7 @@ AN.temp.push(function()
 				break;
 			}
 
-			var jHeader = $('<div class="an-quoteheader"><span>引用:</span><b onclick="AN.box.toggleQuote(jQuery(this))">-</b></div>').prependTo(jQuote);
+			var jHeader = jTempHeader.clone(true).prependTo(jQuote);
 
 			if(!jQuote.find('blockquote').length) // innermost or single-layer
 			{
@@ -129,7 +131,7 @@ AN.temp.push(function()
 			}
 		});
 
-		if(AN.util.getOptions('bOuterOnly')) jDoc.defer(3, '隱藏最外層以外的引用', function(){ AN.box.toggleQuote(jDoc.find('b.an-outerquote'), true); });
+		if(AN.util.getOptions('bOuterOnly')) jDoc.defer(3, '隱藏最外層以外的引用', function(){ oFn.toggleQuote(jDoc.find('.an-outerquote'), true); });
 	}
 },
 

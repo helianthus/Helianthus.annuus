@@ -70,27 +70,37 @@ $.extend(
 		return $(eDiv);
 	},
 
-	isEmpty: function(oTarget)
+	getLength: function(uTarget)
 	{
-		for(var i in oTarget){ return false; }
+		if('length' in uTarget) return uTarget.length;
+
+		for(var nCount in uTarget){};
+		return nCount;
+	},
+
+	make: function(sType, uTarget)
+	{
+		$.each(arguments, function(i, sName)
+		{
+			if(i < 2) return;
+
+			if(!uTarget[sName]) uTarget[sName] = (sType == 'o' ? {} : []);
+			uTarget = uTarget[sName];
+		});
+
+		return uTarget;
+	},
+
+	isEmpty: function(uTarget)
+	{
+		if('length' in uTarget) return uTarget.length;
+		for(var i in uTarget){ return false; }
 		return true;
 	},
 
 	isRubbish: function(uTarget)
 	{
 		return (uTarget === undefined || uTarget === null || uTarget === NaN);
-	},
-
-	getLength: function(uTarget)
-	{
-		if(length in uTarget) return uTarget.length;
-
-		var nCount = 0;
-		for(var x in uTarget)
-		{
-			nCount++;
-		}
-		return nCount;
 	},
 
 	winWidth: function(nMutiply)
@@ -263,10 +273,7 @@ $.fn.extend(
 	defer: function(nPos, uArg, fHandler)
 	{
 		var oArg = (typeof uArg == 'string') ? { sDesc: uArg, aHandler: [fHandler] } : uArg;
-
-		if(!this.aDefer) this.aDefer = [];
-		if(!this.aDefer[nPos]) this.aDefer[nPos] = [];
-		this.aDefer[nPos].push(oArg);
+		$.make('a', this, 'aDefer', nPos).push(oArg);
 
 		return this;
 	}
@@ -470,64 +477,70 @@ var AN = $.extend(window.AN,
 
 		getData: function(sFile, fToExec)
 		{
-			if(!AN.box.external) AN.box.external = {};
-			if(AN.box.external[sFile]) fToExec(AN.box.external[sFile]);
+			var oExternal = $.make('o', AN.box, 'oExternal');
+			if(oExternal[sFile]) fToExec(oExternal[sFile]);
 			else $.getScript($.sprintf('http://helianthus-annuus.googlecode.com/svn/other/an.v3.%s.js', sFile), function()
 			{
-				fToExec(AN.box.external[sFile]);
+				fToExec(oExternal[sFile]);
 			});
 		},
 
 		getOpenerInfo: function(jDoc, fToExec)
 		{
-			if(AN.box.openerInfo)
+			var oInfo = arguments.callee.oInfo;
+
+			if(oInfo)
 			{
-				if(AN.box.openerInfo.sId)
+				if(oInfo.sId)
 				{
-					fToExec(AN.box.openerInfo);
+					fToExec(oInfo);
 				}
 				else
 				{
-					setTimeout(function(){ AN.util.getOpenerInfo(fToExec); }, 100);
+					return setTimeout(function(){ AN.util.getOpenerInfo(jDoc, fToExec); }, 100);
 				}
-			}
-			else if(AN.util.getCurPageNo() == 1)
-			{
-				var oOpener = jDoc.replies()[0];
-				fToExec(AN.box.openerInfo = { sId: oOpener.sUserid, sName: oOpener.sUserName });
 			}
 			else
 			{
-				AN.box.openerInfo = {};
+				oInfo = arguments.callee.oInfo = {};
 
-				$.get('/view.aspx?message=' + window.messageid, function(sHTML)
+				if(AN.util.getCurPageNo() == 1)
 				{
-					var jLink = $.doc(sHTML).find('.repliers:first a:first');
-					AN.box.openerInfo = { sId: jLink.attr('href').replace(/.+?userid=(\d+).*/, '$1'), sName: jLink.html() };
-					fToExec(AN.box.openerInfo);
-				});
+					var oOpener = jDoc.replies()[0];
+					fToExec(oInfo = { sId: oOpener.sUserid, sName: oOpener.sUserName });
+				}
+				else
+				{
+					$.get('/view.aspx?message=' + window.messageid, function(sHTML)
+					{
+						var jLink = $.doc(sHTML).find('.repliers:first a:first');
+						oInfo = { sId: jLink.attr('href').replace(/.+?userid=(\d+).*/, '$1'), sName: jLink.html() };
+						fToExec(oInfo);
+					});
+				}
 			}
 		},
 
 		getOptions: function(sOptionName)
 		{
-			if(!AN.box.oPageOptions)
+			var oOptions = $.make('o', arguments.callee, 'oOptions');
+
+			if($.isEmpty(oOptions))
 			{
-				AN.box.oPageOptions = {};
 				$.each(AN.box.oOptions, function(sName)
 				{
 					$.each(this, function(sPage, uValue)
 					{
 						if(AN.box.nCurPage & sPage)
 						{
-							AN.box.oPageOptions[sName] = uValue;
+							oOptions[sName] = uValue;
 							return false;
 						}
 					});
 				});
 			}
 
-			return sOptionName ? AN.box.oPageOptions[sOptionName] : AN.box.oPageOptions;
+			return sOptionName ? oOptions[sOptionName] : oOptions;
 		},
 
 		getPageNo: function(sURL)
@@ -543,9 +556,8 @@ var AN = $.extend(window.AN,
 
 		isLoggedIn: function()
 		{
-			if(AN.box.bIsLoggedIn) return AN.box.bIsLoggedIn;
-
-			return AN.box.bIsLoggedIn = ($('#ctl00_ContentPlaceHolder1_lb_UserName a:first').attr('href').indexOf('login.aspx') == -1);
+			var bIsLoggedIn = arguments.callee.bIsLoggedIn;
+			return (bIsLoggedIn !== undefined) ? bIsLoggedIn : (arguments.callee.bIsLoggedIn = ($('#ctl00_ContentPlaceHolder1_lb_UserName a:first').attr('href').indexOf('login.aspx') == -1));
 		}
 	},
 
@@ -562,24 +574,23 @@ var AN = $.extend(window.AN,
 			{
 				if(!AN.mod[sMod].fn) return;
 
-				if(!oDB.oSwitches[sMod]) oDB.oSwitches[sMod] = {};
+				$.make('o', oDB.oSwitches, sMod);
 
 				$.each(AN.mod[sMod].fn, function(sId, oFn)
 				{
-					if(!oDB.oSwitches[sMod][sId])
+					$.make('a', oDB.oSwitches[sMod], sId);
+
+					$.each(oFn.page, function(sPage, uDefault)
 					{
-						oDB.oSwitches[sMod][sId] = [];
-						$.each(oFn.page, function(sPage, uDefault)
-						{
-							if(uDefault === true || uDefault == 'comp') oDB.oSwitches[sMod][sId].push(sPage * 1);
-						});
-					}
+						if(uDefault === true || uDefault == 'comp') oDB.oSwitches[sMod][sId].push(sPage * 1);
+					});
 
 					if(!oFn.options) return;
 
 					$.each(oFn.options, function(sName, oOption)
 					{
-						if(!oDB.oOptions[sName]) oDB.oOptions[sName] = {};
+						$.make('o', oDB.oOptions, sName);
+
 						$.each(oFn.page, function(sPage)
 						{
 							if(oDB.oOptions[sName][sPage] === undefined)
@@ -608,7 +619,7 @@ var AN = $.extend(window.AN,
 				{
 					$.each(AN.box.oSwitches[sMod][sId], function()
 					{
-						if(oFn.page[this] != 'disabled' && (this == 65535 || AN.box.nCurPage & this))
+						if(oFn.page[this] != 'disabled' && (sId == 'ed7c7589-c318-487b-8d3a-888212d8d803' || AN.box.nCurPage & this))
 						{
 							var aHandler = [];
 							if(!AN.box.initialised && oFn.once) aHandler.push(oFn.once);
@@ -679,6 +690,7 @@ var AN = $.extend(window.AN,
 					$.each(jDoc.aDefer[i], function(){ execFn(this); });
 				}
 				jDoc.aDefer = null;
+				jDoc.splice(0, jDoc.length);
 
 				AN.box.aBenchmark.push({ type: 'end', name: '延期執行項目' });
 			}
@@ -729,6 +741,8 @@ AN.mod['Kernel'] =
 		});
 		if(!AN.box.nCurPage) AN.box.nCurPage = 32768;
 
+		if(!$('body').length) AN.box.nCurPage = 0;
+
 		if(AN.box.sCurPage == 'view') $('select[name=page]').val(AN.util.getPageNo(location.href)); // for FF3 where select box does not reset
 	}
 },
@@ -743,8 +757,8 @@ AN.mod['Kernel'] =
 		AN.box.debugMode = true;
 
 		AN.util.getOptions();
-		AN.box.oPageOptions['bAutoShowLog'] = true;
-		AN.box.oPageOptions['bShowDetailLog'] = true;
+		AN.util.getOptions.oOptions['bAutoShowLog'] = true;
+		AN.util.getOptions.oOptions['bShowDetailLog'] = true;
 
 		if(AN.box.nCurPage & 92)
 		{
@@ -792,6 +806,7 @@ AN.mod['Kernel'] =
 		.an-content-note { margin-right: 2px; cursor: default; } \
 		.an-content-line { font-size: 0.625em; font-style: italic; } \
 		.an-content-box { display: inline-block; border: 1px solid; padding: 1px 2px; } \
+		a.an-content-line, a.an-content-box { text-decoration: none !important; } \
 		a.an-content-line:hover, a.an-content-box:hover { color: %(sUIHoverColor)s; } \
 		',
 		AN.util.getOptions()
@@ -880,16 +895,16 @@ AN.mod['Kernel'] =
 	defer: 5, // do it at the very end
 	once: function()
 	{
-		AN.box.fixLayout = function()
+		this.fixLayout = function()
 		{
 			$('<tr></tr>').appendTo('table:last').remove();
 		};
 
-		$(window).load(AN.box.fixLayout);
+		$(window).load(this.fixLayout);
 	},
 	infinite: function()
 	{
-		AN.box.fixLayout();
+		this.fixLayout();
 	}
 }
 

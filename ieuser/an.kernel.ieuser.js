@@ -25,7 +25,7 @@
 setTimeout(function() // Chrome 2 totally ignores this?...forced to remove that @run-at document-start
 {
 
-var window = (typeof unsafeWindow != 'undefined') ? unsafeWindow : this;
+var window = (typeof unsafeWindow != 'undefined') ? unsafeWindow : (typeof contentWindow != 'undefined') ? contentWindow : this;
 var JSON = window.JSON;
 var $, jQuery = $ = window.jQuery;
 
@@ -802,7 +802,7 @@ AN.mod['Kernel'] =
 		#an, #an legend { color: %(sMainFontColor)s; } \
 		\
 		.an-forum, .an-forum textarea { background-color: %(sSecBgColor)s; } \
-		.an-forum input[type="text"] { background-color: %(sMainBgColor)s; border: 1px solid %(sMainBorderColor)s; } \
+		.an-forum input[type="text"], .an-forum select { background-color: %(sMainBgColor)s; border: 1px solid %(sMainBorderColor)s; } \
 		.an-forum, .an-forum h4, .an-forum div, .an-forum td, .an-forum dl, .an-forum dt, .an-forum dd, .an-forum ul, .an-forum li, .an-forum a, .an-forum fieldset, .an-forum hr { border: 0 solid %(sMainBorderColor)s; } \
 		.an-forum * { color: %(sMainFontColor)s; } \
 		.an-forum a { text-decoration: none; } \

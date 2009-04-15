@@ -1,5 +1,5 @@
-ï»¿/*
-    Copyright (C) 2008  å‘æ—¥
+/*
+    Copyright (C) 2008  ¦V¤é
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,20 +18,18 @@
 // ==UserScript==
 // @name Helianthus.Annuus 3: Kernel
 // @namespace http://code.google.com/p/helianthus-annuus/
-// @description by å‘æ—¥
+// @description by ¦V¤é
 // @include http://forum*.hkgolden.com/*
 // ==/UserScript==
 
-alert(1);
 setTimeout(function() // Chrome 2 totally ignores this?...forced to remove that @run-at document-start
 {
-alert(2);
 
 var window = (typeof unsafeWindow != 'undefined') ? unsafeWindow : (typeof contentWindow != 'undefined') ? contentWindow : this;
 var JSON = window.JSON;
 var $, jQuery = $ = window.jQuery;
 
-if(!$) return alert('éŒ¯èª¤ç™¼ç”Ÿ! æœªè¼‰å…¥Helianthus.Annuus: Libraries ?');
+if(!$) return alert('¿ù»~µo¥Í! ¥¼¸ü¤JHelianthus.Annuus: Libraries ?');
 
 //////////////////// START OF - [jQuery Extension] ////////////////////
 
@@ -243,7 +241,7 @@ $.fn.extend(
 		var jTrs;
 		this.find('td').each(function()
 		{
-			if($(this).html().match(/^\s*æœ€å¾Œå›æ‡‰æ™‚é–“$/))
+			if($(this).html().match(/^\s*³Ì«á¦^À³®É¶¡$/))
 			{
 				jTrs = $(this).parent().parent().attr('id', 'an-topics').end().nextAll();
 				return false;
@@ -296,34 +294,34 @@ var AN = $.extend(window.AN,
 		aBenchmark: [],
 		oTypeMap:
 		{
-			1: 'æ ¸å¿ƒè¨­å®š',
-			2: 'æ¨£å¼è¨­å®š',
-			3: 'ä½ˆå±€è¨­å®š',
-			4: 'ä¿®æ­£ä¿®æ”¹',
-			5: 'åŠ å…¥ç‰©ä»¶',
-			6: 'å…¶ä»–åŠŸèƒ½',
+			1: '®Ö¤ß³]©w',
+			2: '¼Ë¦¡³]©w',
+			3: '§G§½³]©w',
+			4: '­×¥¿­×§ï',
+			5: '¥[¤Jª«¥ó',
+			6: '¨ä¥L¥\¯à',
 
-			7: 'AJAXåŒ–',
-			8: 'å…ƒä»¶é‡é€ ',
-			9: 'çµ„åˆæŒ‰æ‰­'
+			7: 'AJAX¤Æ',
+			8: '¤¸¥ó­«³y',
+			9: '²Õ¦X«ö§á'
 		},
 		oPageMap:
 		{
-			65535: { action: null, desc: 'æ‰€æœ‰é ' },
-			65534: { action: null, desc: 'æ‰€æœ‰æ­£å¸¸é ' },
-			32768: { action: null, desc: 'æœªçŸ¥æ­£å¸¸é ' },
-			1: { action: 'error', desc: 'æ‰€æœ‰éŒ¯èª¤é ' },
-			2: { action: 'default', desc: 'ä¸»è«–å£‡é ' },
-			4: { action: 'topics', desc: 'æ¨™é¡Œé ' },
-			8: {action: 'search',  desc: 'æœå°‹é ' },
-			16: { action: 'newmessages', desc: 'æœ€æ–°è²¼æ–‡é ' },
-			32: { action: 'view', desc: 'å¸–å­é ' },
-			64: { action: 'profilepage', desc: 'ç”¨æˆ¶è³‡æ–™é ' },
-			128: { action: 'sendpm', desc: 'ç§äººè¨Šæ¯ç™¼é€é ' },
-			256: { action: 'post', desc: 'ç™¼ä½ˆ/å›è¦†é ' },
-			512: { action: 'login', desc: 'ç™»å…¥é ' },
-			1024: { action: 'giftpage', desc: 'äººæ°£é ' },
-			2048: { action: 'blog', desc: 'ç¶²èªŒé ' }
+			65535: { action: null, desc: '©Ò¦³­¶' },
+			65534: { action: null, desc: '©Ò¦³¥¿±`­¶' },
+			32768: { action: null, desc: '¥¼ª¾¥¿±`­¶' },
+			1: { action: 'error', desc: '©Ò¦³¿ù»~­¶' },
+			2: { action: 'default', desc: '¥D½×¾Â­¶' },
+			4: { action: 'topics', desc: '¼ĞÃD­¶' },
+			8: {action: 'search',  desc: '·j´M­¶' },
+			16: { action: 'newmessages', desc: '³Ì·s¶K¤å­¶' },
+			32: { action: 'view', desc: '©«¤l­¶' },
+			64: { action: 'profilepage', desc: '¥Î¤á¸ê®Æ­¶' },
+			128: { action: 'sendpm', desc: '¨p¤H°T®§µo°e­¶' },
+			256: { action: 'post', desc: 'µo§G/¦^ÂĞ­¶' },
+			512: { action: 'login', desc: 'µn¤J­¶' },
+			1024: { action: 'giftpage', desc: '¤H®ğ­¶' },
+			2048: { action: 'blog', desc: 'ºô»x­¶' }
 		}
 	},
 
@@ -386,7 +384,7 @@ var AN = $.extend(window.AN,
 			}
 			else if(sName == null) // DEL ALL
 			{
-				var bDelBackup = confirm('åŒæ™‚åˆªé™¤å‚™ä»½è³‡æ–™?');
+				var bDelBackup = confirm('¦P®É§R°£³Æ¥÷¸ê®Æ?');
 				$.each(['an_data', 'an_switches', 'an_options'], function()
 				{
 					eLSO.remove(sProfile, this + '');
@@ -410,7 +408,7 @@ var AN = $.extend(window.AN,
 							catch(err)
 							{
 								var sNew;
-								if(sNew = prompt('å‰–æå„²å­˜è³‡æ–™æ™‚å‡ºç¾å•é¡Œ!\n\næŒ‰ç¢ºå®šå†æ¬¡è®€å–ä¿®æ­£å¾Œçš„è³‡æ–™\næŒ‰å–æ¶ˆå›å¾©å‚™ä»½è³‡æ–™!', sData))
+								if(sNew = prompt('­åªRÀx¦s¸ê®Æ®É¥X²{°İÃD!\n\n«ö½T©w¦A¦¸Åª¨ú­×¥¿«áªº¸ê®Æ\n«ö¨ú®ø¦^´_³Æ¥÷¸ê®Æ!', sData))
 								{
 									sData = sNew;
 									return arguments.callee();
@@ -423,7 +421,7 @@ var AN = $.extend(window.AN,
 								}
 								else
 								{
-									alert('æ‰¾ä¸åˆ°å‚™ä»½è³‡æ–™!å°‡é€²è¡Œé‡è¨­!');
+									alert('§ä¤£¨ì³Æ¥÷¸ê®Æ!±N¶i¦æ­«³]!');
 									sData = sBackup = null;
 								}
 								eLSO.set(sProfile, sName, sBackup);
@@ -666,12 +664,12 @@ var AN = $.extend(window.AN,
 				{
 					if(AN.shared.log)
 					{
-						AN.shared.log('è«‹é€šçŸ¥ä½œè€…æœ‰é—œæ­¤éŒ¯èª¤');
-						if(err.message) AN.shared.log('éŒ¯èª¤è¨Šæ¯: ' + err.message);
-						if(err.type) AN.shared.log('éŒ¯èª¤é¡å‹: ' + err.type);
-						if(err.lineNumber) AN.shared.log('éŒ¯èª¤è¡Œè™Ÿ: ' + err.lineNumber);
-						AN.shared.log('å‡ºç¾åœ°å€: ' + location.href);
-						AN.shared.log($.sprintf('ç™¼ç”ŸéŒ¯èª¤: %s', oArg.sDesc));
+						AN.shared.log('½Ğ³qª¾§@ªÌ¦³Ãö¦¹¿ù»~');
+						if(err.message) AN.shared.log('¿ù»~°T®§: ' + err.message);
+						if(err.type) AN.shared.log('¿ù»~Ãş«¬: ' + err.type);
+						if(err.lineNumber) AN.shared.log('¿ù»~¦æ¸¹: ' + err.lineNumber);
+						AN.shared.log('¥X²{¦a§}: ' + location.href);
+						AN.shared.log($.sprintf('µo¥Í¿ù»~: %s', oArg.sDesc));
 					}
 					else alert($.sprintf('ERROR ON EXECUATION: %s\r\n%s', oArg.sDesc, err.message));
 				}
@@ -688,7 +686,7 @@ var AN = $.extend(window.AN,
 
 			if(jDoc.aDefer)
 			{
-				AN.box.aBenchmark.push({ type: 'start', name: 'å»¶æœŸåŸ·è¡Œé …ç›®' });
+				AN.box.aBenchmark.push({ type: 'start', name: '©µ´Á°õ¦æ¶µ¥Ø' });
 
 				for(var i=1; i<=5; i++)
 				{
@@ -698,11 +696,11 @@ var AN = $.extend(window.AN,
 				jDoc.aDefer = null;
 				jDoc.splice(0, jDoc.length);
 
-				AN.box.aBenchmark.push({ type: 'end', name: 'å»¶æœŸåŸ·è¡Œé …ç›®' });
+				AN.box.aBenchmark.push({ type: 'end', name: '©µ´Á°õ¦æ¶µ¥Ø' });
 			}
 
 			AN.box.initialised = true;
-			AN.shared('log2', 'æ‰€æœ‰åŠŸèƒ½åŸ·è¡Œå®Œæˆ');
+			AN.shared('log2', '©Ò¦³¥\¯à°õ¦æ§¹¦¨');
 
 			AN.box.aBenchmark.push({ type: 'final', time: $.time(nBegin) });
 		}
@@ -719,7 +717,7 @@ AN.mod['Kernel'] =
 
 'ed7c7589-c318-487b-8d3a-888212d8d803':
 {
-	desc: 'åˆå§‹åŒ–',
+	desc: 'ªì©l¤Æ',
 	page: { 65535: 'comp' },
 	type: 1,
 	once: function(jDoc)
@@ -759,7 +757,7 @@ AN.mod['Kernel'] =
 
 'a599dafa-b550-4b28-921a-019c72f481e5':
 {
-	desc: 'é™¤éŒ¯æ¨¡å¼ [é™¤éŒ¯æŒ‰æ‰­ã€æ›´æº–ç¢ºè©•æ¸¬çµæœç­‰]',
+	desc: '°£¿ù¼Ò¦¡ [°£¿ù«ö§á¡B§ó·Ç½Tµû´úµ²ªGµ¥]',
 	page: { 65535: false },
 	type: 1,
 	once: function(jDoc)
@@ -783,20 +781,20 @@ AN.mod['Kernel'] =
 
 '12c98ebc-873c-4636-a11a-2c4c6ce7d4c2':
 {
-	desc: 'è¨­å®šå…§æ ¸æ¨£å¼',
+	desc: '³]©w¤º®Ö¼Ë¦¡',
 	page: { 65535: 'comp' },
 	type: 2,
 	options:
 	{
-		sUIFontColor: { desc: 'UIä¸»é¡è‰²', defaultValue: '#808080', type: 'text' },
-		sUIHoverColor: { desc: 'UIé€£çµæ‡¸æµ®é¡è‰²', defaultValue: '#9ACD32', type: 'text' },
-		sMainFontColor: { desc: 'è«–å£‡ä¸»è¦å­—é«”é¡è‰²', defaultValue: '#000000', type: 'text' },
-		sMainBorderColor: { desc: 'è«–å£‡ä¸»è¦é‚Šæ¡†é¡è‰²', defaultValue: '#000000', type: 'text' },
-		sSecBorderColor: { desc: 'è«–å£‡æ¬¡è¦é‚Šæ¡†é¡è‰²', defaultValue: '#CCCCCC', type: 'text' },
-		sMainBgColor: { desc: 'è«–å£‡ä¸»è¦èƒŒæ™¯é¡è‰²', defaultValue: '#FFFFFF', type: 'text' },
-		sSecBgColor: { desc: 'è«–å£‡æ¬¡è¦èƒŒæ™¯é¡è‰²', defaultValue: '#F8F8F8', type: 'text' },
-		sMainHeaderFontColor: { desc: 'è«–å£‡æ¨™é¡Œå­—é«”é¡è‰²', defaultValue: '#FFFFFF', type: 'text' },
-		sMainHeaderBgColor: { desc: 'è«–å£‡æ¨™é¡ŒèƒŒæ™¯é¡è‰²', defaultValue: '#336699', type: 'text' }
+		sUIFontColor: { desc: 'UI¥DÃC¦â', defaultValue: '#808080', type: 'text' },
+		sUIHoverColor: { desc: 'UI³sµ²Äa¯BÃC¦â', defaultValue: '#9ACD32', type: 'text' },
+		sMainFontColor: { desc: '½×¾Â¥D­n¦rÅéÃC¦â', defaultValue: '#000000', type: 'text' },
+		sMainBorderColor: { desc: '½×¾Â¥D­nÃä®ØÃC¦â', defaultValue: '#000000', type: 'text' },
+		sSecBorderColor: { desc: '½×¾Â¦¸­nÃä®ØÃC¦â', defaultValue: '#CCCCCC', type: 'text' },
+		sMainBgColor: { desc: '½×¾Â¥D­n­I´ºÃC¦â', defaultValue: '#FFFFFF', type: 'text' },
+		sSecBgColor: { desc: '½×¾Â¦¸­n­I´ºÃC¦â', defaultValue: '#F8F8F8', type: 'text' },
+		sMainHeaderFontColor: { desc: '½×¾Â¼ĞÃD¦rÅéÃC¦â', defaultValue: '#FFFFFF', type: 'text' },
+		sMainHeaderBgColor: { desc: '½×¾Â¼ĞÃD­I´ºÃC¦â', defaultValue: '#336699', type: 'text' }
 	},
 	once: function()
 	{
@@ -804,7 +802,7 @@ AN.mod['Kernel'] =
 		#an, #an legend { color: %(sMainFontColor)s; } \
 		\
 		.an-forum, .an-forum textarea { background-color: %(sSecBgColor)s; } \
-		.an-forum input[type="text"] { background-color: %(sMainBgColor)s; border: 1px solid %(sMainBorderColor)s; } \
+		.an-forum input[type="text"], .an-forum select { background-color: %(sMainBgColor)s; border: 1px solid %(sMainBorderColor)s; } \
 		.an-forum, .an-forum h4, .an-forum div, .an-forum td, .an-forum dl, .an-forum dt, .an-forum dd, .an-forum ul, .an-forum li, .an-forum a, .an-forum fieldset, .an-forum hr { border: 0 solid %(sMainBorderColor)s; } \
 		.an-forum * { color: %(sMainFontColor)s; } \
 		.an-forum a { text-decoration: none; } \
@@ -828,7 +826,7 @@ AN.mod['Kernel'] =
 
 '78af3c29-9bf2-47ee-80bf-a3575b711c73':
 {
-	desc: 'è‡ªå‹•æª¢æŸ¥æ›´æ–°',
+	desc: '¦Û°ÊÀË¬d§ó·s',
 	defer: 5,
 	page: { 65534: true },
 	type: 1,
@@ -855,14 +853,14 @@ AN.mod['Kernel'] =
 						{
 							if(aCur[i] != aLast[i])
 							{
-								if(aCur[i] < aLast[i]) aMsg.push($.sprintf('%s: \n   ç¾æ™‚ç‰ˆæœ¬: %s\n   æœ€æ–°ç‰ˆæœ¬: %s', sMod, sCur, sLast));
+								if(aCur[i] < aLast[i]) aMsg.push($.sprintf('%s: \n   ²{®Éª©¥»: %s\n   ³Ì·sª©¥»: %s', sMod, sCur, sLast));
 								break;
 							}
 						}
 					});
 					if(aMsg.length)
 					{
-						if(confirm($.sprintf('ç™¼ç¾æ–°ç‰ˆæœ¬!\n\n%s\n\næŒ‰ç¢ºå®šè‡ªå‹•å‰å¾€ä¸‹è¼‰é ', aMsg.join('\n\n'))))
+						if(confirm($.sprintf('µo²{·sª©¥»!\n\n%s\n\n«ö½T©w¦Û°Ê«e©¹¤U¸ü­¶', aMsg.join('\n\n'))))
 						{
 							location.assign('http://code.google.com/p/helianthus-annuus/wiki/HowToInstall');
 						}
@@ -875,7 +873,7 @@ AN.mod['Kernel'] =
 
 'c217bf55-6d44-42d1-8fc2-2cd1662d604a':
 {
-	desc: 'è½‰é å¾Œå†æ¬¡é‹è¡ŒåŠŸèƒ½',
+	desc: 'Âà­¶«á¦A¦¸¹B¦æ¥\¯à',
 	page: { 64: true },
 	type: 1,
 	once: function()
@@ -886,7 +884,7 @@ AN.mod['Kernel'] =
 
 '722b69f8-b80d-4b0e-b608-87946e00cfdc':
 {
-	desc: 'å¼·åˆ¶é–å®šé—Šåº¦',
+	desc: '±j¨îÂê©wÁï«×',
 	page: { 124: true },
 	type: 3,
 	infinite: function()
@@ -901,7 +899,7 @@ AN.mod['Kernel'] =
 
 'd0b37f1a-5865-46dd-b73e-e13da90d7893':
 {
-	desc: 'IE8B2: è©¦åœ–ä¿®æ­£ç©ºç™½bug',
+	desc: 'IE8B2: ¸Õ¹Ï­×¥¿ªÅ¥Õbug',
 	page: { 65534: true },
 	type: 3,
 	defer: 5, // do it at the very end
@@ -925,22 +923,17 @@ AN.mod['Kernel'] =
 //////////////////// END OF - [Kernel Functions] ////////////////////
 //////////////////// START OF - [Initialization] ////////////////////
 
-alert(3);
 $.each(AN.temp, function(){ this(); });
 delete AN.temp;
 
-alert(4);
 // right now no browser need a DOMLoad event, but this may change in the future
 AN.box.eLSO = $('<div id="an"></div>').appendTo('body').addFlash('http://helianthus-annuus.googlecode.com/svn/other/lso.swf', { id: 'an-lso', width: 0, height: 0 }, { allowscriptaccess: 'always' })[0];
 (function()
 {
 	if(!AN.box.eLSO.get) return setTimeout(arguments.callee, 1);
-alert(5);
 
 	AN.modFn.getDB();
-alert(6);
 	AN.modFn.execMods();
-alert(7);
 })();
 
 //////////////////// END OF - [Initialization] ////////////////////

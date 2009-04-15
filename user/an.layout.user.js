@@ -26,7 +26,7 @@
 (function()
 {
 
-var window = (typeof unsafeWindow != 'undefined') ? unsafeWindow : this;
+var window = (typeof unsafeWindow != 'undefined') ? unsafeWindow : (typeof contentWindow != 'undefined') ? contentWindow : this;
 var AN = window.AN || (window.AN = { temp: [], mod: {} });
 
 AN.temp.push(function()

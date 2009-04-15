@@ -25,7 +25,7 @@
 setTimeout(function() // Chrome 2 totally ignores this?...forced to remove that @run-at document-start
 {
 
-var window = (typeof unsafeWindow != 'undefined') ? unsafeWindow : this;
+var window = (typeof unsafeWindow != 'undefined') ? unsafeWindow : (typeof contentWindow != 'undefined') ? contentWindow : this;
 var JSON = window.JSON;
 var $, jQuery = $ = window.jQuery;
 

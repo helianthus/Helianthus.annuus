@@ -31,7 +31,7 @@
 (function()
 {
 
-var window = (typeof unsafeWindow != 'undefined') ? unsafeWindow : this;
+var window = (typeof unsafeWindow != 'undefined') ? unsafeWindow : (typeof contentWindow != 'undefined') ? contentWindow : this;
 var AN = window.AN || (window.AN = { temp: [], mod: {} });
 
 AN.temp.push(function()
@@ -193,7 +193,7 @@ AN.temp.push(function()
 					#an-server table { text-align: center; } \
 					');
 
-					AN.shared.box('an-server', '伺服器狀態', 300).append('<div><table><caption><a href="javascript:">重新測試</a></caption><thead><tr><td>伺服器</td><td>回應時間</td></tr></thead><tbody></tbody></table></div>');
+					AN.shared.box('an-server', '伺服器狀態', 300).append('<div><table><caption><a href="javascript:">進行測試</a></caption><thead><tr><td>伺服器</td><td>回應時間</td></tr></thead><tbody></tbody></table></div>');
 
 					var jImg = $(new Image).load(function(){ showResult(this, 'ok'); }).error(function(){ showResult(this, 'dead'); });
 					var sURL = (location.href.indexOf('aspxerrorpath=') > 0) ? $.sprintf('http://%s/topics.aspx?type=BW', location.hostname) : location.href;
@@ -210,7 +210,7 @@ AN.temp.push(function()
 				}
 
 				AN.shared.gray(true, 'an-server');
-				testServers();
+				$('.an-server-reposonse').html('N/A');
 			};
 		})();
 	}

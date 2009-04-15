@@ -9,7 +9,8 @@
 (function()
 {
 
-var window = (typeof unsafeWindow != 'undefined') ? unsafeWindow : this;
+var window = (typeof unsafeWindow != 'undefined') ? unsafeWindow : (typeof contentWindow != 'undefined') ? contentWindow : this;
+
 var document = window.document;
 var navigator = window.navigator;
 var JSON = window.JSON;

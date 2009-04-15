@@ -517,7 +517,7 @@ AN.temp.push(function()
 							var jThis = $(this);
 							var oInfo = getInfo(jThis);
 
-							if(oSettings.oOptions[oInfo.name] && oSettings.oOptions[oInfo.name][oInfo.page])
+							if(oSettings.oOptions[oInfo.name] && oInfo.page in oSettings.oOptions[oInfo.name])
 							{
 								var uValue = oSettings.oOptions[oInfo.name][oInfo.page];
 

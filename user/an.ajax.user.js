@@ -161,7 +161,7 @@ AN.temp.push(function()
 						{
 							jEndTable.before(this).before('<table><tr><td></td></tr></table>');
 						});
-						AN.shared.log($.sprintf('加入%s個新回覆', nNew));
+						AN.shared('log', $.sprintf('加入%s個新回覆', nNew));
 					}
 
 					if(jPageBoxes.eq(0).find('option').length != jNewDoc.find('select[name=page]:first').children().length) // has nextpage
@@ -210,12 +210,12 @@ AN.temp.push(function()
 			if(bAutoRefresh)
 			{
 				clearTimeout(tRefresh);
-				AN.shared.log('已停用自動更新');
+				AN.shared('log', '已停用自動更新');
 			}
 			else
 			{
 				setNextRefresh();
-				AN.shared.log('已啟用自動更新');
+				AN.shared('log', '已啟用自動更新');
 			}
 			bAutoRefresh = !bAutoRefresh;
 		});
@@ -306,12 +306,12 @@ AN.temp.push(function()
 			if(bAutoRefresh)
 			{
 				clearTimeout(tRefresh);
-				AN.shared.log('已停用自動更新');
+				AN.shared('log', '已停用自動更新');
 			}
 			else
 			{
 				setNextRefresh();
-				AN.shared.log('已啟用自動更新');
+				AN.shared('log', '已啟用自動更新');
 			}
 			bAutoRefresh = !bAutoRefresh;
 		});

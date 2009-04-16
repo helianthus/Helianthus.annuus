@@ -64,7 +64,7 @@ $.extend(
 
 	doc: function(sHTML)
 	{
-		return $(sHTML);
+		//return $(sHTML); // cant's use this because FF3 got a script stacking quota thing
 		var eDiv = document.createElement('div');
 		eDiv.innerHTML = sHTML;
 		return $(eDiv);

@@ -102,6 +102,7 @@ AN.temp.push(function()
 				changeReplies(oCache[sTarget].jReplies);
 				updatePageBoxes(oCache[sTarget].jBoxBodies);
 				getReplies();
+				AN.shared('log', '轉頁完成');
 			}
 			else
 			{

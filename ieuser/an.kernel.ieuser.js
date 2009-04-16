@@ -634,7 +634,7 @@ var AN = $.extend(window.AN,
 								{
 									sDesc: oFn.desc,
 									aHandler: aHandler,
-									oFn: oFn,
+									oFn: oFn
 								};
 								oFn.defer ? jDoc.defer(oFn.defer, oArg) : execFn(oArg);
 							}

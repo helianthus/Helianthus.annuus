@@ -192,7 +192,7 @@ AN.temp.push(function()
 	options:
 	{
 		sCustomCSSHref: { desc: '自定CSS檔案位置 [部份瀏覽器不支持本地檔案]', defaultValue: '', type: 'text' },
-		sCustomCSSContent: { desc: '自定CSS內容', defaultValue: '/*sample*/ * { color: black !important; }', type: 'text' },
+		sCustomCSSContent: { desc: '自定CSS內容', defaultValue: '/*sample*/ * { color: black !important; }', type: 'text' }
 	},
 	once: function()
 	{

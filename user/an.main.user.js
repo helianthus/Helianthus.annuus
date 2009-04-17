@@ -36,7 +36,7 @@ AN.temp.push(function()
 
 	AN.mod['Main Script'] =
 	{
-		ver: '1.0.0',
+		ver: '1.0.1',
 		fn: {
 
 // 佈局設定 //
@@ -68,7 +68,7 @@ AN.temp.push(function()
 			32: function()
 			{
 				$('#ctl00_ContentPlaceHolder1_lb_UserName').up('tr', 1).nextAll().remove();
-				$('#HKGTopGoogleAd,#HKGBottomGoogleAd').remove();
+				$('#HKGTopGoogleAd,#HKGBottomGoogleAd').up('tr').remove();
 			},
 			62: function()
 			{

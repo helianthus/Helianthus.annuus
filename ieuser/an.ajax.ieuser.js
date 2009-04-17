@@ -36,7 +36,7 @@ AN.temp.push(function()
 
 	AN.mod['AJAX Integrator'] =
 	{
-		ver: '1.0.0',
+		ver: '1.0.1',
 		fn: {
 
 
@@ -72,14 +72,14 @@ AN.temp.push(function()
 			oCache[nCurPageNo] =
 			{
 				jBoxBodies: $('select[name=page]:first').up('tbody'),
-				jReplies: $('.repliers')
+				jReplies: $('.repliers').up('table')
 			};
 
 			var jThis = $(this);
 			var sTarget = jThis.is('a') ? AN.util.getPageNo(this.href) : jThis.val();
 			var changeReplies = function(jReplies)
 			{
-				$('.repliers').each(function(i)
+				$('.repliers').up('table').each(function(i)
 				{
 					if(i == 0 && nCurPageNo == 1) $(this).remove();
 					else $(this).next().andSelf().remove();
@@ -110,7 +110,7 @@ AN.temp.push(function()
 				$.get(AN.util.getURL(sTarget), function(sHTML)
 				{
 					var jNewDoc = $.doc(sHTML);
-					var jReplies = jNewDoc.find('.repliers');
+					var jReplies = jNewDoc.find('.repliers').up('table');
 
 					if(!jReplies.length) return AN.shared('log', '下一頁找不到回覆, 可能是本帖部份回覆被刪所致');
 
@@ -143,7 +143,7 @@ AN.temp.push(function()
 			$.get(AN.util.getURL(nCurPageNo), function(sHTML)
 			{
 				var jNewDoc = $.doc(sHTML);
-				var jNewReplies = jNewDoc.find('.repliers');
+				var jNewReplies = jNewDoc.find('.repliers').up('table');
 
 				if(!jNewReplies.length)
 				{
@@ -151,14 +151,14 @@ AN.temp.push(function()
 				}
 				else
 				{
-					var jScope = jNewReplies.filter($.sprintf(':gt(%s)', $('.repliers').length - 1));
-					var nNew = jScope.length;
+					jNewReplies = jNewReplies.filter($.sprintf(':gt(%s)', $('.repliers').length - 1));
+					var nNew = jNewReplies.length;
 
 					if(nNew) // has new replies
 					{
 						$('strong:first').text(jNewDoc.find('strong:first').text());
 
-						jScope.each(function()
+						jNewReplies.each(function()
 						{
 							jEndTable.before(this).before('<table><tr><td></td></tr></table>');
 						});
@@ -169,11 +169,11 @@ AN.temp.push(function()
 					{
 						updatePageBoxes(jNewDoc);
 						AN.shared('log', '發現下一頁, 連結建立');
-						AN.modFn.execMods(nNew ? jScope.add(jPageBoxes) : jPageBoxes);
+						AN.modFn.execMods(jPageBoxes.add(jNewReplies));
 						return;
 					}
 
-					if(nNew) AN.modFn.execMods(jScope);
+					if(nNew) AN.modFn.execMods(jNewReplies);
 					else AN.shared('log', '沒有新回覆');
 				}
 
@@ -190,8 +190,8 @@ AN.temp.push(function()
 			tRefresh = setTimeout(getReplies, nInterval * 1000);
 		};
 
-		var jPageBoxes = $('select[name=page]').up('table');
-		var jEndTable = jPageBoxes.eq(1).up('table', 1).prev();
+		var jPageBoxes = AN.jPageBoxes = $('select[name=page]').up('table');
+		var jEndTable = jPageBoxes.eq(1).up('table', 2).prev();
 		var nCurPageNo = AN.util.getCurPageNo();
 		var oCache = {};
 

@@ -41,7 +41,7 @@ AN.temp.push(function()
 
 	AN.mod['User Interface'] =
 	{
-		ver: '1.1.0',
+		ver: '1.1.1',
 		fn: {
 
 '6464e397-dfea-477f-9706-025ec439e810':
@@ -965,20 +965,28 @@ AN.temp.push(function()
 				});
 
 				sHTML += '<dt>[開關設定]</dt>';
-				$.each(AN.util.storage('an_switches'), function(sMod)
+				var oSwitches = AN.util.storage('an_switches');
+				if(oSwitches)
 				{
-					sHTML += $.sprintf('<dd>%s:</dd>', sMod);
-					$.each(this, function(sName)
+					$.each(oSwitches, function(sMod)
+					{
+						sHTML += $.sprintf('<dd>%s:</dd>', sMod);
+						$.each(this, function(sName)
+						{
+							sHTML += $.sprintf('<dd>"%s": %s</dd>', sName, JSON.stringify(this));
+						});
+					});
+				}
+
+				sHTML += '<dt>[選項設定]</dt>';
+				var oOptions = AN.util.storage('an_options');
+				if(oOptions)
+				{
+					$.each(oOptions, function(sName)
 					{
 						sHTML += $.sprintf('<dd>"%s": %s</dd>', sName, JSON.stringify(this));
 					});
-				});
-
-				sHTML += '<dt>[選項設定]</dt>';
-				$.each(AN.util.storage('an_options'), function(sName)
-				{
-					sHTML += $.sprintf('<dd>"%s": %s</dd>', sName, JSON.stringify(this));
-				});
+				}
 
 				jAbout.find('dl').append(sHTML);
 

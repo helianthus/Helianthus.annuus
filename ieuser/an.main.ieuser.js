@@ -36,7 +36,7 @@ AN.temp.push(function()
 
 	AN.mod['Main Script'] =
 	{
-		ver: '1.0.2',
+		ver: '1.0.3',
 		fn: {
 
 // 佈局設定 //
@@ -789,7 +789,7 @@ AN.temp.push(function()
 					}
 				});
 
-				$(this).replaceWith($.sprintf('<object type="application/x-shockwave-flash" width="%s" height="%s" data="%s"><param name="movie" value="%s" /><param name="wmode" value="opaque" /><param name="quality" value="best" /><param name="allowFullScreen" value="true" /></object>', nWidth, nHeight.toFixed(0), sUrl, sUrl));
+				$(this).toFlash(sUrl, { width: nWidth, height: nHeight.toFixed(0) });
 			});
 		});
 	}

@@ -116,11 +116,11 @@ $.extend(
 
 $.fn.extend(
 {
-	addFlash: function(sURL, oAttrs, oParams)
+	toFlash: function(sURL, oAttrs, oParams)
 	{
 		if(!oAttrs) oAttrs = {};
 		if(!oParams) oParams = {};
-		if(!oAttrs.id) oAttrs.id = 'an-addFlash-' + $.time(); // IE: must have an id in order to allow JS access
+		if(!oAttrs.id) oAttrs.id = this.id || 'an-flash-' + $.time(); // IE: must have an id in order to allow JS access
 
 		if($.browser.msie)
 		{
@@ -150,11 +150,11 @@ $.fn.extend(
 
 		if($.browser.msie) // IE: element must be created in this way in order to allow JS access
 		{
-			$('<div></div>').appendTo(this).attr('outerHTML', sHTML);
+			$(this)[0].outerHTML = sHTML;
 		}
 		else
 		{
-			$(sHTML).appendTo(this);
+			$(this).replaceWith(sHTML);
 		}
 
 		return $('#' + oAttrs.id);
@@ -753,7 +753,7 @@ var AN = $.extend(window.AN,
 
 AN.mod['Kernel'] =
 {
-	ver: '1.1.0',
+	ver: '1.1.1',
 	fn: {
 
 'ed7c7589-c318-487b-8d3a-888212d8d803':
@@ -969,9 +969,9 @@ delete AN.temp;
 
 $.support.localStorage = window.localStorage || window.globalStorage || false;
 
-AN.util.DOMLoad(function()
+(function()
 {
-	var jAN = $('<div id="an"></div>').appendTo('body');
+	$('<div id="an"><div id="an-lso"></div></div>').appendTo('body');
 
 	function exec(sStorageType)
 	{
@@ -986,16 +986,17 @@ AN.util.DOMLoad(function()
 	}
 	else
 	{
-		AN.box.eLSO = jAN.addFlash('http://helianthus-annuus.googlecode.com/svn/other/lso.swf', { id: 'an-lso', width: 0, height: 0 }, { allowscriptaccess: 'always' })[0];
+		AN.box.eLSO = $('#an-lso').toFlash('http://helianthus-annuus.googlecode.com/svn/other/lso.swf', { width: 0, height: 0 }, { allowscriptaccess: 'always' })[0];
 
 		var nRetry = 0;
 		(function()
 		{
 			if(!AN.box.eLSO.get)
 			{
-				if(!$.support.localStorage || nRetry++ < 100) return setTimeout(arguments.callee, 1);
+				if(!$.support.localStorage || nRetry++ < 200) return setTimeout(arguments.callee, 1);
 
 				AN.util.cookie('an-storagemode', 'DOM');
+				alert('無法使用Flash儲存方式!已自動轉用DOM儲存方式!');
 				exec('DOM');
 			}
 			else
@@ -1004,7 +1005,7 @@ AN.util.DOMLoad(function()
 			}
 		})();
 	}
-});
+})();
 
 //////////////////// END OF - [Initialization] ////////////////////
 

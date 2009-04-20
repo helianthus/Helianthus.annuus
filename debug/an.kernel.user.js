@@ -24,7 +24,6 @@
 
 setTimeout(function() // Chrome 2 totally ignores this?...forced to remove that @run-at document-start
 {
-alert('1/5');
 
 var window = (typeof unsafeWindow != 'undefined') ? unsafeWindow : (typeof contentWindow != 'undefined') ? contentWindow : this;
 var JSON = window.JSON;
@@ -117,11 +116,11 @@ $.extend(
 
 $.fn.extend(
 {
-	addFlash: function(sURL, oAttrs, oParams)
+	toFlash: function(sURL, oAttrs, oParams)
 	{
 		if(!oAttrs) oAttrs = {};
 		if(!oParams) oParams = {};
-		if(!oAttrs.id) oAttrs.id = 'an-addFlash-' + $.time(); // IE: must have an id in order to allow JS access
+		if(!oAttrs.id) oAttrs.id = this.id || 'an-flash-' + $.time(); // IE: must have an id in order to allow JS access
 
 		if($.browser.msie)
 		{
@@ -151,11 +150,11 @@ $.fn.extend(
 
 		if($.browser.msie) // IE: element must be created in this way in order to allow JS access
 		{
-			$('<div></div>').appendTo(this).attr('outerHTML', sHTML);
+			$(this)[0].outerHTML = sHTML;
 		}
 		else
 		{
-			$(sHTML).appendTo(this);
+			$(this).replaceWith(sHTML);
 		}
 
 		return $('#' + oAttrs.id);
@@ -362,7 +361,7 @@ var AN = $.extend(window.AN,
 			{
 				var dExpire = new Date;
 				dExpire.setFullYear(sValue ? dExpire.getFullYear() + 1 : dExpire.setFullYear(1999)); // SET : DEL
-				document.cookie = $.sprintf('%s=%s; domain=hkgolden.com; expires=%s; path=/', sName, sValue || '', dExpire.toUTCString());
+				document.cookie = $.sprintf('%s=%s; domain=%s; expires=%s; path=/', sName, sValue || '', location.hostname, dExpire.toUTCString());
 
 				return true;
 			}
@@ -370,7 +369,38 @@ var AN = $.extend(window.AN,
 
 		storage: function(sName, uToSet)
 		{
-			var eLSO = AN.box.eLSO;
+			var storage = arguments.callee.storage;
+
+			if(storage === undefined)
+			{
+				if(AN.box.storageMode == 'DOM')
+				{
+					var LS = window.localStorage || window.globalStorage && window.globalStorage[location.hostname] || null;
+					if(LS)
+					{
+						storage =
+						{
+							get: function(sProfile, sName){ var r = LS[sProfile + '___' + sName]; return (r && r.value ? r.value : r); },
+							set: function(sProfile, sName, sData){ LS[sProfile + '___' + sName] = sData; },
+							remove: function(sProfile, sName){ LS.removeItem(sProfile + '___' + sName); }
+						};
+					}
+				}
+				else if(AN.box.storageMode == 'Flash')
+				{
+					storage =
+					{
+						get: function(sProfile, sName){ return AN.box.eLSO.get(sProfile, sName); },
+						set: function(sProfile, sName, sData){ AN.box.eLSO.set(sProfile, sName, sData.replace(/\\\\/g, '\\')); }, // escape the backslash so that it will not be removed on GET
+						remove: function(sProfile, sName){ AN.box.eLSO.remove(sProfile, sName); }
+					};
+				}
+
+				arguments.callee.storage = storage;
+			}
+
+			if(!storage) return null; // mainly for Opera 9 which has no DOM Storage support
+
 			var sProfile = 'default';
 			var sData = '';
 
@@ -378,7 +408,7 @@ var AN = $.extend(window.AN,
 			{
 				$.each(['an_data', 'an_switches', 'an_options'], function()
 				{
-					var uCookie = eLSO.get(sProfile, this + '');
+					var uCookie = storage.get(sProfile, this + '');
 					if(uCookie) sData += uCookie + '\n\n';
 				});
 				return sData;
@@ -388,63 +418,60 @@ var AN = $.extend(window.AN,
 				var bDelBackup = confirm('同時刪除備份資料?');
 				$.each(['an_data', 'an_switches', 'an_options'], function()
 				{
-					eLSO.remove(sProfile, this + '');
-					if(bDelBackup) eLSO.remove(sProfile, this + '_backup');
+					storage.remove(sProfile, this + '');
+					if(bDelBackup) storage.remove(sProfile, this + '_backup');
 				});
 			}
 			else if(uToSet === undefined) // GET
 			{
-				sData = eLSO.get(sProfile, sName);
+				sData = storage.get(sProfile, sName);
 
 				if(sData)
 				{
-					if(sData.indexOf('{') == 0)
+					(function()
 					{
-						(function()
+						try
 						{
-							try
+							sData = JSON.parse(sData);
+						}
+						catch(err)
+						{
+							var sNew;
+							if(sNew = prompt('剖析儲存資料時出現問題!\n\n按確定再次讀取修正後的資料\n按取消回復備份資料!', sData))
 							{
-								sData = JSON.parse(sData);
+								sData = sNew;
+								return arguments.callee();
 							}
-							catch(err)
-							{
-								var sNew;
-								if(sNew = prompt('剖析儲存資料時出現問題!\n\n按確定再次讀取修正後的資料\n按取消回復備份資料!', sData))
-								{
-									sData = sNew;
-									return arguments.callee();
-								}
 
-								var sBackup = eLSO.get(sProfile, sName + '_backup');
-								if(sBackup)
-								{
-									sData = JSON.parse(sBackup);
-								}
-								else
-								{
-									alert('找不到備份資料!將進行重設!');
-									sData = sBackup = null;
-								}
-								eLSO.set(sProfile, sName, sBackup);
+							var sBackup = storage.get(sProfile, sName + '_backup');
+							if(sBackup)
+							{
+								sData = JSON.parse(sBackup);
 							}
-						})();
-					}
+							else
+							{
+								alert('找不到備份資料!將進行重設!');
+								sData = sBackup = null;
+							}
+							storage.set(sProfile, sName, sBackup);
+						}
+					})();
 				}
 
 				return sData || null;
 			}
 			else if(uToSet) // SET
 			{
-				var sData = (typeof uToSet == 'string') ? uToSet : JSON.stringify(uToSet).replace(/\\/g, '\\\\'); // escape the backslash so that it will not be removed on GET
+				var sData = JSON.stringify(uToSet);
 
-				var sCurrent = eLSO.get(sProfile, sName);
-				if(sCurrent) eLSO.set(sProfile, sName + '_backup', sCurrent);
+				var sCurrent = storage.get(sProfile, sName);
+				if(sCurrent) storage.set(sProfile, sName + '_backup', sCurrent);
 
-				eLSO.set(sProfile, sName, sData);
+				storage.set(sProfile, sName, sData);
 			}
 			else // DEL
 			{
-				eLSO.remove(sProfile, sName);
+				storage.remove(sProfile, sName);
 			}
 
 			return true;
@@ -471,6 +498,11 @@ var AN = $.extend(window.AN,
 			}
 		},
 
+		DOMLoad: function(fToExec)
+		{
+			$(fToExec);
+		},
+
 		getCurPageNo: function()
 		{
 			return $('select[name=page]:first').val() * 1;
@@ -478,7 +510,7 @@ var AN = $.extend(window.AN,
 
 		getData: function(sFile, fToExec)
 		{
-			var oExternal = $.make('o', AN.box, 'oExternal');
+			var oExternal = $.make('o', AN.box, 'external');
 			if(oExternal[sFile]) fToExec(oExternal[sFile]);
 			else $.getScript($.sprintf('http://helianthus-annuus.googlecode.com/svn/other/an.v3.%s.js', sFile), function()
 			{
@@ -552,7 +584,15 @@ var AN = $.extend(window.AN,
 
 		getURL: function(nPageNo)
 		{
-			return location.href.replace(/&page=\d+/, '') + (nPageNo && nPageNo > 1 ? '&page=' + nPageNo : '');
+			var sURL = location.search.replace(/&page=\d+/, '');
+			if(nPageNo > 1)
+			{
+				var aSearch = sURL.split('&');
+				aSearch.splice(1, 0, 'page=' + nPageNo);
+				sURL = aSearch.join('&');
+			}
+
+			return sURL;
 		},
 
 		isLoggedIn: function()
@@ -713,7 +753,7 @@ var AN = $.extend(window.AN,
 
 AN.mod['Kernel'] =
 {
-	ver: '1.0.0',
+	ver: '1.1.1',
 	fn: {
 
 'ed7c7589-c318-487b-8d3a-888212d8d803':
@@ -901,7 +941,7 @@ AN.mod['Kernel'] =
 'd0b37f1a-5865-46dd-b73e-e13da90d7893':
 {
 	desc: 'IE8B2: 試圖修正空白bug',
-	page: { 65534: true },
+	page: { 65534: $.browser.msie },
 	type: 3,
 	defer: 5, // do it at the very end
 	once: function()
@@ -924,22 +964,47 @@ AN.mod['Kernel'] =
 //////////////////// END OF - [Kernel Functions] ////////////////////
 //////////////////// START OF - [Initialization] ////////////////////
 
-alert('2/5');
 $.each(AN.temp, function(){ this(); });
 delete AN.temp;
 
-// right now no browser need a DOMLoad event, but this may change in the future
-AN.box.eLSO = $('<div id="an"></div>').appendTo('body').addFlash('http://helianthus-annuus.googlecode.com/svn/other/lso.swf', { id: 'an-lso', width: 0, height: 0 }, { allowscriptaccess: 'always' })[0];
-(function()
-{
-	if(!AN.box.eLSO.get) return setTimeout(arguments.callee, 1);
-alert('3/5');
+$.support.localStorage = window.localStorage || window.globalStorage || false;
 
-	AN.modFn.getDB();
-alert('4/5');
-	AN.modFn.execMods();
-alert('5/5');
-})();
+AN.util.DOMLoad(function()
+{
+	$('<div id="an"><div id="an-lso"></div></div>').appendTo('body');
+
+	function exec(sStorageType)
+	{
+		AN.box.storageMode = sStorageType;
+		AN.modFn.getDB();
+		AN.modFn.execMods();
+	}
+
+	if($.support.localStorage && AN.util.cookie('an-storagemode') == 'DOM')
+	{
+		exec('DOM');
+	}
+	else
+	{
+		AN.box.eLSO = $('#an-lso').toFlash('http://helianthus-annuus.googlecode.com/svn/other/lso.swf', { width: 0, height: 0 }, { allowscriptaccess: 'always' })[0];
+
+		var nRetry = 0;
+		(function()
+		{
+			if(!AN.box.eLSO.get)
+			{
+				if(!$.support.localStorage || nRetry++ < 100) return setTimeout(arguments.callee, 1);
+
+				AN.util.cookie('an-storagemode', 'DOM');
+				exec('DOM');
+			}
+			else
+			{
+				exec('Flash');
+			}
+		})();
+	}
+});
 
 //////////////////// END OF - [Initialization] ////////////////////
 

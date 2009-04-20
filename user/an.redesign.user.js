@@ -36,7 +36,7 @@ AN.temp.push(function()
 
 	AN.mod['Component Redesigner'] =
 	{
-		ver: '1.0.0',
+		ver: '1.0.1',
 		fn: {
 
 '8be1ac06-030a-42d4-a8f4-f2b7f4881300':
@@ -81,9 +81,9 @@ AN.temp.push(function()
 		});
 
 		AN.util.addStyle($.sprintf(' \
-		.repliers blockquote { margin: 5px 0; border: 1px solid %(sMainBorderColor)s; } \
-		.repliers blockquote blockquote { margin-top: 0; border-right: 0; } \
-		.repliers blockquote div { padding: 0 0 5px 2px; } \
+		.repliers_right blockquote { margin: 5px 0; border: 1px solid %(sMainBorderColor)s; } \
+		.repliers_right blockquote blockquote { margin-top: 0; border-right: 0; } \
+		.repliers_right blockquote div { padding: 0 0 5px 2px; } \
 		.an-quoteheader { padding: 0 3px !important; font-size: 12px; margin-bottom: 2px; overflow: hidden; } \
 		.an-quoteheader span { float: left; } \
 		.an-quoteheader b { float: right; cursor: pointer; } \

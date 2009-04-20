@@ -36,7 +36,7 @@ AN.temp.push(function()
 
 	AN.mod['Layout Designer'] =
 	{
-		ver: '1.0.0',
+		ver: '1.0.1',
 		fn: {
 
 '5e173905-9c47-4f37-8d3f-4c31ea871115':
@@ -199,7 +199,7 @@ AN.temp.push(function()
 'c73317d9-f2c4-465a-bc56-f0f817f7eaf6':
 {
 	desc: 'Opera: 修正發表按扭位置',
-	page: { 16: true },
+	page: { 16: $.browser.opera },
 	type: 3,
 	once: function()
 	{

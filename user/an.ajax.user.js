@@ -36,7 +36,7 @@ AN.temp.push(function()
 
 	AN.mod['AJAX Integrator'] =
 	{
-		ver: '1.0.1',
+		ver: '1.0.2',
 		fn: {
 
 
@@ -92,7 +92,7 @@ AN.temp.push(function()
 				});
 
 				scrollTo(0, 0);
-				$('#an-info-curpage').text(sTarget);
+				$('#an-info-curpage').text(sTarget).attr('href', AN.util.getURL(sTarget));
 				nCurPageNo = sTarget * 1;
 			};
 
@@ -101,8 +101,8 @@ AN.temp.push(function()
 				AN.shared('log2', '正從快取中讀取資料...');
 				changeReplies(oCache[sTarget].jReplies);
 				updatePageBoxes(oCache[sTarget].jBoxBodies);
-				getReplies();
 				AN.shared('log', '轉頁完成');
+				getReplies();
 			}
 			else
 			{
@@ -116,6 +116,7 @@ AN.temp.push(function()
 
 					changeReplies(jReplies);
 					updatePageBoxes(jNewDoc);
+					AN.shared('log', '轉頁完成');
 					AN.modFn.execMods(jReplies.add(jPageBoxes));
 					if(bAutoRefresh) setNextRefresh();
 				});
@@ -190,7 +191,7 @@ AN.temp.push(function()
 			tRefresh = setTimeout(getReplies, nInterval * 1000);
 		};
 
-		var jPageBoxes = AN.jPageBoxes = $('select[name=page]').up('table');
+		var jPageBoxes = $('select[name=page]').up('table');
 		var jEndTable = jPageBoxes.eq(1).up('table', 2).prev();
 		var nCurPageNo = AN.util.getCurPageNo();
 		var oCache = {};

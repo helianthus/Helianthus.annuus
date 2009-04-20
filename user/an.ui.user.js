@@ -41,7 +41,7 @@ AN.temp.push(function()
 
 	AN.mod['User Interface'] =
 	{
-		ver: '1.0.0',
+		ver: '1.1.0',
 		fn: {
 
 '6464e397-dfea-477f-9706-025ec439e810':
@@ -210,7 +210,7 @@ AN.temp.push(function()
 				}
 
 				AN.shared.gray(true, 'an-server');
-				$('.an-server-reposonse').html('N/A');
+				testServers();
 			};
 		})();
 	}
@@ -760,12 +760,7 @@ AN.temp.push(function()
 		};
 
 		if(AN.util.getOptions('bShowDetailLog')) AN.shared.log2 = AN.shared.log;
-
-		$.fn.debug = function(sToEval)
-		{
-			AN.shared.log('debug: ' + eval('(' + sToEval + ')'));
-			return this;
-		};
+		if(AN.box.debugMode) AN.shared.debug = AN.shared.log;
 
 		$.ajaxSetup(
 		{
@@ -939,32 +934,59 @@ AN.temp.push(function()
 				#an-about > div { margin: 0.5em; } \
 				#an-about h1 { margin: 0.5em; font-size: 2em; text-align: center; } \
 				#an-about hr { border-width: 1px; margin: 1em 0.5em; } \
-				#an-about div div { overflow: auto; width: 80%; height: 200px; margin: 0 auto; border-width: 1px; } \
+				#an-about div div { overflow-y: auto; overflow-x: hidden; width: 80%; height: 200px; margin: 0 auto; border-width: 1px; } \
 				#an-about dl { margin: 0; padding: 0 0.5em 0.5em; font-size: 0.8em; } \
-				#an-about dt { margin: 0.5em 0; } \
+				#an-about dt { margin-top: 1em; } \
 				#an-about dd { margin: 0; line-height: 1.3; } \
 				#an-about p { margin: 1em 0; font-size: 0.75em; text-align: center; } \
 				');
 
 				var jAbout = AN.shared.box('an-about', '關於', 500, 'auto').append('<div><h1>Helianthus.Annuus</h1><hr /><div><dl></dl></div><p>&copy; 2009 向日 Licenced under <a href="http://www.gnu.org/licenses/gpl.html" target="_blank">GNU General Public License v3</a></p></div>');
-				var jList = jAbout.find('dl');
+				var sHTML = '';
 
-				jList.append('<dt>程式資料:</dt>');
+				sHTML += '<dt>[程式]</dt>';
 				$.each(
 				{
 					'名稱': 'Helianthus.Annuus',
-					'版本': AN.util.data('AN-version'),
 					'作者': '<a target="_blank" href="ProfilePage.aspx?userid=148720">向日</a>',
-					'主頁': '<a target="_blank" href="ProfilePage.aspx?userid=148720">http://code.google.com/p/helianthus-annuus/</a>'
+					'主頁': '<a target="_blank" href="ProfilePage.aspx?userid=148720">http://code.google.com/p/helianthus-annuus/</a>',
+					'版本': AN.util.data('AN-version'),
+					'儲存方式': $.sprintf('<select id="an-about-storage"><option>Flash</option></select>'),
+					'除錯模式': AN.box.debugMode ? '啟用' : '停用'
 				}, function(sName, sValue)
 				{
-					jList.append($.sprintf('<dd>%s: %s</dd>', sName, sValue));
+					sHTML += $.sprintf('<dd>%s: %s</dd>', sName, sValue);
 				});
 
-				jList.append('<dt>已安裝元件:</dt>');
+				sHTML += '<dt>[元件]</dt>';
 				$.each(AN.mod, function(sMod)
 				{
-					jList.append($.sprintf('<dd>%s: %s</dd>', sMod, this.ver));
+					sHTML += $.sprintf('<dd>%s: %s</dd>', sMod, this.ver);
+				});
+
+				sHTML += '<dt>[開關設定]</dt>';
+				$.each(AN.util.storage('an_switches'), function(sMod)
+				{
+					sHTML += $.sprintf('<dd>%s:</dd>', sMod);
+					$.each(this, function(sName)
+					{
+						sHTML += $.sprintf('<dd>"%s": %s</dd>', sName, JSON.stringify(this));
+					});
+				});
+
+				sHTML += '<dt>[選項設定]</dt>';
+				$.each(AN.util.storage('an_options'), function(sName)
+				{
+					sHTML += $.sprintf('<dd>"%s": %s</dd>', sName, JSON.stringify(this));
+				});
+
+				jAbout.find('dl').append(sHTML);
+
+				if(window.localStorage || window.globalStorage) $('#an-about-storage').append('<option>DOM</option>');
+				$('#an-about-storage').val(AN.box.storageMode).change(function()
+				{
+					AN.util.cookie('an-storagemode', $(this).val());
+					location.reload();
 				});
 			}
 

@@ -36,7 +36,7 @@ AN.temp.push(function()
 
 	AN.mod['Main Script'] =
 	{
-		ver: '1.0.1',
+		ver: '1.0.2',
 		fn: {
 
 // 佈局設定 //
@@ -185,7 +185,7 @@ AN.temp.push(function()
 		{
 			$(this).up('tr').find('a').each(function()
 			{
-				this.href = this.href.replace(/&(?:page=1|highlight_id=0)/g, '');
+				this.href = this.href.replace(/&(?:page=1(?!\d)|highlight_id=0)/g, '');
 			});
 		});
 	}
@@ -293,7 +293,7 @@ AN.temp.push(function()
 'a93f1149-d11b-4b72-98dd-c461fd9ee754':
 {
 	desc: '帖子連結開新頁',
-	page: { 92: false },
+	page: { 8: false, 20: false, 64: false },
 	type: 4,
 	infinite: function(jDoc)
 	{

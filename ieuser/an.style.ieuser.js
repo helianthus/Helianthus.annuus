@@ -36,7 +36,7 @@ AN.temp.push(function()
 
 	AN.mod['Style Editor'] =
 	{
-		ver: '1.0.0',
+		ver: '1.0.1',
 		fn: {
 
 '89615a78-21b7-46bd-aeb1-12e7f031e896':
@@ -120,12 +120,12 @@ AN.temp.push(function()
 		p, td { color: %(sMainFontColor)s; } \
 		/* main border */\
 		.repliers_header, .repliers_left, .repliers, .repliers td { border-color: %(sMainBorderColor)s !important; } \
-		body > table table[cellspacing="1"][cellpadding="2"], #ctl00_ContentPlaceHolder1_PMMsgTable, #ctl00_ContentPlaceHolder1_QuickReplyTable { background-color: %(sMainBorderColor)s !important; } \
+		body > table table[cellspacing="1"][cellpadding="2"], #ctl00_ContentPlaceHolder1_PMMsgTable, #ctl00_ContentPlaceHolder1_QuickReplyTable, #ctl00_ContentPlaceHolder1_QuickReplyLoginTable { background-color: %(sMainBorderColor)s !important; } \
 		*[style*="128, 128, 128"], *[style*="808080"] { background-color: transparent !important; } \
 		/* sec border */\
 		.main_table1 { border-color: %(sSecBorderColor)s; } \
 		/* PM Box & white table cells */\
-		.ListPMText, *[style*="255, 255, 255"], *[style*="#FFFFFF"], *[style*="background-color: white"], *[style*="BACKGROUND-COLOR: white"] { background-color: %(sMainBgColor)s !important; } \
+		.ListPMText, *[style*="255, 255, 255"], *[style*="#FFFFFF"], *[style*="background-color: white"], *[style*="BACKGROUND-COLOR: white"], *[bgcolor="#f8f8f8"] { background-color: %(sMainBgColor)s !important; } \
 		/* nearly-white backgrounds */\
 		*[style*="rgb(23"], *[style*="rgb(24"], *[style*="#E"], *[style*="#F"], *[style*="#e"], *[style*="#f"] { background-color: %(sSecBgColor)s !important; } \
 		/* headers */\

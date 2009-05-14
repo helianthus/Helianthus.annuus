@@ -36,7 +36,7 @@ AN.temp.push(function()
 
 	AN.mod['Layout Designer'] =
 	{
-		ver: '1.0.1',
+		ver: '1.0.2',
 		fn: {
 
 '5e173905-9c47-4f37-8d3f-4c31ea871115':
@@ -146,7 +146,18 @@ AN.temp.push(function()
 	type: 3,
 	once: function()
 	{
-		$('body > table > tbody > tr:last').remove();
+		$('#aspnetForm > tbody > tr:last').remove();
+	}
+},
+
+'8c317615-b5e7-4b1a-a140-b7319c5b0a5b':
+{
+	desc: '移除Bookmark Bar',
+	page: { 65534: false },
+	type: 3,
+	once: function()
+	{
+		$('#hkg_bottombar').remove();
 	}
 },
 

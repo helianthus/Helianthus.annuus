@@ -36,7 +36,7 @@ AN.temp.push(function()
 
 	AN.mod['Main Script'] =
 	{
-		ver: '1.0.3',
+		ver: '1.0.4',
 		fn: {
 
 // 佈局設定 //
@@ -649,12 +649,18 @@ AN.temp.push(function()
 	type: 6,
 	infinite: function(jDoc)
 	{
-		var aMatch;
+		var rForum = /forum\d*.hkgolden\.com/i;
+
 		$.each(jDoc.replies(), function()
 		{
-			this.jTdContent.find('a')
-			.filter(function(){ return (aMatch = this.hostname.match(/forum\d*.hkgolden\.com/i)) && aMatch[0] != location.hostname && !$(this).children().length; })
-			.attr('hostname', location.hostname).before('<span class="an-content-note" title="已轉換伺服器位置">[C]</span>');
+			this.jTdContent.find('a').each(function()
+			{
+				var jThis = $(this);
+				if(!jThis.children().length && this.hostname != location.hostname && this.hostname.match(rForum))
+				{
+					jThis.attr('href', this.href.replace(rForum, location.hostname)).before('<span class="an-content-note" title="已轉換伺服器位置">[C]</span>');
+				}
+			});
 		});
 	}
 },
@@ -789,7 +795,7 @@ AN.temp.push(function()
 					}
 				});
 
-				$(this).toFlash(sUrl, { width: nWidth, height: nHeight.toFixed(0) });
+				$(this).toFlash(sUrl, { width: nWidth, height: nHeight.toFixed(0) }, { wmode: 'opaque' });
 			});
 		});
 	}

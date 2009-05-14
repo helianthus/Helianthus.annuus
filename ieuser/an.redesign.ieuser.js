@@ -36,7 +36,7 @@ AN.temp.push(function()
 
 	AN.mod['Component Redesigner'] =
 	{
-		ver: '1.0.1',
+		ver: '1.0.2',
 		fn: {
 
 '8be1ac06-030a-42d4-a8f4-f2b7f4881300':
@@ -46,9 +46,9 @@ AN.temp.push(function()
 	type: 8,
 	defer: 1, // after linkify to improve effieciency, note: this is a part of layout changing
 	options: { bOuterOnly: { desc: '只顯示最外層的引用', type: 'checkbox', defaultValue: true } },
-	once: function(jDoc, oFn)
+	once: function(jDoc)
 	{
-		oFn.toggleQuote = function(jTarget, bOuterOnly)
+		AN.box.toggleQuote = function(jTarget, bOuterOnly)
 		{
 			if(bOuterOnly === undefined) bOuterOnly = (jTarget.html() == '-');
 
@@ -77,7 +77,7 @@ AN.temp.push(function()
 		var bOuterOnly = AN.util.getOptions('bOuterOnly');
 		AN.shared('addButton', '切換最外層引用', function()
 		{
-			oFn.toggleQuote($('.an-outerquote'), (bOuterOnly = !bOuterOnly));
+			AN.box.toggleQuote($('.an-outerquote'), (bOuterOnly = !bOuterOnly));
 		});
 
 		AN.util.addStyle($.sprintf(' \
@@ -91,9 +91,9 @@ AN.temp.push(function()
 		AN.util.getOptions()
 		));
 	},
-	infinite: function(jDoc, oFn)
+	infinite: function(jDoc)
 	{
-		var jTempHeader = $('<div class="an-forum-header an-quoteheader"><span>引用:</span><b>-</b></div>').children('b').click(function(){ oFn.toggleQuote($(this)); }).end();
+		var jTempHeader = $('<div class="an-forum-header an-quoteheader"><span>引用:</span><b onclick="AN.box.toggleQuote($(this))">-</b></div>');
 
 		jDoc.find('blockquote').each(function()
 		{
@@ -130,7 +130,7 @@ AN.temp.push(function()
 			}
 		});
 
-		if(AN.util.getOptions('bOuterOnly')) jDoc.defer(3, '隱藏最外層以外的引用', function(){ oFn.toggleQuote(jDoc.find('.an-outerquote'), true); });
+		if(AN.util.getOptions('bOuterOnly')) jDoc.defer(3, '隱藏最外層以外的引用', function(){ AN.box.toggleQuote(jDoc.find('.an-outerquote'), true); });
 	}
 },
 

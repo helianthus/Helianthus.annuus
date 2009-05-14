@@ -36,7 +36,7 @@ AN.temp.push(function()
 
 	AN.mod['Style Editor'] =
 	{
-		ver: '1.0.1',
+		ver: '1.0.2',
 		fn: {
 
 '89615a78-21b7-46bd-aeb1-12e7f031e896':
@@ -66,11 +66,11 @@ AN.temp.push(function()
 	once: function()
 	{
 		var sTextCSS = AN.util.getOptions('bRemoveLinkUnderline') ? 'text-decoration: none; } .repliers_right a { text-decoration: underline; }' : '}';
-		var sStyle = 'body > table a { color: %(sMainLinkFontColor)s; ' + sTextCSS;
 
-		AN.util.addStyle($.sprintf(sStyle + ' \
-		body > table a[href*="view.aspx"]:visited { color: %(sMainVisitedColor)s; } \
-		body > table a[href]:hover { color: %(sMainHoverColor)s; } \
+		AN.util.addStyle($.sprintf('\
+		body > form a { color: %(sMainLinkFontColor)s; ' + sTextCSS + ' \
+		body > form a[href*="view.aspx"]:visited { color: %(sMainVisitedColor)s; } \
+		body > form a[href]:hover { color: %(sMainHoverColor)s; } \
 		',
 		AN.util.getOptions()
 		));
@@ -120,7 +120,7 @@ AN.temp.push(function()
 		p, td { color: %(sMainFontColor)s; } \
 		/* main border */\
 		.repliers_header, .repliers_left, .repliers, .repliers td { border-color: %(sMainBorderColor)s !important; } \
-		body > table table[cellspacing="1"][cellpadding="2"], #ctl00_ContentPlaceHolder1_PMMsgTable, #ctl00_ContentPlaceHolder1_QuickReplyTable, #ctl00_ContentPlaceHolder1_QuickReplyLoginTable { background-color: %(sMainBorderColor)s !important; } \
+		#aspnetForm table[cellspacing="1"][cellpadding="2"], #ctl00_ContentPlaceHolder1_PMMsgTable, #ctl00_ContentPlaceHolder1_QuickReplyTable, #ctl00_ContentPlaceHolder1_QuickReplyLoginTable { background-color: %(sMainBorderColor)s !important; } \
 		*[style*="128, 128, 128"], *[style*="808080"] { background-color: transparent !important; } \
 		/* sec border */\
 		.main_table1 { border-color: %(sSecBorderColor)s; } \

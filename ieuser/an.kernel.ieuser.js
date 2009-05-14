@@ -498,11 +498,6 @@ var AN = $.extend(window.AN,
 			}
 		},
 
-		DOMLoad: function(fToExec)
-		{
-			$(fToExec);
-		},
-
 		getCurPageNo: function()
 		{
 			return $('select[name=page]:first').val() * 1;
@@ -663,7 +658,7 @@ var AN = $.extend(window.AN,
 				{
 					$.each(AN.box.oSwitches[sMod][sId], function()
 					{
-						if(oFn.page[this] != 'disabled' && (sId == 'ed7c7589-c318-487b-8d3a-888212d8d803' || AN.box.nCurPage & this))
+						if(oFn.page[this] != 'disabled' && this in oFn.page && (sId == 'ed7c7589-c318-487b-8d3a-888212d8d803' || AN.box.nCurPage & this))
 						{
 							var aHandler = [];
 							if(!AN.box.initialised && oFn.once) aHandler.push(oFn.once);
@@ -753,7 +748,7 @@ var AN = $.extend(window.AN,
 
 AN.mod['Kernel'] =
 {
-	ver: '1.1.1',
+	ver: '1.1.2',
 	fn: {
 
 'ed7c7589-c318-487b-8d3a-888212d8d803':
@@ -869,46 +864,68 @@ AN.mod['Kernel'] =
 {
 	desc: '自動檢查更新',
 	defer: 5,
-	page: { 65534: true },
+	page: { 4: true },
 	type: 1,
+	options:
+	{
+		bAlsoCheckBeta: { desc: '同時檢查Beta版本', defaultValue: true, type: 'checkbox' },
+		nCheckUpdateInterval: { desc: '檢查更新間隔(小時)', defaultValue: 24, type: 'text' }
+	},
 	once: function()
 	{
-		if($.time() - AN.util.data('nLastChecked') > 86400000)
+		var nInterval = AN.util.getOptions('nCheckUpdateInterval');
+		if(isNaN(nInterval) || nInterval < 1) nInterval = 1;
+		var nLastChecked = AN.util.data('nLastChecked') || 0;
+		if($.time() - AN.util.data('nLastChecked') < 1000 * nInterval * 60) return;
+
+		AN.util.getData('main', function(oMain)
 		{
-			AN.util.data('nLastChecked', $.time());
+ 			AN.util.data('nLastChecked', $.time());
 
-			setTimeout(function()
+			var aMsg = [];
+
+			$.each(AN.mod, function(sMod, oMod)
 			{
-				AN.util.getData('main', function(oMain)
+				var isNewer = function(sToCheck, sToCompare)
 				{
-					var sLast, sCur, aLast, aCur, aMsg = [];
-					$.each(AN.mod, function(sMod)
+					var aToCheck = sToCheck.split('.'), aToCompare = sToCompare.split('.');
+					for(var i=0; i<aToCheck.length; i++)
 					{
-						sCur = this.ver;
-						sLast = oMain.ver[sMod];
-						if(!sLast) return;
-
-						aCur = sCur.split('.');
-						aLast = sLast.split('.');
-						for(var i=0; i<3; i++)
+						if(aToCompare[i] != aToCheck[i])
 						{
-							if(aCur[i] != aLast[i])
-							{
-								if(aCur[i] < aLast[i]) aMsg.push($.sprintf('%s: \n   現時版本: %s\n   最新版本: %s', sMod, sCur, sLast));
-								break;
-							}
-						}
-					});
-					if(aMsg.length)
-					{
-						if(confirm($.sprintf('發現新版本!\n\n%s\n\n按確定自動前往下載頁', aMsg.join('\n\n'))))
-						{
-							location.assign('http://code.google.com/p/helianthus-annuus/wiki/HowToInstall');
+							if(aToCompare[i] < aToCheck[i]) return true;
+							break;
 						}
 					}
-				});
-			}, 500);
-		}
+					return false;
+				};
+
+				var sCurrent = oMod.ver;
+				var sStable = oMain.ver['stable'][sMod];
+				var sBeta = oMain.ver['beta'][sMod];
+				var sMsg = '';
+
+				if(sStable && isNewer(sStable, sCurrent))
+				{
+					sMsg += $.sprintf('\n- 最新穩定版本: %s', sStable);
+				}
+
+				if(sBeta && AN.util.getOptions('bAlsoCheckBeta') && (isNewer(sBeta, sCurrent) && (!sStable || isNewer(sBeta, sStable))))
+				{
+					sMsg += $.sprintf('\n- 最新測試版本: %s', sBeta);
+				}
+
+				if(sMsg) aMsg.push($.sprintf('%s:\n- 現時版本: %s', sMod, sCurrent) + sMsg);
+			});
+
+			if(aMsg.length)
+			{
+				if(confirm($.sprintf('發現新版本!\n\n%s\n\n按確定前往下載頁', aMsg.join('\n\n'))))
+				{
+					location.assign('http://code.google.com/p/helianthus-annuus/wiki/HowToInstall');
+				}
+			}
+		});
 	}
 },
 

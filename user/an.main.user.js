@@ -29,6 +29,8 @@
 var window = (typeof unsafeWindow != 'undefined') ? unsafeWindow : (typeof contentWindow != 'undefined') ? contentWindow : this;
 var AN = window.AN || (window.AN = { temp: [], mod: {} });
 
+if(AN.initialized) return; // for Chrome which interestingly executes user scripts even when injecting xhr HTML into an element
+
 AN.temp.push(function()
 {
 	var JSON = window.JSON;
@@ -36,7 +38,7 @@ AN.temp.push(function()
 
 	AN.mod['Main Script'] =
 	{
-		ver: '1.0.4',
+		ver: '1.0.5',
 		fn: {
 
 // 佈局設定 //
@@ -54,6 +56,7 @@ AN.temp.push(function()
 			4: function()
 			{
 				$('#ctl00_ContentPlaceHolder1_lb_UserName').up('table', 1).removeAttr('height');
+				$('#HKGHeaderGoogleAd').up('table', 1).remove();
 			},
 			28: function()
 			{
@@ -87,18 +90,13 @@ AN.temp.push(function()
 	{
 		$.each(
 		{
-			28: function()
+			60: function()
 			{
 				$('span[id^=MsgInLineAd]').up('tr').remove();
-			},
-			32: function()
-			{
-				$('span[id^=MsgInLineAd]').next().andSelf().remove();
 			},
 			64: function()
 			{
 				$('span').filter('[id^=PMInLineAd],[id^=MsgInLineAd]').up('tr').remove();
-				$('#ctl00_ContentPlaceHolder1_PMPersonalTable').remove().insertAfter('#ctl00_ContentPlaceHolder1_UpdatePanelPM'); // to remove the black line in IE
 			}
 		}, function(sPage)
 		{
@@ -814,7 +812,7 @@ AN.temp.push(function()
 			{
 				if(!$(this).children().length && /jpg|gif|png|bmp/i.test(this.href))
 				{
-					$(this).attr('target', '_blank').html($.sprintf('<img style="border-style: none" onLoad="DrawImage(this)" src="%s" />', this.href)).before('<span class="an-content-note" title="已轉換連結為圖片">[P]</span>');
+					$(this).attr('target', '_blank').html($.sprintf('<img style="border-style: none" onLoad="DrawImage(this)" src="%s" alt="死圖" />', this.href, this.href)).before('<span class="an-content-note" title="已轉換連結為圖片">[P]</span>');
 				}
 			});
 		});

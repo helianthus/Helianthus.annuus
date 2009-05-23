@@ -29,6 +29,8 @@
 var window = (typeof unsafeWindow != 'undefined') ? unsafeWindow : (typeof contentWindow != 'undefined') ? contentWindow : this;
 var AN = window.AN || (window.AN = { temp: [], mod: {} });
 
+if(AN.initialized) return; // for Chrome which interestingly executes user scripts even when injecting xhr HTML into an element
+
 AN.temp.push(function()
 {
 	var JSON = window.JSON;
@@ -36,7 +38,7 @@ AN.temp.push(function()
 
 	AN.mod['Component Redesigner'] =
 	{
-		ver: '1.0.2',
+		ver: '1.0.3',
 		fn: {
 
 '8be1ac06-030a-42d4-a8f4-f2b7f4881300':

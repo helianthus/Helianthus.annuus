@@ -29,6 +29,8 @@
 var window = (typeof unsafeWindow != 'undefined') ? unsafeWindow : (typeof contentWindow != 'undefined') ? contentWindow : this;
 var AN = window.AN || (window.AN = { temp: [], mod: {} });
 
+if(AN.initialized) return; // for Chrome which interestingly executes user scripts even when injecting xhr HTML into an element
+
 AN.temp.push(function()
 {
 	var JSON = window.JSON;
@@ -36,7 +38,7 @@ AN.temp.push(function()
 
 	AN.mod['AJAX Integrator'] =
 	{
-		ver: '1.0.2',
+		ver: '1.0.3',
 		fn: {
 
 
@@ -92,7 +94,7 @@ AN.temp.push(function()
 				});
 
 				scrollTo(0, 0);
-				$('#an-info-curpage').text(sTarget).attr('href', AN.util.getURL(sTarget));
+				$('#an-info-curpage').text($.sprintf('第%s頁', sTarget)).attr('href', AN.util.getURL(sTarget));
 				nCurPageNo = sTarget * 1;
 			};
 
@@ -197,7 +199,7 @@ AN.temp.push(function()
 		var oCache = {};
 
 		if(AN.util.getOptions('bAjaxifyPageChange_R')) addEvents();
-		if(AN.util.getOptions('bShowPageNo')) AN.shared('addInfo', $.sprintf('本頁頁數: <a id="an-info-curpage" href="%s">%s</a>', location.href, nCurPageNo));
+		if(AN.util.getOptions('bShowPageNo')) AN.shared('addInfo', $.sprintf('本頁頁數: <a id="an-info-curpage" href="%s">第%s頁</a>', location.href, nCurPageNo));
 
 		if(AN.util.getOptions('bAddGetBtn_R')) jDoc.defer(2, '加入讀取按扭', function(){ AN.shared('addButton', '讀取最新回覆', function(){ getReplies(true); }); });
 
@@ -295,7 +297,7 @@ AN.temp.push(function()
 			tRefresh = setTimeout(refreshTopics, nInterval * 1000);
 		};
 
-		if(AN.util.getOptions('bAddGetBtn_T')) jDoc.defer(2, '加入讀取按扭', function(){ AN.shared('addButton', '更新列表', function(){ refreshTopics(); }); });
+		if(AN.util.getOptions('bAddGetBtn_T')) jDoc.defer(2, '加入更新按扭', function(){ AN.shared('addButton', '更新列表', function(){ refreshTopics(); }); });
 
 		var tRefresh;
 		var bAutoRefresh = AN.util.getOptions('bAutoRefresh_T');

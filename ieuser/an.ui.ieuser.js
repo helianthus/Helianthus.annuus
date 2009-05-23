@@ -34,6 +34,8 @@
 var window = (typeof unsafeWindow != 'undefined') ? unsafeWindow : (typeof contentWindow != 'undefined') ? contentWindow : this;
 var AN = window.AN || (window.AN = { temp: [], mod: {} });
 
+if(AN.initialized) return; // for Chrome which interestingly executes user scripts even when injecting xhr HTML into an element
+
 AN.temp.push(function()
 {
 	var JSON = window.JSON;
@@ -41,7 +43,7 @@ AN.temp.push(function()
 
 	AN.mod['User Interface'] =
 	{
-		ver: '1.1.1',
+		ver: '1.1.2',
 		fn: {
 
 '6464e397-dfea-477f-9706-025ec439e810':
@@ -229,7 +231,7 @@ AN.temp.push(function()
 		{
 			if(!$('#an-settings').length)
 			{
-				AN.shared.box('an-settings', '選項', 900, 'max').append('<div id="an-settings-tabs"><ul id="an-settings-tabs-main"></ul><ul id="an-settings-tabs-extend"></ul></div><div id="an-settings-main"><div id="an-settings-main-panelswrapper"><form id="an-settings-main-panels"></form></div><div id="an-settings-main-controls"><ul id="an-settings-main-control-1"></ul><ul id="an-settings-main-control-2"></ul></div></div>');
+				AN.shared.box('an-settings', '選項', 900, 'max').append('<div id="an-settings-tabs"><ul id="an-settings-tabs-main"></ul><ul id="an-settings-tabs-extend"></ul></div><div id="an-settings-main"><div id="an-settings-main-panelswrapper"><div id="an-settings-main-panels"></div></div><div id="an-settings-main-controls"><ul id="an-settings-main-control-1"></ul><ul id="an-settings-main-control-2"></ul></div></div>');
 
 				AN.util.addStyle(' \
 				#an-settings-tabs { float: left; height: 100%; border-right-width: 1px; } \

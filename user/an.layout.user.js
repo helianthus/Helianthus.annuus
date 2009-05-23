@@ -29,6 +29,8 @@
 var window = (typeof unsafeWindow != 'undefined') ? unsafeWindow : (typeof contentWindow != 'undefined') ? contentWindow : this;
 var AN = window.AN || (window.AN = { temp: [], mod: {} });
 
+if(AN.initialized) return; // for Chrome which interestingly executes user scripts even when injecting xhr HTML into an element
+
 AN.temp.push(function()
 {
 	var JSON = window.JSON;
@@ -36,7 +38,7 @@ AN.temp.push(function()
 
 	AN.mod['Layout Designer'] =
 	{
-		ver: '1.0.2',
+		ver: '1.0.3',
 		fn: {
 
 '5e173905-9c47-4f37-8d3f-4c31ea871115':
@@ -190,7 +192,8 @@ AN.temp.push(function()
 	type: 3,
 	once: function()
 	{
-		$('#searchstring').up('tr', 1).prev().remove().end().up('table').css('border-collapse', 'collapse').find('form').css('margin', 0);
+		$('#searchstring').up('tr', 1).prev().remove().end().up('table').css('border-collapse', 'collapse');
+		//.find('form').css('margin', 0);
 		$('#ctl00_ContentPlaceHolder1_MiddleAdSpace1').find('tr:first').remove();
 		$('#forum_list').parent().css('margin', 0).prev('br').remove();
 	}

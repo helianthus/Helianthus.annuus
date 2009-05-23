@@ -26,6 +26,10 @@ setTimeout(function() // Chrome 2 totally ignores this?...forced to remove that 
 {
 
 var window = (typeof unsafeWindow != 'undefined') ? unsafeWindow : (typeof contentWindow != 'undefined') ? contentWindow : this;
+var AN = window.AN;
+
+if(AN.initialized) return; // for Chrome which interestingly executes user scripts even when injecting xhr HTML into an element
+
 var JSON = window.JSON;
 var $, jQuery = $ = window.jQuery;
 
@@ -243,7 +247,7 @@ $.fn.extend(
 		{
 			if($(this).html().match(/^\s*最後回應時間$/))
 			{
-				jTrs = $(this).parent().parent().attr('id', 'an-topics').end().nextAll();
+				jTrs = $(this).parent().parent().attr('id', 'an-topics').end().nextAll('tr');
 				return false;
 			}
 		});
@@ -282,7 +286,7 @@ $.fn.extend(
 //////////////////// END OF - [jQuery Extension] ////////////////////
 //////////////////// START OF - [AN Extension] ////////////////////
 
-var AN = $.extend(window.AN,
+$.extend(AN,
 {
 	shared: function(sFnName)
 	{
@@ -658,10 +662,10 @@ var AN = $.extend(window.AN,
 				{
 					$.each(AN.box.oSwitches[sMod][sId], function()
 					{
-						if(oFn.page[this] != 'disabled' && this in oFn.page && (sId == 'ed7c7589-c318-487b-8d3a-888212d8d803' || AN.box.nCurPage & this))
+						if(oFn.page[this] != 'disabled' && this in oFn.page && AN.box.nCurPage & this)
 						{
 							var aHandler = [];
-							if(!AN.box.initialised && oFn.once) aHandler.push(oFn.once);
+							if(!AN.initialized && oFn.once) aHandler.push(oFn.once);
 							if(oFn.infinite) aHandler.push(oFn.infinite);
 
 							if(aHandler.length)
@@ -707,7 +711,7 @@ var AN = $.extend(window.AN,
 						AN.shared.log('出現地址: ' + location.href);
 						AN.shared.log($.sprintf('發生錯誤: %s', oArg.sDesc));
 					}
-					else alert($.sprintf('ERROR ON EXECUATION: %s\r\n%s', oArg.sDesc, err.message));
+					else if(AN.box.debugMode) alert($.sprintf('ERROR ON EXECUATION: %s\r\n%s', oArg.sDesc, err.message));
 				}
 			};
 
@@ -720,25 +724,28 @@ var AN = $.extend(window.AN,
 				if(sMod != 'Kernel' && sMod != 'User Interface') execMod(sMod);
 			});
 
-			if(jDoc.aDefer)
+			setTimeout(function()
 			{
-				AN.box.aBenchmark.push({ type: 'start', name: '延期執行項目' });
-
-				for(var i=1; i<=5; i++)
+				if(jDoc.aDefer)
 				{
-					if(!jDoc.aDefer[i]) continue;
-					$.each(jDoc.aDefer[i], function(){ execFn(this); });
+					AN.box.aBenchmark.push({ type: 'start', name: '延期執行項目' });
+
+					for(var i=1; i<=5; i++)
+					{
+						if(!jDoc.aDefer[i]) continue;
+						$.each(jDoc.aDefer[i], function(){ execFn(this); });
+					}
+					jDoc.aDefer = null;
+					jDoc.splice(0, jDoc.length);
+
+					AN.box.aBenchmark.push({ type: 'end', name: '延期執行項目' });
 				}
-				jDoc.aDefer = null;
-				jDoc.splice(0, jDoc.length);
 
-				AN.box.aBenchmark.push({ type: 'end', name: '延期執行項目' });
-			}
+				AN.initialized = true;
+				AN.shared('log2', '所有功能執行完成');
 
-			AN.box.initialised = true;
-			AN.shared('log2', '所有功能執行完成');
-
-			AN.box.aBenchmark.push({ type: 'final', time: $.time(nBegin) });
+				AN.box.aBenchmark.push({ type: 'final', time: $.time(nBegin) });
+			}, 0);
 		}
 	}
 });
@@ -748,21 +755,21 @@ var AN = $.extend(window.AN,
 
 AN.mod['Kernel'] =
 {
-	ver: '1.1.2',
+	ver: '1.1.3',
 	fn: {
 
-'ed7c7589-c318-487b-8d3a-888212d8d803':
+'Kernel_Initializer':
 {
 	desc: '初始化',
 	page: { 65535: 'comp' },
 	type: 1,
 	once: function(jDoc)
 	{
-		if(!$('head').length) $('html').prepend(document.createElement('head')); // chrome
+		//if(!$('head').length) $('html').prepend(document.createElement('head')); // chrome
 
 		$.ajaxSetup(
 		{
-			//cache: false,
+			cache: false,
 			contentType: 'application/x-www-form-urlencoded; charset=UTF-8'
 		});
 
@@ -771,21 +778,6 @@ AN.mod['Kernel'] =
 		{
 			AN.util.data('AN-version', AN_VER);
 		}
-
-		AN.box.sCurPage = ($('#aspnetForm').length) ?
-			$('#aspnetForm').attr('action').match(/[^.]+/)[0].toLowerCase() :
-			$('#ctl00_ContentPlaceHolder1_SystemMessageBoard').length ? location.pathname.match(/\w+/i)[0] : 'error';
-		$.each(AN.box.oPageMap, function(sPage)
-		{
-			if(this.action == AN.box.sCurPage)
-			{
-				AN.box.nCurPage = sPage * 1;
-				return false;
-			}
-		});
-		if(!AN.box.nCurPage) AN.box.nCurPage = 32768;
-
-		if(!$('body').length) AN.box.nCurPage = 0;
 
 		if(AN.box.sCurPage == 'view') $('select[name=page]').val(AN.util.getPageNo(location.href)); // for FF3 where select box does not reset
 	}
@@ -876,30 +868,29 @@ AN.mod['Kernel'] =
 		var nInterval = AN.util.getOptions('nCheckUpdateInterval');
 		if(isNaN(nInterval) || nInterval < 1) nInterval = 1;
 		var nLastChecked = AN.util.data('nLastChecked') || 0;
-		if($.time() - AN.util.data('nLastChecked') < 1000 * nInterval * 60) return;
+		if($.time() - AN.util.data('nLastChecked') < 3600000 * nInterval) return;
 
 		AN.util.getData('main', function(oMain)
 		{
  			AN.util.data('nLastChecked', $.time());
 
+			var isNewer = function(sToCheck, sToCompare)
+			{
+				var aToCheck = sToCheck.split('.'), aToCompare = sToCompare.split('.');
+				for(var i=0; i<aToCheck.length; i++)
+				{
+					if(aToCompare[i] != aToCheck[i])
+					{
+						if(aToCompare[i] < aToCheck[i]) return true;
+						break;
+					}
+				}
+				return false;
+			};
 			var aMsg = [];
 
 			$.each(AN.mod, function(sMod, oMod)
 			{
-				var isNewer = function(sToCheck, sToCompare)
-				{
-					var aToCheck = sToCheck.split('.'), aToCompare = sToCompare.split('.');
-					for(var i=0; i<aToCheck.length; i++)
-					{
-						if(aToCompare[i] != aToCheck[i])
-						{
-							if(aToCompare[i] < aToCheck[i]) return true;
-							break;
-						}
-					}
-					return false;
-				};
-
 				var sCurrent = oMod.ver;
 				var sStable = oMain.ver['stable'][sMod];
 				var sBeta = oMain.ver['beta'][sMod];
@@ -947,32 +938,10 @@ AN.mod['Kernel'] =
 	type: 3,
 	infinite: function()
 	{
-		// win7 IE8 bug..
 		AN.util.addStyle(' \
 		body { -ms-word-wrap: break-word; } \
-		.repliers table { table-layout: fixed; } \
-		'); // .repliers table { overflow-x: hidden; table-layout: fixed; } \
-	}
-},
-
-'d0b37f1a-5865-46dd-b73e-e13da90d7893':
-{
-	desc: 'IE8B2: 試圖修正空白bug',
-	page: { 65534: $.browser.msie },
-	type: 3,
-	defer: 5, // do it at the very end
-	once: function()
-	{
-		this.fixLayout = function()
-		{
-			$('<tr></tr>').appendTo('table:last').remove();
-		};
-
-		$(window).load(this.fixLayout);
-	},
-	infinite: function()
-	{
-		this.fixLayout();
+		.repliers_right { overflow-x: hidden; table-layout: fixed; } \
+		');
 	}
 }
 
@@ -992,6 +961,22 @@ $.support.localStorage = window.localStorage || window.globalStorage || false;
 
 	function exec(sStorageType)
 	{
+		if(!$('body').length) return AN.box.nCurPage = 0;
+
+		AN.box.sCurPage = $('#ctl00_ContentPlaceHolder1_SystemMessageBoard').length ?
+			'message' : //location.pathname.match(/\w+/i)[0] :
+			$('#aspnetForm').length ? $('#aspnetForm').attr('action').match(/[^.]+/)[0].toLowerCase() : 'error';
+
+		$.each(AN.box.oPageMap, function(sPage)
+		{
+			if(this.action == AN.box.sCurPage)
+			{
+				AN.box.nCurPage = sPage * 1;
+				return false;
+			}
+		});
+		if(!AN.box.nCurPage) AN.box.nCurPage = 32768;
+
 		AN.box.storageMode = sStorageType;
 		AN.modFn.getDB();
 		AN.modFn.execMods();
@@ -1010,7 +995,7 @@ $.support.localStorage = window.localStorage || window.globalStorage || false;
 		{
 			if(!AN.box.eLSO.get)
 			{
-				if(!$.support.localStorage || nRetry++ < 200) return setTimeout(arguments.callee, 1);
+				if(!$.support.localStorage || nRetry++ < 200) return setTimeout(arguments.callee, 0);
 
 				AN.util.cookie('an-storagemode', 'DOM');
 				alert('無法使用Flash儲存方式!已自動轉用DOM儲存方式!');
@@ -1026,4 +1011,4 @@ $.support.localStorage = window.localStorage || window.globalStorage || false;
 
 //////////////////// END OF - [Initialization] ////////////////////
 
-}, 1);
+}, 0);

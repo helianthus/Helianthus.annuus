@@ -29,6 +29,8 @@
 var window = (typeof unsafeWindow != 'undefined') ? unsafeWindow : (typeof contentWindow != 'undefined') ? contentWindow : this;
 var AN = window.AN || (window.AN = { temp: [], mod: {} });
 
+if(AN.initialized) return; // for Chrome which interestingly executes user scripts even when injecting xhr HTML into an element
+
 AN.temp.push(function()
 {
 	var JSON = window.JSON;
@@ -36,7 +38,7 @@ AN.temp.push(function()
 
 	AN.mod['Style Editor'] =
 	{
-		ver: '1.0.2',
+		ver: '1.0.3',
 		fn: {
 
 '89615a78-21b7-46bd-aeb1-12e7f031e896':

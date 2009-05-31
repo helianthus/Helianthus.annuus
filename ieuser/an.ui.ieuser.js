@@ -43,7 +43,7 @@ AN.temp.push(function()
 
 	AN.mod['User Interface'] =
 	{
-		ver: '1.1.2',
+		ver: '1.1.3',
 		fn: {
 
 '6464e397-dfea-477f-9706-025ec439e810':
@@ -409,7 +409,7 @@ AN.temp.push(function()
 						else
 						{
 							aInfo = jTarget.attr('id').replace(/an-settings-option-/, '').split(sSep);
-							oInfo = { page: aInfo[0] * 1, name: aInfo[1], type: jTarget.attr('type') || jTarget[0].nodeName };
+							oInfo = { page: aInfo[0] * 1, name: aInfo[1], type: jTarget[0].nodeName == 'SELECT' ? 'select' : jTarget.attr('type') };
 						}
 						jTarget.data('info', oInfo);
 					}
@@ -652,7 +652,7 @@ AN.temp.push(function()
 				#an-benchmark div { padding: 0.5em; } \
 				');
 
-				AN.shared.box('an-benchmark', '評測', 500, 500).append('<div><table><thead><tr><td>#</td><td>功能</td><td>執行時間</td></tr></thead><tbody></tbody></table></div>');
+				AN.shared.box('an-benchmark', '評測', 550, 500).append('<div><table><thead><tr><td>#</td><td>功能</td><td>執行時間</td></tr></thead><tbody></tbody></table></div>');
 			}
 
 			var uCount, sName, sTime;

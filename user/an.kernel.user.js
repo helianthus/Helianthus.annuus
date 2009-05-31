@@ -43,7 +43,7 @@ $.extend(
 
 	time: function(nStart)
 	{
-		return nStart ? $.time() - nStart : (new Date).getTime();
+		return nStart ? $.time() - nStart : +new Date;
 	},
 
 	correct: function(sTarget)
@@ -109,12 +109,12 @@ $.extend(
 
 	winWidth: function(nMutiply)
 	{
-		return Math.round((window.innerWidth || $(window).width()) * nMutiply);
+		return Math.round((window.innerWidth || $(window).width()) * (nMutiply || 1));
 	},
 
 	winHeight: function(nMutiply)
 	{
-		return Math.round((window.innerHeight || $(window).height()) * nMutiply);
+		return Math.round((window.innerHeight || $(window).height()) * (nMutiply || 1));
 	}
 });
 
@@ -123,8 +123,12 @@ $.fn.extend(
 	toFlash: function(sURL, oAttrs, oParams)
 	{
 		if(!oAttrs) oAttrs = {};
+		if(!oAttrs.id) oAttrs.id = this[0].id || 'an-flash-' + $.time(); // IE: must have an id in order to allow JS access
+		if(!oAttrs.width) oAttrs.width = 0;
+		if(!oAttrs.height) oAttrs.height = 0;
+		
 		if(!oParams) oParams = {};
-		if(!oAttrs.id) oAttrs.id = this.id || 'an-flash-' + $.time(); // IE: must have an id in order to allow JS access
+		if(!oParams.allowscriptaccess) oParams.allowscriptaccess = 'always';
 
 		if($.browser.msie)
 		{
@@ -154,11 +158,11 @@ $.fn.extend(
 
 		if($.browser.msie) // IE: element must be created in this way in order to allow JS access
 		{
-			$(this)[0].outerHTML = sHTML;
+			this[0].outerHTML = sHTML;
 		}
 		else
 		{
-			$(this).replaceWith(sHTML);
+			this.replaceWith(sHTML);
 		}
 
 		return $('#' + oAttrs.id);
@@ -712,6 +716,7 @@ $.extend(AN,
 						AN.shared.log($.sprintf('發生錯誤: %s', oArg.sDesc));
 					}
 					else if(AN.box.debugMode) alert($.sprintf('ERROR ON EXECUATION: %s\r\n%s', oArg.sDesc, err.message));
+					//alert($.sprintf('ERROR ON EXECUATION: %s\r\n%s', oArg.sDesc, err.message));
 				}
 			};
 
@@ -755,7 +760,7 @@ $.extend(AN,
 
 AN.mod['Kernel'] =
 {
-	ver: '1.1.3',
+	ver: '1.1.4',
 	fn: {
 
 'Kernel_Initializer':
@@ -913,7 +918,7 @@ AN.mod['Kernel'] =
 			{
 				if(confirm($.sprintf('發現新版本!\n\n%s\n\n按確定前往下載頁', aMsg.join('\n\n'))))
 				{
-					location.assign('http://code.google.com/p/helianthus-annuus/wiki/HowToInstall');
+					location.assign('http://code.google.com/p/helianthus-annuus/wiki/Changelog');
 				}
 			}
 		});
@@ -939,7 +944,7 @@ AN.mod['Kernel'] =
 	infinite: function()
 	{
 		AN.util.addStyle(' \
-		body { -ms-word-wrap: break-word; } \
+		body { word-wrap: break-word; } \
 		.repliers_right { overflow-x: hidden; table-layout: fixed; } \
 		');
 	}
@@ -988,22 +993,23 @@ $.support.localStorage = window.localStorage || window.globalStorage || false;
 	}
 	else
 	{
-		AN.box.eLSO = $('#an-lso').toFlash('http://helianthus-annuus.googlecode.com/svn/other/lso.swf', { width: 0, height: 0 }, { allowscriptaccess: 'always' })[0];
+		AN.box.eLSO = $('#an-lso').toFlash('http://helianthus-annuus.googlecode.com/svn/other/lso.swf')[0];
 
 		var nRetry = 0;
 		(function()
 		{
-			if(!AN.box.eLSO.get)
+			if($.isFunction(AN.box.eLSO.get))
 			{
-				if(!$.support.localStorage || nRetry++ < 200) return setTimeout(arguments.callee, 0);
+				exec('Flash');
+			}
+			else
+			{
+				if(nRetry++ < 200) return setTimeout(arguments.callee, 1);
+				if(!$.support.localStorage) return alert('無法使用Flash儲存方式, 且瀏覽器並不支援DOM儲存方式!請通知作者有關此問題!');
 
 				AN.util.cookie('an-storagemode', 'DOM');
 				alert('無法使用Flash儲存方式!已自動轉用DOM儲存方式!');
 				exec('DOM');
-			}
-			else
-			{
-				exec('Flash');
 			}
 		})();
 	}
@@ -1011,4 +1017,4 @@ $.support.localStorage = window.localStorage || window.globalStorage || false;
 
 //////////////////// END OF - [Initialization] ////////////////////
 
-}, 0);
+}, 1);

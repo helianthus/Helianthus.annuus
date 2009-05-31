@@ -38,7 +38,7 @@ AN.temp.push(function()
 
 	AN.mod['Component Redesigner'] =
 	{
-		ver: '1.0.3',
+		ver: '1.0.4',
 		fn: {
 
 '8be1ac06-030a-42d4-a8f4-f2b7f4881300':
@@ -141,7 +141,11 @@ AN.temp.push(function()
 	desc: '改變快速回覆的風格',
 	page: { 32: true },
 	type: 8,
-	options: { bToggleOnClick: { desc: '心須點擊才顯示/隱藏', type: 'checkbox', defaultValue: true } },
+	options:
+	{
+		bToggleOnClick: { desc: '心須點擊才顯示/隱藏', type: 'checkbox', defaultValue: true },
+		nQROpacity: { desc: '透明度 (10 = 移除半透明)', type: 'select', defaultValue: 7, choices: [10,9,8,7,6,5,4,3,2,1,0] }
+	},
 	once: function()
 	{
 		if(!AN.util.isLoggedIn()) return;
@@ -155,10 +159,10 @@ AN.temp.push(function()
 		{
 			position: 'fixed',
 			width: '806px',
-			left: ($(window).width() - 806) / 2 + 'px',
+			left: ($.winWidth() - 806) / 2 + 'px',
 			bottom: '-2px'
 		})
-		.fadeTo(0, '0.7')
+		.fadeTo(0, AN.util.getOptions('nQROpacity') / 10)
 		.find('tr:eq(2)').attr('id', 'an-qr').hide()
 		.end()
 		.find('td:eq(1)')

@@ -38,7 +38,7 @@ AN.temp.push(function()
 
 	AN.mod['Main Script'] =
 	{
-		ver: '1.0.6',
+		ver: '1.0.7',
 		fn: {
 
 // 佈局設定 //
@@ -120,6 +120,20 @@ AN.temp.push(function()
 	{
 		if(document.referrer.indexOf('/login.aspx') > 0) location.replace('/topics.aspx?type=BW');
 		else if(!location.pathname.match(/^\/(?:default.aspx)?$/i)) location.reload();
+	}
+},
+
+'b7ef89eb-1190-4466-899a-c19b3621d6b1':
+{
+	desc: 'Opera: 修正無法使用Enter搜尋的錯誤',
+	page: { 30: $.browser.opera || 'disabled' },
+	type: 4,
+	once: function()
+	{
+		$('#aspnetForm').submit(function(event)
+		{
+			event.preventDefault();
+		});
 	}
 },
 
@@ -255,7 +269,7 @@ AN.temp.push(function()
 		}
 		else
 		{
-			$('#aspnetForm a').attr('target', '_blank');
+			$('#aspnetForm a').filter(function(){ return /(?:ProfilePage|newmessages|view)\.aspx/.test(this.href); }).attr('target', '_blank');
 		}
 	}
 },
@@ -811,8 +825,8 @@ AN.temp.push(function()
 
 '85950fa3-c5f0-4456-a81a-30a90ba6425c':
 {
-	desc: '顯示防盜鏈/域名被禁圖片',
-	page: { 32: true },
+	desc: '顯示防盜鏈/域名被禁圖片 [FF: 建議改用RefControl]',
+	page: { 32: !$.browser.mozilla },
 	type: 6,
 	// http://www.pomo.cn/showpic.asp?url=
 	// http://www.mysea.net/download/js/get163.asp?url=

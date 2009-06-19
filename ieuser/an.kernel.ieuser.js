@@ -760,7 +760,7 @@ $.extend(AN,
 
 AN.mod['Kernel'] =
 {
-	ver: '1.1.4',
+	ver: '1.1.5',
 	fn: {
 
 'Kernel_Initializer':
@@ -770,7 +770,7 @@ AN.mod['Kernel'] =
 	type: 1,
 	once: function(jDoc)
 	{
-		//if(!$('head').length) $('html').prepend(document.createElement('head')); // chrome
+		if(!$('head').length) $('html').prepend(document.createElement('head')); // chrome
 
 		$.ajaxSetup(
 		{

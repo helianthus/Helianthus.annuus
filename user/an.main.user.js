@@ -38,7 +38,7 @@ AN.temp.push(function()
 
 	AN.mod['Main Script'] =
 	{
-		ver: '1.0.7',
+		ver: '1.0.8',
 		fn: {
 
 // 佈局設定 //
@@ -61,7 +61,7 @@ AN.temp.push(function()
 			28: function()
 			{
 				$('#ctl00_ContentPlaceHolder1_lb_UserName').up('tr', 1).find('tr:last').remove();
-				$('#HKGBottomGoogleAd').up('table', 1).next('br').andSelf().remove();
+				$('#HKGBottomGoogleAd').up('tr').remove();
 			},
 			30: function()
 			{
@@ -240,7 +240,7 @@ AN.temp.push(function()
 '87a6307e-f5c2-405c-8614-af60c85b101e':
 {
 	desc: '搜尋開新頁',
-	page: { 20: !$.browser.msie, 8: false },
+	page: { 20: false, 8: false },
 	type: 4,
 	once: function()
 	{
@@ -277,6 +277,7 @@ AN.temp.push(function()
 '2ab2f404-0d35-466f-98a5-c88fdbdaa031':
 {
 	desc: '外鏈連結開新頁',
+	defer: 1, // after links are created
 	page: { 32: true },
 	type: 4,
 	infinite: function(jDoc)

@@ -38,7 +38,7 @@ AN.temp.push(function()
 
 	AN.mod['Main Script'] =
 	{
-		ver: '1.0.9',
+		ver: '1.0.10',
 		fn: {
 
 // 佈局設定 //
@@ -80,7 +80,7 @@ AN.temp.push(function()
 			},
 			108: function()
 			{
-				$('#HKGHeaderGoogleAd,#HKGBottomGoogleAd').up('tr').remove();
+				$('#HKGHeaderGoogleAd,#HKGBottomGoogleAd,#HKGTopGoogleAd').up('tr').remove(); // HKGTopGoogleAd is for chrome(& opera?), view.aspx
 			},
 			2048: function()
 			{

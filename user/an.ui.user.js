@@ -43,7 +43,7 @@ AN.temp.push(function()
 
 	AN.mod['User Interface'] =
 	{
-		ver: '1.1.3',
+		ver: '1.1.4',
 		fn: {
 
 '6464e397-dfea-477f-9706-025ec439e810':
@@ -711,7 +711,7 @@ AN.temp.push(function()
 
 '0868eb64-9631-42dd-8b5c-02f11a8c9a48':
 {
-	desc: '加入記錄元件',
+	desc: '加入記錄元件 [右下]',
 	page: { 65534: true },
 	type: 1,
 	options:
@@ -747,8 +747,8 @@ AN.temp.push(function()
 		AN.shared.log = function(sLog)
 		{
 			var jLog = getMod();
-
-			if(!sLog) return;
+			
+			if($.isRubbish(sLog)) return;
 
 			if(AN.util.getOptions('bAutoShowLog')) jLog.fadeIn('fast');
 
@@ -776,7 +776,7 @@ AN.temp.push(function()
 
 'e9051bb8-2613-4f10-82ec-69290831c6a5':
 {
-	desc: '加入按扭元件',
+	desc: '加入按扭元件 [左上]',
 	page: { 65534: true },
 	type: 1,
 	options:
@@ -818,7 +818,7 @@ AN.temp.push(function()
 
 '437dc7da-fdfa-429a-aec5-329c80222327':
 {
-	desc: '加入連結元件',
+	desc: '加入連結元件 [左中]',
 	page: { 65534: true },
 	type: 1,
 	options:
@@ -878,7 +878,7 @@ AN.temp.push(function()
 
 '1c6e8869-8148-4e58-b440-31e1bee4aef1':
 {
-	desc: '加入資訊元件',
+	desc: '加入資訊元件 [左下]',
 	page: { 65534: true },
 	type: 1,
 	options:

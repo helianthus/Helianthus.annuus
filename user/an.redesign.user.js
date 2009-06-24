@@ -38,7 +38,7 @@ AN.temp.push(function()
 
 	AN.mod['Component Redesigner'] =
 	{
-		ver: '1.0.4',
+		ver: '1.0.5',
 		fn: {
 
 '8be1ac06-030a-42d4-a8f4-f2b7f4881300':
@@ -153,8 +153,6 @@ AN.temp.push(function()
 		var jQR = $('#newmessage');
 
 		jQR
-		.prevAll('br:lt(2)').remove()
-		.end()
 		.css(
 		{
 			position: 'fixed',
@@ -162,46 +160,44 @@ AN.temp.push(function()
 			left: ($.winWidth() - 806) / 2 + 'px',
 			bottom: '-2px'
 		})
-		.fadeTo(0, AN.util.getOptions('nQROpacity') / 10)
-		.find('tr:eq(2)').attr('id', 'an-qr').hide()
-		.end()
-		.find('td:eq(1)')
-		.css('text-align', 'center')
-		.fn(function()
+		.fadeTo(0, AN.util.getOptions('nQROpacity') / 10)		
+		.prevAll('br:lt(2)').remove();
+		
+		var jQRContent = jQR.find('tr:eq(2)').hide();
+		var jQRClickbar = jQR.find('td:eq(1)').css('text-align', 'center');
+		
+		if(AN.util.getOptions('bToggleOnClick'))
 		{
-			if(AN.util.getOptions('bToggleOnClick'))
+			jQRClickbar.html('點擊顯示/隱藏快速回覆').css('cursor', 'pointer').click(function()
 			{
-				this.html('點擊顯示/隱藏快速回覆').css('cursor', 'pointer').click(function()
+				jQRContent.css('display') == 'none' ? jQRContent.show() : jQRContent.hide();
+				$('#previewArea').empty();
+			});
+		}
+		else
+		{
+			jQRClickbar.html('快速回覆');
+			jQR.hover(
+				function()
 				{
-					$('#an-qr').toggle();
+					jQRContent.show();
+				},
+				function()
+				{
+					jQRContent.hide();
 					$('#previewArea').empty();
-				});
-			}
-			else
-			{
-				this.html('快速回覆');
-				jQR.hover(
-					function()
-					{
-						$('#an-qr').show();
-					},
-					function()
-					{
-						$('#an-qr').hide();
-						$('#previewArea').empty();
-					}
-				);
-			}
-		});
+				}
+			);
+		}
 
 		$('#aspnetForm').submit(function()
 		{
-			$('#an-qr').hide();
+			jQRContent.hide();
 		});
 
 		window.OnQuoteSucceeded = function(result)
 		{
-			$('#an-qr').show();
+			jQRContent.show();
 			$('#ctl00_ContentPlaceHolder1_messagetext').val(unescape(result) + '\n')[0].scrollIntoView(false);
 			window.moveEnd();
 		};

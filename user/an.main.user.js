@@ -38,7 +38,7 @@ AN.temp.push(function()
 
 	AN.mod['Main Script'] =
 	{
-		ver: '1.0.8',
+		ver: '1.0.9',
 		fn: {
 
 // 佈局設定 //
@@ -56,12 +56,10 @@ AN.temp.push(function()
 			4: function()
 			{
 				$('#ctl00_ContentPlaceHolder1_lb_UserName').up('table', 1).removeAttr('height');
-				$('#HKGHeaderGoogleAd').up('table', 1).remove();
 			},
 			28: function()
 			{
 				$('#ctl00_ContentPlaceHolder1_lb_UserName').up('tr', 1).find('tr:last').remove();
-				$('#HKGBottomGoogleAd').up('tr').remove();
 			},
 			30: function()
 			{
@@ -71,7 +69,6 @@ AN.temp.push(function()
 			32: function()
 			{
 				$('#ctl00_ContentPlaceHolder1_lb_UserName').up('tr', 1).nextAll().remove();
-				$('#HKGTopGoogleAd,#HKGBottomGoogleAd').up('tr').remove();
 			},
 			62: function()
 			{
@@ -79,8 +76,11 @@ AN.temp.push(function()
 			},
 			64: function()
 			{
-				$('#HKGBottomGoogleAd').up('table', 1).prev().andSelf().remove();
 				$('img[src*=http://pagead]').parent('div').remove(); // chrome
+			},
+			108: function()
+			{
+				$('#HKGHeaderGoogleAd,#HKGBottomGoogleAd').up('tr').remove();
 			},
 			2048: function()
 			{

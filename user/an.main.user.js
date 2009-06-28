@@ -38,7 +38,7 @@ AN.temp.push(function()
 
 	AN.mod['Main Script'] =
 	{
-		ver: '1.0.10',
+		ver: '1.0.11',
 		fn: {
 
 // 佈局設定 //
@@ -399,7 +399,7 @@ AN.temp.push(function()
 'aad1f3ac-e70c-4878-a1ef-678539ca7ee4':
 {
 	desc: '加入前往吹水台的快速連結',
-	page: { 65534: false },
+	page: { 65534: true },
 	type: 5,
 	once: function()
 	{

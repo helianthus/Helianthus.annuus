@@ -26,7 +26,7 @@ setTimeout(function() // Chrome 2 totally ignores this?...forced to remove that 
 {
 
 var window = (typeof unsafeWindow != 'undefined') ? unsafeWindow : (typeof contentWindow != 'undefined') ? contentWindow : this;
-var AN = window.AN;
+var AN = window.AN || (window.AN = { temp: [], mod: {} });
 
 if(AN.initialized) return; // for Chrome which interestingly executes user scripts even when injecting xhr HTML into an element
 
@@ -347,7 +347,7 @@ $.extend(AN,
 			var jStyle = $('#an-style');
 			if(!jStyle.length) jStyle = $('<style id="an-style" type="text/css"></style>').appendTo('head');
 
-			sStyle = sStyle.replace(/(^|}|\*\/)\s+/g, '$1\n');
+			//sStyle = sStyle.replace(/(^|}|\*\/)\s+/g, '$1\n'); // indentation
 			jStyle[0].styleSheet ? jStyle[0].styleSheet.cssText += sStyle : jStyle.append(sStyle);
 		},
 
@@ -760,7 +760,7 @@ $.extend(AN,
 
 AN.mod['Kernel'] =
 {
-	ver: '1.1.5',
+	ver: '1.1.6',
 	fn: {
 
 'Kernel_Initializer':

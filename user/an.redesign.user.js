@@ -38,7 +38,7 @@ AN.temp.push(function()
 
 	AN.mod['Component Redesigner'] =
 	{
-		ver: '1.0.5',
+		ver: '1.0.6',
 		fn: {
 
 '8be1ac06-030a-42d4-a8f4-f2b7f4881300':
@@ -156,6 +156,7 @@ AN.temp.push(function()
 		.css(
 		{
 			position: 'fixed',
+			'z-index': 10,
 			width: '806px',
 			left: ($.winWidth() - 806) / 2 + 'px',
 			bottom: '-2px'

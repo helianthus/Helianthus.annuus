@@ -165,7 +165,7 @@ AN.temp.push(function()
 '02837e6a-3dd7-4c73-a155-90d6f6edd8f9':
 {
 	desc: '拉闊頁面',
-	page: { 65534: true },
+	page: { 65534: false },
 	type: 3,
 	options: { nPageWidth: { desc: '頁面闊度 [可設定為auto, 80%, 1000px等]', defaultValue: 'auto', type: 'text' } },
 	once: function()

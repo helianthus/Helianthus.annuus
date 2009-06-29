@@ -246,20 +246,13 @@ $.fn.extend(
 	{
 		if(this.aTopics) return this.aTopics;
 
-		var jTrs;
-		this.find('td').each(function()
-		{
-			if($(this).html().match(/^\s*最後回應時間$/))
-			{
-				jTrs = $(this).parent().parent().attr('id', 'an-topics').end().nextAll('tr');
-				return false;
-			}
-		});
-		if(!jTrs) return null;
+		if(!this.jTbody) this.jTbody = $('td,th').filter(function(){ return /\s*最後回應時間/.test($(this).html()); }).eq(0);		
+		
+		if(!this.jTbody.length) throw new Error('Error on getting table body!');
 
 		var aTopics = this.aTopics = [];
 
-		$.each(jTrs, function()
+		this.jTbody.children('tr:gt(0)').each(function()
 		{
 			var jThis = $(this), jTopicLinks = jThis.find('a');
 
@@ -760,7 +753,7 @@ $.extend(AN,
 
 AN.mod['Kernel'] =
 {
-	ver: '1.1.6',
+	ver: '1.1.7',
 	fn: {
 
 'Kernel_Initializer':

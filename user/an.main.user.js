@@ -38,7 +38,7 @@ AN.temp.push(function()
 
 	AN.mod['Main Script'] =
 	{
-		ver: '1.0.11',
+		ver: '1.0.12',
 		fn: {
 
 // 佈局設定 //
@@ -49,64 +49,26 @@ AN.temp.push(function()
 	type: 3,
 	once: function()
 	{
-		$('#HKGTopAd').remove();
+		AN.util.addStyle('\
+		.an-ads, \
+		#HKGTopAd, \
+		.Topic_TopRightAdPanel, \
+		.Topic_ForumInfoPanel tr:first-child + tr ~ tr, \
+		#ctl00_ContentPlaceHolder1_MiddleAdSpace1 > a, #ctl00_ContentPlaceHolder1_MiddleAdSpace1 > a + br, \
+		#LeftSide_GoogleAd, /* blog */\
+		td[height="250"], td[width="302"], /* main & newmessages */\
+		img[width="20"][height="25"], /* newmessages & search */\
+		#dummy \
+				{ display: none; } \
+		.Topic_ForumInfoPanel { padding-right: 0; } \
+		.Topic_ForumInfoPanel table td { padding-bottom: 5px; } \
+		');
 
-		$.each(
-		{
-			4: function()
-			{
-				$('#ctl00_ContentPlaceHolder1_lb_UserName').up('table', 1).removeAttr('height');
-			},
-			28: function()
-			{
-				$('#ctl00_ContentPlaceHolder1_lb_UserName').up('tr', 1).find('tr:last').remove();
-			},
-			30: function()
-			{
-				$('#MainPageAd2').up('tr', 1).prev().andSelf().remove();
-				$('#ctl00_ContentPlaceHolder1_MainPageAd1,#MainPageAd1').up('td').prev().andSelf().remove();
-			},
-			32: function()
-			{
-				$('#ctl00_ContentPlaceHolder1_lb_UserName').up('tr', 1).nextAll().remove();
-			},
-			62: function()
-			{
-				$('#ctl00_ContentPlaceHolder1_MiddleAdSpace1').contents(':lt(2)').remove();
-			},
-			64: function()
-			{
-				$('img[src*=http://pagead]').parent('div').remove(); // chrome
-			},
-			108: function()
-			{
-				$('#HKGHeaderGoogleAd,#HKGBottomGoogleAd,#HKGTopGoogleAd').up('tr').remove(); // HKGTopGoogleAd is for chrome(& opera?), view.aspx
-			},
-			2048: function()
-			{
-				$('#LeftSide_GoogleAd').remove();
-			}
-		}, function(sPage)
-		{
-			if(sPage & AN.box.nCurPage) this();
-		});
+		$('#MainPageAd2').up('tr', AN.box.sCurPage != 'view' && 1).prev().andSelf().addClass('an-ads');
 	},
 	infinite: function()
 	{
-		$.each(
-		{
-			60: function()
-			{
-				$('span[id^=MsgInLineAd]').up('tr').remove();
-			},
-			64: function()
-			{
-				$('span').filter('[id^=PMInLineAd],[id^=MsgInLineAd]').up('tr').remove();
-			}
-		}, function(sPage)
-		{
-			if(sPage & AN.box.nCurPage) this();
-		});
+		$('#HKGHeaderGoogleAd,#HKGTopGoogleAd,#HKGBottomGoogleAd').add($('span').filter('[id^=PMInLineAd],[id^=MsgInLineAd]')).up('tr').addClass('an-ads');
 	}
 },
 
@@ -269,7 +231,7 @@ AN.temp.push(function()
 		}
 		else
 		{
-			$('#aspnetForm a').filter(function(){ return /(?:ProfilePage|newmessages|view)\.aspx/.test(this.href); }).attr('target', '_blank');
+			$('#aspnetForm a').filter(function(){ return /(?:ProfilePage|newmessages|view|search)\.aspx/.test(this.href); }).attr('target', '_blank');
 		}
 	}
 },

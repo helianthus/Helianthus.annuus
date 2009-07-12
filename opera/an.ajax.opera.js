@@ -38,7 +38,7 @@ AN.temp.push(function()
 
 	AN.mod['AJAX Integrator'] =
 	{
-		ver: '3.2.0',
+		ver: '3.2.1',
 		author: '向日',
 		fn: {
 
@@ -114,6 +114,12 @@ AN.temp.push(function()
 				else
 				{
 					nTargetPageNo = jThis.val() * 1;
+
+					// this is to workaround a Google Chrome problem
+					var jTemp = $('<span></span>');
+					jThis.replaceWith(jTemp);
+					jTemp.replaceWith(jThis);
+
 					jThis.val(jThis.data('an-pageNo'));
 				}
 			}

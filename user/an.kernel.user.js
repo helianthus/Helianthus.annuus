@@ -43,6 +43,7 @@ if(window.opera && arguments.length == 0)
 }
 
 if(AN.initialized) return; // for Chrome which interestingly executes user scripts even when injecting xhr HTML into an element
+AN.initialized = true;
 
 var JSON = window.JSON;
 var $ = AN.jQuery;
@@ -675,7 +676,7 @@ $.extend(AN,
 						if(oFn.page[this] != 'disabled' && this in oFn.page && AN.box.nCurPage & this)
 						{
 							var aHandler = [];
-							if(!AN.initialized && oFn.once) aHandler.push(oFn.once);
+							if(!AN.firstRan && oFn.once) aHandler.push(oFn.once);
 							if(oFn.infinite) aHandler.push(oFn.infinite);
 
 							if(aHandler.length)
@@ -750,7 +751,7 @@ $.extend(AN,
 					AN.box.aBenchmark.push({ type: 'end', name: '延期執行項目' });
 				}
 
-				AN.initialized = true;
+				AN.firstRan = true;
 				AN.shared('log2', '所有功能執行完成');
 
 				AN.box.aBenchmark.push({ type: 'final', time: $.time(nBegin) });
@@ -764,7 +765,7 @@ $.extend(AN,
 
 AN.mod['Kernel'] =
 {
-	ver: '3.3.0',
+	ver: '3.3.1',
 	author: '向日',
 	fn: {
 

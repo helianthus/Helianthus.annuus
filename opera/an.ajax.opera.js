@@ -117,8 +117,8 @@ AN.temp.push(function()
 
 					// this is to workaround a Google Chrome problem
 					var jTemp = $('<span></span>');
-					jThis.replaceWith(jTemp);
-					jTemp.replaceWith(jThis);
+					jThis.after(jTemp).insertAfter(jTemp);
+					jTemp.remove();
 
 					jThis.val(jThis.data('an-pageNo'));
 				}

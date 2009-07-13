@@ -38,7 +38,7 @@ AN.temp.push(function()
 
 	AN.mod['AJAX Integrator'] =
 	{
-		ver: '3.2.1',
+		ver: '3.2.2',
 		author: '向日',
 		fn: {
 
@@ -174,7 +174,7 @@ AN.temp.push(function()
 
 			if(oPages[nCurPageNo].jPageBoxes.eq(0).find('option:selected').next().length)
 			{
-				if(bGetNext && AN.util.getOptions('bAppendReplies')) getPage(null);
+				if(AN.util.getOptions('bAppendReplies') && bGetNext && !oPages[nCurPageNo + 1]) getPage(null);
 				return;
 			}
 
@@ -243,9 +243,11 @@ AN.temp.push(function()
 
 		var toggleTimer = function(bToSet, bDeferCheck)
 		{
+			if(!AN.util.getOptions('bCheckOnBottom') || oPages[nCurPageNo + 1]) return;
+
 			if(bToSet)
 			{
-				if(AN.util.getOptions('bCheckOnBottom')) tCheck = setTimeout(checkBottom, bDeferCheck ? nInterval : 500);
+				 tCheck = setTimeout(checkBottom, bDeferCheck ? nInterval : 500);
 			}
 			else
 			{

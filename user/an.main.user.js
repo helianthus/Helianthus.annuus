@@ -38,7 +38,7 @@ AN.temp.push(function()
 
 	AN.mod['Main Script'] =
 	{
-		ver: '3.5.0',
+		ver: '3.6.0',
 		author: '向日',
 		fn: {
 
@@ -133,6 +133,23 @@ AN.temp.push(function()
 				this.href = this.href.replace(/\?/, '?' + sType[0] + '&');
 			});
 		}
+	}
+},
+
+'c2d9eedb-bb6c-4cb4-be11-ea2ec9612f63':
+{
+	desc: '修正底部失效的論壇功能',
+	page: { 28: true },
+	type: 4,
+	once: function()
+	{
+		$('#filter select').change(function(event)
+		{
+			event.preventDefault();
+
+			var jParent = $(this).parent();
+			location.assign($.sprintf('/topics.aspx?type=%s&md=%s&page=%s', jParent.find('[name=type]').val(), jParent.find('[name=md]').val(), jParent.find('[name=page]').val()));
+		});
 	}
 },
 
@@ -434,7 +451,7 @@ AN.temp.push(function()
 	infinite: function(jDoc)
 	{
 		var nCurPageNo = jDoc.pageNo();
-		var nFloor = ((nCurPageNo == 1) ? 0 : 50 * (nCurPageNo - 1) + 1) + jDoc.find('.an-content-floor').length;
+		var nFloor = ((nCurPageNo == 1) ? 0 : 50 * (nCurPageNo - 1) + 1) + jDoc.pageScope().find('.an-content-floor').length;
 
 		jDoc.replies().each(function()
 		{

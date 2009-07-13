@@ -231,10 +231,15 @@ $.fn.extend(
 
 	//--------[AN Related]--------//
 
-	pageNo: function()
+	pageScope: function()
 	{
 		var jScope = this.closest('div');
-		return (jScope.length ? jScope : this).find('select[name=page]:first').val() * 1;
+		return jScope.length ? jScope : this;
+	},
+
+	pageNo: function()
+	{
+		return this.pageScope().find('select[name=page]:first').val() * 1;
 	},
 
 	replies: function(sSelector)
@@ -765,7 +770,7 @@ $.extend(AN,
 
 AN.mod['Kernel'] =
 {
-	ver: '3.3.1',
+	ver: '3.3.2',
 	author: '向日',
 	fn: {
 

@@ -89,6 +89,21 @@ $.extend(
 		return $(eDiv);
 	},
 
+	getDOM: function(sURL, success)
+	{
+		$.ajax(
+		{
+			url: sURL,
+			dataType: 'text',
+			success: success,
+			error: function()
+			{
+				AN.shared('log', '無法讀取頁面, 現進行重新讀取');
+				success();
+			}
+		});
+	},
+
 	getLength: function(uTarget)
 	{
 		if('length' in uTarget) return uTarget.length;
@@ -770,7 +785,7 @@ $.extend(AN,
 
 AN.mod['Kernel'] =
 {
-	ver: '3.3.2',
+	ver: '3.3.3',
 	author: '向日',
 	fn: {
 
@@ -890,7 +905,7 @@ AN.mod['Kernel'] =
 	options:
 	{
 		bAlsoCheckBeta: { desc: '同時檢查Beta版本', defaultValue: true, type: 'checkbox' },
-		nCheckUpdateInterval: { desc: '檢查更新間隔(小時)', defaultValue: 24, type: 'text' }
+		nCheckUpdateInterval: { desc: '檢查更新間隔(小時)', defaultValue: 1, type: 'text' }
 	},
 	once: function()
 	{

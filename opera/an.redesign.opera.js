@@ -38,7 +38,7 @@ AN.temp.push(function()
 
 	AN.mod['Component Redesigner'] =
 	{
-		ver: '3.2.0',
+		ver: '3.2.1',
 		author: '向日',
 		fn: {
 
@@ -167,31 +167,47 @@ AN.temp.push(function()
 
 		AN.util.addStyle($.sprintf('\
 		#newmessage { %s; z-index: 3; position: fixed; width: 806px; bottom: -2px; right: %spx; } \
-		#newmessage.an-qr-alt { right: %spx; } \
 		#an-qr-header { cursor: pointer; text-align: center; } \
 		',
-		AN.util.getOpacityStr(AN.util.getOptions('nQROpacity')), nCenterPx, nRightPx
+		AN.util.getOpacityStr(AN.util.getOptions('nQROpacity')), nCenterPx
 		));
 
 		var jQR = $('#newmessage');
 		var jQRContent = jQR.find('tr:eq(2)').hide();
 		var jQRHeader = jQR.find('td:eq(1)').attr('id', 'an-qr-header').html('快速回覆');
-		var jPreviewArea = $('#previewArea');
 
-		var toggleQR = function(fCallback)
+		var isNotNeeded = function(bToShow)
 		{
-			jQRContent.toggle(jQRContent.css('display') == 'none');
-			jPreviewArea.empty();
-			if($.isFunction(fCallback)) fCallback();
+			return typeof bToShow == 'boolean' && bToShow == (jQRContent.css('display') != 'none');
+		};
+
+		var isToShow = function(bToShow)
+		{
+			return typeof bToShow == 'boolean' ? bToShow : jQRContent.css('display') == 'none';
+		};
+
+		var toggleQR = function(bToShow, fCallback)
+		{
+			if(isNotNeeded(bToShow)) return;
+
+			jQRContent.toggle(isToShow(bToShow));
+			$('#previewArea').empty();
+			if(fCallback) fCallback();
 		};
 
 		if(AN.util.getOptions('bAlternativeHide'))
 		{
-			jQR.addClass('an-qr-alt');
-			jQRHeader.click(function()
+			jQR.css('right', nRightPx);
+			toggleQR = (function(toggleDisplay)
 			{
-				jQRContent.css('display') == 'none' ? jQR.animate({ right: nCenterPx }, 'slow', toggleQR) : toggleQR(jQR.animate({ right: nRightPx }, 'slow'));
-			});
+				return function(bToShow)
+				{
+					if(isNotNeeded(bToShow)) return;
+
+					isToShow(bToShow) ? jQR.animate({ right: nCenterPx }, 'slow', toggleDisplay) : toggleDisplay(false, jQR.animate({ right: nRightPx }, 'slow'));
+				}
+			})(toggleQR);
+			jQRHeader.click(toggleQR);
 		}
 		else
 		{
@@ -200,13 +216,13 @@ AN.temp.push(function()
 
 		$('#aspnetForm').submit(function()
 		{
-			jQRContent.hide();
+			toggleQR(false);
 		});
 
 		window.OnQuoteSucceeded = function(result)
 		{
-			jQRContent.show();
-			$('#ctl00_ContentPlaceHolder1_messagetext').val(unescape(result) + '\n')[0].scrollIntoView(false);
+			toggleQR(true);
+			$('#ctl00_ContentPlaceHolder1_messagetext').val(unescape(result) + '\n').scrollTop(99999);
 			window.moveEnd();
 		};
 	}

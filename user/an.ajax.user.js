@@ -38,7 +38,7 @@ AN.temp.push(function()
 
 	AN.mod['AJAX Integrator'] =
 	{
-		ver: '3.2.2',
+		ver: '3.3.0',
 		author: '向日',
 		fn: {
 
@@ -135,7 +135,7 @@ AN.temp.push(function()
 			else
 			{
 				AN.shared('log2', $.sprintf('正在讀取第%s頁...', nTargetPageNo));
-				$.get(AN.util.getURL(nTargetPageNo), function(sHTML)
+				$.getDOM(AN.util.getURL(nTargetPageNo), function(sHTML)
 				{
 					var jNewDiv = $.doc(sHTML).find('.repliers:first').up('div');
 					//if(!jNewDiv.length) return AN.shared('log', '下一頁找不到回覆, 可能是本帖部份回覆被刪所致');
@@ -185,7 +185,7 @@ AN.temp.push(function()
 			}
 
 			AN.shared('log', '正在讀取最新回覆...');
-			$.get(AN.util.getURL(nCurPageNo), function(sHTML)
+			$.getDOM(AN.util.getURL(nCurPageNo), function(sHTML)
 			{
 				var jNewDoc = $.doc(sHTML);
 				var jNewReplies = jNewDoc.find('.repliers').up('table');
@@ -212,7 +212,7 @@ AN.temp.push(function()
 
 					if(oPages[nCurPageNo].jPageBoxes.eq(0).find('option').length != jNewDoc.find('select[name=page]:first').children().length) // has nextpage
 					{
-						oPages[nCurPageNo].jPageBoxes.replaceWith(jNewDoc.find('select[name=page]').up('table'));
+						oPages[nCurPageNo].jPageBoxes.replaceWith(jNewDoc.find('select[name=page]:first').up('table'));
 						handlePage(oPages[nCurPageNo].jDiv);
 						AN.shared('log', '發現下一頁, 連結建立');
 						AN.modFn.execMods(oPages[nCurPageNo].jPageBoxes.add(jNewReplies));
@@ -247,11 +247,21 @@ AN.temp.push(function()
 
 			if(bToSet)
 			{
-				 tCheck = setTimeout(checkBottom, bDeferCheck ? nInterval : 500);
+				if(!bDeferCheck) return checkBottom();
+
+				var nRemain = nInterval;
+				(function()
+				{
+					if(nRemain < 0) return checkBottom();
+
+					$('#an-info-ajaxtimer').html(nRemain-- + '秒');
+					tCheck = setTimeout(arguments.callee, 1000);
+				})();
 			}
 			else
 			{
 				clearTimeout(tCheck);
+				$('#an-info-ajaxtimer').html('N/A');
 			}
 		};
 
@@ -261,11 +271,15 @@ AN.temp.push(function()
 
 		var nInterval = AN.util.getOptions('nCheckInterval');
 		if(nInterval < 30) nInterval = 30;
-		nInterval *= 1000;
 
 		handlePage();
 		$('#newmessage').insertAfter(oPages[nCurPageNo].jDiv);
-		toggleTimer(true, false);
+
+		if(AN.util.getOptions('bCheckOnBottom'))
+		{
+			AN.shared('addInfo', '距離更新: <span id="an-info-ajaxtimer">N/A</span>');
+			toggleTimer(true, false);
+		}
 
 		if(AN.util.getOptions('bAddCheckBtn')) jDoc.defer(2, '加入讀取按扭', function(){ AN.shared('addButton', '更新帖子', function(){ getReplies(true); }); });
 		if(AN.util.getOptions('bShowPageNo')) AN.shared('addInfo', $.sprintf('本頁頁數: <a id="an-info-curpage" href="%s">第%s頁</a>', location.href, nCurPageNo));
@@ -310,7 +324,7 @@ AN.temp.push(function()
 
 			if(!bRetry) AN.shared('log', '正在讀取最新列表...');
 			var nStart = $.time();
-			$.get(AN.util.getURL(), function(sHTML)
+			$.getDOM(AN.util.getURL(), function(sHTML)
 			{
 				var jNewTopics = $.doc(sHTML).topics();
 				if(jNewTopics && jNewTopics.length)

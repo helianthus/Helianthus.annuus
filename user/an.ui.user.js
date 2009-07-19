@@ -43,7 +43,7 @@ AN.temp.push(function()
 
 	AN.mod['User Interface'] =
 	{
-		ver: '3.2.0',
+		ver: '3.2.1',
 		author: '向日',
 		fn: {
 
@@ -59,18 +59,18 @@ AN.temp.push(function()
 	},
 	once: function()
 	{
-		AN.util.addStyle($.sprintf(' \
+		AN.util.stackStyle($.sprintf(' \
 		.an-box { display: none; position: fixed; left: 50%; top: 50%; z-index: 10; border-width: 1px; } \
 		.an-box-header { line-height: 1.8em; margin: 0; padding: 0 0 0 0.2em; } \
 		.an-box-content { overflow: auto; position: relative; } \
 		\
 		.an-menu { font-size: %(sMenuFontSize)spx; } \
+		.an-menu a { display: block; } \
 		.an-menu a:hover { color: %(sUIHoverColor)s; } \
 		\
 		.an-small { font-size: %(sSmallFontSize)spx; } \
 		\
 		#an-ui ul { margin: 0; padding: 0; list-style: none; } \
-		#an-ui li a { display: block; } \
 		#an-ui a:focus { outline: 0; } \
 		\
 		.an-mod { position: fixed; color: %(sUIFontColor)s; } \
@@ -236,7 +236,7 @@ AN.temp.push(function()
 
 				AN.util.addStyle(' \
 				#an-settings-tabs { float: left; height: 100%; border-right-width: 1px; } \
-				#an-settings-tabs a { line-height: 2em; text-align: center; border-bottom-width: 1px; padding: 0 0.5em; } \
+				#an-settings-tabs a { display: block; line-height: 2em; text-align: center; border-bottom-width: 1px; padding: 0 0.5em; } \
 				#an-settings-tabs-extend li:first-child { margin-top: 2em; border-top-width: 1px; } \
 				\
 				#an-settings-main { position: relative; overflow: hidden; height: 100%; } \
@@ -1019,7 +1019,7 @@ AN.temp.push(function()
 	options: { nUIOpacity: { desc: '透明度 (10 = 移除半透明)', type: 'select', defaultValue: 3, choices: [10,9,8,7,6,5,4,3,2,1,0] } },
 	once: function()
 	{
-		AN.util.addStyle($.sprintf('\
+		AN.util.stackStyle($.sprintf('\
 		.an-mod { opacity: %s; -ms-filter: alpha(opacity=%s); } \
 		.an-mod:hover { opacity: 1; -ms-filter: alpha(opacity=100); } \
 		',

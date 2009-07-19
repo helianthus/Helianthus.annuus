@@ -38,19 +38,19 @@ AN.temp.push(function()
 
 	AN.mod['Main Script'] =
 	{
-		ver: '3.6.0',
+		ver: '3.6.1',
 		author: '向日',
 		fn: {
 
 // 佈局設定 //
 '63d2407a-d8db-44cb-8666-64e5b76378a2':
 {
-	desc: '移除廣告',
+	desc: '隱藏廣告',
 	page: { 65534: true },
 	type: 3,
 	once: function()
 	{
-		AN.util.addStyle('\
+		AN.util.stackStyle('\
 		.an-ads, \
 		#HKGTopAd, \
 		.Topic_TopRightAdPanel, \
@@ -68,11 +68,11 @@ AN.temp.push(function()
 		.Topic_ForumInfoPanel table td { padding-bottom: 5px; } \
 		');
 
-		$('#MainPageAd2').up('tr', AN.box.nCurPage & ~36 && 2 || 1).prev().andSelf().addClass('an-ads');
+		$('#MainPageAd2').up('tr', $().pageCode() & ~36 && 2 || 1).prev().andSelf().addClass('an-ads');
 	},
 	infinite: function()
 	{
-		$('#HKGHeaderGoogleAd,#HKGTopGoogleAd,#HKGBottomGoogleAd').add($('span').filter('[id^=PMInLineAd],[id^=MsgInLineAd]')).up('tr').remove();//.addClass('an-ads');
+		$('span').filter(function(){ return /GoogleAd|InLineAd/.test(this.id); }).up('tr').addClass('an-ads');
 	}
 },
 
@@ -117,38 +117,20 @@ AN.temp.push(function()
 	}
 },
 
-'30673b05-557d-4343-a873-bf88c2247525':
-{
-	desc: '修正頁數跳轉連結地址',
-	page: { 4: true },
-	type: 4,
-	once: function()
-	{
-		var sType = location.search.match(/type=[^&]+/i);
-		if(sType)
-		{
-			$('#filter').attr('action', '/topics.aspx?' + sType[0])
-			.up('tr').find('a').each(function()
-			{
-				this.href = this.href.replace(/\?/, '?' + sType[0] + '&');
-			});
-		}
-	}
-},
-
 'c2d9eedb-bb6c-4cb4-be11-ea2ec9612f63':
 {
-	desc: '修正底部失效的論壇功能',
+	desc: '修正底部的論壇功能',
 	page: { 28: true },
 	type: 4,
 	once: function()
 	{
-		$('#filter select').change(function(event)
+		$('select').filter(function(){ return /^(?:page|md|mt)$/.test(this.name); }).change(function(event)
 		{
-			event.preventDefault();
+			event.stopImmediatePropagation();
 
-			var jParent = $(this).parent();
-			location.assign($.sprintf('/topics.aspx?type=%s&md=%s&page=%s', jParent.find('[name=type]').val(), jParent.find('[name=md]').val(), jParent.find('[name=page]').val()));
+			var oParam = {};
+			oParam[this.name] = $(this).val();
+			location.assign(AN.util.getURL(oParam));
 		});
 	}
 },
@@ -160,7 +142,7 @@ AN.temp.push(function()
 	type: 4,
 	once: function()
 	{
-		AN.util.addStyle('blockquote { opacity: 1 !important; }');
+		AN.util.stackStyle('blockquote { opacity: 1 !important; }');
 	}
 },
 
@@ -196,7 +178,7 @@ AN.temp.push(function()
 	{
 		window.DrawImage = $.blank;
 
-		AN.util.addStyle('img[onLoad] { width: auto; height: auto; max-width: 100% }');
+		AN.util.stackStyle('img[onLoad] { width: auto; height: auto; max-width: 100% }');
 	}
 },
 
@@ -426,7 +408,7 @@ AN.temp.push(function()
 	type: 5,
 	once: function()
 	{
-		//if(AN.box.sCurPage == 'topics') return;
+		//if($().pageName() == 'topics') return;
 		AN.shared('addLink', '吹水台', '/topics.aspx?type=BW', 1);
 	}
 },
@@ -581,7 +563,7 @@ AN.temp.push(function()
 	options: { nQuoteImgMaxHeight: { desc: '圖片最大高度(px)', defaultValue: 100, type: 'text' } },
 	once: function()
 	{
-		AN.util.addStyle($.sprintf('.repliers_right blockquote img { max-height: %spx; }', AN.util.getOptions('nQuoteImgMaxHeight')));
+		AN.util.stackStyle($.sprintf('.repliers_right blockquote img { max-height: %spx; }', AN.util.getOptions('nQuoteImgMaxHeight')));
 	}
 },
 
@@ -867,7 +849,7 @@ AN.temp.push(function()
 	{
 		var nWidth = jDoc.replies().jContents.eq(0).width();
 
-		AN.util.addStyle($.sprintf('\
+		AN.util.stackStyle($.sprintf('\
 		.repliers_right { overflow-x: visible; } \
 		.an-replywrapper { overflow-y: auto; position: relative; z-index: 2; max-height: %spx; width: %spx; } \
 		.an-replywrapper > div { padding-right: 1px; width: %spx; } \
@@ -929,6 +911,7 @@ AN.temp.push(function()
 
 			if(++down == 3)
 			{
+				window.opener = window;
 				window.open('', '_parent');
 				window.close();
 			}

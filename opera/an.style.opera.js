@@ -38,7 +38,7 @@ AN.temp.push(function()
 
 	AN.mod['Style Editor'] =
 	{
-		ver: '3.1.0',
+		ver: '3.1.1',
 		author: '向日',
 		fn: {
 
@@ -50,7 +50,7 @@ AN.temp.push(function()
 	options: { sMainFontFamily: { desc: '字體名稱', defaultValue: 'SimSun', type: 'text' } },
 	once: function()
 	{
-		AN.util.addStyle($.sprintf('body * { font-family: %s !important; }', AN.util.getOptions('sMainFontFamily')));
+		AN.util.stackStyle($.sprintf('body * { font-family: %s !important; }', AN.util.getOptions('sMainFontFamily')));
 	}
 },
 
@@ -70,7 +70,7 @@ AN.temp.push(function()
 	{
 		var sTextCSS = AN.util.getOptions('bRemoveLinkUnderline') ? 'text-decoration: none; } .repliers_right a { text-decoration: underline; }' : '}';
 
-		AN.util.addStyle($.sprintf('\
+		AN.util.stackStyle($.sprintf('\
 		body > form a { color: %(sMainLinkFontColor)s; ' + sTextCSS + ' \
 		body > form a[href*="view.aspx"]:visited { color: %(sMainVisitedColor)s; } \
 		body > form a[href]:hover { color: %(sMainHoverColor)s; } \
@@ -117,7 +117,7 @@ AN.temp.push(function()
 	},
 	once: function()
 	{
-		AN.util.addStyle($.sprintf(' \
+		AN.util.stackStyle($.sprintf(' \
 		/* Global stuff */\
 		body { background-color: %(sMainBgColor)s; } \
 		p, td { color: %(sMainFontColor)s; } \
@@ -203,7 +203,7 @@ AN.temp.push(function()
 		if(sHref) $('head').append($.sprintf('<link type="text/css" rel="stylesheet" href="%s" />', sHref));
 
 		var sContent = AN.util.getOptions('sCustomCSSContent');
-		if(sContent) AN.util.addStyle(sContent);
+		if(sContent) AN.util.stackStyle(sContent);
 	}
 }
 

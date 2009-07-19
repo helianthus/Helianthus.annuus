@@ -38,7 +38,7 @@ AN.temp.push(function()
 
 	AN.mod['Layout Designer'] =
 	{
-		ver: '3.3.0',
+		ver: '3.3.1',
 		author: '向日',
 		fn: {
 
@@ -49,7 +49,7 @@ AN.temp.push(function()
 	type: 3,
 	once: function()
 	{
-		AN.util.addStyle('.TopMenuBox { visibility: hidden; }');
+		AN.util.stackStyle('.TopMenuBox { visibility: hidden; }');
 	}
 },
 
@@ -60,7 +60,7 @@ AN.temp.push(function()
 	type: 3,
 	once: function()
 	{
-		AN.util.addStyle('.TopBannerBox { display: none; }');
+		AN.util.stackStyle('.TopBannerBox { display: none; }');
 	}
 },
 
@@ -71,7 +71,7 @@ AN.temp.push(function()
 	type: 3,
 	once: function()
 	{
-		AN.util.addStyle('\
+		AN.util.stackStyle('\
 		.PageMiddleFunctions { height: 5px; } \
 		.PageMiddleFunctions > div { display: none; } \
 		');
@@ -92,7 +92,7 @@ AN.temp.push(function()
 	},
 	once: function()
 	{
-		if(AN.util.getOptions('bRemoveColumn') && AN.box.sCurPage != 'login')
+		if(AN.util.getOptions('bRemoveColumn') && $().pageName() != 'login')
 		{
 			AN.util.addStyle('\
 			.PageMiddleFunctions, .ContentPanel { padding: 0; } \
@@ -119,7 +119,7 @@ AN.temp.push(function()
 				}
 			});
 
-			AN.util.addStyle(aEle.join(',') + '{ display: none; }');
+			AN.util.stackStyle(aEle.join(',') + '{ display: none; }');
 		}
 	}
 },
@@ -131,7 +131,7 @@ AN.temp.push(function()
 	type: 3,
 	once: function()
 	{
-		AN.util.addStyle('.FooterPanel { display: none; }');
+		AN.util.stackStyle('.FooterPanel { display: none; }');
 	}
 },
 
@@ -142,7 +142,7 @@ AN.temp.push(function()
 	type: 3,
 	once: function()
 	{
-		AN.util.addStyle('.FooterPanel + div, .FooterPanel + div + div { display: none; }');
+		AN.util.stackStyle('.FooterPanel + div, .FooterPanel + div + div { display: none; }');
 	}
 },
 
@@ -153,7 +153,7 @@ AN.temp.push(function()
 	type: 3,
 	once: function()
 	{
-		AN.util.addStyle('#hkg_bottombar { display: none; }');
+		AN.util.stackStyle('#hkg_bottombar { display: none; }');
 	}
 },
 
@@ -164,18 +164,18 @@ AN.temp.push(function()
 	type: 3,
 	once: function()
 	{
-		AN.util.addStyle('#hkg_bottombar { width: auto; }');
+		AN.util.stackStyle('#hkg_bottombar { width: auto; }');
 	}
 },
 
 '098b7645-5a00-485e-ae62-f38b9bbf6181':
 {
-	desc: 'Bookmark Bar圓角 [Webkit browser only]',
+	desc: 'Bookmark Bar圓角 [Webkit browsers only]',
 	page: { 65534: $.browser.safari || 'diabled' },
 	type: 3,
 	once: function()
 	{
-		AN.util.addStyle('.hkg_bottombar { -webkit-border-top-left-radius: 5px; -webkit-border-top-right-radius: 5px; }');
+		AN.util.stackStyle('.hkg_bottombar { -webkit-border-top-left-radius: 5px; -webkit-border-top-right-radius: 5px; }');
 	}
 },
 
@@ -204,9 +204,9 @@ AN.temp.push(function()
 	type: 3,
 	once: function()
 	{
-		AN.util.addStyle('.Topic_ForumInfoPanel { display: none; }');
+		AN.util.stackStyle('.Topic_ForumInfoPanel { display: none; }');
 
-		if(AN.box.sCurPage != 'topics')
+		if($().pageName() != 'topics')
 		{
 			$('#ctl00_ContentPlaceHolder1_lb_UserName').up('table', 3).hide();
 		}
@@ -220,12 +220,12 @@ AN.temp.push(function()
 	type: 3,
 	once: function()
 	{
-		AN.util.addStyle('\
+		AN.util.stackStyle('\
 		.Topic_FunctionPanel { margin-top: 3px; } \
 		.Topic_FunctionPanel > div:last-child { margin-top: 0 !important; } \
 		');
 
-		/*if(AN.box.sCurPage != 'topics')
+		/*if($().pageName() != 'topics')
 		{
 			$('#searchstring').up('tr', 2).prev().hide().up('table').css('border-collapse', 'collapse');
 			$('#ctl00_ContentPlaceHolder1_MiddleAdSpace1').find('tr:first').hide();
@@ -240,9 +240,9 @@ AN.temp.push(function()
 	type: 3,
 	once: function()
 	{
-		AN.util.addStyle('#forum_list, #forum_list + br { display: none; }');
+		AN.util.stackStyle('#forum_list, #forum_list + br { display: none; }');
 
-		if(AN.box.sCurPage != 'topics')
+		if($().pageName() != 'topics')
 		{
 			$('#forum_list').up('table').hide();
 		}
@@ -289,7 +289,7 @@ AN.temp.push(function()
 	type: 3,
 	once: function()
 	{
-		AN.util.addStyle('#ctl00_ContentPlaceHolder1_HotPeoples, #ctl00_ContentPlaceHolder1_HotPeoples + br { display: none; }');
+		AN.util.stackStyle('#ctl00_ContentPlaceHolder1_HotPeoples, #ctl00_ContentPlaceHolder1_HotPeoples + br { display: none; }');
 	}
 },
 
@@ -300,7 +300,7 @@ AN.temp.push(function()
 	type: 3,
 	once: function()
 	{
-		AN.util.addStyle('img[alt="Logo"] { display: none; }');
+		AN.util.stackStyle('img[alt="Logo"] { display: none; }');
 	}
 },
 
@@ -311,7 +311,7 @@ AN.temp.push(function()
 	type: 3,
 	once: function()
 	{
-		AN.util.addStyle('img[src^="labels/"] { display: none; }');
+		AN.util.stackStyle('img[src^="labels/"] { display: none; }');
 	}
 },
 
@@ -322,7 +322,7 @@ AN.temp.push(function()
 	type: 3,
 	once: function()
 	{
-		AN.util.addStyle('.repliers_right blockquote { display: none; }');
+		AN.util.stackStyle('.repliers_right blockquote { display: none; }');
 	}
 },
 
@@ -341,7 +341,7 @@ AN.temp.push(function()
 			sSelector += ',a[href*="QuoteReply("],#ct100_ContentPlaceHolder1_QuickReplyLoginTable';
 		}
 
-		AN.util.addStyle(sSelector + '{ display: none; }');
+		AN.util.stackStyle(sSelector + '{ display: none; }');
 	}
 },
 
@@ -378,7 +378,18 @@ AN.temp.push(function()
 	type: 3,
 	once: function()
 	{
-		AN.util.addStyle('#ctl00_ContentPlaceHolder1_HotPeoples, #ctl00_ContentPlaceHolder1_HotPeoples + br { display: none; }')
+		AN.util.stackStyle('#ctl00_ContentPlaceHolder1_HotPeoples, #ctl00_ContentPlaceHolder1_HotPeoples + br { display: none; }')
+	}
+},
+
+'222f0c01-1ebd-49d6-b7f4-b1b7fc60ca40':
+{
+	desc: '隱藏起底列表',
+	page: { 64: false },
+	type: 3,
+	once: function()
+	{
+		AN.util.stackStyle('#ctl00_ContentPlaceHolder1_siteUpdateProgress + table { display: none; }')
 	}
 }
 

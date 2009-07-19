@@ -83,23 +83,27 @@ $.extend(
 
 	doc: function(sHTML)
 	{
-		//return $(sHTML); // cant's use this because FF3 got a script stacking quota thing
 		var eDiv = document.createElement('div');
 		eDiv.innerHTML = sHTML;
 		return $(eDiv);
 	},
 
-	getDOM: function(sURL, success)
+	getDoc: function(sURL, success)
 	{
 		$.ajax(
 		{
 			url: sURL,
 			dataType: 'text',
-			success: success,
+			timeout: 10000,
+			success: function(sHTML)
+			{
+				var jNewDoc = $.doc(sHTML);
+				jNewDoc.pageCode() & 32769 ? this.error() : success(jNewDoc);
+			},
 			error: function()
 			{
-				AN.shared('log', '無法讀取頁面, 現進行重新讀取');
-				success();
+				AN.shared('log', '頁面讀取失敗, 5秒後重新讀取...');
+				setTimeout(function(){ $.getDoc(sURL, success); }, 5000);
 			}
 		});
 	},
@@ -244,7 +248,41 @@ $.fn.extend(
 		});
 	},
 
+	contains: function(jNode)
+	{
+		return this[0].contains ? this[0].contains(jNode[0]) : !!(this[0].compareDocumentPosition(jNode[0]) & 16);
+	},
+
 	//--------[AN Related]--------//
+
+	pageName: function()
+	{
+		if(this.sPageName) return this.sPageName;
+
+		return (this.sPageName = $('#ctl00_ContentPlaceHolder1_SystemMessageBoard', this).length ?
+			'message' :
+			$('#aspnetForm', this).length ? $('#aspnetForm', this).attr('action').match(/[^.]+/)[0].toLowerCase() : 'error');
+	},
+
+	pageCode: function()
+	{
+		if(this.nPageCode) return this.nPageCode;
+
+		var sPageName = this.pageName();
+		var nPageCode;
+
+		$.each(AN.box.oPageMap, function(sPage)
+		{
+			if(this.action == sPageName)
+			{
+				nPageCode = sPage * 1;
+				return false;
+			}
+		});
+		if(!nPageCode) $().pageCode() = 32768;
+
+		return (this.nPageCode = nPageCode);
+	},
 
 	pageScope: function()
 	{
@@ -286,24 +324,42 @@ $.fn.extend(
 		return sSelector ? jReplies.filter(sSelector) : jReplies;
 	},
 
+	treeTop: function()
+	{
+		return (this[0] === document || $(document.documentElement).contains(this)) ? $() : this;
+	},
+
+	topicTable: function()
+	{
+		if(this.jTopicTable) return this.jTopicTable;
+
+		var jThis = this;
+		this.treeTop().find('td,th').filter(function(){ return $(this).children().length === 0; }).each(function()
+		{
+			if(/\s*最後回應時間/.test($(this).html()))
+			{
+				jThis.jTopicTable = $(this).up('table');
+				return false;
+			}
+		});
+
+		return this.jTopicTable;
+	},
+
 	topics: function(sSelector)
 	{
 		if(this.jTopics) return this.jTopics;
 
-		var jTbody = $('td,th', this).filter(function(){ return /\s*最後回應時間/.test($(this).html()); }).eq(0).up('tbody');
+		var jTopics = this.jTopics = this.topicTable().find('tr').filter(function(){ return !!$(this).children().children('a').length; });
 
-		if(!jTbody.length) throw new Error('Error on getting table body!');
-
-		var jTopics = this.jTopics = jTbody.children('tr:gt(0)').filter(function(){ return $(this).children().length > 1; });
-
-		jTopics.extend(
+		jTopics
+		.extend(
 		{
 			jNameLinks: $([]),
 			jTitleCells: $([]),
-			jTbody: jTbody
-		});
-
-		jTopics.each(function()
+			jTbody: this.topicTable().children()
+		})
+		.each(function()
 		{
 			var jThis = $(this), jLinks = jThis.find('a');
 
@@ -383,6 +439,21 @@ $.extend(AN,
 		addFnType: function(uType, sDec)
 		{
 			AN.box.oTypeMap[uType] = sDec;
+		},
+
+		stackStyle: function(sStyle)
+		{
+			if(AN.util.stackStyle.sStyle === undefined)
+			{
+				AN.util.stackStyle.sStyle = '';
+				$().bind('an.defer5', function()
+				{
+					AN.util.addStyle(AN.util.stackStyle.sStyle);
+					AN.util.stackStyle.sStyle = '';
+				});
+			}
+
+			AN.util.stackStyle.sStyle += sStyle;
 		},
 
 		addStyle: function(sStyle)
@@ -589,7 +660,7 @@ $.extend(AN,
 				{
 					$.each(this, function(sPage, uValue)
 					{
-						if(AN.box.nCurPage & sPage)
+						if($().pageCode() & sPage)
 						{
 							oOptions[sName] = uValue;
 							return false;
@@ -612,17 +683,19 @@ $.extend(AN,
 			return isNaN(sExtract) ? 1 : sExtract * 1;
 		},
 
-		getURL: function(nPageNo)
+		getURL: function(oParam)
 		{
-			var sURL = location.search.replace(/&page=\d+/, '');
-			if(nPageNo > 1)
+			var oSearch = {};
+			var aParam = location.search.replace(/^\?/, '').split('&');
+			$.each(aParam, function()
 			{
-				var aSearch = sURL.split('&');
-				aSearch.splice(1, 0, 'page=' + nPageNo);
-				sURL = aSearch.join('&');
-			}
+				var aPair = this.split('=');
+				if(aPair[1]) oSearch[aPair[0]] = aPair[1];
+			});
 
-			return sURL;
+			$.extend(oSearch, oParam);
+
+			return '?' + $.param(oSearch);
 		},
 
 		isLoggedIn: function()
@@ -693,7 +766,7 @@ $.extend(AN,
 				{
 					$.each(AN.box.oSwitches[sMod][sId], function()
 					{
-						if(oFn.page[this] != 'disabled' && this in oFn.page && AN.box.nCurPage & this)
+						if(oFn.page[this] != 'disabled' && this in oFn.page && $().pageCode() & this)
 						{
 							var aHandler = [];
 							if(!AN.firstRan && oFn.once) aHandler.push(oFn.once);
@@ -762,6 +835,7 @@ $.extend(AN,
 
 					for(var i=1; i<=5; i++)
 					{
+						$().trigger('an.defer' + i);
 						if(!jDoc.aDefer[i]) continue;
 						$.each(jDoc.aDefer[i], function(){ execFn(this); });
 					}
@@ -785,7 +859,7 @@ $.extend(AN,
 
 AN.mod['Kernel'] =
 {
-	ver: '3.3.3',
+	ver: '3.4.0',
 	author: '向日',
 	fn: {
 
@@ -810,7 +884,7 @@ AN.mod['Kernel'] =
 			AN.util.data('AN-version', AN_VER);
 		}
 
-		if(AN.box.sCurPage == 'view') $('select[name=page]').val(AN.util.getPageNo(location.href)); // for FF3 where select box does not reset
+		if($().pageName() == 'view') $('select[name=page]').val(AN.util.getPageNo(location.href)); // for FF3 where select box does not reset
 	}
 },
 
@@ -824,16 +898,15 @@ AN.mod['Kernel'] =
 		AN.box.debugMode = true;
 
 		AN.util.addStyle('');
-
 		AN.util.getOptions();
 		AN.util.getOptions.oOptions['bAutoShowLog'] = true;
 		AN.util.getOptions.oOptions['bShowDetailLog'] = true;
 
-		if(AN.box.nCurPage & 92)
+		if($().pageCode() & 92)
 		{
 			jDoc.topics();
 		}
-		else if(AN.box.sCurPage == 'view')
+		else if($().pageName() == 'view')
 		{
 			jDoc.replies();
 		}
@@ -870,7 +943,7 @@ AN.mod['Kernel'] =
 	},
 	once: function()
 	{
-		AN.util.addStyle($.sprintf(' \
+		AN.util.stackStyle($.sprintf(' \
 		#an, #an legend { color: %(sMainFontColor)s; } \
 		\
 		.an-forum, .an-forum textarea { background-color: %(sSecBgColor)s; } \
@@ -982,10 +1055,21 @@ AN.mod['Kernel'] =
 	type: 3,
 	infinite: function()
 	{
-		AN.util.addStyle(' \
+		AN.util.stackStyle(' \
 		body { word-wrap: break-word; } \
 		.repliers_right { overflow-x: hidden; table-layout: fixed; } \
 		');
+	}
+},
+
+'1b804b67-40ab-4750-8759-e63346d289ef':
+{
+	desc: '設定論壇浮動物件至最上層',
+	page: { 65534: true },
+	type: 4,
+	infinite: function()
+	{
+		AN.util.stackStyle('.TransparentGrayBackground, #bb_bookmark_dialog_text { z-index: 10; }');
 	}
 }
 
@@ -1006,23 +1090,6 @@ $.support.localStorage = !!(window.localStorage || window.globalStorage || false
 	function exec(sStorageType)
 	{
 		AN.box.storageMode = sStorageType;
-
-		if(!$('body').length) return AN.box.nCurPage = 0;
-
-		AN.box.sCurPage = $('#ctl00_ContentPlaceHolder1_SystemMessageBoard').length ?
-			'message' :
-			$('#aspnetForm').length ? $('#aspnetForm').attr('action').match(/[^.]+/)[0].toLowerCase() : 'error';
-
-		$.each(AN.box.oPageMap, function(sPage)
-		{
-			if(this.action == AN.box.sCurPage)
-			{
-				AN.box.nCurPage = sPage * 1;
-				return false;
-			}
-		});
-		if(!AN.box.nCurPage) AN.box.nCurPage = 32768;
-
 		AN.modFn.getDB();
 		AN.modFn.execMods();
 	}

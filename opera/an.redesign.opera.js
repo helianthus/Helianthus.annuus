@@ -38,7 +38,7 @@ AN.temp.push(function()
 
 	AN.mod['Component Redesigner'] =
 	{
-		ver: '3.2.1',
+		ver: '3.2.2',
 		author: '向日',
 		fn: {
 
@@ -89,7 +89,7 @@ AN.temp.push(function()
 			oFn.toggleAll();
 		});
 
-		AN.util.addStyle($.sprintf(' \
+		AN.util.stackStyle($.sprintf(' \
 		.repliers_right blockquote { margin: 5px 0; border: 1px solid %s; } \
 		.repliers_right blockquote blockquote { margin-top: 0; border-right: 0; } \
 		.repliers_right blockquote > div { padding: 0 0 5px 2px; } \
@@ -165,7 +165,7 @@ AN.temp.push(function()
 		var nCenterPx = ($.winWidth() - 806) / 2;
 		var nRightPx = -750;
 
-		AN.util.addStyle($.sprintf('\
+		AN.util.stackStyle($.sprintf('\
 		#newmessage { %s; z-index: 3; position: fixed; width: 806px; bottom: -2px; right: %spx; } \
 		#an-qr-header { cursor: pointer; text-align: center; } \
 		',
@@ -211,7 +211,7 @@ AN.temp.push(function()
 		}
 		else
 		{
-			AN.util.getOptions('bToggleOnClick') ? jQRHeader.click(toggleQR) : jQRHeader.hover(toggleQR);
+			AN.util.getOptions('bToggleOnClick') ? jQRHeader.click(toggleQR) : jQR.hover(toggleQR, toggleQR);
 		}
 
 		$('#aspnetForm').submit(function()

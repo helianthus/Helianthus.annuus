@@ -38,7 +38,7 @@ AN.temp.push(function()
 
 	AN.mod['AJAX Integrator'] =
 	{
-		ver: '3.3.0',
+		ver: '3.4.0',
 		author: '向日',
 		fn: {
 
@@ -94,7 +94,7 @@ AN.temp.push(function()
 			{
 				if(!AN.util.getOptions('bAppendReplies')) oPages[nCurPageNo].jDiv.hide();
 				if(event) (jDiv || oPages[nTargetPageNo].jDiv)[0].scrollIntoView();
-				$('#an-info-curpage').text($.sprintf('第%s頁', nTargetPageNo)).attr('href', AN.util.getURL(nTargetPageNo));
+				$('#an-info-curpage').text($.sprintf('第%s頁', nTargetPageNo)).attr('href', AN.util.getURL({ page: nTargetPageNo }));
 				nCurPageNo = nTargetPageNo;
 			};
 
@@ -135,11 +135,11 @@ AN.temp.push(function()
 			else
 			{
 				AN.shared('log2', $.sprintf('正在讀取第%s頁...', nTargetPageNo));
-				$.getDOM(AN.util.getURL(nTargetPageNo), function(sHTML)
+				$.getDoc(AN.util.getURL({ page: nTargetPageNo }), function(jNewDoc)
 				{
-					var jNewDiv = $.doc(sHTML).find('.repliers:first').up('div');
+					var jNewDiv = jNewDoc.find('.repliers:first').up('div');
 					//if(!jNewDiv.length) return AN.shared('log', '下一頁找不到回覆, 可能是本帖部份回覆被刪所致');
-					jNewDiv.children(':last').remove(); // quick reply
+					jNewDiv.children(':last').prev('table').andSelf().remove(); // quick reply
 
 					if(nTargetPageNo > oPages.nLastest)
 					{
@@ -185,9 +185,8 @@ AN.temp.push(function()
 			}
 
 			AN.shared('log', '正在讀取最新回覆...');
-			$.getDOM(AN.util.getURL(nCurPageNo), function(sHTML)
+			$.getDoc(AN.util.getURL({ page: nCurPageNo }), function(jNewDoc)
 			{
-				var jNewDoc = $.doc(sHTML);
 				var jNewReplies = jNewDoc.find('.repliers').up('table');
 
 				if(!jNewReplies.length)
@@ -273,7 +272,7 @@ AN.temp.push(function()
 		if(nInterval < 30) nInterval = 30;
 
 		handlePage();
-		$('#newmessage').insertAfter(oPages[nCurPageNo].jDiv);
+		$('#newmessage,#ctl00_ContentPlaceHolder1_QuickReplyLoginTable').insertAfter(oPages[nCurPageNo].jDiv);
 
 		if(AN.util.getOptions('bCheckOnBottom'))
 		{
@@ -289,8 +288,10 @@ AN.temp.push(function()
 			{
 				toggleTimer(false);
 				AN.shared('log', '正在發送回覆...');
-				$.post(location.href, $('#aspnetForm').serialize() + '&ctl00%24ContentPlaceHolder1%24btn_Submit.x=0&ctl00%24ContentPlaceHolder1%24btn_Submit.y=0', function()
+				$.post(location.href, $('#aspnetForm').serialize() + '&ctl00%24ContentPlaceHolder1%24btn_Submit.x=0&ctl00%24ContentPlaceHolder1%24btn_Submit.y=0', function(sHTML)
 				{
+					if($.doc(sHTML).pageName() != 'view') return AN.shared('log', '回覆發送失敗!');
+
 					$('#ctl00_ContentPlaceHolder1_messagetext').val('');
 					$('#previewArea').empty();
 					AN.shared('log', '回覆發送完成');
@@ -311,6 +312,7 @@ AN.temp.push(function()
 	options:
 	{
 		//bAjaxifyPageChange_T: { desc: 'AJAX化轉頁', defaultValue: true, type: 'checkbox' },
+		nNumOfTopicPage: { desc: '列表顯示數量', defaultValue: 1, type: 'text' },
 		bAddGetBtn_T: { desc: '加入更新列表按扭', defaultValue: true, type: 'checkbox' },
 		bAutoRefresh_T: { desc: '預設啟用自動更新', defaultValue: false, type: 'checkbox' },
 		bAddToggleAutoBtn_T: { desc: '加入切換自動更新按扭', defaultValue: false, type: 'checkbox' },
@@ -318,43 +320,46 @@ AN.temp.push(function()
 	},
 	once: function(jDoc)
 	{
-		var refreshTopics = function(bRetry)
+		var refreshTopics = function(nPage)
 		{
 			clearTimeout(tRefresh);
 
-			if(!bRetry) AN.shared('log', '正在讀取最新列表...');
-			var nStart = $.time();
-			$.getDOM(AN.util.getURL(), function(sHTML)
+			if(isNaN(nPage))
 			{
-				var jNewTopics = $.doc(sHTML).topics();
-				if(jNewTopics && jNewTopics.length)
+				nPage = 1;
+				AN.shared('log', '正在讀取最新列表...');
+			}
+
+			$.getDoc(AN.util.getURL({ page: nPage }), function(jNewDoc)
+			{
+				var jNewTbody = jNewDoc.topics().jTbody;
+				if(nPage == 1) $().topicTable().empty();
+				$().topicTable().append(jNewTbody);
+
+				if(nPage == AN.util.getOptions('nNumOfTopicPage'))
 				{
-					$(document.body).topics().jTbody.replaceWith(jNewTopics.jTbody);
+					AN.modFn.execMods($(document).topicTable());
+					AN.shared('log', '列表更新完成');
 
-					AN.modFn.execMods(jNewTopics.jTbody);
-
-					AN.shared('log', $.sprintf('列表更新完成(%sms)', $.time() - nStart));
+					if(bAutoRefresh)
+					{
+						AN.shared('log2', $.sprintf('%s秒後再次重新整埋....', nInterval));
+						setNextRefresh();
+					}
 				}
-				else if(!bRetry)
+				else
 				{
-					AN.shared('log', '列表讀取失敗, 可能是由於session timeout, 重新讀取中...');
-					return refreshTopics(true);
-				}
-				else AN.shared('log', '列表讀取失敗, 原因不明!');
-
-				if(bAutoRefresh)
-				{
-					AN.shared('log2', $.sprintf('%s秒後再次重新整埋....', nInterval));
-					setNextRefresh();
+					refreshTopics(nPage + 1);
 				}
 			});
 		};
+
 		var setNextRefresh = function()
 		{
 			tRefresh = setTimeout(refreshTopics, nInterval * 1000);
 		};
 
-		if(AN.util.getOptions('bAddGetBtn_T')) jDoc.defer(2, '加入更新按扭', function(){ AN.shared('addButton', '更新列表', function(){ refreshTopics(); }); });
+		if(AN.util.getOptions('bAddGetBtn_T')) jDoc.defer(2, '加入更新按扭', function(){ AN.shared('addButton', '更新列表', refreshTopics); });
 
 		var tRefresh;
 		var bAutoRefresh = AN.util.getOptions('bAutoRefresh_T');

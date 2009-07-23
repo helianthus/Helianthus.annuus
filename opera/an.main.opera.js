@@ -38,7 +38,7 @@ AN.temp.push(function()
 
 	AN.mod['Main Script'] =
 	{
-		ver: '3.6.1',
+		ver: '3.6.2',
 		author: '向日',
 		fn: {
 
@@ -844,20 +844,32 @@ AN.temp.push(function()
 	page: { 32: false },
 	type: 6,
 	defer: 2, // after layout is fixed
-	options: { nMaxReplyHeight: { desc: '最大回覆高度(px)', defaultValue: 2000, type: 'text' } },
+	options:
+	{
+		bAltScrollBarStyle: { desc: '將滾動條置於外層 [buggy w/ ajax fn@IE,FF,Chrome]', defaultValue: false, type: 'checkbox' },
+		nMaxReplyHeight: { desc: '最大回覆高度(px)', defaultValue: 2000, type: 'text' }
+	},
 	once: function(jDoc)
 	{
-		var nWidth = jDoc.replies().jContents.eq(0).width();
+		if(AN.util.getOptions('bAltScrollBarStyle'))
+		{
+			var nWidth = jDoc.replies().jContents.eq(0).width();
 
-		AN.util.stackStyle($.sprintf('\
-		.repliers_right { overflow-x: visible; } \
-		.an-replywrapper { overflow-y: auto; position: relative; z-index: 2; max-height: %spx; width: %spx; } \
-		.an-replywrapper > div { padding-right: 1px; width: %spx; } \
-		',
-		AN.util.getOptions('nMaxReplyHeight'), nWidth + 30, nWidth));
+			AN.util.stackStyle($.sprintf('\
+			.repliers_right { overflow-x: visible; } \
+			.an-replywrapper { overflow-y: auto; position: relative; z-index: 2; max-height: %spx; width: %spx; } \
+			.an-replywrapper > div { padding-right: 1px; width: %spx; } \
+			',
+			AN.util.getOptions('nMaxReplyHeight'), nWidth + 30, nWidth));
+		}
+		else
+		{
+			AN.util.stackStyle($.sprintf('.an-replywrapper { overflow-y: auto; max-height: %spx; }', AN.util.getOptions('nMaxReplyHeight')));
+		}
 	},
 	infinite: function(jDoc)
 	{
+		//jDoc.replies().jContents.wrapInner('<div class="an-replywrapper"></div>');
 		jDoc.replies().jContents.wrapInner('<div class="an-replywrapper"><div></div></div>');
 	}
 },

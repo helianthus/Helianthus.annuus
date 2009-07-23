@@ -859,7 +859,7 @@ $.extend(AN,
 
 AN.mod['Kernel'] =
 {
-	ver: '3.4.0',
+	ver: '3.4.1',
 	author: '向日',
 	fn: {
 
@@ -1069,7 +1069,7 @@ AN.mod['Kernel'] =
 	type: 4,
 	infinite: function()
 	{
-		AN.util.stackStyle('.TransparentGrayBackground, #bb_bookmark_dialog_text { z-index: 10; }');
+		AN.util.stackStyle('.TransparentGrayBackground, .TransparentGrayBackground + * { z-index: 10; }');
 	}
 }
 

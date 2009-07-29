@@ -38,7 +38,7 @@ AN.temp.push(function()
 
 	AN.mod['Main Script'] =
 	{
-		ver: '3.6.2',
+		ver: '3.6.3',
 		author: '向日',
 		fn: {
 
@@ -351,7 +351,7 @@ AN.temp.push(function()
 
 '69260bc4-4f43-4dda-ba0f-87ba804a866c':
 {
-	desc: '加入同步登入所有server的按扭 [未完成]',
+	desc: '加入同步登入所有server的按扭',
 	page: { 65534: false },
 	type: 5,
 	once: function()
@@ -367,7 +367,7 @@ AN.temp.push(function()
 				var doc = this.contentWindow.document;
 				var jThis = $(this);
 
-				if(!doc.getElementById('#aspnetForm')) // error page
+				if(!doc.getElementById('aspnetForm')) // error page
 				{
 					jThis.remove();
 					return;
@@ -396,7 +396,15 @@ AN.temp.push(function()
 			{
 				this.src = $.sprintf('http://forum%s.hkgolden.com/login.aspx', i + 1);
 			})
-			.load(login)
+			.load(login);
+
+			AN.shared('log', '登入各伺服器中, 請稍候...');
+
+			setTimeout(function()
+			{
+				alert('登入完成! (部份伺服器有可能因連線問題無法登入)\n\n點擊確定重新整理頁面.');
+				location.reload();
+			}, 10000);
 		});
 	}
 },

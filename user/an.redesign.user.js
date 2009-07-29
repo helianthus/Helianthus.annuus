@@ -38,7 +38,7 @@ AN.temp.push(function()
 
 	AN.mod['Component Redesigner'] =
 	{
-		ver: '3.2.2',
+		ver: '3.2.3',
 		author: '向日',
 		fn: {
 
@@ -162,14 +162,14 @@ AN.temp.push(function()
 	{
 		if(!AN.util.isLoggedIn()) return;
 
-		var nCenterPx = ($.winWidth() - 806) / 2;
 		var nRightPx = -750;
 
 		AN.util.stackStyle($.sprintf('\
-		#newmessage { %s; z-index: 3; position: fixed; width: 806px; bottom: -2px; right: %spx; } \
+		#newmessage { %s; z-index: 3; position: fixed; width: 806px; bottom: -2px; %s; } \
 		#an-qr-header { cursor: pointer; text-align: center; } \
 		',
-		AN.util.getOpacityStr(AN.util.getOptions('nQROpacity')), nCenterPx
+		AN.util.getOpacityStr(AN.util.getOptions('nQROpacity')),
+		AN.util.getOptions('bAlternativeHide') ? $.sprintf('right: %spx', (($.winWidth() - 806) / 2)) : 'left: 50%; margin-left: -403px'
 		));
 
 		var jQR = $('#newmessage');
@@ -204,7 +204,7 @@ AN.temp.push(function()
 				{
 					if(isNotNeeded(bToShow)) return;
 
-					isToShow(bToShow) ? jQR.animate({ right: nCenterPx }, 'slow', toggleDisplay) : toggleDisplay(false, jQR.animate({ right: nRightPx }, 'slow'));
+					isToShow(bToShow) ? jQR.animate({ right: ($.winWidth() - 806) / 2 }, 'slow', toggleDisplay) : toggleDisplay(false, jQR.animate({ right: nRightPx }, 'slow'));
 				}
 			})(toggleQR);
 			jQRHeader.click(toggleQR);

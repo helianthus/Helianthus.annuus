@@ -43,7 +43,7 @@ AN.temp.push(function()
 
 	AN.mod['User Interface'] =
 	{
-		ver: '3.2.1',
+		ver: '3.2.2',
 		author: '向日',
 		fn: {
 
@@ -331,7 +331,7 @@ AN.temp.push(function()
 									sHTML += '<dd>';
 
 									var sOptionId = $.sprintf('an-settings-option-%s%s%s', sPage, sSep, sName);
-									var sSavable = bDisabled ? 'disabled="disabled' : 'class="an-settings-option"';
+									var sSavable = bDisabled ? 'disabled="disabled"' : 'class="an-settings-option"';
 
 									if(this.type == 'checkbox')
 									{

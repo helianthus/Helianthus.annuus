@@ -38,7 +38,7 @@ AN.temp.push(function()
 
 	AN.mod['Main Script'] =
 	{
-		ver: '3.6.3',
+		ver: '3.6.4',
 		author: '向日',
 		fn: {
 
@@ -826,11 +826,9 @@ AN.temp.push(function()
 
 '85950fa3-c5f0-4456-a81a-30a90ba6425c':
 {
-	desc: '顯示防盜鏈/域名被禁圖片 [FF: 建議改用RefControl]',
-	page: { 32: !$.browser.mozilla },
+	desc: '顯示防盜鏈/域名被禁圖片 [FF: 建議改用RefControl] [暫時停用]',
+	page: { 32: 'disabled'/*!$.browser.mozilla*/ },
 	type: 6,
-	// http://www.pomo.cn/showpic.asp?url=
-	// http://www.mysea.net/download/js/get163.asp?url=
 	options: { sImgProxy: { desc: '圖片代理', defaultValue: 'http://www.pomo.cn/showpic.asp?url=', type: 'text' } },
 	infinite: function(jDoc)
 	{

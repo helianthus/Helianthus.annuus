@@ -878,7 +878,7 @@ AN.mod['Kernel'] =
 			contentType: 'application/x-www-form-urlencoded; charset=UTF-8'
 		});
 
-		var AN_VER = '3.0_beta';
+		var AN_VER = '3.0';
 		if(AN.util.data('AN-version') != AN_VER)
 		{
 			AN.util.data('AN-version', AN_VER);

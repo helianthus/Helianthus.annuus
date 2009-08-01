@@ -38,7 +38,7 @@ AN.temp.push(function()
 
 	AN.mod['Main Script'] =
 	{
-		ver: '3.6.5',
+		ver: '3.6.6',
 		author: '向日',
 		fn: {
 
@@ -72,7 +72,7 @@ AN.temp.push(function()
 	},
 	infinite: function()
 	{
-		$('span').filter(function(){ return /GoogleAd|InLineAd/.test(this.id); }).up('tr').addClass('an-ads');
+		$('span').filter(function(){ return /HKG.*?GoogleAd|InLineAd/.test(this.id); }).up('tr').addClass('an-ads');
 	}
 },
 

@@ -43,7 +43,7 @@ AN.temp.push(function()
 
 	AN.mod['User Interface'] =
 	{
-		ver: '3.2.3',
+		ver: '3.2.4',
 		author: '向日',
 		fn: {
 
@@ -907,7 +907,7 @@ AN.temp.push(function()
 			jDoc.defer(1, '按需要調整資訊元件位置', function()
 			{
 				var jBM = $('#hkg_bottombar');
-				if(!jBM.length || jBM.css('display') == 'none')
+				if(jBM.length && jBM.is(':visible'))
 				{
 					AN.util.stackStyle('#an-info { bottom: 30px; }');
 				}

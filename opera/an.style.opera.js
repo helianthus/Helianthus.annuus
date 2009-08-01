@@ -38,7 +38,7 @@ AN.temp.push(function()
 
 	AN.mod['Style Editor'] =
 	{
-		ver: '3.1.1',
+		ver: '3.1.2',
 		author: '向日',
 		fn: {
 
@@ -181,6 +181,7 @@ AN.temp.push(function()
 		table[width="150"] { border-color: %(sSecBorderColor)s !important; } \
 		/* footer */\
 		.FooterPanel > div:first-child { background-color: %(sFooterBgColor)s !important; } \
+		a.terms_link { color: %(sMainFontColor)s; } \
 		',
 		AN.util.getOptions()
 		));

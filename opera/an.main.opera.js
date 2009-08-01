@@ -38,7 +38,7 @@ AN.temp.push(function()
 
 	AN.mod['Main Script'] =
 	{
-		ver: '3.6.4',
+		ver: '3.6.5',
 		author: '向日',
 		fn: {
 
@@ -46,7 +46,7 @@ AN.temp.push(function()
 '63d2407a-d8db-44cb-8666-64e5b76378a2':
 {
 	desc: '隱藏廣告',
-	page: { 65534: true },
+	page: { 65535: true },
 	type: 3,
 	once: function()
 	{
@@ -456,6 +456,7 @@ AN.temp.push(function()
 	desc: '自動顯示伺服器狀態檢查視窗',
 	page: { 1: true },
 	type: 6,
+	defer: 5,
 	once: function()
 	{
 		AN.shared('serverTable');

@@ -259,14 +259,16 @@ $.fn.extend(
 	{
 		if(this.sPageName) return this.sPageName;
 
-		return (this.sPageName = $('#ctl00_ContentPlaceHolder1_SystemMessageBoard', this).length ?
-			'message' :
-			$('#aspnetForm', this).length ? $('#aspnetForm', this).attr('action').match(/[^.]+/)[0].toLowerCase() : 'error');
+		return this.sPageName =
+			$('#ctl00_ContentPlaceHolder1_SystemMessageBoard', this).length && 'message' ||
+			$('#aspnetForm', this).length && $('#aspnetForm', this).attr('action').match(/[^.]+/)[0].toLowerCase() ||
+			/^\/(?:terms)\./.test(location.pathname) && location.pathname.substring(1).match('^[^.]+')[0] ||
+			'error';
 	},
 
 	pageCode: function()
 	{
-		if(this.nPageCode) return this.nPageCode;
+		if('nPageCode' in this) return this.nPageCode;
 
 		var sPageName = this.pageName();
 		var nPageCode;
@@ -279,7 +281,7 @@ $.fn.extend(
 				return false;
 			}
 		});
-		if(!nPageCode) $().pageCode() = 32768;
+		if(!nPageCode) nPageCode = 0;
 
 		return (this.nPageCode = nPageCode);
 	},
@@ -416,7 +418,6 @@ $.extend(AN,
 		{
 			65535: { action: null, desc: '所有頁' },
 			65534: { action: null, desc: '所有正常頁' },
-			32768: { action: null, desc: '未知正常頁' },
 			1: { action: 'error', desc: '所有錯誤頁' },
 			2: { action: 'default', desc: '主論壇頁' },
 			4: { action: 'topics', desc: '標題頁' },
@@ -829,21 +830,20 @@ $.extend(AN,
 
 			setTimeout(function()
 			{
-				if(jDoc.aDefer)
-				{
-					AN.box.aBenchmark.push({ type: 'start', name: '延期執行項目' });
+				AN.box.aBenchmark.push({ type: 'start', name: '延期執行項目' });
 
-					for(var i=1; i<=5; i++)
+				for(var i=1; i<=5; i++)
+				{
+					$().trigger('an.defer' + i);
+					if(jDoc.aDefer && jDoc.aDefer[i])
 					{
-						$().trigger('an.defer' + i);
-						if(!jDoc.aDefer[i]) continue;
 						$.each(jDoc.aDefer[i], function(){ execFn(this); });
 					}
-					jDoc.aDefer = null;
-					jDoc.splice(0, jDoc.length);
-
-					AN.box.aBenchmark.push({ type: 'end', name: '延期執行項目' });
 				}
+				jDoc.aDefer = null;
+				jDoc.splice(0, jDoc.length);
+
+				AN.box.aBenchmark.push({ type: 'end', name: '延期執行項目' });
 
 				AN.firstRan = true;
 				AN.shared('log2', '所有功能執行完成');
@@ -859,7 +859,7 @@ $.extend(AN,
 
 AN.mod['Kernel'] =
 {
-	ver: '3.4.1',
+	ver: '3.4.2',
 	author: '向日',
 	fn: {
 

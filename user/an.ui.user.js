@@ -43,7 +43,7 @@ AN.temp.push(function()
 
 	AN.mod['User Interface'] =
 	{
-		ver: '3.2.2',
+		ver: '3.2.3',
 		author: '向日',
 		fn: {
 
@@ -887,7 +887,7 @@ AN.temp.push(function()
 		bAddInfoButton: { desc: '加入資訊元件開關按扭', defaultValue: false, type: 'checkbox' },
 		bAutoShowInfo: { desc: '自動顯示資訊視窗', defaultValue: true, type: 'checkbox' },
 	},
-	once: function()
+	once: function(jDoc)
 	{
 		var getMod = function()
 		{
@@ -895,15 +895,23 @@ AN.temp.push(function()
 			if(jMod.length) return jMod;
 
 			AN.util.addStyle($.sprintf(' \
-			#an-info { %s left: 10px; bottom: %spx; border-width: 0 0 1px 1px; } \
+			#an-info { %s; left: 10px; bottom: 10px; border-width: 0 0 1px 1px; } \
 			#an-info-content { padding: 1em 1em 0 0.5em !important; } \
 			#an-info-footer { text-align: right; font-weight: bold; } \
 			#an-info li { display: none; padding-bottom: 0.5em; } \
 			#an-info li a { display: inline; } \
 			',
-			AN.util.getOptions('bAutoShowInfo') ? '' : 'display: none;',
-			$('#hkg_bottombar').length ? 30 : 10
+			AN.util.getOptions('bAutoShowInfo') ? '' : 'display: none'
 			));
+
+			jDoc.defer(1, '按需要調整資訊元件位置', function()
+			{
+				var jBM = $('#hkg_bottombar');
+				if(!jBM.length || jBM.css('display') == 'none')
+				{
+					AN.util.stackStyle('#an-info { bottom: 30px; }');
+				}
+			});
 
 			return $('<div id="an-info" class="an-mod"><ul id="an-info-content" class="an-menu an-small"></ul><div class="an-small" id="an-info-footer">Info</div></div>').appendTo('#an-ui');
 		};
@@ -970,6 +978,7 @@ AN.temp.push(function()
 					sHTML += $.sprintf('<dd>%s by %s: %s</dd>', sMod, this.author, this.ver);
 				});
 
+				/*
 				sHTML += '<dt>[開關設定]</dt>';
 				var oSwitches = AN.util.storage('an_switches');
 				if(oSwitches)
@@ -993,6 +1002,7 @@ AN.temp.push(function()
 						sHTML += $.sprintf('<dd>"%s": %s</dd>', sName, JSON.stringify(this));
 					});
 				}
+				*/
 
 				jAbout.find('dl').append(sHTML);
 
@@ -1049,6 +1059,7 @@ AN.temp.push(function()
 				location.reload();
 			}
 		});
+
 		AN.shared('addButton', '顯示儲存資料', function()
 		{
 				if(!$('#an-savedsettings').length)
@@ -1059,6 +1070,32 @@ AN.temp.push(function()
 				}
 				$('#an-savedsettings code').text(AN.util.storage().replace(/{[^{]*},?/g, function(sMatch){ return sMatch.replace(/,/g, ',\n'); }));
 				AN.shared('gray', true, 'an-savedsettings');
+		});
+
+		AN.shared('addButton', '顯示功能列表', function()
+		{
+				if(!$('#an-savedsettings').length)
+				{
+					AN.shared('box', 'an-functionlist', '功能列表', 600, 400);
+					AN.util.addStyle('#an-functionlist textarea { margin: 10px; width: 570px; height: 370px; font-family: Consolas; }');
+					$('#an-functionlist').append('<textarea readonly="readonly"></textarea>');
+
+					var sList = '';
+					$.each(AN.mod, function(sMod)
+					{
+						if(!this.fn) return;
+
+						sList += '\r' + sMod + ':\r\r';
+
+						$.each(this.fn, function()
+						{
+							sList += ' * ' + this.desc + '\r';
+						});
+					});
+
+					$('#an-functionlist textarea').text(sList);
+				}
+				AN.shared('gray', true, 'an-functionlist');
 		});
 	}
 }

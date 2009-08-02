@@ -262,7 +262,7 @@ $.fn.extend(
 		return this.sPageName =
 			$('#ctl00_ContentPlaceHolder1_SystemMessageBoard', this).length && 'message' ||
 			$('#aspnetForm', this).length && $('#aspnetForm', this).attr('action').match(/[^.]+/)[0].toLowerCase() ||
-			/^\/(?:terms)\./.test(location.pathname) && location.pathname.substring(1).match('^[^.]+')[0] ||
+			$('body > :first', this).is('b') && 'terms' ||
 			'error';
 	},
 
@@ -859,7 +859,7 @@ $.extend(AN,
 
 AN.mod['Kernel'] =
 {
-	ver: '3.4.3',
+	ver: '3.4.4',
 	author: '向日',
 	fn: {
 

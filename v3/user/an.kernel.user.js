@@ -859,7 +859,7 @@ $.extend(AN,
 
 AN.mod['Kernel'] =
 {
-	ver: '3.4.2',
+	ver: '3.4.3',
 	author: '向日',
 	fn: {
 
@@ -977,7 +977,7 @@ AN.mod['Kernel'] =
 	type: 1,
 	options:
 	{
-		bAlsoCheckBeta: { desc: '同時檢查Beta版本', defaultValue: true, type: 'checkbox' },
+		bAlsoCheckBeta: { desc: '同時檢查Beta版本', defaultValue: false, type: 'checkbox' },
 		nCheckUpdateInterval: { desc: '檢查更新間隔(小時)', defaultValue: 1, type: 'text' }
 	},
 	once: function()

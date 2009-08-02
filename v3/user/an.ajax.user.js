@@ -38,7 +38,7 @@ AN.temp.push(function()
 
 	AN.mod['AJAX Integrator'] =
 	{
-		ver: '3.4.0',
+		ver: '3.4.1',
 		author: '向日',
 		fn: {
 
@@ -324,7 +324,7 @@ AN.temp.push(function()
 		{
 			clearTimeout(tRefresh);
 
-			if(isNaN(nPage))
+			if(isNaN(nPage) || nPage < 1)
 			{
 				nPage = 1;
 				AN.shared('log', '正在讀取最新列表...');

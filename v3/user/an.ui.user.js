@@ -43,7 +43,7 @@ AN.temp.push(function()
 
 	AN.mod['User Interface'] =
 	{
-		ver: '3.2.4',
+		ver: '3.2.5',
 		author: '向日',
 		fn: {
 
@@ -904,17 +904,16 @@ AN.temp.push(function()
 			AN.util.getOptions('bAutoShowInfo') ? '' : 'display: none'
 			));
 
-			jDoc.defer(1, '按需要調整資訊元件位置', function()
-			{
-				var jBM = $('#hkg_bottombar');
-				if(jBM.length && jBM.is(':visible'))
-				{
-					AN.util.stackStyle('#an-info { bottom: 30px; }');
-				}
-			});
-
 			return $('<div id="an-info" class="an-mod"><ul id="an-info-content" class="an-menu an-small"></ul><div class="an-small" id="an-info-footer">Info</div></div>').appendTo('#an-ui');
 		};
+
+		jDoc.defer(5, '按需要調整資訊元件位置', function()
+		{
+			if($('#hkg_bottombar').is(':visible'))
+			{
+				AN.util.addStyle('#an-info { bottom: 30px; }');
+			}
+		});
 
 		if(AN.util.getOptions('bAddInfoButton'))
 		{

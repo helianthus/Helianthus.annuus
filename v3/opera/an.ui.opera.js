@@ -43,7 +43,7 @@ AN.temp.push(function()
 
 	AN.mod['User Interface'] =
 	{
-		ver: '3.2.4',
+		ver: '3.2.5',
 		author: '向日',
 		fn: {
 
@@ -889,25 +889,31 @@ AN.temp.push(function()
 	},
 	once: function(jDoc)
 	{
-		AN.util.stackStyle('#an-info { bottom: %spx; }',
 		var getMod = function()
 		{
 			var jMod = $('#an-info');
 			if(jMod.length) return jMod;
 
 			AN.util.addStyle($.sprintf(' \
-			#an-info { %s; left: 10px; bottom: %spx; border-width: 0 0 1px 1px; } \
+			#an-info { %s; left: 10px; bottom: 10px; border-width: 0 0 1px 1px; } \
 			#an-info-content { padding: 1em 1em 0 0.5em !important; } \
 			#an-info-footer { text-align: right; font-weight: bold; } \
 			#an-info li { display: none; padding-bottom: 0.5em; } \
 			#an-info li a { display: inline; } \
 			',
 			AN.util.getOptions('bAutoShowInfo') ? '' : 'display: none'
-			$('#hkg_bottombar').is(':visible') ? 30 : 10
 			));
 
 			return $('<div id="an-info" class="an-mod"><ul id="an-info-content" class="an-menu an-small"></ul><div class="an-small" id="an-info-footer">Info</div></div>').appendTo('#an-ui');
 		};
+
+		jDoc.defer(5, '按需要調整資訊元件位置', function()
+		{
+			if($('#hkg_bottombar').is(':visible'))
+			{
+				AN.util.addStyle('#an-info { bottom: 30px; }');
+			}
+		});
 
 		if(AN.util.getOptions('bAddInfoButton'))
 		{

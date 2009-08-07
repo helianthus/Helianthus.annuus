@@ -497,11 +497,22 @@ $.extend(AN,
 		storage: function(sName, uToSet)
 		{
 			var storage = arguments.callee.storage || (arguments.callee.storage =
-			{
-				get: function(sProfile, sName){ return AN.box.eLSO.get(sProfile, sName); },
-				set: function(sProfile, sName, sData){ AN.box.eLSO.set(sProfile, sName, sData.replace(/\\\\/g, '\\')); }, // escape the backslash so that it will not be removed on GET
-				remove: function(sProfile, sName){ AN.box.eLSO.remove(sProfile, sName); }
-			});
+				AN.box.storageMode == 'Flash' && {
+					get: function(sProfile, sName){ return AN.box.eLSO.get(sProfile, sName); },
+					set: function(sProfile, sName, sData){ AN.box.eLSO.set(sProfile, sName, sData.replace(/\\\\/g, '\\')); }, // escape the backslash so that it will not be removed on GET
+					remove: function(sProfile, sName){ AN.box.eLSO.remove(sProfile, sName); }
+				}
+				||
+				AN.box.storageMode == 'DOM' && (function()
+				{
+					var LS = window.localStorage || window.globalStorage && window.globalStorage[location.hostname];
+					return {
+						get: function(sProfile, sName){ var r = LS[sProfile + '___' + sName]; return (r && r.value ? r.value : r); },
+						set: function(sProfile, sName, sData){ LS[sProfile + '___' + sName] = sData; },
+						remove: function(sProfile, sName){ LS.removeItem(sProfile + '___' + sName); }
+					};
+				})()
+			);
 
 			var sProfile = 'default';
 			var sData = '';
@@ -859,7 +870,7 @@ $.extend(AN,
 
 AN.mod['Kernel'] =
 {
-	ver: '3.4.4',
+	ver: '3.4.5',
 	author: '向日',
 	fn: {
 
@@ -1094,11 +1105,18 @@ $.support.localStorage = !!(window.localStorage || window.globalStorage || false
 		AN.modFn.execMods();
 	}
 
-	var sURL = 'http://helianthus-annuus.googlecode.com/svn/other/lso.swf';
-	if($.browser.msie) sURL += '?' + $.time();
-	AN.box.eLSO = $('#an-lso').toFlash(sURL)[0];
+	if(AN.util.cookie('an-storagemode') == 'DOM')
+	{
+		exec('DOM');
+	}
+	else
+	{
+		var sURL = 'http://helianthus-annuus.googlecode.com/svn/other/lso.swf';
+		if($.browser.msie) sURL += '?' + $.time();
+		AN.box.eLSO = $('#an-lso').toFlash(sURL)[0];
 
-	(function(){ AN.box.eLSO.get ? exec('Flash') : setTimeout(arguments.callee, 50); })();
+		(function(){ AN.box.eLSO.get && AN.box.eLSO.set('default', 'an_test_for_safari', ':o)') && AN.box.eLSO.get('default', 'an_test_for_safari') ? exec('Flash') : setTimeout(arguments.callee, 50); })();
+	}
 })();
 
 //////////////////// END OF - [Initialization] ////////////////////

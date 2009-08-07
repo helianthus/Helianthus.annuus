@@ -38,7 +38,7 @@ AN.temp.push(function()
 
 	AN.mod['Style Editor'] =
 	{
-		ver: '3.1.2',
+		ver: '3.1.3',
 		author: '向日',
 		fn: {
 
@@ -122,7 +122,7 @@ AN.temp.push(function()
 		body { background-color: %(sMainBgColor)s; } \
 		p, td { color: %(sMainFontColor)s; } \
 		/* main border */\
-		.repliers_header, .repliers_left, .repliers, .repliers td, .Topic_ForumInfoPanel table, .Topic_ForumInfoPanel th, .hkg_bottombar { border-color: %(sMainBorderColor)s !important; } \
+		.repliers_header, .repliers_left, .repliers, .repliers td, .Topic_ForumInfoPanel table, .Topic_ForumInfoPanel th { border-color: %(sMainBorderColor)s !important; } \
 		#aspnetForm table[cellspacing="1"][cellpadding="2"], #ctl00_ContentPlaceHolder1_PMMsgTable, #ctl00_ContentPlaceHolder1_QuickReplyTable, #ctl00_ContentPlaceHolder1_QuickReplyLoginTable { background-color: %(sMainBorderColor)s !important; } \
 		*[style*="128, 128, 128"], *[style*="808080"] { background-color: transparent !important; } \
 		/* sec border */\
@@ -130,7 +130,7 @@ AN.temp.push(function()
 		/* nearly-white backgrounds */\
 		*[style*="rgb(23"], *[style*="rgb(24"], *[style*="#E"], *[style*="#F"], *[style*="#e"], *[style*="#f"], .Topic_ForumInfoPanel table td { background-color: %(sSecBgColor)s !important; } \
 		/* PM Box & white table cells */\
-		.ListPMText, *[style*="255, 255, 255"], *[style*="#FFFFFF"], *[style*="background-color: white"], *[style*="BACKGROUND-COLOR: white"], *[bgcolor="#f8f8f8"], .hkg_bottombar, .hkg_bbItem, .hkg_bb_bookmarkItem { background-color: %(sMainBgColor)s !important; } \
+		.ListPMText, *[style*="255, 255, 255"], *[style*="#FFFFFF"], *[style*="background-color: white"], *[style*="BACKGROUND-COLOR: white"], *[bgcolor="#f8f8f8"] { background-color: %(sMainBgColor)s !important; } \
 		/* headers */\
 		.repliers_header, *[style*="51, 102, 153"], *[style*="#336699"], .Topic_ForumInfoPanel table th, .Topic_ListPanel table th { color: %(sMainHeaderFontColor)s !important; background-color: %(sMainHeaderBgColor)s !important; } \
 		/* under logo links, footer text, username links, bookmarkbar */\
@@ -182,6 +182,10 @@ AN.temp.push(function()
 		/* footer */\
 		.FooterPanel > div:first-child { background-color: %(sFooterBgColor)s !important; } \
 		a.terms_link { color: %(sMainFontColor)s; } \
+		/* bookmark bar */\
+		.hkg_bottombar, .hkg_bottombar *, .hkg_bbMenu, .hkg_bbMenu * { background-color: %(sSecBgColor)s; border-color: %(sMainBorderColor)s; color: %(sMainFontColor)s; } \
+		.hkg_bb_bookmark_TitleBox, .hkg_bb_bookmark_TitleBox *, .hkg_bb_bookmarkItem_Hover, .hkg_bb_bookmarkItem_Hover a div { background-color: %(sMainHeaderBgColor)s; color: %(sMainHeaderFontColor)s; } \
+		.hkg_bb_bookmarkItem a div { background-color: transparent; color: inherit; } \
 		',
 		AN.util.getOptions()
 		));

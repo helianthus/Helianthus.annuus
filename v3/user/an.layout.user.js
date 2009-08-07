@@ -38,7 +38,7 @@ AN.temp.push(function()
 
 	AN.mod['Layout Designer'] =
 	{
-		ver: '3.3.1',
+		ver: '3.3.2',
 		author: '向日',
 		fn: {
 
@@ -165,17 +165,6 @@ AN.temp.push(function()
 	once: function()
 	{
 		AN.util.stackStyle('#hkg_bottombar { width: auto; }');
-	}
-},
-
-'098b7645-5a00-485e-ae62-f38b9bbf6181':
-{
-	desc: 'Bookmark Bar圓角 [Webkit browsers only]',
-	page: { 65534: $.browser.safari || 'diabled' },
-	type: 3,
-	once: function()
-	{
-		AN.util.stackStyle('.hkg_bottombar { -webkit-border-top-left-radius: 5px; -webkit-border-top-right-radius: 5px; }');
 	}
 },
 

@@ -43,7 +43,7 @@ AN.temp.push(function()
 
 	AN.mod['User Interface'] =
 	{
-		ver: '3.2.5',
+		ver: '3.2.6',
 		author: '向日',
 		fn: {
 
@@ -907,13 +907,20 @@ AN.temp.push(function()
 			return $('<div id="an-info" class="an-mod"><ul id="an-info-content" class="an-menu an-small"></ul><div class="an-small" id="an-info-footer">Info</div></div>').appendTo('#an-ui');
 		};
 
-		jDoc.defer(5, '按需要調整資訊元件位置', function()
+		if($('#hkg_bottombar').is(':visible'))
 		{
-			if($('#hkg_bottombar').is(':visible'))
+			AN.util.stackStyle('#an-info { bottom: 30px; }');
+		}
+		else
+		{
+			$(window).load(function()
 			{
-				AN.util.addStyle('#an-info { bottom: 30px; }');
-			}
-		});
+					if($('#hkg_bottombar').is(':visible'))
+					{
+						AN.util.addStyle('#an-info { bottom: 30px; }');
+					}
+			});
+		}
 
 		if(AN.util.getOptions('bAddInfoButton'))
 		{
@@ -977,42 +984,14 @@ AN.temp.push(function()
 					sHTML += $.sprintf('<dd>%s by %s: %s</dd>', sMod, this.author, this.ver);
 				});
 
-				/*
-				sHTML += '<dt>[開關設定]</dt>';
-				var oSwitches = AN.util.storage('an_switches');
-				if(oSwitches)
-				{
-					$.each(oSwitches, function(sMod)
-					{
-						sHTML += $.sprintf('<dd>%s:</dd>', sMod);
-						$.each(this, function(sName)
-						{
-							sHTML += $.sprintf('<dd>"%s": %s</dd>', sName, JSON.stringify(this));
-						});
-					});
-				}
-
-				sHTML += '<dt>[選項設定]</dt>';
-				var oOptions = AN.util.storage('an_options');
-				if(oOptions)
-				{
-					$.each(oOptions, function(sName)
-					{
-						sHTML += $.sprintf('<dd>"%s": %s</dd>', sName, JSON.stringify(this));
-					});
-				}
-				*/
-
 				jAbout.find('dl').append(sHTML);
 
-				/*
 				if($.support.localStorage) $('#an-about-storage').append('<option>DOM</option>');
 				$('#an-about-storage').val(AN.box.storageMode).change(function()
 				{
 					AN.util.cookie('an-storagemode', $(this).val());
 					location.reload();
 				});
-				*/
 			}
 
 			AN.shared.gray(true, 'an-about');

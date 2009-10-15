@@ -16,7 +16,7 @@
 */
 
 // ==UserScript==
-// @name Helianthus.Annuus 3: Scripts Injecter
+// @name Helianthus.Annuus 3: Scripts Injector
 // @namespace http://code.google.com/p/helianthus-annuus/
 // @description by 向日
 // @include http://forum*.hkgolden.com/*
@@ -61,7 +61,7 @@ function scriptExecuted()
 	
 	if(--remain !== 0) return;
 	
-	addScript('AN.mod["Scripts Injecter"] = { ver: "3.1.0", author: "向日" };');	
+	addScript('AN.mod["Scripts Injector"] = { ver: "3.1.0", author: "向日" };');	
 	addScript(kernel);
 }
 

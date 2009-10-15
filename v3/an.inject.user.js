@@ -26,16 +26,16 @@
 (function()
 {
 
-var kernel = 'http://helianthus-annuus.googlecode.com/svn/tags/v3/LASTEST/an.kernel.user.js';
+var kernel = 'http://helianthus-annuus.googlecode.com/svn/tags/v3/LASTEST/user/an.kernel.user.js';
 var modules =
 [
-	'http://helianthus-annuus.googlecode.com/svn/tags/v3/LASTEST/an.ajax.user.js',
-	'http://helianthus-annuus.googlecode.com/svn/tags/v3/LASTEST/an.redesign.user.js',
-	'http://helianthus-annuus.googlecode.com/svn/tags/v3/LASTEST/an.style.user.js',
-	'http://helianthus-annuus.googlecode.com/svn/tags/v3/LASTEST/an.layout.user.js',
-	'http://helianthus-annuus.googlecode.com/svn/tags/v3/LASTEST/an.main.user.js',
-	'http://helianthus-annuus.googlecode.com/svn/tags/v3/LASTEST/an.ui.user.js',
-	'http://helianthus-annuus.googlecode.com/svn/tags/v3/LASTEST/an.lib.user.js'
+	'http://helianthus-annuus.googlecode.com/svn/tags/v3/LASTEST/user/an.ajax.user.js',
+	'http://helianthus-annuus.googlecode.com/svn/tags/v3/LASTEST/user/an.redesign.user.js',
+	'http://helianthus-annuus.googlecode.com/svn/tags/v3/LASTEST/user/an.style.user.js',
+	'http://helianthus-annuus.googlecode.com/svn/tags/v3/LASTEST/user/an.layout.user.js',
+	'http://helianthus-annuus.googlecode.com/svn/tags/v3/LASTEST/user/an.main.user.js',
+	'http://helianthus-annuus.googlecode.com/svn/tags/v3/LASTEST/user/an.ui.user.js',
+	'http://helianthus-annuus.googlecode.com/svn/tags/v3/LASTEST/user/an.lib.user.js'
 ];
 
 var head = document.getElementsByTagName('head');

@@ -38,7 +38,7 @@ AN.temp.push(function()
 
 	AN.mod['Main Script'] =
 	{
-		ver: '3.6.6',
+		ver: '3.6.7',
 		author: '向日',
 		fn: {
 
@@ -55,7 +55,7 @@ AN.temp.push(function()
 		#HKGTopAd, \
 		.Topic_TopRightAdPanel, \
 		.Topic_ForumInfoPanel tr:first-child + tr ~ tr, \
-		#ctl00_ContentPlaceHolder1_MiddleAdSpace1 > a, #ctl00_ContentPlaceHolder1_MiddleAdSpace1 > a + br, \
+		#ctl00_ContentPlaceHolder1_MiddleAdSpace1 > table:first-child td[align=right], \
 		.ContentPanel > table > tbody > tr > td + td, \
 		#LeftSide_GoogleAd, /* blog */\
 		td[height="250"], td[width="302"], /* main & newmessages */\

@@ -43,7 +43,7 @@ AN.temp.push(function()
 
 	AN.mod['User Interface'] =
 	{
-		ver: '3.2.6',
+		ver: '3.2.7',
 		author: '向日',
 		fn: {
 
@@ -106,7 +106,7 @@ AN.temp.push(function()
 			var jGray = $('#an-backlayer');
 			if(jGray.is(':hidden'))
 			{
-				$('html').css('overflow', 'hidden');
+				//$('html').css('overflow', 'hidden');
 
 				if(bClickToQuit)
 				{
@@ -133,7 +133,7 @@ AN.temp.push(function()
 			else
 			{
 				jGray.add('.an-box:visible').fadeOut('slow');
-				$('html').css('overflow', '');
+				//$('html').css('overflow', '');
 			}
 		};
 
@@ -906,21 +906,14 @@ AN.temp.push(function()
 
 			return $('<div id="an-info" class="an-mod"><ul id="an-info-content" class="an-menu an-small"></ul><div class="an-small" id="an-info-footer">Info</div></div>').appendTo('#an-ui');
 		};
-
-		if($('#hkg_bottombar').is(':visible'))
+		
+		(function()
 		{
-			AN.util.stackStyle('#an-info { bottom: 30px; }');
-		}
-		else
-		{
-			$(window).load(function()
-			{
-					if($('#hkg_bottombar').is(':visible'))
-					{
-						AN.util.addStyle('#an-info { bottom: 30px; }');
-					}
-			});
-		}
+			function check(){ $('#hkg_bottombar').is(':visible') && AN.util.addStyle('#an-info { bottom: 30px; }'); }
+		
+			// jQuery onload event sometimes does not fire on chrome?
+			window.addEventListener ? window.addEventListener('load', check, false) : window.attachEvent('onload', check);
+		})();
 
 		if(AN.util.getOptions('bAddInfoButton'))
 		{

@@ -20,20 +20,18 @@
 // @namespace http://code.google.com/p/helianthus-annuus/
 // @description by 向日
 // @include http://forum*.hkgolden.com/*
+// @run-at document-start
 // ==/UserScript==
 
 document.domain = 'hkgolden.com'; // needs to be done before window.load
 
 setTimeout(function()
 {
-
 if(document.body && document.body.firstChild.className == 'webkit-line-gutter-backdrop') return; // Chrome view-source
 
 var window = (typeof contentWindow != 'undefined') ? contentWindow : ((typeof unsafeWindow != 'undefined') ? unsafeWindow : this);
 
-var AN = window.AN || (window.AN = { temp: [], mod: {} });
-
-if(window.opera && arguments.length == 0)
+if(window.opera && window.opera.addEventListener && arguments.length == 0)
 {
 	var callee = arguments.callee;
 	return window.addEventListener('DOMContentLoaded', function()
@@ -41,6 +39,8 @@ if(window.opera && arguments.length == 0)
 		callee(null);
 	}, false);
 }
+
+var AN = window.AN || (window.AN = { temp: [], mod: {} });
 
 if(AN.initialized) return; // for Chrome which interestingly executes user scripts even when injecting xhr HTML into an element
 AN.initialized = true;
@@ -311,7 +311,7 @@ $.fn.extend(
 
 		jReplies.each(function()
 		{
-			var jThis = $(this), jNameLink = jThis.find('a:first');
+			var jThis = $(this), jNameLink = jThis.find('.repliers_left a:first');
 
 			jThis
 			.data('jContent', jThis.find('.repliers_right td:first'))
@@ -649,7 +649,7 @@ $.extend(AN,
 				{
 					$.get('/view.aspx?message=' + window.messageid, function(sHTML)
 					{
-						var jLink = $.doc(sHTML).find('.repliers:first a:first');
+						var jLink = $.doc(sHTML).find('.repliers_left:first a:first');
 						oInfo = { sId: jLink.attr('href').replace(/.+?userid=(\d+).*/, '$1'), sName: jLink.html() };
 						fToExec(oInfo);
 					});
@@ -870,7 +870,7 @@ $.extend(AN,
 
 AN.mod['Kernel'] =
 {
-	ver: '3.4.5',
+	ver: '3.4.6',
 	author: '向日',
 	fn: {
 
@@ -1094,7 +1094,7 @@ delete AN.temp;
 
 $.support.localStorage = !!(window.localStorage || window.globalStorage || false);
 
-(function()
+function init()
 {
 	$('<div id="an"><div id="an-lso"></div></div>').appendTo('body');
 
@@ -1117,7 +1117,9 @@ $.support.localStorage = !!(window.localStorage || window.globalStorage || false
 
 		(function(){ AN.box.eLSO.get && AN.box.eLSO.set('default', 'an_test_for_safari', ':o)') && AN.box.eLSO.get('default', 'an_test_for_safari') ? exec('Flash') : setTimeout(arguments.callee, 50); })();
 	}
-})();
+}
+
+$.browser.mozilla ? init() : $(init);
 
 //////////////////// END OF - [Initialization] ////////////////////
 

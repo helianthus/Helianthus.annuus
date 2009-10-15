@@ -38,7 +38,7 @@ AN.temp.push(function()
 
 	AN.mod['AJAX Integrator'] =
 	{
-		ver: '3.4.1',
+		ver: '3.4.2',
 		author: '向日',
 		fn: {
 
@@ -333,8 +333,10 @@ AN.temp.push(function()
 			$.getDoc(AN.util.getURL({ page: nPage }), function(jNewDoc)
 			{
 				var jNewTbody = jNewDoc.topics().jTbody;
-				if(nPage == 1) $().topicTable().empty();
-				$().topicTable().append(jNewTbody);
+				var jTopicTable = $().topicTable();
+				
+				if(nPage == 1) jTopicTable.empty();
+				jTopicTable.append(jNewTbody);
 
 				if(nPage == AN.util.getOptions('nNumOfTopicPage'))
 				{

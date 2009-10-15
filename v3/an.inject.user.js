@@ -20,30 +20,57 @@
 // @namespace http://code.google.com/p/helianthus-annuus/
 // @description by 向日
 // @include http://forum*.hkgolden.com/*
+// @run-at document-start
 // ==/UserScript==
 
 (function()
 {
 
-var aScripts =
+var kernel = 'http://helianthus-annuus.googlecode.com/svn/tags/v3/LASTEST/an.kernel.user.js';
+var modules =
 [
-	'http://helianthus-annuus.googlecode.com/svn/tags/v3/LASTEST/user/an.kernel.user.js',
-	'http://helianthus-annuus.googlecode.com/svn/tags/v3/LASTEST/user/an.ajax.user.js',
-	'http://helianthus-annuus.googlecode.com/svn/tags/v3/LASTEST/user/an.redesign.user.js',
-	'http://helianthus-annuus.googlecode.com/svn/tags/v3/LASTEST/user/an.style.user.js',
-	'http://helianthus-annuus.googlecode.com/svn/tags/v3/LASTEST/user/an.layout.user.js',
-	'http://helianthus-annuus.googlecode.com/svn/tags/v3/LASTEST/user/an.main.user.js',
-	'http://helianthus-annuus.googlecode.com/svn/tags/v3/LASTEST/user/an.ui.user.js',
-	'http://helianthus-annuus.googlecode.com/svn/tags/v3/LASTEST/user/an.lib.user.js'
+	'http://helianthus-annuus.googlecode.com/svn/tags/v3/LASTEST/an.ajax.user.js',
+	'http://helianthus-annuus.googlecode.com/svn/tags/v3/LASTEST/an.redesign.user.js',
+	'http://helianthus-annuus.googlecode.com/svn/tags/v3/LASTEST/an.style.user.js',
+	'http://helianthus-annuus.googlecode.com/svn/tags/v3/LASTEST/an.layout.user.js',
+	'http://helianthus-annuus.googlecode.com/svn/tags/v3/LASTEST/an.main.user.js',
+	'http://helianthus-annuus.googlecode.com/svn/tags/v3/LASTEST/an.ui.user.js',
+	'http://helianthus-annuus.googlecode.com/svn/tags/v3/LASTEST/an.lib.user.js'
 ];
 
-var i = aScripts.length;
-while(i--)
+var head = document.getElementsByTagName('head');
+
+function addScript(content, addListener)
 {
-	var eScript = document.createElement('script');
-	eScript.type = 'text/javascript';
-	eScript.src = aScripts[i];
-	document.getElementsByTagName('head')[0].appendChild(eScript);
+	var script = document.createElement('script');
+	script[content.indexOf('http') === 0 ? 'src' : 'text'] = content;
+	
+	if(addListener) script.onload = script.onreadystatechange = scriptExecuted;
+	
+	head[0].insertBefore(script, head[0].firstChild);
 }
+
+var remain = modules.length;
+function scriptExecuted()
+{
+	if(this.executed || this.readyState && this.readyState != 'loaded' && this.readyState != 'complete') return;
+	
+	this.executed = true;
+	this.onload = this.onreadystatechange = null;
+	//head[0].removeChild(this);
+	
+	if(--remain !== 0) return;
+	
+	addScript('AN.mod["Scripts Injecter"] = { ver: "3.1.0", author: "向日" };');	
+	addScript(kernel);
+}
+
+(function appendModules()
+{
+	if(!head.length) return setTimeout(appendModules, 50);
+	
+	var i = modules.length;
+	while(i--) addScript(modules[i], true);
+})();
 
 })();

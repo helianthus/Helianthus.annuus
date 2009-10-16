@@ -38,7 +38,7 @@ AN.temp.push(function()
 
 	AN.mod['Style Editor'] =
 	{
-		ver: '3.1.3',
+		ver: '3.1.4',
 		author: '向日',
 		fn: {
 
@@ -90,15 +90,6 @@ AN.temp.push(function()
 		sLogoBgImage: { desc: '高登Logo圖片', defaultValue: '/images/index_images/logo.jpg', type: 'text' },
 		sTopBgImage: { desc: '頂部背景圖片', defaultValue: '/images/index_images/bg_top.jpg', type: 'text' },
 		sMainBgImage: { desc: '主表格背景圖片', defaultValue: '/images/index_images/bg_maintop.jpg', type: 'text' },
-		sLeftTable1BorderColor: { desc: '左欄選單一邊框顏色', defaultValue: '#CCCCCC', type: 'text' },
-		sLeftTable1BgImage: { desc: '左欄選單一背景圖片', defaultValue: '/images/left_menu/bg_leftm1.jpg', type: 'text' },
-		sLeftTable1FontColor: { desc: '左欄選單一連結顏色', defaultValue: '#333333', type: 'text' },
-		sLeftTable1HoverColor: { desc: '左欄選單一懸浮顏色', defaultValue: '#33AAAA', type: 'text' },
-		sLeftTable2BorderColor: { desc: '左欄選單二邊框顏色', defaultValue: 'transparent', type: 'text' },
-		sLeftTable2BgColor: { desc: '左欄選單二背景顏色', defaultValue: '#CCDDEA', type: 'text' },
-		sLeftTable2BgImage: { desc: '左欄選單二背景圖片', defaultValue: '/images/left_menu/bg_leftm2.jpg', type: 'text' },
-		sLeftTable2FontColor: { desc: '左欄選單二連結顏色', defaultValue: '#333333', type: 'text' },
-		sLeftTable2HoverColor: { desc: '左欄選單二懸浮顏色', defaultValue: '#33AAAA', type: 'text' },
 		sRedTitleFontColor: { desc: '紅人榜標題字體顏色', defaultValue: '#FFFFFF', type: 'text' },
 		sRedTitleBgColor: { desc: '紅人榜標題背景顏色', defaultValue: '#CC2331', type: 'text' },
 		sRedHeaderFontColor: { desc: '紅人榜第一列字體顏色', defaultValue: '#003366', type: 'text' },
@@ -141,14 +132,6 @@ AN.temp.push(function()
 		/* main logo */\
 		#ctl00_TopBarHomeLink { display: block; background: url(%(sLogoBgImage)s) no-repeat; } \
 		#ctl00_TopBarHomeLink img { visibility: hidden; } \
-		/* left table 1 */\
-		.left_table[class] { border: 1px solid %(sLeftTable1BorderColor)s; background: %(sSecBgColor)s url(%(sLeftTable1BgImage)s) no-repeat bottom right; } \
-		a.leftmenu_link { color: %(sLeftTable1FontColor)s; } \
-		a.leftmenu_link:hover { color: %(sLeftTable1HoverColor)s; } \
-		/* left table 2 */\
-		.left_table2[class] { border: 1px solid %(sLeftTable2BorderColor)s; background: %(sLeftTable2BgColor)s url(%(sLeftTable2BgImage)s) no-repeat bottom right; } \
-		a.leftmenu_link2 { color: %(sLeftTable2FontColor)s; } \
-		a.leftmenu_link2:hover { color: %(sLeftTable2HoverColor)s; } \
 		/* thin bars icon */\
 		.title:first-child, *[bgcolor="#6ea0c4"]:first-child, .redhottitle:first-child { background-image: url(%(sBlueBarBgImage)s); } \
 		*[src*="/p.jpg"], *[src*="/redhotp.jpg"] { visibility: hidden; } \

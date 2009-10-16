@@ -43,7 +43,7 @@ AN.temp.push(function()
 
 	AN.mod['User Interface'] =
 	{
-		ver: '3.2.7',
+		ver: '3.2.8',
 		author: '向日',
 		fn: {
 
@@ -962,7 +962,7 @@ AN.temp.push(function()
 				{
 					'名稱': 'Helianthus.Annuus',
 					'作者': '<a target="_blank" href="ProfilePage.aspx?userid=148720">向日</a>',
-					'主頁': '<a target="_blank" href="ProfilePage.aspx?userid=148720">http://code.google.com/p/helianthus-annuus/</a>',
+					'主頁': '<a target="_blank" href="http://code.google.com/p/helianthus-annuus/">http://code.google.com/p/helianthus-annuus/</a>',
 					'版本': AN.util.data('AN-version'),
 					'儲存方式': $.sprintf('<select id="an-about-storage"><option>Flash</option></select>'),
 					'除錯模式': AN.box.debugMode ? '啟用' : '停用'

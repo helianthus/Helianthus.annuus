@@ -38,9 +38,24 @@ AN.temp.push(function()
 
 	AN.mod['Layout Designer'] =
 	{
-		ver: '3.3.2',
+		ver: '3.3.3',
 		author: '向日',
 		fn: {
+
+'e424fe8d-852b-4239-b797-6aa682e68c39':
+{
+	desc: '修正表格闊度',
+	page: { 65534: true },
+	type: 3,
+	once: function()
+	{
+		AN.util.stackStyle('\
+		table[width="99%"], table[width="800"], td[width="792"] { width: 100%; } \
+		div[style^="width: 99%"], div[style^="WIDTH: 99%"] { width: 100% !important; } \
+		#ctl00_ContentPlaceHolder1_ProfileForm td[width="8"] { display: none; } \
+		');
+	}
+},
 
 '5e173905-9c47-4f37-8d3f-4c31ea871115':
 {
@@ -64,6 +79,17 @@ AN.temp.push(function()
 	}
 },
 
+'7ca54ba4-e2b7-489c-9adc-7ac7d62012f0':
+{
+	desc: '隱藏按扭列',
+	page: { 65534: false },
+	type: 3,
+	once: function()
+	{
+		AN.util.stackStyle('.TopMenuPanel + .PageWidthContainer { display: none; }');
+	}
+},
+
 'd0164ba6-a5a2-4850-ab67-658b840fd3ef':
 {
 	desc: '隱藏繁簡轉換及分享這頁',
@@ -75,52 +101,6 @@ AN.temp.push(function()
 		.PageMiddleFunctions { height: 5px; } \
 		.PageMiddleFunctions > div { display: none; } \
 		');
-	}
-},
-
-'62156da3-5894-489d-a766-7349982a6d40':
-{
-	desc: '隱藏左側連結欄項目',
-	page: { 65534: true },
-	type: 3,
-	options:
-	{
-		bRemoveColumn: { desc: '隱藏整欄(登入頁除外)', defaultValue: false, type: 'checkbox' },
-		bRemoveMainList: { desc: '主選單', defaultValue: false, type: 'checkbox' },
-		bRemovePriceList: { desc: '最新價格', defaultValue: false, type: 'checkbox' },
-		bRemoveArticleList: { desc: '最近刊登的文章', defaultValue: true, type: 'checkbox' }
-	},
-	once: function()
-	{
-		if(AN.util.getOptions('bRemoveColumn') && $().pageName() != 'login')
-		{
-			AN.util.addStyle('\
-			.PageMiddleFunctions, .ContentPanel { padding: 0; } \
-			.PageLeftPanel { display: none; } \
-			table[width="99%"], table[width="800"], td[width="801"], td[width="792"] { width: 100%; } \
-			div[style^="width: 99%"], div[style^="WIDTH: 99%"] { width: 100% !important; } \
-			#ctl00_ContentPlaceHolder1_ProfileForm td[width="8"] { display: none; } \
-			');
-		}
-		else
-		{
-			var aEle = [];
-
-			$.each(
-			{
-				bRemoveMainList: '.left_table',
-				bRemovePriceList: '.left_table2_header,.left_table2',
-				bRemoveArticleList: '.left_table3_header,.left_table3'
-			}, function(sName, sClass)
-			{
-				if(AN.util.getOptions(sName))
-				{
-					aEle.push(sClass);
-				}
-			});
-
-			AN.util.stackStyle(aEle.join(',') + '{ display: none; }');
-		}
 	}
 },
 
@@ -142,7 +122,7 @@ AN.temp.push(function()
 	type: 3,
 	once: function()
 	{
-		AN.util.stackStyle('.FooterPanel + div, .FooterPanel + div + div { display: none; }');
+		AN.util.stackStyle('.FooterPanel ~ br { display: none; }');
 	}
 },
 

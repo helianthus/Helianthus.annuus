@@ -38,7 +38,7 @@ AN.temp.push(function()
 
 	AN.mod['Main Script'] =
 	{
-		ver: '3.6.7',
+		ver: '3.6.8',
 		author: '向日',
 		fn: {
 
@@ -50,25 +50,31 @@ AN.temp.push(function()
 	type: 3,
 	once: function()
 	{
+		// .Topic_TopRightAdPanel
+		
 		AN.util.stackStyle('\
 		.an-ads, \
 		#HKGTopAd, \
-		.Topic_TopRightAdPanel, \
 		.Topic_ForumInfoPanel tr:first-child + tr ~ tr, \
-		#ctl00_ContentPlaceHolder1_MiddleAdSpace1 > table:first-child td[align=right], \
+		#ctl00_ContentPlaceHolder1_MiddleAdSpace1 > div[style*=": right"], \
 		.ContentPanel > table > tbody > tr > td + td, \
-		#LeftSide_GoogleAd, /* blog */\
-		td[height="250"], td[width="302"], /* main & newmessages */\
-		img[width="20"][height="25"], /* newmessages & search */\
+		#LeftSide_GoogleAd, /* blog */ \
+		td[height="250"], td[width="302"], /* main & newmessages */ \
+		img[width="20"][height="25"], /* newmessages & search */ \
 		#dummy \
 				{ display: none; } \
+		');
+		
+		$().pageCode() == 4 && AN.util.stackStyle('\
 		.ContentPanel > table { width: 100%; } \
 		.ContentPanel > table > tbody > tr > td:first-child { width: 100% !important; } \
-		.Topic_ForumInfoPanel { padding-right: 0; } \
+		.Topic_ForumInfoPanel{ padding-right: 0; } \
 		.Topic_ForumInfoPanel table td { padding-bottom: 5px; } \
 		');
 
-		$('#MainPageAd2').up('tr', $().pageCode() & ~36 && 2 || 1).prev().andSelf().addClass('an-ads');
+		$().pageCode() == 2 && AN.util.stackStyle('#MainPageAd2, #MainPageAd2 ~ br, #MainPageAd1, #ctl00_ContentPlaceHolder1_lb_NewPM + br { display: none; }');
+			
+		$().pageCode() & 60 && $('#MainPageAd2').up('tr', $().pageCode() & ~36 && 2 || 1).prev().andSelf().addClass('an-ads');
 	},
 	infinite: function()
 	{

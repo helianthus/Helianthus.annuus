@@ -1,0 +1,175 @@
+<project name="Helianthus.annuus">
+	<property name="dist_prefix" value="../../dist/v3" />
+	<tempfile property="temp" deleteonexit="true" />
+
+	<!--** build **-->
+	<target name="build">
+		<propertyfile file="metadata.ini">
+			<entry key="_AN_VERSION" default="0" />
+			<entry key="MAIN_VERSION" default="0" />
+			
+			<entry key="BUILD_NUMBER" default="0" type="int" operation="+" />
+		</propertyfile>
+		
+		<property file="metadata.ini" />
+		
+		<tstamp>
+			<format property="BUILD_TIME" pattern="yyyy-MM-dd HH:mm:ss" />
+		</tstamp>
+		<property name="AN_VERSION" value="${MAIN_VERSION}.${_AN_VERSION}.${BUILD_NUMBER}" />
+		<property name="AN_VERSION_STABLE" value="${MAIN_VERSION}.${_AN_VERSION}.${BUILD_NUMBER_STABLE}" />
+		
+		<delete dir="test" />
+		
+		<!--
+		<replaceregexp match="}\s*$" replace="}," encoding="UTF-8">
+			<fileset dir="src/modules" includes="*.js" erroronmissingdir="false" />
+		</replaceregexp>
+		-->
+
+		<concat destfile="${temp}" fixlastline="true" encoding="UTF-8">
+			<!-- lib -->
+			<fileset file="src/script/lib/jquery.js" />
+			<fileset dir="src/script/lib" includes="*.js" excludes="jquery.js" />
+			<!-- modules -->
+			<fileset dir="src/script/modules" includes="*.js" />
+			<!-- kernel -->
+			<fileset file="src/script/kernel/init.js" />
+		</concat>
+
+		<!-- annuus.js -->
+		<concat destfile="test/annuus.js" fixlastline="true" encoding="UTF-8">
+			<filterchain>
+				<expandproperties/>
+			</filterchain>
+
+			<fileset file="src/script/intro.js" />
+			<fileset file="${temp}" />
+			<fileset file="src/script/outro.js" />
+		</concat>
+
+		<!-- annuus.user.js -->
+		<copy file="test/annuus.js" tofile="test/user/annuus.user.js" overwrite="true" />
+
+		<!-- annuus.opera.js -->
+		<concat destfile="test/opera/annuus.opera.js" fixlastline="true" encoding="UTF-8">
+			<filterchain>
+				<expandproperties/>
+			</filterchain>
+
+			<fileset file="src/script/intro.js" />
+
+			<filelist dir="src/script/opera">
+				<file name="opera9.js" />
+				<file name="rubbish.js" />
+			</filelist>
+
+			<fileset file="${temp}" />
+			<fileset file="src/script/outro.js" />
+		</concat>
+
+		<!-- m2f -->
+		<copy todir="test" overwrite="true">
+			<fileset dir="src" includes="m2f/" />
+		</copy>
+
+		<copy file="src/m2f/Helianthus.annuus.xml" todir="test/m2f" overwrite="true" encoding="UTF-8">
+			<filterchain>
+				<expandproperties/>
+			</filterchain>
+		</copy>
+
+		<copy file="test/annuus.js" todir="test/m2f/Helianthus.annuus/Scripts" />
+
+		<!-- crx -->
+		<copy todir="test" overwrite="true" encoding="UTF-8">
+			<filterchain>
+				<expandproperties/>
+			</filterchain>
+
+			<fileset dir="src" includes="crx/" />
+		</copy>
+		<copy file="test/annuus.js" tofile="test/crx/annuus.js" overwrite="true" />
+		
+		<!-- privoxy -->
+		<copy todir="test" overwrite="true">
+			<fileset dir="src" includes="privoxy/" />
+		</copy>
+	</target>
+
+	<!--** stable **-->
+	<target name="stable" depends="build, _stable, _clean, _dist">
+		<!-- duplicate as beta -->
+		<delete dir="${dist_prefix}/beta" />
+		<copy todir="${dist_prefix}/beta">
+		 <fileset dir="${dist_prefix}/stable" includes="**/*" />
+		</copy>
+	
+		<!-- version.js -->
+		<copy file="src/version.js" tofile="../../other/an.v3.main.js" overwrite="true" encoding="UTF-8">
+			<filterset>
+				<filter token="AN_BETA" value="${AN_VERSION}" />
+				<filter token="AN_STABLE" value="${AN_VERSION}" />
+			</filterset>
+		</copy>
+
+		<!-- an.crx.xml 
+		<copy file="src/crx.xml" tofile="../../other/annuus.crx.xml" overwrite="true" encoding="UTF-8">
+			<filterchain>
+				<expandproperties/>
+			</filterchain>
+		</copy>
+		-->
+
+		<!-- metadata.ini -->
+		<propertyfile file="metadata.ini">
+			<entry key="AN_VERSION_STABLE" value="${AN_VERSION}" />
+			<entry key="_AN_VERSION" type="int" operation="+" value="1" />
+		</propertyfile>
+	</target>
+
+	<!--** beta **-->
+	<target name="beta" depends="build, _beta, _clean, _dist">
+		<copy file="src/version.js" tofile="../../other/an.v3.main.js" overwrite="true" encoding="UTF-8">
+			<filterset>
+				<filter token="AN_BETA" value="${AN_VERSION}" />
+				<filter token="AN_STABLE" value="${AN_VERSION_STABLE}" />
+			</filterset>
+		</copy>
+	</target>
+
+	<!--** internals **-->
+
+	<target name="_dist">
+		<!-- scripts -->
+		<copy todir="${dist_dir}">
+			<fileset dir="test" includes="annuus.js" />
+			<fileset dir="test/user" includes="annuus.user.js" />
+			<fileset dir="test/opera" includes="annuus.opera.js" />
+		</copy>
+		
+		<!-- crx -->
+		<exec executable="cmd.exe">
+			<!-- what a wonderful app: http://github.com/Constellation/crxmake -->
+			<arg value="/C crxmake --pack-extension=test/crx --pack-extension-key=build/key.pem --extension-out=${dist_dir}/annuus.crx" />
+		</exec>
+		
+		<!-- m2f -->
+		<zip basedir="test/m2f" destfile="${dist_dir}/annuus.m2f" />
+		
+		<!-- privoxy -->
+		<zip basedir="test/privoxy" destfile="${dist_dir}/annuus.privoxy.zip" />
+	</target>
+	
+	<target name="_clean">
+		<delete dir="${dist_dir}" />
+	</target>
+
+	<target name="_stable">
+		<property name="dist_dir" value="${dist_prefix}/stable" />
+	</target>
+
+	<target name="_beta">
+		<property name="dist_dir" value="${dist_prefix}/beta" />
+	</target>
+</project>

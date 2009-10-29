@@ -1,0 +1,28 @@
+<m2filter version="1.0">
+	<package author="向日" description="" title="Helianthus.annuus" support_url="http://code.google.com/p/helianthus-annuus/" version="${AN_VERSION}"/>
+	<filterlist>
+		<group name="Scripts" enable="1">
+			<filter enable="1" name="annuus.js" author="向日" type="text" comment="" action="3" priority="5" match="^" match_count="1" replace="&lt;script type=&quot;text/javascript&quot; src=&quot;file:///$MAXPATH()/Filter/Helianthus.annuus/Scripts/annuus.js&quot;&gt;&lt;/script&gt;" match_url="^http://forum\d+\.hkgolden\.com/(?:$|[a-z]+?\.(?:aspx|html))" exclude_url="" bound="&lt;/(?:head|body)&gt;" max_bound_size="0" exclude="" keywords=""/>
+		</group>
+		<group name="IE8 Re-enabler" enable="1">
+			<filter enable="1" name="ForceIE8" author="向日" type="text" comment="" action="3" priority="5" match="$" match_count="1" replace="&lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=8&quot; /&gt;" match_url="^http://forum\d+\.hkgolden\.com/(?:$|[a-z]+?\.(?:aspx|html))" exclude_url="" bound="&lt;head&gt;" max_bound_size="0" exclude="" keywords=""/>
+			<filter enable="1" name="FixInnerForm" author="向日" type="text" comment="" action="3" priority="5" match="form" match_count="4" replace="div" match_url="^http://forum\d+\.hkgolden\.com/(?:$|topic|search|newmessages)" exclude_url="" bound="&lt;(?:td|div)[^&gt;]+?&gt;\s*&lt;form|&lt;/form&gt;\s*&lt;/(?:td|div)&gt;" max_bound_size="0" exclude="" keywords=""/>
+			<filter enable="1" name="FixViewLayout" author="向日" type="text" comment="" action="3" priority="5" match=".+" match_count="2" replace="" match_url="^http://forum\d+\.hkgolden\.com/view" exclude_url="" bound="&lt;tr&gt;&lt;td[^&gt;]+&gt;&lt;span id=&quot;HKG\w+?GoogleAd&quot;.+?&lt;/tr&gt;" max_bound_size="0" exclude="" keywords=""/>
+			<filter enable="1" name="FixProfileLayout" author="向日" type="text" comment="" action="3" priority="5" match=".+" match_count="0" replace="" match_url="^http://forum\d+\.hkgolden\.com/ProfilePage" exclude_url="" bound="&lt;tr&gt;&lt;td[^&gt;]+&gt;&lt;span id=&quot;PMInLineAd.+?&lt;/tr&gt;" max_bound_size="0" exclude="" keywords=""/>
+			<filter enable="1" name="FixBookmarkBar" author="向日" type="text" comment="" action="3" priority="5" match=".+" match_count="0" replace="" match_url="^http://forum\d+\.hkgolden\.com/golden_apps" exclude_url="" bound="document\.all \? 'className' :" max_bound_size="0" exclude="" keywords=""/>
+		</group>
+		<group name="Others" enable="1">
+			<filter enable="0" name="ForceMarkup" author="向日" type="text" comment="May cause error" action="3" priority="20" match="(.+)" match_count="1" replace="&lt;html&gt;&lt;head&gt;&lt;/head&gt;&lt;body&gt;$1&lt;/body&gt;&lt;/html&gt;" match_url="^http://forum\d+\.hkgolden\.com/(?:$|[a-z]+?\.(?:aspx|html))" exclude_url="" bound="^[^&lt;]+$" max_bound_size="0" exclude="" keywords=""/>
+			<filter enable="1" name="ForceStrictMode" author="向日" type="text" comment="" action="3" priority="5" match="^" match_count="1" replace="&lt;!DOCTYPE html&gt;" match_url="^http://forum\d+\.hkgolden\.com/(?:$|[a-z]+?\.(?:aspx|html))" exclude_url="" bound="^\s*&lt;html&gt;" max_bound_size="0" exclude="" keywords=""/>
+		</group>
+		<group name="Rubbish Remover" enable="1">
+			<filter enable="1" name="GenSpan" author="向日" type="text" comment="" action="3" priority="5" match=".+" match_count="0" replace="" match_url="^http://forum\d+\.hkgolden\.com/(?:$|blog/|[a-z]+?\.(?:aspx|html))" exclude_url="" bound="\s*&lt;span id=&quot;Gen.+?&lt;/span&gt;\s*" max_bound_size="0" exclude="" keywords=""/>
+			<filter enable="1" name="AdScripts" author="向日" type="text" comment="" action="3" priority="5" match=".+?$KEYWORDS(ads).+" match_count="0" replace="" match_url="^http://forum\d+\.hkgolden\.com/(?:$|blog/|[a-z]+?\.(?:aspx|html))" exclude_url="" bound="\s*(?:&lt;script.+?&lt;/script&gt;|&lt;noscript.+?&lt;/noscript&gt;)\s*" max_bound_size="0" exclude="" keywords=""><keywords name="ads"><item>pixelinteractivemedia</item><item>PageAd</item><item>SideAd</item><item>GoogleAd</item><item>google_ad</item><item>InLineAd</item></keywords></filter>
+			<filter enable="1" name="Counters" author="向日" type="text" comment="" action="3" priority="5" match=".+?$KEYWORDS(counters).+" match_count="0" replace="" match_url="^http://forum\d+\.hkgolden\.com/(?:$|blog/|[a-z]+?\.(?:aspx|html))" exclude_url="" bound="\s*(?:&lt;script.+?&lt;/script&gt;|&lt;noscript.+?&lt;/noscript&gt;)\s*" max_bound_size="0" exclude="" keywords=""><keywords name="counters"><item>google-analytics</item><item>_getTracker</item><item>imrworldwide</item></keywords></filter>
+			<filter name="BookmarkBar" author="向日" type="text" comment="" action="3" priority="5" match=".+?(?:/golden_apps/|bbBar\.).+" match_count="0" replace="" match_url="^http://forum\d+\.hkgolden\.com/(?:$|[a-z]+?\.(?:aspx|html))" exclude_url="" bound="&lt;script.+?&lt;/script&gt;|onclick=&quot;[^&quot;]+&quot;" max_bound_size="0" exclude="" keywords="" enable="0"/>
+		</group>
+		<group name="File Cacher" enable="1">
+			<filter enable="1" name="Images" author="向日" type="text" comment="" action="3" priority="5" match="(?&lt;=['&quot;])(?:\.?/)?(?=faces|images|labels)" match_count="0" replace="file:///$MAXPATH()/Filter/Helianthus.annuus/FileCacher/" match_url="^http://forum\d+\.hkgolden\.com/(?:$|blog/|[a-z]+?\.(?:aspx|html))" exclude_url="" bound="&lt;(?:img|image|input)[^&gt;]+?src=&quot;(?:\.?/)?(?:faces|images|labels)|MM_swapImage[^)]+?'/images/" max_bound_size="0" exclude="" keywords=""/>
+		</group>
+	</filterlist>
+</m2filter>

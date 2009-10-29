@@ -100,7 +100,10 @@
 	<!--** stable **-->
 	<target name="stable" depends="build, _stable, _clean, _dist">
 		<!-- duplicate as beta -->
-		<delete dir="${dist_prefix}/beta" />
+		<delete failonerror="false">
+			<fileset dir="${dist_prefix}/beta" includes="**/*" />
+		</delete>
+		
 		<copy todir="${dist_prefix}/beta">
 		 <fileset dir="${dist_prefix}/stable" includes="**/*" />
 		</copy>
@@ -162,7 +165,9 @@
 	</target>
 	
 	<target name="_clean">
-		<delete dir="${dist_dir}" />
+		<delete failonerror="false">
+			<fileset dir="${dist_dir}" includes="*/**" />
+		</delete>
 	</target>
 
 	<target name="_stable">

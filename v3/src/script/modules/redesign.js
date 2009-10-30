@@ -177,12 +177,14 @@ AN.mod['Component Redesigner'] = { ver: 'N/A', author: '向日', fn: {
 			toggleQR(false);
 		});
 
-		window.OnQuoteSucceeded = function(result)
+		window._OnQuoteSucceeded = function(result)
 		{
 			toggleQR(true);
 			$('#ctl00_ContentPlaceHolder1_messagetext').val(unescape(result) + '\n').scrollTop(99999);
 			window.moveEnd();
 		};
+		
+		window.OnQuoteSucceeded = new window.Function('result', 'window._OnQuoteSucceeded(result);');
 	}
 }
 

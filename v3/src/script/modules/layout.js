@@ -164,19 +164,6 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	}
 },
 
-/*
-'c73317d9-f2c4-465a-bc56-f0f817f7eaf6':
-{
-	desc: 'Opera: 修正發表按扭位置',
-	page: { 16: $.browser.opera || 'disabled' },
-	type: 3,
-	once: function()
-	{
-		$('#searchstring').up('td').prev().attr('valign', 'top');
-	}
-},
-*/
-
 '4bf6619f-2cd8-4aa2-a54a-e7d7255e8603':
 {
 	desc: '隱藏熱門關鍵字',

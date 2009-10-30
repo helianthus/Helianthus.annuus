@@ -914,22 +914,6 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	}
 },
 
-'b2be12c7-8c97-4293-b283-51232cf91746':
-{
-	desc: '強制鎖定用戶名於一行',
-	page: { 28: 'disabled' },
-	type: 6,
-	infinite: function(jDoc)
-	{
-		/*
-		jDoc.topics().jNameLinks.each(function()
-		{
-			this.parent().css('white-space', 'nowrap');
-		});
-		*/
-	}
-},
-
 'e19a8d96-151f-4f86-acfc-0af12b53b99b':
 {
 	desc: '快速3擊左鍵關閉頁面 [FF: 只能配合連結開新頁使用]',

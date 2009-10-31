@@ -108,7 +108,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 'b7ef89eb-1190-4466-899a-c19b3621d6b1':
 {
 	desc: 'Opera: 修正無法使用Enter搜尋的錯誤',
-	page: { 24: $.browser.opera || 'disabled' },
+	page: { 28: $.browser.opera || 'disabled' },
 	type: 4,
 	once: function()
 	{

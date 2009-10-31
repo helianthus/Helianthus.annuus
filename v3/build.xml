@@ -3,7 +3,7 @@
 	<tempfile property="temp" deleteonexit="true" />
 
 	<!--** build **-->
-	<target name="build">
+	<target name="build" depends="_beta">
 		<propertyfile file="metadata.ini">
 			<entry key="_AN_VERSION" default="0" />
 			<entry key="MAIN_VERSION" default="0" />
@@ -68,6 +68,13 @@
 			<fileset file="src/script/outro.js" />
 		</concat>
 
+		<!-- annuus.chrome.js -->
+		<copy file="src/chrome/chrome.js" tofile="test/chrome/annuus.chrome.user.js" overwrite="true" encoding="UTF-8">
+			<filterchain>
+				<expandproperties/>
+			</filterchain>
+		</copy>
+
 		<!-- m2f -->
 		<copy todir="test" overwrite="true">
 			<fileset dir="src" includes="m2f/" />
@@ -92,13 +99,17 @@
 		<copy file="test/annuus.js" tofile="test/crx/annuus.js" overwrite="true" />
 		
 		<!-- privoxy -->
-		<copy todir="test" overwrite="true">
-			<fileset dir="src" includes="privoxy/" />
+		<copy todir="test/privoxy" overwrite="true" encoding="UTF-8">
+			<filterchain>
+				<expandproperties/>
+			</filterchain>
+			
+			<fileset dir="src/privoxy" includes="**/*" />
 		</copy>
 	</target>
 
 	<!--** stable **-->
-	<target name="stable" depends="build, _stable, _clean, _dist">
+	<target name="stable" depends="_stable, _clean, build, _dist">
 		<!-- duplicate as beta -->
 		<delete failonerror="false">
 			<fileset dir="${dist_prefix}/beta" includes="**/*" />
@@ -132,7 +143,7 @@
 	</target>
 
 	<!--** beta **-->
-	<target name="beta" depends="build, _beta, _clean, _dist">
+	<target name="beta" depends="_beta, _clean, build, _dist">
 		<copy file="src/version.js" tofile="../../other/an.v3.main.js" overwrite="true" encoding="UTF-8">
 			<filterset>
 				<filter token="AN_BETA" value="${AN_VERSION}" />
@@ -149,6 +160,7 @@
 			<fileset dir="test" includes="annuus.js" />
 			<fileset dir="test/user" includes="annuus.user.js" />
 			<fileset dir="test/opera" includes="annuus.opera.js" />
+			<fileset dir="test/chrome" includes="annuus.chrome.user.js" />
 		</copy>
 		
 		<!-- crx -->
@@ -172,9 +184,11 @@
 
 	<target name="_stable">
 		<property name="dist_dir" value="${dist_prefix}/stable" />
+		<property name="AN_URL" value="http://helianthus-annuus.googlecode.com/svn/dist/v3/stable/annuus.js" />
 	</target>
 
 	<target name="_beta">
 		<property name="dist_dir" value="${dist_prefix}/beta" />
+		<property name="AN_URL" value="http://helianthus-annuus.googlecode.com/svn/dist/v3/beta/annuus.js" />
 	</target>
 </project>

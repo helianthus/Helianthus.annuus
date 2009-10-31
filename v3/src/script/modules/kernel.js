@@ -15,7 +15,7 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 			contentType: 'application/x-www-form-urlencoded; charset=UTF-8'
 		});
 
-		var AN_VER = '3.5';
+		var AN_VER = '3.5b';
 		
 		if(AN.util.data('AN-version') != AN_VER)
 		{
@@ -180,7 +180,7 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 '722b69f8-b80d-4b0e-b608-87946e00cfdc':
 {
 	desc: '強制鎖定闊度',
-	page: { 108: true },
+	page: { 124: true },
 	type: 3,
 	infinite: function()
 	{

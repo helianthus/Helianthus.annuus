@@ -1,7 +1,6 @@
 # Scripts
 FILTER: annuus.js # switch the below 2 to use beta version
-s`</head>`<script type="text/javascript" src="http://helianthus-annuus.googlecode.com/svn/dist/v3/stable/annuus.js"></script>\n</head>`is
-### s`</head>`<script type="text/javascript" src="http://helianthus-annuus.googlecode.com/svn/dist/v3/beta/annuus.js"></script>\n</head>`is
+s`</head>`<script type="text/javascript" src="${AN_URL}"></script>\n</head>`is
 
 # IE8 Re-enabler
 FILTER: annuus.ForceIE8

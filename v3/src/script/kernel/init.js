@@ -377,7 +377,8 @@ $.extend(AN,
 			256: { action: 'post', desc: '發佈/回覆頁' },
 			512: { action: 'login', desc: '登入頁' },
 			1024: { action: 'giftpage', desc: '人氣頁' },
-			2048: { action: 'blog', desc: '網誌頁' }
+			2048: { action: 'blog', desc: '網誌頁' },
+			4096: { action: 'message', desc: '系統信息頁' }
 		}
 	},
 

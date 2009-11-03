@@ -12,7 +12,7 @@ forum*.hkgolden.com/(?:$|[a-z]+?\.(?:aspx|html))
 { +filter{annuus.ForceIE8} }
 forum*.hkgolden.com/(?:$|[a-z]+?\.(?:aspx|html))
 { +filter{annuus.FixInnerForm} }
-forum*.hkgolden.com/(?:$|topic|search|newmessages)
+forum*.hkgolden.com/(?:$|topic|search|tags)
 { +filter{annuus.FixViewLayout} }
 forum*.hkgolden.com/view
 { +filter{annuus.FixProfileLayout} }

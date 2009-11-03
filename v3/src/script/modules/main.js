@@ -16,25 +16,28 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			// default
 			2: '\
 			#MainPageAd2, #MainPageAd2 ~ br, /* text ads */\
+			#ctl00_ContentPlaceHolder1_MiddleAdSpace1, /* text ad */\
 			.ContentPanel > div > div:first-child, /* flash ad */\
 			#ctl00_ContentPlaceHolder1_lb_NewPM + br /* blank line */\
 				{ display: none; } \
 			',
 			// topics
 			4: '\
-			.ContentPanel > table > tbody > tr > td + td, /* flash ad */\
-			/* inline ads */\
+			.ContentPanel > table > tbody > tr > td + td /* flash ad */\
+				{ display: none; } \
+			/* inline ads, non-IE only */\
 			#HotTopics tr:nth-child(11n+2) \
 				{ display: none; } \
 			.ContentPanel > table > tbody > tr > td:first-child, /* fix forumInfo width, IE only */\
 			.ContentPanel > table /* fix forumInfo width */\
 				{ width: 100% !important; } \
 			',
-			// search
+			// search, tags
 			24: '\
 			#ctl00_ContentPlaceHolder1_lb_NewPM + br ~ br, /* forumInfo blanks */\
-			#ctl00_ContentPlaceHolder1_topics_form > script:first-child + table td + td, /* flash ad */\
-			/* inline ads */\
+			#ctl00_ContentPlaceHolder1_topics_form > script:first-child + table td + td /* flash ad */\
+				{ display: none; } \
+			/* inline ads, non-IE only */\
 			#ctl00_ContentPlaceHolder1_topics_form > div + table + table tr:nth-child(11n+2), \
 			#ctl00_ContentPlaceHolder1_topics_form > div + table + table table tr:last-child \
 				{ display: none; } \
@@ -52,12 +55,14 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			32: '\
 			#ctl00_ContentPlaceHolder1_view_form > script:first-child + table tr:first-child + tr ~ tr, /* 高登活動資訊 */\
 			#ctl00_ContentPlaceHolder1_view_form > div[style*="99%"] table[width] > tbody > tr + tr + tr, /* top & bottom ads */\
-			#ctl00_ContentPlaceHolder1_view_form > div > table[width="100%"] > tbody > tr + tr /* inline ads */\
+			#ctl00_ContentPlaceHolder1_view_form > div[style*="99%"] > table[width="100%"] > tbody > tr + tr /* inline ads */\
 				{ display: none; } \
 			',
-			// default, topics, search, tags, view
-			62: '\
-			#ctl00_ContentPlaceHolder1_MiddleAdSpace1 { display: none; } /* text ad */\
+			// topics, search, tags, view
+			60: '\
+			#ctl00_ContentPlaceHolder1_MiddleAdSpace1 { margin-top: 5px !important; } \
+			#ctl00_ContentPlaceHolder1_MiddleAdSpace1 > div { padding: 0 !important; } \
+			#ctl00_ContentPlaceHolder1_MiddleAdSpace1 div[style*="right"] { display: none; } /* text ad */\
 			',
 			// profilepage
 			64: '\
@@ -67,7 +72,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		},
 		function(nPageCode){ $().pageCode() & nPageCode && AN.util.stackStyle(this); });
 
-		if($.browser.msie && $().pageCode() & 12)
+		if($.browser.msie && $().pageCode() & 28)
 		{
 			AN.util.stackStyle($().pageName() == 'topics'
 			?

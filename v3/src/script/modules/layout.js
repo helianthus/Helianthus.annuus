@@ -177,6 +177,17 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	}
 },
 
+'a5d7f8f0-99fc-4aaf-8c65-373b17cfcf69':
+{
+	desc: '隱藏投票站連結(如有)',
+	page: { 60: false },
+	type: 3,
+	once: function()
+	{
+		AN.util.stackStyle('#ctl00_ContentPlaceHolder1_MiddleAdSpace1 { display: none; }');
+	}
+},
+
 'f41e288e-cd1d-4649-a396-83d92d99ded8':
 {
 	desc: '隱藏紅人榜',

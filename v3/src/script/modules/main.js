@@ -60,8 +60,6 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			',
 			// topics, search, tags, view
 			60: '\
-			#ctl00_ContentPlaceHolder1_MiddleAdSpace1 { margin-top: 5px !important; } \
-			#ctl00_ContentPlaceHolder1_MiddleAdSpace1 > div { padding: 0 !important; } \
 			#ctl00_ContentPlaceHolder1_MiddleAdSpace1 div[style*="right"] { display: none; } /* text ad */\
 			',
 			// profilepage
@@ -266,17 +264,6 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	infinite: function(jDoc)
 	{
 		jDoc.replies().jContents.find('a').attr('target', '_blank');
-	}
-},
-
-'6e978310-e87b-4043-9def-076a13377c19':
-{
-	desc: '更換favicon(小丑icon) [部份瀏覽器無效]',
-	page: { 65534: false },
-	type: 4,
-	once: function()
-	{
-		$('head').append('<link rel="shortcut icon" href="http://helianthus-annuus.googlecode.com/svn/other/hkg.ico" />');
 	}
 },
 

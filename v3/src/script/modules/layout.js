@@ -7,7 +7,7 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	type: 3,
 	once: function()
 	{
-		AN.util.stackStyle('.Topic_FunctionPanel { overflow: hidden; }');
+		AN.util.stackStyle('.Topic_FunctionPanel > .ClearLeft { clear: both; }');
 	}
 },
 
@@ -142,8 +142,15 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	type: 3,
 	once: function()
 	{
+		AN.util.stackStyle('\
+		#ctl00_ContentPlaceHolder1_MiddleAdSpace1 > div { padding: 0 !important; } \
+		');
+		
 		if($().pageName() == 'topics')
-			AN.util.stackStyle('.Topic_FunctionPanel { margin-top: 3px; }');
+			AN.util.stackStyle('\
+			.Topic_FunctionPanel { margin-top: 3px; } \
+			#ctl00_ContentPlaceHolder1_MiddleAdSpace1 { margin-top: 5px !important; } \
+			');
 		else
 			AN.util.stackStyle('\
 			td[valign="bottom"] > br:first-child { display: none; } \

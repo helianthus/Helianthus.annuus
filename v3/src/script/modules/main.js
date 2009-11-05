@@ -54,8 +54,8 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			// view
 			32: '\
 			#ctl00_ContentPlaceHolder1_view_form > script:first-child + table tr:first-child + tr ~ tr, /* 高登活動資訊 */\
-			#ctl00_ContentPlaceHolder1_view_form > div[style*="99%"] table[width] > tbody > tr + tr + tr, /* top & bottom ads */\
-			#ctl00_ContentPlaceHolder1_view_form > div[style*="99%"] > table[width="100%"] > tbody > tr + tr /* inline ads */\
+			#ctl00_ContentPlaceHolder1_view_form > div[style*="99%"] table[cellspacing="1"][cellpadding="2"] > tbody > tr + tr + tr, /* top & bottom ads */\
+			#ctl00_ContentPlaceHolder1_view_form > div > table[width="100%"] > tbody > tr + tr /* inline ads */\
 				{ display: none; } \
 			',
 			// topics, search, tags, view

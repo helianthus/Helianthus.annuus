@@ -7,7 +7,7 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	type: 3,
 	once: function()
 	{
-		AN.util.stackStyle('.Topic_FunctionPanel > .ClearLeft { clear: both; }');
+		AN.util.stackStyle('.Topic_FunctionPanel > .ClearLeft { clear: both; } /*-> IE bug fix? ->*/ .Topic_FunctionPanel { overflow: hidden; }');
 	}
 },
 

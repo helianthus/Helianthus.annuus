@@ -1,17 +1,18 @@
-<project name="Helianthus.annuus">
+﻿<project name="Helianthus.annuus">
 	<property name="dist_prefix" value="../../dist/v3" />
-	<tempfile property="temp" deleteonexit="true" />
+	<tempfile property="temp" destdir="test" suffix=".js" deleteonexit="true" />
+	<tempfile property="temp2" destdir="test" suffix=".js" deleteonexit="true" />
 
 	<!--** build **-->
 	<target name="build" depends="_beta">
-		<propertyfile file="metadata.ini">
+		<propertyfile file="build.ini">
 			<entry key="_AN_VERSION" default="0" />
 			<entry key="MAIN_VERSION" default="0" />
 			
 			<entry key="BUILD_NUMBER" default="0" type="int" operation="+" />
 		</propertyfile>
 		
-		<property file="metadata.ini" />
+		<property file="build.ini" />
 		
 		<tstamp>
 			<format property="BUILD_TIME" pattern="yyyy-MM-dd HH:mm:ss" />
@@ -20,6 +21,7 @@
 		<property name="AN_VERSION_STABLE" value="${MAIN_VERSION}.${_AN_VERSION}.${BUILD_NUMBER_STABLE}" />
 		
 		<delete dir="test" />
+		<mkdir dir="test" />
 		
 		<!--
 		<replaceregexp match="}\s*$" replace="}," encoding="UTF-8">
@@ -38,25 +40,37 @@
 		</concat>
 
 		<!-- annuus.js -->
-		<concat destfile="test/annuus.js" fixlastline="true" encoding="UTF-8">
+		<concat destfile="test/annuus-raw.js" fixlastline="true" encoding="UTF-8">
 			<filterchain>
 				<expandproperties/>
 			</filterchain>
 
+			<fileset file="src/BOM" />
 			<fileset file="src/script/intro.js" />
 			<fileset file="${temp}" />
 			<fileset file="src/script/outro.js" />
+		</concat>
+		
+		<!-- minify -->
+		<java jar="build/yuicompressor/yuicompressor.jar" fork="true" failonerror="true">
+			<arg line="test/annuus-raw.js -o ${temp2} --charset UTF-8" />
+		</java>
+		
+		<!-- add BOM -->
+		<concat destfile="test/annuus.js" binary="true">
+			<fileset file="src/BOM" />
+			<fileset file="${temp2}" />
 		</concat>
 
 		<!-- annuus.user.js -->
 		<copy file="test/annuus.js" tofile="test/user/annuus.user.js" overwrite="true" />
 
 		<!-- annuus.opera.js -->
-		<concat destfile="test/opera/annuus.opera.js" fixlastline="true" encoding="UTF-8">
+		<concat destfile="test/annuus-raw.opera.js" fixlastline="true" encoding="UTF-8">
 			<filterchain>
 				<expandproperties/>
 			</filterchain>
-
+			<fileset file="src/BOM" />
 			<fileset file="src/script/intro.js" />
 
 			<filelist dir="src/script/opera">
@@ -66,6 +80,17 @@
 
 			<fileset file="${temp}" />
 			<fileset file="src/script/outro.js" />
+		</concat>
+		
+		<!-- minify -->
+		<java jar="build/yuicompressor/yuicompressor.jar" fork="true" failonerror="true">
+			<arg line="test/annuus-raw.opera.js -o ${temp2} --charset UTF-8" />
+		</java>
+		
+		<!-- add BOM -->
+		<concat destfile="test/opera/annuus.opera.js" binary="true">
+			<fileset file="src/BOM" />
+			<fileset file="${temp2}" />
 		</concat>
 
 		<!-- annuus.chrome.js -->
@@ -135,8 +160,8 @@
 		</copy>
 		-->
 
-		<!-- metadata.ini -->
-		<propertyfile file="metadata.ini">
+		<!-- build.ini -->
+		<propertyfile file="build.ini">
 			<entry key="AN_VERSION_STABLE" value="${AN_VERSION}" />
 			<entry key="_AN_VERSION" type="int" operation="+" value="1" />
 		</propertyfile>
@@ -164,8 +189,8 @@
 		</copy>
 		
 		<!-- crx -->
-		<exec executable="cmd.exe">
-			<!-- what a wonderful app: http://github.com/Constellation/crxmake -->
+		<exec executable="cmd">
+			<!-- http://github.com/Constellation/crxmake -->
 			<arg value="/C crxmake --pack-extension=test/crx --pack-extension-key=build/key.pem --extension-out=${dist_dir}/annuus.crx" />
 		</exec>
 		

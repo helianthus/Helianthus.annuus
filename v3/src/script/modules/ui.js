@@ -842,7 +842,7 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 	options:
 	{
 		bAddInfoButton: { desc: '加入資訊元件開關按扭', defaultValue: false, type: 'checkbox' },
-		bAutoShowInfo: { desc: '自動顯示資訊視窗', defaultValue: true, type: 'checkbox' },
+		bAutoShowInfo: { desc: '自動顯示資訊視窗', defaultValue: true, type: 'checkbox' }
 	},
 	once: function(jDoc)
 	{

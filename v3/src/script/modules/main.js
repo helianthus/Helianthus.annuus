@@ -6,6 +6,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	desc: '隱藏廣告',
 	page: { 65535: true },
 	type: 3,
+	options: { 'bRetroHideAds': { desc: '相容性模式', defaultValue: false, type: 'checkbox' } },
 	once: function()
 	{
 		$.each(
@@ -25,9 +26,6 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			4: '\
 			.ContentPanel > table > tbody > tr > td + td /* flash ad */\
 				{ display: none; } \
-			/* inline ads, non-IE only */\
-			#HotTopics tr:nth-child(11n+2) \
-				{ display: none; } \
 			.ContentPanel > table > tbody > tr > td:first-child, /* fix forumInfo width, IE only */\
 			.ContentPanel > table /* fix forumInfo width */\
 				{ width: 100% !important; } \
@@ -37,11 +35,6 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			#ctl00_ContentPlaceHolder1_lb_NewPM + br ~ br, /* forumInfo blanks */\
 			#ctl00_ContentPlaceHolder1_topics_form > script:first-child + table td + td /* flash ad */\
 				{ display: none; } \
-			/* inline ads, non-IE only */\
-			#ctl00_ContentPlaceHolder1_topics_form > div + table + table tr:nth-child(11n+2), \
-			#ctl00_ContentPlaceHolder1_topics_form > div + table + table table tr:last-child \
-				{ display: none; } \
-			#ctl00_ContentPlaceHolder1_topics_form > div + table + table table tr:last-child { display: none; } \
 			#ctl00_ContentPlaceHolder1_topics_form > script:first-child + table td:first-child, /* fix forumInfo width, IE only */\
 			#ctl00_ContentPlaceHolder1_topics_form > script:first-child + table /* fix forumInfo width */\
 				{ width: 100% !important; } \
@@ -70,27 +63,63 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		},
 		function(nPageCode){ $().pageCode() & nPageCode && AN.util.stackStyle(this); });
 
-		if($.browser.msie && $().pageCode() & 28)
+		if(AN.util.getOptions('bRetryHideAds'))
 		{
-			AN.util.stackStyle($().pageName() == 'topics'
-			?
-			'\
-			#HotTopics tr:first-child+tr, \
-			#HotTopics tr:first-child+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr, \
-			#HotTopics tr:first-child+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr, \
-			#HotTopics tr:first-child+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr \
-				{ display: none; } \
-			'
-			:
-			'\
-			#ctl00_ContentPlaceHolder1_topics_form > div + table + table tr:first-child+tr, \
-			#ctl00_ContentPlaceHolder1_topics_form > div + table + table tr:first-child+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr, \
-			#ctl00_ContentPlaceHolder1_topics_form > div + table + table tr:first-child+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr, \
-			#ctl00_ContentPlaceHolder1_topics_form > div + table + table tr:first-child+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr, \
-			td[height="52"] \
-				{ display: none; } \
-			'
-			);
+			AN.util.stackStyle('td[height="52"] { display: none; }');
+		}
+		else if($().pageCode() & 28)
+		{
+			if($.browser.msie)
+			{
+				AN.util.stackStyle($.sprintf(
+				$().pageName() == 'topics'
+				?
+				'\
+				#HotTopics tr:first-child+tr%(extra)s, \
+				#HotTopics tr:first-child+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr%(extra)s, \
+				#HotTopics tr:first-child+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr%(extra)s, \
+				#HotTopics tr:first-child+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr%(extra)s \
+					{ display: none; } \
+				'
+				:
+				'\
+				#ctl00_ContentPlaceHolder1_topics_form > div + table + table tr:first-child+tr%(extra)s, \
+				#ctl00_ContentPlaceHolder1_topics_form > div + table + table tr:first-child+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr%(extra)s, \
+				#ctl00_ContentPlaceHolder1_topics_form > div + table + table tr:first-child+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr%(extra)s, \
+				#ctl00_ContentPlaceHolder1_topics_form > div + table + table tr:first-child+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr%(extra)s, \
+				td[height="52"] \
+					{ display: none; } \
+				'
+				,
+				{ extra: $('#aspnetForm[action*="type=MB"]').length ? '+tr' : '' }
+				));
+			}
+			else
+			{
+				AN.util.stackStyle($.sprintf(
+				$().pageName() == 'topics'
+				?
+				'\
+				#HotTopics tr:nth-child(11n+%(num)s) \
+					{ display: none; } \
+				'
+				:
+				'\
+				#ctl00_ContentPlaceHolder1_topics_form > div + table + table tr:nth-child(11n+%(num)s), \
+				#ctl00_ContentPlaceHolder1_topics_form > div + table + table table tr:last-child \
+					{ display: none; } \
+				'
+				,
+				{ num: $('#aspnetForm[action*="type=MB"]').length ? 3 : 2 }
+				));
+			}
+		}
+	},
+	infinite: function()
+	{
+		if(AN.util.getOptions('bRetroHideAds'))
+		{
+			$('td[height="52"]').parent().hide();
 		}
 	}
 },
@@ -630,7 +659,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	type: 6,
 	infinite: function(jDoc)
 	{
-		var rLink = /(?:ftp|https?):\/\/[\w./?:;~!@#$%^&*()+=-]+/i;
+		var rLink = /(?:ftp|https?):\/\/[\w.\/?:;~!@#$%^&*()+=-]+/i;
 		var aMatch;
 
 		var checkNode = function(nTarget)
@@ -842,7 +871,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 '85950fa3-c5f0-4456-a81a-30a90ba6425c':
 {
 	desc: '顯示防盜鏈/域名被禁圖片 [FF: 建議改用RefControl] [暫時停用]',
-	page: { 32: 'disabled'/*!$.browser.mozilla*/ },
+	page: { 32: 'disabled'/* !$.browser.mozilla */ },
 	type: 6,
 	options: { sImgProxy: { desc: '圖片代理', defaultValue: 'http://www.pomo.cn/showpic.asp?url=', type: 'text' } },
 	infinite: function(jDoc)

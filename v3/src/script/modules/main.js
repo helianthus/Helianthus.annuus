@@ -63,7 +63,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		},
 		function(nPageCode){ $().pageCode() & nPageCode && AN.util.stackStyle(this); });
 
-		if(AN.util.getOptions('bRetryHideAds'))
+		if(AN.util.getOptions('bRetroHideAds'))
 		{
 			AN.util.stackStyle('td[height="52"] { display: none; }');
 		}
@@ -222,13 +222,13 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 'b6b232c8-1f26-449e-bb0d-2b7826bf95ef':
 {
 	desc: '優化圖片縮放',
-	page: { 32: true },
+	page: { 32: true, 192: true },
 	type: 4,
 	once: function(jDoc)
 	{
 		window.DrawImage = $.blank;
 
-		AN.util.stackStyle('img[onLoad] { width: auto; height: auto; max-width: 100% }');
+		AN.util.stackStyle('img[onload] { width: auto; height: auto; max-width: 100% }');
 	}
 },
 

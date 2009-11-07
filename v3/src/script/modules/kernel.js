@@ -180,13 +180,13 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 '722b69f8-b80d-4b0e-b608-87946e00cfdc':
 {
 	desc: '強制鎖定闊度',
-	page: { 124: true },
+	page: { 65534: true },
 	type: 3,
 	infinite: function()
 	{
 		AN.util.stackStyle(' \
 		body { word-wrap: break-word; } \
-		.repliers_right { overflow-x: hidden; table-layout: fixed; } \
+		.ListPMText table, .repliers table { overflow-x: hidden; table-layout: fixed; } \
 		');
 	}
 },

@@ -1,7 +1,5 @@
 ﻿<project name="Helianthus.annuus">
 	<property name="dist_prefix" value="../../dist/v3" />
-	<tempfile property="temp" destdir="test" suffix=".js" deleteonexit="true" />
-	<tempfile property="temp2" destdir="test" suffix=".js" deleteonexit="true" />
 
 	<!--** build **-->
 	<target name="build" depends="_beta">
@@ -28,8 +26,11 @@
 			<fileset dir="src/modules" includes="*.js" erroronmissingdir="false" />
 		</replaceregexp>
 		-->
+		
+		<tempfile property="script_body" destdir="test" suffix=".js" deleteonexit="true" />
+		<tempfile property="temp" destdir="test" suffix=".js" deleteonexit="true" />
 
-		<concat destfile="${temp}" fixlastline="true" encoding="UTF-8">
+		<concat destfile="${script_body}" fixlastline="true" encoding="UTF-8">
 			<!-- lib -->
 			<fileset file="src/script/lib/jquery.js" />
 			<fileset dir="src/script/lib" includes="*.js" excludes="jquery.js" />
@@ -46,20 +47,25 @@
 			</filterchain>
 
 			<fileset file="src/BOM" />
+			<fileset file="src/script/header.js" />
 			<fileset file="src/script/intro.js" />
-			<fileset file="${temp}" />
+			<fileset file="${script_body}" />
 			<fileset file="src/script/outro.js" />
 		</concat>
 		
 		<!-- minify -->
 		<java jar="build/yuicompressor/yuicompressor.jar" fork="true" failonerror="true">
-			<arg line="test/annuus-raw.js -o ${temp2} --charset UTF-8" />
+			<arg line="test/annuus-raw.js -o ${temp} --charset UTF-8" />
 		</java>
 		
-		<!-- add BOM -->
-		<concat destfile="test/annuus.js" binary="true">
+		<concat destfile="test/annuus.js" encoding="UTF-8">
+			<filterchain>
+				<expandproperties/>
+			</filterchain>
+			
 			<fileset file="src/BOM" />
-			<fileset file="${temp2}" />
+			<fileset file="src/script/header.js" />
+			<fileset file="${temp}" />
 		</concat>
 
 		<!-- annuus.user.js -->
@@ -70,7 +76,9 @@
 			<filterchain>
 				<expandproperties/>
 			</filterchain>
+			
 			<fileset file="src/BOM" />
+			<fileset file="src/script/header.js" />
 			<fileset file="src/script/intro.js" />
 
 			<filelist dir="src/script/opera">
@@ -78,19 +86,23 @@
 				<file name="rubbish.js" />
 			</filelist>
 
-			<fileset file="${temp}" />
+			<fileset file="${script_body}" />
 			<fileset file="src/script/outro.js" />
 		</concat>
 		
 		<!-- minify -->
 		<java jar="build/yuicompressor/yuicompressor.jar" fork="true" failonerror="true">
-			<arg line="test/annuus-raw.opera.js -o ${temp2} --charset UTF-8" />
+			<arg line="test/annuus-raw.opera.js -o ${temp} --charset UTF-8" />
 		</java>
 		
-		<!-- add BOM -->
-		<concat destfile="test/opera/annuus.opera.js" binary="true">
+		<concat destfile="test/opera/annuus.opera.js" encoding="UTF-8">
+			<filterchain>
+				<expandproperties/>
+			</filterchain>
+			
 			<fileset file="src/BOM" />
-			<fileset file="${temp2}" />
+			<fileset file="src/script/header.js" />
+			<fileset file="${temp}" />
 		</concat>
 
 		<!-- annuus.chrome.js -->

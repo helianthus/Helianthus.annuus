@@ -144,7 +144,7 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 			var aLastest = oMain.ver[sType]['annuus'].split('.');
 			var aCurrent = AN.version.split('.');
 
-			for(var i=0; i<aToCheck.length; i++)
+			for(var i=0; i<aLastest.length; i++)
 			{
 				if(aCurrent[i] != aLastest[i])
 				{

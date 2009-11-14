@@ -309,6 +309,21 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			document.title = 'Google';
 		}
 	}
+}, 
+
+'e54d5c5f-47ae-4839-b4e8-6fc3733edfef':
+{
+	desc: '改進公司模式(假扮為Google)',
+	page: { 65534: true },
+	type: 4,
+	once: function()
+	{
+		if(AN.util.cookie('companymode') == 'Y')
+		{
+			$('head').append('<link rel="shortcut icon" href="http://www.google.com/favicon.ico" />');
+			document.title = 'Google';
+		}
+	}
 },
 
 // 加入物件 //

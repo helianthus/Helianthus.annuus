@@ -431,12 +431,12 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 					return;
 				}
 
-				var $$ = this.contentWindow.AN.jQuery;
+				var _$ = this.contentWindow.jQuery;
 
-				$$('#ctl00_ContentPlaceHolder1_txt_email').val(sEmail);
-				$$('#ctl00_ContentPlaceHolder1_txt_pass').val(sPass);
+				_$('#ctl00_ContentPlaceHolder1_txt_email').val(sEmail);
+				_$('#ctl00_ContentPlaceHolder1_txt_pass').val(sPass);
 
-				$$.post('login.aspx', $$('#aspnetForm').serialize() + '&ctl00%24ContentPlaceHolder1%24linkb_login=', function()
+				_$.post('login.aspx', _$('#aspnetForm').serialize() + '&ctl00%24ContentPlaceHolder1%24linkb_login=', function()
 				{
 					jThis.remove();
 				});

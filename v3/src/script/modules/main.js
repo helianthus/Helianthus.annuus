@@ -296,20 +296,16 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	}
 },
 
-'e54d5c5f-47ae-4839-b4e8-6fc3733edfef':
+'6e978310-e87b-4043-9def-076a13377c19':
 {
-	desc: '改進公司模式(假扮為Google)',
-	page: { 65534: true },
+	desc: '更換favicon(小丑icon) [部份瀏覽器無效]',
+	page: { 65534: false },
 	type: 4,
 	once: function()
 	{
-		if(AN.util.cookie('companymode') == 'Y')
-		{
-			$('head').append('<link rel="shortcut icon" href="http://www.google.com/favicon.ico" />');
-			document.title = 'Google';
-		}
+		$('head').append('<link rel="shortcut icon" href="http://helianthus-annuus.googlecode.com/svn/other/hkg.ico" />');
 	}
-}, 
+},
 
 'e54d5c5f-47ae-4839-b4e8-6fc3733edfef':
 {

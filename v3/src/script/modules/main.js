@@ -16,7 +16,6 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			',
 			// default
 			2: '\
-			#MainPageAd2, #MainPageAd2 ~ br, /* text ads */\
 			#ctl00_ContentPlaceHolder1_MiddleAdSpace1, /* text ad */\
 			.ContentPanel > div > div:first-child, /* flash ad */\
 			#ctl00_ContentPlaceHolder1_lb_NewPM + br /* blank line */\
@@ -24,31 +23,34 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			',
 			// topics
 			4: '\
-			.ContentPanel > table > tbody > tr > td + td /* flash ad */\
+			.ContentPanel > table td:first-child { width: 100% !important; } \
+			.ContentPanel > table td:first-child + td \
 				{ display: none; } \
-			.ContentPanel > table > tbody > tr > td:first-child, /* fix forumInfo width, IE only */\
-			.ContentPanel > table /* fix forumInfo width */\
-				{ width: 100% !important; } \
 			',
 			// search, tags
 			24: '\
+			.Topic_ForumInfoPanel table td { padding-bottom: 5px; } /* forumInfo blanks */\
 			#ctl00_ContentPlaceHolder1_lb_NewPM + br ~ br, /* forumInfo blanks */\
+			.Topic_ForumInfoPanel tr:first-child + tr ~ tr, /* 高登活動資訊 */\
 			#ctl00_ContentPlaceHolder1_topics_form > script:first-child + table td + td /* flash ad */\
 				{ display: none; } \
 			#ctl00_ContentPlaceHolder1_topics_form > script:first-child + table td:first-child, /* fix forumInfo width, IE only */\
 			#ctl00_ContentPlaceHolder1_topics_form > script:first-child + table /* fix forumInfo width */\
 				{ width: 100% !important; } \
 			',
-			// topics, search, tags
-			28: '\
-			.Topic_ForumInfoPanel table td { padding-bottom: 5px; } /* forumInfo blanks */\
-			.Topic_ForumInfoPanel tr:first-child + tr ~ tr { display: none; } /* 高登活動資訊 */\
-			',
 			// view
 			32: '\
-			#ctl00_ContentPlaceHolder1_view_form > script:first-child + table tr:first-child + tr ~ tr, /* 高登活動資訊 */\
+			#ctl00_ContentPlaceHolder1_view_form > script:first-child + table td:first-child { width: 100% !important; } \
+			#ctl00_ContentPlaceHolder1_view_form > script:first-child + table td:first-child + td { display: none; } \
 			#ctl00_ContentPlaceHolder1_view_form > div[style*="99%"] table[cellspacing="1"][cellpadding="2"] > tbody > tr + tr + tr, /* top & bottom ads */\
 			#ctl00_ContentPlaceHolder1_view_form > div > table[width="100%"] > tbody > tr + tr /* inline ads */\
+				{ display: none; } \
+			',
+			// default, topics, view
+			38: '\
+			#MainPageAd2 + br + br + div { padding-bottom: 10px !important; } \
+			#MainPageAd2, #MainPageAd2 ~ br, /* text ads */\
+			#ctl00_ContentPlaceHolder1_lb_NewPM + br \
 				{ display: none; } \
 			',
 			// topics, search, tags, view
@@ -57,7 +59,8 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			',
 			// profilepage
 			64: '\
-			.main_table1 tr { display: none; } /* inline ads */\
+			/* inline ads */\
+			.main_table1 tr { display: none; } \
 			.main_table1 tr[style], .main_table1 tr:first-child, #ctl00_ContentPlaceHolder1_ProfileForm > table > tbody > tr > td > table:first-child .main_table1 tr { display: table-row; } \
 			'
 		},

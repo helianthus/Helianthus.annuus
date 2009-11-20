@@ -1002,7 +1002,7 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 
 		AN.shared('addButton', '顯示功能列表', function()
 		{
-				if(!$('#an-savedsettings').length)
+				if(!$('#an-functionlist').length)
 				{
 					AN.shared('box', 'an-functionlist', '功能列表', 600, 400);
 					AN.util.addStyle('#an-functionlist textarea { margin: 10px; width: 570px; height: 370px; font-family: Consolas; }');

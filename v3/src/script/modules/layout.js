@@ -24,7 +24,7 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 
 '7af1060d-d38c-40b9-b16b-df1bb799cb74':
 {
-	desc: '隱藏上方Logo列',
+	desc: '隱藏Logo列',
 	page: { 65534: false },
 	type: 3,
 	once: function()
@@ -46,7 +46,7 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 
 'd0164ba6-a5a2-4850-ab67-658b840fd3ef':
 {
-	desc: '隱藏繁簡轉換及分享這頁',
+	desc: '隱藏繁簡轉換/addThis列',
 	page: { 65534: false },
 	type: 3,
 	once: function()
@@ -54,6 +54,20 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 		AN.util.stackStyle('\
 		.PageMiddleFunctions { height: 5px; } \
 		.PageMiddleFunctions > div { display: none; } \
+		');
+	}
+},
+
+'a7dc713c-2d23-4254-be8b-16cf6e9bbe8f':
+{
+	desc: '優化addThis組件',
+	page: { 65534: false },
+	type: 3,
+	once: function()
+	{
+		AN.util.stackStyle('\
+		.addthis_toolbox { padding-top: 3px; } \
+		.addthis_toolbox > a, .addthis_toolbox > span { font-family: arial !important; color: black; } \
 		');
 	}
 },
@@ -123,15 +137,26 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 '8d53fef9-818f-46d1-99b8-5e199453b360':
 {
 	desc: '隱藏討論區資訊',
-	page: { 28: false, 32:false },
+	page: { 24: false },
 	type: 3,
 	once: function()
 	{
-		AN.util.stackStyle({
-			topics: '.ContentPanel',
-			search: '#ctl00_ContentPlaceHolder1_topics_form',
-			view: '#ctl00_ContentPlaceHolder1_view_form'
-		}[$().pageName()] + ' > script:first-child + table { display: none; }');
+		AN.util.stackStyle('#ctl00_ContentPlaceHolder1_topics_form > script:first-child + table { display: none; }');
+	}
+},
+
+'1c63cc45-21f7-40ab-905a-730dabffc2ab':
+{
+	desc: '隱藏高登公告',
+	page: { 36: false },
+	type: 3,
+	once: function()
+	{
+		AN.util.stackStyle('\
+		#ctl00_ContentPlaceHolder1_view_form > script:first-child + table + table tr:first-child, \
+		.DivResizableBoxContainer \
+			{ display: none; } \
+		');
 	}
 },
 

@@ -498,6 +498,8 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	{
 		AN.shared('addButton', '登出所有server', function()
 		{
+			if(!confirm('確定登出所有server?')) return;
+			
 			var nServer = 8;
 			
 			var aLeft = [];

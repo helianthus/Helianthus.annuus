@@ -672,7 +672,8 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 	{
 		bAddLogButton: { desc: '加入記錄元件開關按扭', defaultValue: false, type: 'checkbox' },
 		bAutoShowLog: { desc: '自動顯示記錄視窗', defaultValue: true, type: 'checkbox' },
-		bShowDetailLog: { desc: '顯示詳盡記錄', defaultValue: false, type: 'checkbox' }
+		bShowDetailLog: { desc: '顯示詳盡記錄', defaultValue: false, type: 'checkbox' },
+		sLogWidth: { desc: '元件闊度 [可設定為20em, 15%, 200px等]', defaultValue: '200px', type: 'text' }
 	},
 	once: function()
 	{
@@ -681,11 +682,13 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 			var jMod = $('#an-log');
 			if(jMod.length) return jMod;
 
-			AN.util.addStyle(' \
-			#an-log { display: none; height: 30%; width: 20em; bottom: 0; right: 0; } \
+			AN.util.addStyle($.sprintf('\
+			#an-log { display: none; height: 30%; width: %s; bottom: 0; right: 0; } \
 			#an-log-header { font-weight: bold; border-bottom-width: 1px; padding-bottom: 0.2em; } \
 			#an-log-content li { display: none; border-bottom: 1px dotted; padding: 0.3em 0; } \
-			');
+			',
+			AN.util.getOptions('sLogWidth')
+			));
 
 			return $('<div id="an-log" class="an-mod an-small"><div id="an-log-header">Log</div><ul id="an-log-content"></ul></div>').appendTo('#an-ui');
 		};

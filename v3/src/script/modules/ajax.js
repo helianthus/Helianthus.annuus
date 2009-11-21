@@ -11,6 +11,7 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 		nCheckInterval: { desc: '自動更新間隔(秒)', defaultValue: 30, type: 'text' },
 		bAddCheckBtn: { desc: '加入更新帖子按扭', defaultValue: true, type: 'checkbox' },
 		bAppendReplies: { desc: '延展帖子回覆', defaultValue: false, type: 'checkbox' },
+		bRemovePageBoxes: { desc: '移除轉頁格', defauleValue: false, type: 'checkbox' },
 		bAjaxifyReplying: { desc: 'AJAX化回覆', defaultValue: true, type: 'checkbox' },
 		bShowPageNo: { desc: '顯示資料: 本頁頁數', defaultValue: true, type: 'checkbox' }
 	},
@@ -96,7 +97,9 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 				{
 					var jNewDiv = jNewDoc.find('.repliers:first').up('div');
 					//if(!jNewDiv.length) return AN.shared('log', '下一頁找不到回覆, 可能是本帖部份回覆被刪所致');
-					jNewDiv.children(':last').prev('table').andSelf().remove(); // quick reply
+					
+					//jNewDiv.children(':last').prev('table').andSelf().remove(); // quick reply
+					jNewDiv.children('br:first').nextAll().andSelf().remove();
 
 					if(nTargetPageNo > oPages.nLastest)
 					{
@@ -112,6 +115,11 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 								break;
 							}
 						}
+					}
+					
+					if(AN.util.getOptions('bAppendReplies') && AN.util.getOptions('bRemovePageBoxes'))
+					{
+						jNewDiv.children(':lt(2)').add(jNewDiv.children(':last').prev().andSelf()).remove();
 					}
 
 					handleLeftOver(jNewDiv);
@@ -229,7 +237,15 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 		if(nInterval < 30) nInterval = 30;
 
 		handlePage();
-		$('#newmessage,#ctl00_ContentPlaceHolder1_QuickReplyLoginTable').insertAfter(oPages[nCurPageNo].jDiv);
+		
+		var jDiv = $('#ctl00_ContentPlaceHolder1_view_form > div');
+		
+		jDiv.children('br:first').nextAll().andSelf().add('#ctl00_ContentPlaceHolder1_QuickReplyLoginTable').insertAfter(oPages[nCurPageNo].jDiv);
+		
+		if(AN.util.getOptions('bAppendReplies') && AN.util.getOptions('bRemovePageBoxes'))
+		{
+			jDiv.children(':lt(2)').add(jDiv.children(':last').prev().andSelf()).remove();
+		}
 
 		if(AN.util.getOptions('bCheckOnBottom'))
 		{

@@ -418,15 +418,30 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			var sEmail, sPass;
 			if(!(sEmail = prompt('請輸入電郵地址', ''))) return;
 			if(!(sPass = prompt('請輸入密碼', ''))) return;
-
-			var login = function()
+			
+			var nServer = 8;
+			
+			var aLeft = [];
+			for(var i=1; i<=nServer; i++)	aLeft.push(i);
+			
+			var complete = function(bForce)
+			{
+				if(aLeft.length == 0 || bForce)
+				{
+					alert($.sprintf('登入完成!%s\n\n點擊確定重新整理頁面.', aLeft.length ? $.sprintf('\n\n伺服器%s登入失敗!', aLeft.join(',')) : ''));
+					location.reload();
+				}
+			};
+			
+			var login = function(nForum)
 			{
 				var doc = this.contentWindow.document;
 				var jThis = $(this);
 
 				if(!doc.getElementById('aspnetForm')) // error page
 				{
-					jThis.remove();
+					AN.shared('log', $.sprintf('伺服器%s登入失敗!', nForum));
+					complete();
 					return;
 				}
 
@@ -437,31 +452,89 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 
 				_$.post('login.aspx', _$('#aspnetForm').serialize() + '&ctl00%24ContentPlaceHolder1%24linkb_login=', function()
 				{
-					jThis.remove();
+					$.each(aLeft, function(i, n)
+					{
+						if(n == nForum)
+						{
+							aLeft.splice(i, 1);
+							return false;
+						}
+					});
+					
+					AN.shared('log', $.sprintf('伺服器%s登入成功!', nForum));
+					complete();
 				});
 			};
-
-			var sHTML = '';
-			for(var i=1; i<=8; i++)
-			{
-				sHTML += '<iframe style="display: none;"></iframe>';
-			}
-
-			$(sHTML)
-			.appendTo('#an')
-			.each(function(i)
-			{
-				this.src = $.sprintf('http://forum%s.hkgolden.com/login.aspx', i + 1);
-			})
-			.load(login);
-
+			
 			AN.shared('log', '登入各伺服器中, 請稍候...');
-
-			setTimeout(function()
+			
+			$.each(aLeft, function(i, nForum)
 			{
-				alert('登入完成! (部份伺服器有可能因連線問題無法登入)\n\n點擊確定重新整理頁面.');
-				location.reload();
-			}, 10000);
+				$('<iframe style="display: none;"></iframe>')
+				.appendTo('#an')
+				.attr('src', $.sprintf('http://forum%s.hkgolden.com/login.aspx', nForum))
+				.load(function()
+				{
+					login.call(this, nForum);
+				})
+				.error(function()
+				{
+					AN.shared('log', $.sprintf('伺服器%s登入失敗!', nForum));
+					complete();
+				});
+			});
+			
+			setTimeout(function(){ complete(true); }, 10000);
+		});
+	}
+},
+
+'13c276a5-f84e-4f53-9ada-45545ccc6b2e':
+{
+	desc: '加入同步登出所有server的按扭',
+	page: { 65534: false },
+	type: 5,
+	once: function()
+	{
+		AN.shared('addButton', '登出所有server', function()
+		{
+			var nServer = 8;
+			
+			var aLeft = [];
+			for(var i=1; i<=nServer; i++)	aLeft.push(i);
+			
+			var complete = function(bForce)
+			{
+				if(aLeft.length == 0 || bForce)
+				{
+					alert($.sprintf('登出完成!%s\n\n點擊確定重新整理頁面.', aLeft.length ? $.sprintf('\n\n伺服器%s登出失敗!', aLeft.join(',')) : ''));
+					location.reload();
+				}
+			};
+			
+			AN.shared('log', '登出各伺服器中, 請稍候...');
+			
+			$.each(aLeft, function(i, nForum)
+			{
+				$($.sprintf('<img src="http://forum%s.hkgolden.com/logout.aspx" />', nForum))
+				.appendTo('#an')
+				.error(function()
+				{
+					$.each(aLeft, function(i, n)
+					{
+						if(n == nForum)
+						{
+							aLeft.splice(i, 1);
+							return false;
+						}
+					});
+					
+					AN.shared('log', $.sprintf('伺服器%s登出完成!', nForum));
+					complete();
+				});
+			});
+			
+			setTimeout(function(){ complete(true); }, 10000);
 		});
 	}
 },
@@ -855,7 +928,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 				}
 			});
 
-			$(this).toFlash(sUrl, { width: nWidth, height: nHeight.toFixed(0) }, { wmode: 'opaque' });
+			$(this).toFlash(sUrl, { width: nWidth, height: nHeight.toFixed(0) }, { wmode: 'opaque', allowfullscreen: 'true' });
 		};
 	},
 	infinite: function(jDoc, oFn)

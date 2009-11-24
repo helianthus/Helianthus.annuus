@@ -113,24 +113,29 @@ AN.mod['Component Redesigner'] = { ver: 'N/A', author: '向日', fn: {
 	options:
 	{
 		bAlternativeHide: { desc: '隱藏於右下角 [必須點擊]', type: 'checkbox', defaultValue: false },
-		bToggleOnClick: { desc: '心須點擊才顯示/隱藏', type: 'checkbox', defaultValue: true },
+		bToggleOnClick: { desc: '必須點擊才顯示/隱藏', type: 'checkbox', defaultValue: true },
 		nQROpacity: { desc: '透明度 (10 = 移除半透明)', type: 'select', defaultValue: 7, choices: [10,9,8,7,6,5,4,3,2,1,0] }
 	},
 	once: function()
 	{
 		if(!AN.util.isLoggedIn()) return;
 
-		var nRightPx = -750;
+		var jQR = $('#newmessage');
+		var nWidth = 939;
+		var nRight = 50 - nWidth;
 
 		AN.util.stackStyle($.sprintf('\
-		#newmessage { %s; z-index: 3; position: fixed; width: 806px; bottom: -2px; %s; } \
+		#newmessage { %s; z-index: 3; position: fixed; width: %spx; bottom: -2px; %s; } \
 		#an-qr-header { cursor: pointer; text-align: center; } \
+		#previewArea { display: block; overflow: auto; width: %spx; } \
+		#previewArea img[onload] { width: 300px; } \
 		',
 		AN.util.getOpacityStr(AN.util.getOptions('nQROpacity')),
-		AN.util.getOptions('bAlternativeHide') ? $.sprintf('right: %spx', (($.winWidth() - 806) / 2)) : 'left: 50%; margin-left: -403px'
+		nWidth,
+		AN.util.getOptions('bAlternativeHide') ? $.sprintf('right: %spx', nRight) : $.sprintf('left: 50%; margin-left: -%spx', nWidth / 2),
+		nWidth - 159
 		));
-
-		var jQR = $('#newmessage');
+		
 		var jQRContent = jQR.find('tr:eq(2)').hide();
 		var jQRHeader = jQR.find('td:eq(1)').attr('id', 'an-qr-header').html('快速回覆');
 
@@ -155,14 +160,13 @@ AN.mod['Component Redesigner'] = { ver: 'N/A', author: '向日', fn: {
 
 		if(AN.util.getOptions('bAlternativeHide'))
 		{
-			jQR.css('right', nRightPx);
 			toggleQR = (function(toggleDisplay)
 			{
 				return function(bToShow)
 				{
 					if(isNotNeeded(bToShow)) return;
 
-					isToShow(bToShow) ? jQR.animate({ right: ($.winWidth() - 806) / 2 }, 'slow', toggleDisplay) : toggleDisplay(false, function(){ jQR.animate({ right: nRightPx }, 'slow'); });
+					isToShow(bToShow) ? jQR.animate({ right: ($.winWidth() - nWidth) / 2 + 5 }, 'slow', toggleDisplay) : toggleDisplay(false, function(){ jQR.animate({ right: nRight }, 'slow'); });
 				}
 			})(toggleQR);
 			jQRHeader.click(toggleQR);
@@ -185,6 +189,17 @@ AN.mod['Component Redesigner'] = { ver: 'N/A', author: '向日', fn: {
 		};
 		
 		window.OnQuoteSucceeded = new window.Function('result', 'window._OnQuoteSucceeded(result);');
+		
+		window.doPreview = (function(_doPreview)
+		{
+			var jPreview = $('#previewArea');
+			
+			return function()
+			{
+				jPreview.css('max-height', $.winHeight() - jQR.height() - jPreview.height());
+				_doPreview();
+			};
+		})(window.doPreview);
 	}
 }
 

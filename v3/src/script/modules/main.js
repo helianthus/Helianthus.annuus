@@ -930,12 +930,22 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 				}
 			});
 
-			$(this).toFlash(sUrl, { width: nWidth, height: nHeight.toFixed(0) }, { wmode: 'opaque', allowfullscreen: 'true' });
+			$('<div></div>').insertAfter(this).toFlash(sUrl, { width: nWidth, height: nHeight.toFixed(0) }, { wmode: 'opaque', allowfullscreen: 'true' });
 		};
+		
+		$(document).click(function(event)
+		{
+			var jLink = $(event.target);
+			if($(event.target).is('.an-videolink'))
+			{
+				jLink.next().toggle();
+				event.preventDefault();
+			}
+		});
 	},
 	infinite: function(jDoc, oFn)
 	{
-		var jVideoLinks = jDoc.replies().jContents.find('a').filter(function(){ return oFn.rLink.test(this.href); });
+		var jVideoLinks = jDoc.replies().jContents.find('a').filter(function(){ return oFn.rLink.test(this.href); }).addClass('an-videolink');
 		AN.util.getOptions('bConvertOnClick') ? jVideoLinks.click(oFn.convert) : jVideoLinks.each(oFn.convert);
 	}
 },

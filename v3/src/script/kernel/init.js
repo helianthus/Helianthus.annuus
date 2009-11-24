@@ -91,12 +91,12 @@ $.extend(
 
 	winWidth: function(nMutiply)
 	{
-		return Math.round((window.innerWidth || $(window).width()) * (nMutiply || 1));
+		return Math.round($(window).width() * (nMutiply || 1));
 	},
 
 	winHeight: function(nMutiply)
 	{
-		return Math.round((window.innerHeight || $(window).height()) * (nMutiply || 1));
+		return Math.round($(window).height() * (nMutiply || 1));
 	}
 });
 

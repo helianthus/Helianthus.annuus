@@ -205,14 +205,18 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 			}
 		};
 
+		var bTimerOn = false;
 		var toggleTimer = function(bToSet, bDeferCheck)
 		{
 			if(!AN.util.getOptions('bCheckOnBottom') || oPages[nCurPageNo + 1]) return;
-
+			
 			if(bToSet)
 			{
+				if(bTimerOn) return;
+				bTimerOn = true;
+				
 				if(!bDeferCheck) return checkBottom();
-
+				
 				var nRemain = nInterval;
 				(function()
 				{
@@ -224,6 +228,7 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 			}
 			else
 			{
+				bTimerOn = false;
 				clearTimeout(tCheck);
 				$('#an-info-ajaxtimer').html('N/A');
 			}

@@ -936,17 +936,15 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			});
 
 			$('<div></div>').insertAfter(this).toFlash(sUrl, { width: nWidth, height: nHeight.toFixed(0) }, { wmode: 'opaque', allowfullscreen: 'true' });
+			
+			$(this).unbind('click', arguments.callee).click(toggleVideo);
 		};
 		
-		$(document).click(function(event)
+		var toggleVideo = function(event)
 		{
-			var jLink = $(event.target);
-			if($(event.target).is('.an-videolink'))
-			{
-				jLink.next().toggle();
-				event.preventDefault();
-			}
-		});
+			event.preventDefault();
+			$(this).next().toggle();
+		};
 	},
 	infinite: function(jDoc, oFn)
 	{

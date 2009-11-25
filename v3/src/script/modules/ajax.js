@@ -119,7 +119,7 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 					
 					if(AN.util.getOptions('bAppendReplies') && AN.util.getOptions('bRemovePageBoxes'))
 					{
-						jNewDiv.children(':lt(2)').add(jNewDiv.children(':last').prev().andSelf()).remove();
+						jNewDiv.children(':lt(2)').add(jNewDiv.children(':last').prev().andSelf()).hide();
 					}
 
 					handleLeftOver(jNewDiv);
@@ -249,7 +249,7 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 		
 		if(AN.util.getOptions('bAppendReplies') && AN.util.getOptions('bRemovePageBoxes'))
 		{
-			jDiv.children(':lt(2)').add(jDiv.children(':last').prev().andSelf()).remove();
+			jDiv.children(':lt(2)').add(jDiv.children(':last').prev().andSelf()).hide();
 		}
 
 		if(AN.util.getOptions('bCheckOnBottom'))

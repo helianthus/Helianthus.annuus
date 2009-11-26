@@ -448,7 +448,7 @@ $.extend(AN,
 			var storage = arguments.callee.storage || (arguments.callee.storage =
 				AN.box.storageMode == 'Flash' && {
 					get: function(sProfile, sName){ return AN.box.eLSO.get(sProfile, sName); },
-					set: function(sProfile, sName, sData){ AN.box.eLSO.set(sProfile, sName, sData.replace(/\\\\/g, '\\')); }, // escape the backslash so that it will not be removed on GET
+					set: function(sProfile, sName, sData){ AN.box.eLSO.set(sProfile, sName, sData.replace(/\\/g, '\\\\')); }, // escape the backslash so that it will not be removed on GET
 					remove: function(sProfile, sName){ AN.box.eLSO.remove(sProfile, sName); }
 				}
 				||

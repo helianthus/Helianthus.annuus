@@ -1065,6 +1065,118 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			}
 		});
 	}
+},
+
+'b69c5067-2726-43f8-b3de-dfb907355b71':
+{
+	desc: '標題過濾功能',
+	page: { 4: true },
+	type: 6,
+	options:
+	{
+		bFilterListButton: { desc: '加入標題過濾列表按扭', defaultValue: true, type: 'checkbox' }
+	},
+	once: function(jDoc, oFn)
+	{	
+		AN.util.stackStyle('img[alt="Topic"] { cursor: pointer; }');
+		
+		$('#HotTopics').click(function(event)
+		{
+			var jImg = $(event.target);
+			if(!jImg.is('img[alt="Topic"]')) return;
+			
+			addFilter(jImg.parent().next().children('a:first').html().replace(/<img[^>]+?alt="([^"]+)[^>]*>/ig, '$1'));
+		});
+		
+		var aFilter = AN.util.data('aTopicFilter') || [];
+		
+		var addFilter = function(sTopicName)
+		{
+			var sFilter = prompt('請輸入過濾器', sTopicName);
+			if(!sFilter) return;
+			
+			aFilter.push(sFilter);
+			AN.util.data('aTopicFilter', aFilter);
+			oFn.filterTopics();
+		};
+		
+		this.filterTopics = function()
+		{
+			if(!aFilter.length) return;
+			
+			var nCount = 0;
+			$('body').topics().each(function()
+			{
+				var jThis = $(this);
+				var sTitle = jThis.data('sTitle');
+				$.each(aFilter, function(i, sFilter)
+				{
+					if(sTitle.indexOf(sFilter) != -1)
+					{
+						nCount++;
+						jThis.hide();
+						return false;
+					}
+				});
+			});
+			
+			AN.shared('log', $.sprintf('%s個標題已被過濾', nCount));
+		};
+		
+		if(AN.util.getOptions('bFilterListButton')) AN.shared('addButton', '標題過濾列表', function()
+		{
+			if(!$('#an-filterlist').length)
+			{
+				AN.util.addStyle('\
+				#an-filterlist > ul { margin: 5px; } \
+				#an-filterlist > ul > li { padding: 2px 0; } \
+				#an-filterlist > ul > li > a { border: 1px solid black; background-color: pink; margin-right: 5px; padding: 0 5px; } \
+				');
+				
+				AN.shared.box('an-filterlist', '標題過濾列表', 500);
+				
+				$('#an-filterlist').click(function(event)
+				{
+					var jTarget = $(event.target);
+					if(!jTarget.is('a')) return;
+					
+					var sFilter = jTarget.next().html();					
+					$.each(aFilter, function(i)
+					{
+						if(this == sFilter)
+						{
+							aFilter.splice(i, 1);
+							return false;
+						}
+					});
+					
+					AN.util.data('aTopicFilter', aFilter);
+					jTarget.parent().remove();
+				});
+			}
+			
+			var sHTML = '';
+			if(aFilter.length)
+			{
+				$.each(aFilter, function(i, sFilter)
+				{
+					sHTML += $.sprintf('<li><a href="javascript:">X</a><span>%s</span></li>', sFilter);
+				});
+			}
+			else
+			{
+				sHTML += '<li>沒有任何過濾器</li>';
+			}
+			
+			$('#an-filterlist').html('<ul>' + sHTML + '</ul>');
+			
+			AN.shared.gray(true, 'an-filterlist');
+		});
+	},
+	infinite: function()
+	{
+		this.filterTopics();
+	}
 }
 
 }};

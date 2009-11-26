@@ -168,6 +168,24 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	}
 },
 
+'d4bf67cc-349c-4541-a8e4-9d9f9d0be267':
+{
+	desc: 'Opera: 修正特殊字符導致的顯示錯誤',
+	page: { 92: $.browser.opera || 'disabled' },
+	type: 4,
+	infinite: function(jDoc)
+	{
+		jDoc.topics().jNameLinks.each(function()
+		{
+			var jNameCell = $(this).parent();
+			if(jNameCell.nextAll().length != 2)
+			{
+				jNameCell[0].outerHTML = jNameCell[0].outerHTML.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/<A.+?\/a>/, 'NAME_ERROR').replace(/=""/g, '');
+			}
+		});
+	}
+},
+
 /*
 'c2d9eedb-bb6c-4cb4-be11-ea2ec9612f63':
 {
@@ -1074,7 +1092,8 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	type: 6,
 	options:
 	{
-		bFilterListButton: { desc: '加入標題過濾列表按扭', defaultValue: true, type: 'checkbox' }
+		bFilterListButton: { desc: '加入標題過濾列表按扭', defaultValue: true, type: 'checkbox' },
+		bAddFilterButton: { desc: '加入新增過濾器按扭', defauleValue: false, type: 'checkbox' }
 	},
 	once: function(jDoc, oFn)
 	{	
@@ -1092,7 +1111,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		
 		var addFilter = function(sTopicName)
 		{
-			var sFilter = prompt('請輸入過濾器', sTopicName);
+			var sFilter = prompt('請輸入過濾器', sTopicName || '');
 			if(!sFilter) return;
 			
 			aFilter.push(sFilter);
@@ -1122,6 +1141,8 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			
 			AN.shared('log', $.sprintf('%s個標題已被過濾', nCount));
 		};
+		
+		if(AN.util.getOptions('bAddFilterButton')) AN.shared('addButton', '新增過濾器', function(){ addFilter() });
 		
 		if(AN.util.getOptions('bFilterListButton')) AN.shared('addButton', '標題過濾列表', function()
 		{

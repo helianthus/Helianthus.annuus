@@ -1261,12 +1261,12 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		.an-bammed .repliers_left > table > tbody > tr:first-child ~ tr, .an-bammed .repliers_right > tbody > tr:first-child { display: none; } \
 		');
 
-		this.toggleReplies = function(jScope, sUserId, bToHide)
+		this.toggleReplies = function(jScope)
 		{
 			(jScope || $(document)).replies().each(function()
 			{
 				var jThis = $(this);
-				jThis.toggleClass('an-bammed', sUserId ? bToHide && jThis.data('sUserid') == sUserId : $.inArray(jThis.data('sUserid'), aBamList) != -1);
+				jThis.toggleClass('an-bammed', $.inArray(jThis.data('sUserid'), aBamList) != -1);
 			});
 		};
 	},

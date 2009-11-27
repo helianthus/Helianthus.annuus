@@ -114,7 +114,7 @@ AN.mod['Component Redesigner'] = { ver: 'N/A', author: '向日', fn: {
 	{
 		bAlternativeHide: { desc: '隱藏於右下角 [必須點擊]', type: 'checkbox', defaultValue: false },
 		bToggleOnClick: { desc: '必須點擊才顯示/隱藏', type: 'checkbox', defaultValue: true },
-		nQROpacity: { desc: '透明度 (10 = 移除半透明)', type: 'select', defaultValue: 7, choices: [10,9,8,7,6,5,4,3,2,1,0] }
+		nQROpacity: { desc: '透明度 (10 = 移除半透明)', type: 'select', defaultValue: 10, choices: [10,9,8,7,6,5,4,3,2,1,0] }
 	},
 	once: function()
 	{

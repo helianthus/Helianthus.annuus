@@ -278,9 +278,9 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		{
 			var sType = $('#st').val(); // $('#st option:selected')[0].value;
 			var sQuery = escape($('#searchstring').val());
-			
+
 			window.open(sType == 'tag' ? 'tags.aspx?tagword='.concat(sQuery) : $.sprintf('search.aspx?st=%s&searchstring=%s', sType, sQuery), '_blank');
-			
+
 			$('#searchstring').val('');
 		};
 	}
@@ -441,12 +441,12 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			var sEmail, sPass;
 			if(!(sEmail = prompt('請輸入電郵地址', ''))) return;
 			if(!(sPass = prompt('請輸入密碼', ''))) return;
-			
+
 			var nServer = 8;
-			
+
 			var aLeft = [];
 			for(var i=1; i<=nServer; i++)	aLeft.push(i);
-			
+
 			var complete = function(bForce)
 			{
 				if(aLeft.length == 0 || bForce)
@@ -455,7 +455,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 					location.reload();
 				}
 			};
-			
+
 			var login = function(nForum)
 			{
 				var doc = this.contentWindow.document;
@@ -483,14 +483,14 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 							return false;
 						}
 					});
-					
+
 					AN.shared('log', $.sprintf('伺服器%s登入成功!', nForum));
 					complete();
 				});
 			};
-			
+
 			AN.shared('log', '登入各伺服器中, 請稍候...');
-			
+
 			$.each(aLeft, function(i, nForum)
 			{
 				$('<iframe style="display: none;"></iframe>')
@@ -506,7 +506,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 					complete();
 				});
 			});
-			
+
 			setTimeout(function(){ complete(true); }, 10000);
 		});
 	}
@@ -522,12 +522,12 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		AN.shared('addButton', '登出所有server', function()
 		{
 			if(!confirm('確定登出所有server?')) return;
-			
+
 			var nServer = 8;
-			
+
 			var aLeft = [];
 			for(var i=1; i<=nServer; i++)	aLeft.push(i);
-			
+
 			var complete = function(bForce)
 			{
 				if(aLeft.length == 0 || bForce)
@@ -536,9 +536,9 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 					location.reload();
 				}
 			};
-			
+
 			AN.shared('log', '登出各伺服器中, 請稍候...');
-			
+
 			$.each(aLeft, function(i, nForum)
 			{
 				$($.sprintf('<img src="http://forum%s.hkgolden.com/logout.aspx" />', nForum))
@@ -553,12 +553,12 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 							return false;
 						}
 					});
-					
+
 					AN.shared('log', $.sprintf('伺服器%s登出完成!', nForum));
 					complete();
 				});
 			});
-			
+
 			setTimeout(function(){ complete(true); }, 10000);
 		});
 	}
@@ -954,10 +954,10 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			});
 
 			$('<div></div>').insertAfter(this).toFlash(sUrl, { width: nWidth, height: nHeight.toFixed(0) }, { wmode: 'opaque', allowfullscreen: 'true' });
-			
+
 			$(this).unbind('click', arguments.callee).click(toggleVideo);
 		};
-		
+
 		var toggleVideo = function(event)
 		{
 			event.preventDefault();
@@ -1096,35 +1096,54 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		bAddFilterButton: { desc: '加入新增過濾器按扭', defauleValue: false, type: 'checkbox' }
 	},
 	once: function(jDoc, oFn)
-	{	
-		AN.util.stackStyle('img[alt="Topic"] { cursor: pointer; }');
-		
-		$('#HotTopics').click(function(event)
-		{
-			var jImg = $(event.target);
-			if(!jImg.is('img[alt="Topic"]')) return;
-			
-			addFilter(jImg.parent().next().children('a:first').html().replace(/<img[^>]+?alt="([^"]+)[^>]*>/ig, '$1'));
-		});
-		
+	{
 		var aFilter = AN.util.data('aTopicFilter') || [];
-		
+		var jCurTarget;
+		var jButton= $($.sprintf('\
+			<span style="display: none; position: absolute; text-align: center; background-color: %(sMainHeaderBgColor)s; color: %(sMainHeaderFontColor)s; cursor: pointer;">X</span> \
+			', AN.util.getOptions()))
+			.appendTo('#an')
+			.click(function()
+			{
+				addFilter(jCurTarget.parent().next().children('a:first').html().replace(/<img[^>]+?alt="([^"]+)[^>]*>/ig, '$1'));
+			});
+
+		$(document).mouseover(function(event)
+		{
+			var jTarget = $(event.target);
+			if(jTarget[0] == jButton[0]) return;
+
+			jTarget = jTarget.closest('#HotTopics tr');
+			if(jTarget.length && jTarget.children().length == 5)
+			{
+				jCurTarget = jTarget;
+				var offset = jTarget.offset();
+				var jImgCell = jTarget.children(':first');
+				var nHeight = jImgCell.outerHeight();
+				jButton.css({ top: offset.top, left: offset.left, width: jImgCell.outerWidth() + 1, height: nHeight, lineHeight: nHeight + 'px' }).show();
+			}
+			else
+			{
+				jButton.hide();
+			}
+		});
+
 		var addFilter = function(sTopicName)
 		{
 			var sFilter = prompt('請輸入過濾器', sTopicName || '');
 			if(!sFilter) return;
-			
+
 			aFilter.push(sFilter);
 			AN.util.data('aTopicFilter', aFilter);
 			oFn.filterTopics();
 		};
-		
-		this.filterTopics = function()
+
+		this.filterTopics = function(jScope)
 		{
 			if(!aFilter.length) return;
-			
+
 			var nCount = 0;
-			$('body').topics().each(function()
+			(jDoc || jScope).topics().each(function()
 			{
 				var jThis = $(this);
 				var sTitle = jThis.data('sTitle');
@@ -1138,12 +1157,12 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 					}
 				});
 			});
-			
+
 			AN.shared('log', $.sprintf('%s個標題已被過濾', nCount));
 		};
-		
+
 		if(AN.util.getOptions('bAddFilterButton')) AN.shared('addButton', '新增過濾器', function(){ addFilter() });
-		
+
 		if(AN.util.getOptions('bFilterListButton')) AN.shared('addButton', '標題過濾列表', function()
 		{
 			if(!$('#an-filterlist').length)
@@ -1153,29 +1172,24 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 				#an-filterlist > ul > li { padding: 2px 0; } \
 				#an-filterlist > ul > li > a { border: 1px solid black; background-color: pink; margin-right: 5px; padding: 0 5px; } \
 				');
-				
+
 				AN.shared.box('an-filterlist', '標題過濾列表', 500);
-				
+
 				$('#an-filterlist').click(function(event)
 				{
 					var jTarget = $(event.target);
 					if(!jTarget.is('a')) return;
-					
-					var sFilter = jTarget.next().html();					
-					$.each(aFilter, function(i)
-					{
-						if(this == sFilter)
-						{
-							aFilter.splice(i, 1);
-							return false;
-						}
-					});
-					
+
+					var sFilter = jTarget.next().html();
+
+					var nIndex = $.inArray(sFilter, aFilter);
+					if(nIndex != -1) aFilter.splice(nIndex, 1);
+
 					AN.util.data('aTopicFilter', aFilter);
 					jTarget.parent().remove();
 				});
 			}
-			
+
 			var sHTML = '';
 			if(aFilter.length)
 			{
@@ -1188,15 +1202,77 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			{
 				sHTML += '<li>沒有任何過濾器</li>';
 			}
-			
+
 			$('#an-filterlist').html('<ul>' + sHTML + '</ul>');
-			
+
 			AN.shared.gray(true, 'an-filterlist');
 		});
 	},
-	infinite: function()
+	infinite: function(jDoc)
 	{
-		this.filterTopics();
+		this.filterTopics(jDoc);
+	}
+},
+
+'db770fdc-9bf5-46b9-b3fa-78807f242c3c':
+{
+	desc: '用戶屏敞功能',
+	page: { 32: true },
+	type: 6,
+	once: function(jDoc, oFn)
+	{
+		var aBamList = AN.util.data('aBamList') || [];
+		var jCurTarget;
+		var jButton= $($.sprintf('\
+			<span style="display: none; position: absolute; padding: 2px 5px; background-color: %(sMainHeaderBgColor)s; color: %(sMainHeaderFontColor)s; cursor: pointer;">X</span> \
+			', AN.util.getOptions()))
+			.appendTo('#an')
+			.click(function()
+			{
+				var sUserId = jCurTarget.find('a:first').attr('href').replace(/.+?userid=(\d+).*/, '$1');
+
+				var nIndex = $.inArray(sUserId, aBamList);
+				nIndex == -1 ? aBamList.push(sUserId) : aBamList.splice(nIndex, 1);
+
+				AN.util.data('aBamList', aBamList);
+				oFn.toggleReplies(null, sUserId, nIndex == -1);
+			});
+
+		$(document).mouseover(function(event)
+		{
+			var jTarget = $(event.target);
+			if(jTarget[0] == jButton[0]) return;
+
+			jTarget = jTarget.closest('.repliers_left');
+			if(jTarget.length)
+			{
+				jCurTarget = jTarget;
+				var offset = jTarget.offset();
+				jButton.css({ top: offset.top, left: offset.left }).show();
+			}
+			else
+			{
+				jButton.hide();
+			}
+		});
+
+		AN.util.stackStyle('\
+		.an-bammed { opacity: 0.5; filter: alpha(opacity=50); } \
+		.an-bammed .repliers_left > table > tbody > tr:first-child ~ tr, .an-bammed .repliers_right > tbody > tr:first-child { display: none; } \
+		');
+
+		this.toggleReplies = function(jScope, sUserId, bToHide)
+		{
+			(jScope || $(document)).replies().each(function()
+			{
+				var jThis = $(this);
+				jThis.toggleClass('an-bammed', sUserId ? bToHide && jThis.data('sUserid') == sUserId : $.inArray(jThis.data('sUserid'), aBamList) != -1);
+			});
+		};
+	},
+	infinite: function(jDoc)
+	{
+		this.toggleReplies(jDoc);
 	}
 }
 

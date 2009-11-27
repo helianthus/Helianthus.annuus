@@ -1143,7 +1143,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			if(!aFilter.length) return;
 
 			var nCount = 0;
-			(jDoc || jScope).topics().each(function()
+			(jScope || jDoc).topics().each(function()
 			{
 				var jThis = $(this);
 				var sTitle = jThis.data('sTitle');
@@ -1158,7 +1158,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 				});
 			});
 
-			AN.shared('log', $.sprintf('%s個標題已被過濾', nCount));
+			if(nCount) AN.shared('log', $.sprintf('%s個標題已被過濾', nCount));
 		};
 
 		if(AN.util.getOptions('bAddFilterButton')) AN.shared('addButton', '新增過濾器', function(){ addFilter() });

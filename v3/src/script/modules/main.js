@@ -1105,7 +1105,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			.appendTo('#an')
 			.click(function()
 			{
-				addFilter(jCurTarget.parent().next().children('a:first').html().replace(/<img[^>]+?alt="([^"]+)[^>]*>/ig, '$1'));
+				addFilter(jCurTarget.find('a:first').html().replace(/<img[^>]+?alt="([^"]+)[^>]*>/ig, '$1'));
 			});
 
 		$(document).mouseover(function(event)
@@ -1216,7 +1216,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 
 'db770fdc-9bf5-46b9-b3fa-78807f242c3c':
 {
-	desc: '用戶屏敞功能',
+	desc: '用戶屏敝功能',
 	page: { 32: true },
 	type: 6,
 	once: function(jDoc, oFn)

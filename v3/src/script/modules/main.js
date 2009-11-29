@@ -1143,7 +1143,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			if(!aFilter.length) return;
 
 			var nCount = 0;
-			(jScope || jDoc).topics().each(function()
+			(jScope || $(document)).topics().each(function()
 			{
 				var jThis = $(this);
 				var sTitle = jThis.data('sTitle');

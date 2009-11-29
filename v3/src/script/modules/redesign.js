@@ -112,8 +112,7 @@ AN.mod['Component Redesigner'] = { ver: 'N/A', author: '向日', fn: {
 	type: 8,
 	options:
 	{
-		bAlternativeHide: { desc: '隱藏於右下角 [必須點擊]', type: 'checkbox', defaultValue: false },
-		bToggleOnClick: { desc: '必須點擊才顯示/隱藏', type: 'checkbox', defaultValue: true },
+		sQRHideMethod: { desc: '隱藏方式', type: 'select', choices: ['完全隱藏', '隱藏於中下方, 懸浮切換顯示', '隱藏於中下方, 點擊切換顯示', '隱藏於右下角'], defaultValue: '隱藏於中下方, 點擊切換顯示' },
 		nQROpacity: { desc: '透明度 (10 = 移除半透明)', type: 'select', defaultValue: 10, choices: [10,9,8,7,6,5,4,3,2,1,0] }
 	},
 	once: function()
@@ -123,58 +122,60 @@ AN.mod['Component Redesigner'] = { ver: 'N/A', author: '向日', fn: {
 		var jQR = $('#newmessage');
 		var nWidth = 939;
 		var nRight = 50 - nWidth;
+		
+		var sMethod = AN.util.getOptions('sQRHideMethod');
+		var aChoices = this.options.sQRHideMethod.choices;
 
 		AN.util.stackStyle($.sprintf('\
-		#newmessage { %s; z-index: 3; position: fixed; width: %spx; bottom: -2px; %s; } \
+		#newmessage { %s; z-index: 3; position: fixed; width: %spx; bottom: 0px; right: %spx; } \
 		#an-qr-header { cursor: pointer; text-align: center; } \
 		#previewArea { display: block; overflow: auto; width: %spx; } \
 		#previewArea img[onload] { width: 300px; } \
 		',
 		AN.util.getOpacityStr(AN.util.getOptions('nQROpacity')),
 		nWidth,
+		sMethod == aChoices[3] ? nRight : ($.winWidth() - nWidth) / 2 + 5,
 		AN.util.getOptions('bAlternativeHide') ? $.sprintf('right: %spx', nRight) : $.sprintf('left: 50%; margin-left: -%spx', nWidth / 2),
 		nWidth - 159
 		));
 		
-		var jQRContent = jQR.find('tr:eq(2)').hide();
-		var jQRHeader = jQR.find('td:eq(1)').attr('id', 'an-qr-header').html('快速回覆');
-
+		var jToggle = (sMethod == aChoices[0] ? jQR : jQR.find('tr:eq(2)')).hide();
+		
 		var isNotNeeded = function(bToShow)
 		{
-			return typeof bToShow == 'boolean' && bToShow == (jQRContent.css('display') != 'none');
+			return typeof bToShow == 'boolean' && bToShow == (jToggle.css('display') != 'none');
 		};
 
 		var isToShow = function(bToShow)
 		{
-			return typeof bToShow == 'boolean' ? bToShow : jQRContent.css('display') == 'none';
+			return typeof bToShow == 'boolean' ? bToShow : jToggle.css('display') == 'none';
 		};
-
+		
 		var toggleQR = function(bToShow, fCallback)
 		{
 			if(isNotNeeded(bToShow)) return;
 
-			jQRContent.toggle(isToShow(bToShow));
+			jToggle.toggle(isToShow(bToShow));
 			$('#previewArea').empty();
 			if(fCallback) fCallback();
 		};
-
-		if(AN.util.getOptions('bAlternativeHide'))
+		
+		if(sMethod == aChoices[3])
 		{
-			toggleQR = (function(toggleDisplay)
+			toggleQR = (function(_toggleQR)
 			{
 				return function(bToShow)
 				{
 					if(isNotNeeded(bToShow)) return;
 
-					isToShow(bToShow) ? jQR.animate({ right: ($.winWidth() - nWidth) / 2 + 5 }, 'slow', toggleDisplay) : toggleDisplay(false, function(){ jQR.animate({ right: nRight }, 'slow'); });
-				}
+					isToShow(bToShow) ? jQR.animate({ right: ($.winWidth() - nWidth) / 2 + 5 }, 'slow', _toggleQR) : _toggleQR(false, function(){ jQR.animate({ right: nRight }, 'slow'); });
+				};
 			})(toggleQR);
-			jQRHeader.click(toggleQR);
 		}
-		else
-		{
-			AN.util.getOptions('bToggleOnClick') ? jQRHeader.click(toggleQR) : jQR.hover(toggleQR, toggleQR);
-		}
+		
+		var jQRHeader = jQR.find('td:eq(1)').attr('id', 'an-qr-header').html('快速回覆');
+		
+		sMethod == aChoices[1] ? jQR.bind('mouseenter mouseleave', toggleQR) : jQRHeader.click(toggleQR);
 
 		$('#aspnetForm').submit(function()
 		{

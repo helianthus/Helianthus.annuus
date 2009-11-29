@@ -336,7 +336,7 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 		
 		if(AN.util.getOptions('nNumOfTopicPage') > 1)
 		{
-			refreshTopics(2);
+			setTimeout(function(){ refreshTopics(2); }, 0);
 		}
 
 		var setNextRefresh = function()

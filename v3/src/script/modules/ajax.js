@@ -333,6 +333,11 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 				}
 			});
 		};
+		
+		if(AN.util.getOptions('nNumOfTopicPage') > 1)
+		{
+			refreshTopics(2);
+		}
 
 		var setNextRefresh = function()
 		{

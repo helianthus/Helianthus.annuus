@@ -23,8 +23,8 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			',
 			// topics
 			4: '\
-			.ContentPanel > table td:first-child { width: 100% !important; } \
-			.ContentPanel > table td:first-child + td \
+			.ContentPanel > table > tbody > tr > td:first-child { width: 100% !important; } \
+			.ContentPanel > table > tbody > tr > td:first-child + td \
 				{ display: none; } \
 			',
 			// search, tags
@@ -40,8 +40,8 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			',
 			// view
 			32: '\
-			#ctl00_ContentPlaceHolder1_view_form > script:first-child + table td:first-child { width: 100% !important; } \
-			#ctl00_ContentPlaceHolder1_view_form > script:first-child + table td:first-child + td { display: none; } \
+			#ctl00_ContentPlaceHolder1_view_form > script:first-child + div { width: 100% !important; } \
+			#ctl00_ContentPlaceHolder1_view_form > script:first-child + div + div { display: none; } \
 			#ctl00_ContentPlaceHolder1_view_form > div[style*="99%"] table[cellspacing="1"][cellpadding="2"] > tbody > tr + tr + tr, /* top & bottom ads */\
 			#ctl00_ContentPlaceHolder1_view_form > div > table[width="100%"] > tbody > tr + tr /* inline ads */\
 				{ display: none; } \
@@ -1273,6 +1273,34 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	infinite: function(jDoc)
 	{
 		this.toggleReplies(jDoc);
+	}
+},
+
+'a7484cf2-9cbd-47aa-ac28-472f55a1b8f4':
+{
+	desc: '需要時自動加入[img]代碼插入按扭',
+	page: { 288: true },
+	type: 6,
+	once: function()
+	{
+		var pattern, jTextarea, jSubmit, text, match;
+		
+		$('#ctl00_ContentPlaceHolder1_messagetext').bind('keyup mouseup change', function()
+		{
+			if(!pattern)
+			{
+				pattern = /http:\/\/\S+?\/\S+?\.(?:jpg|png|gif)(?!\s*\[\/(?:img|url)])/gi;
+				jTextarea = $(this);
+				jMsg = $('<button type="button" style="vertical-align: top; margin-left: 5px; display: none;" />').insertAfter('#ctl00_ContentPlaceHolder1_btn_Submit').click(function()
+				{
+					jTextarea.val(text.replace(pattern, '[img]$&[/img]'));
+					jMsg.hide();
+				});
+			}
+			
+			text = jTextarea.val();
+			(match = text.match(pattern)) ? jMsg.html($.sprintf('為%s個圖片連結加上[img]代碼', match.length)).show() : jMsg.hide();
+		});
 	}
 }
 

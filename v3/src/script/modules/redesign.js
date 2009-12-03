@@ -8,7 +8,7 @@ AN.mod['Component Redesigner'] = { ver: 'N/A', author: '向日', fn: {
 	defer: 1, // after linkify to improve effieciency, note: this is a part of layout changing
 	options:
 	{
-		bOuterOnly: { desc: '隱蔵內層引用', type: 'checkbox', defaultValue: true },
+		bOuterOnly: { desc: '隱藏內層引用', type: 'checkbox', defaultValue: true },
 		nOuterNum: { desc: '外層引用的顯示數目', type: 'text', defaultValue: 1 }
 	},
 	once: function(jDoc, oFn)
@@ -130,7 +130,7 @@ AN.mod['Component Redesigner'] = { ver: 'N/A', author: '向日', fn: {
 		#newmessage { %s; z-index: 3; position: fixed; width: %spx; bottom: 0px; right: %spx; } \
 		#an-qr-header { cursor: pointer; text-align: center; } \
 		#previewArea { display: block; overflow: auto; width: %spx; } \
-		#previewArea img[onload] { width: 300px; } \
+		#previewArea img[onload] { max-width: 300px; } \
 		',
 		AN.util.getOpacityStr(AN.util.getOptions('nQROpacity')),
 		nWidth,

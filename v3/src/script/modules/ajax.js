@@ -243,7 +243,7 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 
 		handlePage();
 		
-		var jDiv = $('#ctl00_ContentPlaceHolder1_view_form > div');
+		var jDiv = $('#ctl00_ContentPlaceHolder1_view_form > div:last');
 		
 		jDiv.children('br:first').nextAll().andSelf().add('#ctl00_ContentPlaceHolder1_QuickReplyLoginTable').insertAfter(oPages[nCurPageNo].jDiv);
 		

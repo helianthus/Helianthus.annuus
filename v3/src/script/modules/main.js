@@ -934,16 +934,14 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		{
 			var aReg = [];
 			$.each(aSites, function(){ aReg.push(this.regex); });
-			return RegExp(aReg.join('|'), 'i');
+			return new RegExp(aReg.join('|'), 'i');
 		})();
 
 		var nWidth, nHeight, sUrl;
-		this.convert = function(event)
+		this.convert = function()
 		{
-			if(event.preventDefault) event.preventDefault();
-
 			sUrl = this.href;
-			nWidth = $(this).up('td,div').width();
+			nWidth = $(this).addClass('an-videolink').up('td,div').width();
 			$.each(aSites, function()
 			{
 				if(RegExp(this.regex, 'i').test(sUrl))
@@ -954,20 +952,29 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			});
 
 			$('<div></div>').insertAfter(this).toFlash(sUrl, { width: nWidth, height: nHeight.toFixed(0) }, { wmode: 'opaque', allowfullscreen: 'true' });
-
-			$(this).unbind('click', arguments.callee).click(toggleVideo);
 		};
-
-		var toggleVideo = function(event)
+		
+		$('#ctl00_ContentPlaceHolder1_view_form').click(function(event)
 		{
+			var jTarget = $(event.target);
+			if(!jTarget.is('.an-videolink')) return;
 			event.preventDefault();
-			$(this).next().toggle();
-		};
+			jTarget.next().toggle();
+		});
+		
+		var oFn = this;
+		if(AN.util.getOptions('bConvertOnClick')) $('#ctl00_ContentPlaceHolder1_view_form').click(function(event)
+		{
+			var jTarget = $(event.target);
+			if(!jTarget.is('a') || jTarget.is('.an-videolink') || !oFn.rLink.test(jTarget.attr('href'))) return;
+			event.preventDefault();
+			$($.sprintf('<iframe style="display: none" src="%s" />', jTarget.attr('href'))).appendTo('body').doTimeout(250, function(){ this.remove(); });
+			oFn.convert.call(jTarget[0]);
+		});
 	},
 	infinite: function(jDoc, oFn)
 	{
-		var jVideoLinks = jDoc.replies().jContents.find('a').filter(function(){ return oFn.rLink.test(this.href); }).addClass('an-videolink');
-		AN.util.getOptions('bConvertOnClick') ? jVideoLinks.click(oFn.convert) : jVideoLinks.each(oFn.convert);
+		if(!AN.util.getOptions('bConvertOnClick')) jDoc.replies().jContents.find('a').filter(function(){ return oFn.rLink.test(this.href); }).each(oFn.convert);
 	}
 },
 

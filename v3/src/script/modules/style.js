@@ -32,7 +32,7 @@ AN.mod['Style Editor'] = { ver: 'N/A', author: '向日', fn: {
 
 		AN.util.stackStyle($.sprintf('\
 		body > form a, #ctl00_ContentPlaceHolder1_MiddleAdSpace1 a { color: %(sMainLinkFontColor)s; ' + sTextCSS + ' \
-		body > form a[href*="view.aspx"]:visited { color: %(sMainVisitedColor)s; } \
+		body > form a[href*="view.aspx"]:visited, .repliers_right a:visited { color: %(sMainVisitedColor)s; } \
 		body > form a[href]:hover { color: %(sMainHoverColor)s; } \
 		',
 		AN.util.getOptions()

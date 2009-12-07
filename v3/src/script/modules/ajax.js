@@ -31,7 +31,7 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 			(oPages[nCurPageNo] =
 			{
 				jDiv: jTable.parent(),
-				jEndTable: jTable.next(),
+				jEndTable: jTable.next().next(),
 				jPageBoxes: $('select[name=page]', jScope).up('div', 3)
 			})
 			.jPageBoxes

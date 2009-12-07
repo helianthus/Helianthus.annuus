@@ -972,7 +972,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			var jTarget = $(event.target);
 			if(!jTarget.is('a') || jTarget.is('.an-videolink') || !oFn.rLink.test(jTarget.attr('href'))) return;
 			event.preventDefault();
-			$($.sprintf('<iframe style="display: none" src="%s" />', jTarget.attr('href'))).appendTo('body').doTimeout(250, function(){ this.remove(); });
+			$($.sprintf('<iframe style="display: none" src="%s" />', jTarget.attr('href'))).appendTo('body').doTimeout(500, function(){ this.remove(); });
 			oFn.convert.call(jTarget[0]);
 		});
 	},

@@ -182,7 +182,7 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 
 					if(oPages[nCurPageNo].jPageBoxes.eq(0).find('option').length != jNewDoc.find('select[name=page]:first').children().length) // has nextpage
 					{
-						oPages[nCurPageNo].jPageBoxes.replaceWith(jNewDoc.find('select[name=page]:first').up('table'));
+						oPages[nCurPageNo].jPageBoxes.replaceWith(jNewDoc.find('select[name=page]:first').up('div', 3));
 						handlePage(oPages[nCurPageNo].jDiv);
 						AN.shared('log', '發現下一頁, 連結建立');
 						AN.modFn.execMods(oPages[nCurPageNo].jPageBoxes.add(jNewReplies));

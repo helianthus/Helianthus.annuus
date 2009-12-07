@@ -120,7 +120,7 @@ AN.mod['Component Redesigner'] = { ver: 'N/A', author: '向日', fn: {
 		if(!AN.util.isLoggedIn()) return;
 
 		var jQR = $('#newmessage');
-		var nWidth = 939;
+		var nWidth = jQR.width() + 1;
 		var nRight = 50 - nWidth;
 		
 		var sMethod = AN.util.getOptions('sQRHideMethod');
@@ -134,9 +134,8 @@ AN.mod['Component Redesigner'] = { ver: 'N/A', author: '向日', fn: {
 		',
 		AN.util.getOpacityStr(AN.util.getOptions('nQROpacity')),
 		nWidth,
-		sMethod == aChoices[3] ? nRight : ($.winWidth() - nWidth) / 2 + 5,
-		AN.util.getOptions('bAlternativeHide') ? $.sprintf('right: %spx', nRight) : $.sprintf('left: 50%; margin-left: -%spx', nWidth / 2),
-		nWidth - 159
+		sMethod == aChoices[3] ? nRight : Math.ceil(($.winWidth() - nWidth) / 2),
+		nWidth - 149
 		));
 		
 		var jToggle = (sMethod == aChoices[0] ? jQR : jQR.find('tr:eq(2)')).hide();
@@ -168,7 +167,7 @@ AN.mod['Component Redesigner'] = { ver: 'N/A', author: '向日', fn: {
 				{
 					if(isNotNeeded(bToShow)) return;
 
-					isToShow(bToShow) ? jQR.animate({ right: ($.winWidth() - nWidth) / 2 + 5 }, 'slow', _toggleQR) : _toggleQR(false, function(){ jQR.animate({ right: nRight }, 'slow'); });
+					isToShow(bToShow) ? jQR.animate({ right: Math.ceil(($.winWidth() - nWidth) / 2) }, 'slow', _toggleQR) : _toggleQR(false, function(){ jQR.animate({ right: nRight }, 'slow'); });
 				};
 			})(toggleQR);
 		}

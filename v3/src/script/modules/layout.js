@@ -264,6 +264,17 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	}
 },
 
+'d0ac656c-e602-4852-843b-f776d8a976f4':
+{
+	desc: '隱藏評分格',
+	page: { 32: false },
+	type: 3,
+	once: function()
+	{
+		AN.util.stackStyle('#DivMarkThread { display: none; }');
+	}
+},
+
 '26eaf7f8-d260-4b42-b6d9-08b235f56d43':
 {
 	desc: '隱藏引用原文連結',

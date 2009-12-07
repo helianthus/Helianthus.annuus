@@ -23,7 +23,8 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			',
 			// topics
 			4: '\
-			.ContentPanel > table > tbody > tr > td:first-child { width: 100% !important; } \
+			.ContentPanel > table { width: 100%; } \
+			.ContentPanel > table > tbody > tr > td:first-child { width: auto !important; } \
 			.ContentPanel > table > tbody > tr > td:first-child + td \
 				{ display: none; } \
 			',
@@ -39,13 +40,16 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 				{ width: 100% !important; } \
 			',
 			// view
-			32: '\
+			32: $.sprintf('\
 			#ctl00_ContentPlaceHolder1_view_form > script:first-child + div { width: 100% !important; } \
 			#ctl00_ContentPlaceHolder1_view_form > script:first-child + div + div { display: none; } \
-			#ctl00_ContentPlaceHolder1_view_form > div[style*="99%"] table[cellspacing="1"][cellpadding="2"] > tbody > tr + tr + tr, /* top & bottom ads */\
+			div[style*="58px"] , /* top & bottom ads */\
 			#ctl00_ContentPlaceHolder1_view_form > div > table[width="100%"] > tbody > tr + tr /* inline ads */\
 				{ display: none; } \
+			#ctl00_ContentPlaceHolder1_view_form > div[style^="%(border)s"], #ctl00_ContentPlaceHolder1_view_form > div[style*="100%"] > div[style^="%(border)s"] { border-bottom: 0 !important; } \
 			',
+			{ border: $.browser.msie ? 'BORDER' : 'border' })
+			,
 			// default, topics, view
 			38: '\
 			#MainPageAd2 + br + br + div { padding-bottom: 10px !important; } \
@@ -596,7 +600,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	infinite: function(jDoc)
 	{
 		var nCurPageNo = jDoc.pageNo();
-		var nFloor = ((nCurPageNo == 1) ? 0 : 50 * (nCurPageNo - 1) + 1) + jDoc.pageScope().find('.an-content-floor').length;
+		var nFloor = ((nCurPageNo == 1) ? 0 : 25 * (nCurPageNo - 1) + 1) + jDoc.pageScope().find('.an-content-floor').length;
 
 		jDoc.replies().each(function()
 		{
@@ -1121,7 +1125,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			if(jTarget[0] == jButton[0]) return;
 
 			jTarget = jTarget.closest('#HotTopics tr');
-			if(jTarget.length && jTarget.children().length == 5)
+			if(jTarget.length && !jTarget.is(':first-child'))
 			{
 				jCurTarget = jTarget;
 				var offset = jTarget.offset();

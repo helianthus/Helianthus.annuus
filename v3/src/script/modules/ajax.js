@@ -3,7 +3,7 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 'b17a0463-e46c-4420-a8f5-f169fac20aec':
 {
 	desc: 'AJAX化頁面讀取',
-	page: { 32: true },
+	page: { 32: 'disabled' },
 	type: 7,
 	options:
 	{
@@ -24,13 +24,12 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 
 		var handlePage = function(jScope)
 		{
-			var jPageBoxes = $('select[name=page]', jScope).up('table');
-
+			var jReplyTables = $('.repliers', jScope).up('table');
 			oPages[nCurPageNo] =
 			{
-				jDiv: $('.repliers:first', jScope).up('div'),
-				jEndTable: jPageBoxes.eq(1).up('table', 3).prev(),
-				jPageBoxes: jPageBoxes
+				jDiv: jReplyTables.first().parent(),
+				jEndTable: jReplyTables.last().next(),
+				jPageBoxes: $('select[name=page]', jScope).up('div', 3)
 			};
 
 			if(!oPages.nLastest || oPages.nLastest < nCurPageNo)
@@ -143,7 +142,7 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 				return;
 			}
 
-			if(nCurPageNo == 21)
+			if(nCurPageNo == 41)
 			{
 				AN.shared('log', '1001!');
 				return;
@@ -243,13 +242,11 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 
 		handlePage();
 		
-		var jDiv = $('#ctl00_ContentPlaceHolder1_view_form > div:last');
-		
-		jDiv.children('br:first').nextAll().andSelf().add('#ctl00_ContentPlaceHolder1_QuickReplyLoginTable').insertAfter(oPages[nCurPageNo].jDiv);
+		$('.repliers:last').up('table').next().nextAll().insertAfter(oPages[nCurPageNo].jDiv);
 		
 		if(AN.util.getOptions('bAppendReplies') && AN.util.getOptions('bRemovePageBoxes'))
 		{
-			jDiv.children(':lt(2)').add(jDiv.children(':last').prev().andSelf()).hide();
+			oPages[nCurPageNo].jPageBoxes.hide();
 		}
 
 		if(AN.util.getOptions('bCheckOnBottom'))

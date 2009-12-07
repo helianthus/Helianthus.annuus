@@ -3,7 +3,7 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 'b17a0463-e46c-4420-a8f5-f169fac20aec':
 {
 	desc: 'AJAX化頁面讀取',
-	page: { 32: 'disabled' },
+	page: { 32: true },
 	type: 7,
 	options:
 	{
@@ -22,23 +22,26 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 			window.changePage = $.blank;
 		});
 
+		var jPageTools;
+
 		var handlePage = function(jScope)
 		{
-			var jReplyTables = $('.repliers', jScope).up('table');
-			oPages[nCurPageNo] =
+			var jTable = $('.repliers:last', jScope).up('table');
+
+			(oPages[nCurPageNo] =
 			{
-				jDiv: jReplyTables.first().parent(),
-				jEndTable: jReplyTables.last().next(),
+				jDiv: jTable.parent(),
+				jEndTable: jTable.next(),
 				jPageBoxes: $('select[name=page]', jScope).up('div', 3)
-			};
+			})
+			.jPageBoxes
+			.find('a').click(getPage).end()
+			.find('select').data('an-pageNo', nCurPageNo).change(getPage);
 
 			if(!oPages.nLastest || oPages.nLastest < nCurPageNo)
 			{
 				oPages.nLastest = nCurPageNo;
 			}
-
-			jPageBoxes.find('a').click(getPage);
-			jPageBoxes.find('select').data('an-pageNo', nCurPageNo).change(getPage);
 		};
 
 		var getPage = function(event)
@@ -96,9 +99,18 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 				{
 					var jNewDiv = jNewDoc.find('.repliers:first').up('div');
 					//if(!jNewDiv.length) return AN.shared('log', '下一頁找不到回覆, 可能是本帖部份回覆被刪所致');
-					
-					//jNewDiv.children(':last').prev('table').andSelf().remove(); // quick reply
-					jNewDiv.children('br:first').nextAll().andSelf().remove();
+
+					jNewDiv
+					.prepend(jNewDiv.prev())
+					.children(':last').prevAll('div:eq(2)').nextAll().remove();
+
+					if(AN.util.getOptions('bAppendReplies'))
+					{
+						if(AN.util.getOptions('bRemovePageBoxes'))
+						{
+							jNewDiv.children(':lt(2),:gt(-2)').hide();
+						}
+					}
 
 					if(nTargetPageNo > oPages.nLastest)
 					{
@@ -114,11 +126,6 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 								break;
 							}
 						}
-					}
-					
-					if(AN.util.getOptions('bAppendReplies') && AN.util.getOptions('bRemovePageBoxes'))
-					{
-						jNewDiv.children(':lt(2)').add(jNewDiv.children(':last').prev().andSelf()).hide();
 					}
 
 					handleLeftOver(jNewDiv);
@@ -208,14 +215,14 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 		var toggleTimer = function(bToSet, bDeferCheck)
 		{
 			if(!AN.util.getOptions('bCheckOnBottom') || oPages[nCurPageNo + 1]) return;
-			
+
 			if(bToSet)
 			{
 				if(bTimerOn) return;
 				bTimerOn = true;
-				
+
 				if(!bDeferCheck) return checkBottom();
-				
+
 				var nRemain = nInterval;
 				(function()
 				{
@@ -241,9 +248,11 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 		if(nInterval < 30) nInterval = 30;
 
 		handlePage();
-		
-		$('.repliers:last').up('table').next().nextAll().insertAfter(oPages[nCurPageNo].jDiv);
-		
+
+		oPages[nCurPageNo].jDiv
+		.prepend(oPages[nCurPageNo].jDiv.prev())
+		.after($('#newmessage').prevAll('div:eq(2)').nextAll());
+
 		if(AN.util.getOptions('bAppendReplies') && AN.util.getOptions('bRemovePageBoxes'))
 		{
 			oPages[nCurPageNo].jPageBoxes.hide();
@@ -309,7 +318,7 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 			{
 				var jNewTbody = jNewDoc.topics().jTbody;
 				var jTopicTable = $().topicTable();
-				
+
 				if(nPage == 1) jTopicTable.empty();
 				jTopicTable.append(jNewTbody);
 
@@ -330,7 +339,7 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 				}
 			});
 		};
-		
+
 		if(AN.util.getOptions('nNumOfTopicPage') > 1)
 		{
 			setTimeout(function(){ refreshTopics(2); }, 0);

@@ -30,14 +30,9 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			',
 			// search, tags
 			24: '\
-			.Topic_ForumInfoPanel table td { padding-bottom: 5px; } /* forumInfo blanks */\
-			#ctl00_ContentPlaceHolder1_lb_NewPM + br ~ br, /* forumInfo blanks */\
-			.Topic_ForumInfoPanel tr:first-child + tr ~ tr, /* 高登活動資訊 */\
-			#ctl00_ContentPlaceHolder1_topics_form > script:first-child + table td + td /* flash ad */\
+			#ctl00_ContentPlaceHolder1_topics_form > script:first-child + div { width: 100% !important; } \
+			#ctl00_ContentPlaceHolder1_topics_form > script:first-child + div + div { display: none; } \
 				{ display: none; } \
-			#ctl00_ContentPlaceHolder1_topics_form > script:first-child + table td:first-child, /* fix forumInfo width, IE only */\
-			#ctl00_ContentPlaceHolder1_topics_form > script:first-child + table /* fix forumInfo width */\
-				{ width: 100% !important; } \
 			',
 			// view
 			32: $.sprintf('\
@@ -50,16 +45,16 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			',
 			{ border: $.browser.msie ? 'BORDER' : 'border' })
 			,
-			// default, topics, view
-			38: '\
+			// topics, search, tags, view
+			60: '\
+			#ctl00_ContentPlaceHolder1_MiddleAdSpace1 div[style*="right"] { display: none; } /* text ad */\
+			',
+			// default, topics, search, tags, view
+			62: '\
 			#MainPageAd2 + br + br + div { padding-bottom: 10px !important; } \
 			#MainPageAd2, #MainPageAd2 ~ br, /* text ads */\
 			#ctl00_ContentPlaceHolder1_lb_NewPM + br \
 				{ display: none; } \
-			',
-			// topics, search, tags, view
-			60: '\
-			#ctl00_ContentPlaceHolder1_MiddleAdSpace1 div[style*="right"] { display: none; } /* text ad */\
 			',
 			// profilepage
 			64: '\

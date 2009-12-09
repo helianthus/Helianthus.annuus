@@ -134,26 +134,16 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	}
 },
 
-'8d53fef9-818f-46d1-99b8-5e199453b360':
-{
-	desc: '隱藏討論區資訊',
-	page: { 24: false },
-	type: 3,
-	once: function()
-	{
-		AN.util.stackStyle('#ctl00_ContentPlaceHolder1_topics_form > script:first-child + table { display: none; }');
-	}
-},
-
 '1c63cc45-21f7-40ab-905a-730dabffc2ab':
 {
 	desc: '隱藏高登公告',
-	page: { 36: false },
+	page: { 60: false },
 	type: 3,
 	once: function()
 	{
 		AN.util.stackStyle('\
 		#ctl00_ContentPlaceHolder1_view_form > script:first-child + table + table tr:first-child, \
+		#ctl00_ContentPlaceHolder1_topics_form > script:first-child + table + table tr:first-child, \
 		.DivResizableBoxContainer \
 			{ display: none; } \
 		');

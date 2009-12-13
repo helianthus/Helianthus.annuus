@@ -38,7 +38,7 @@ $.extend(
 
 	getDoc: function(sURL, success)
 	{
-		$.ajax(
+		var s = 
 		{
 			url: sURL,
 			dataType: 'text',
@@ -46,21 +46,23 @@ $.extend(
 			success: function(sHTML)
 			{
 				var jNewDoc = $.doc(sHTML);
-				jNewDoc.pageCode() & 32769 ? this.error() : success(jNewDoc);
+				jNewDoc.pageCode() & 65534 ? success.call(s, jNewDoc) : s.error();
 			},
 			error: function()
 			{
 				AN.shared('log', '頁面讀取失敗, 5秒後重新讀取...');
 				setTimeout(function(){ $.getDoc(sURL, success); }, 5000);
 			}
-		});
+		};
+		
+		$.ajax(s);
 	},
 
 	getLength: function(uTarget)
 	{
 		if('length' in uTarget) return uTarget.length;
 
-		for(var nCount in uTarget){};
+		for(var nCount in uTarget){}
 		return nCount;
 	},
 
@@ -475,7 +477,7 @@ $.extend(AN,
 				});
 				return sData;
 			}
-			else if(sName == null) // DEL ALL
+			else if(sName === null) // DEL ALL
 			{
 				$.each(['an_data', 'an_switches', 'an_options'], function()
 				{
@@ -491,7 +493,7 @@ $.extend(AN,
 			}
 			else if(uToSet) // SET
 			{
-				var sData = JSON.stringify(uToSet);
+				sData = JSON.stringify(uToSet);
 				storage.set(sProfile, sName, sData);
 			}
 			else // DEL

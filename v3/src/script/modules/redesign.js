@@ -120,7 +120,7 @@ AN.mod['Component Redesigner'] = { ver: 'N/A', author: '向日', fn: {
 		if(!AN.util.isLoggedIn()) return;
 
 		var jQR = $('#newmessage');
-		var nWidth = jQR.width() + 1;
+		var nWidth = 938; //jQR.width() + 1;
 		var nRight = 50 - nWidth;
 		
 		var sMethod = AN.util.getOptions('sQRHideMethod');

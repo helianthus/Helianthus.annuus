@@ -44,10 +44,15 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 			}
 		};
 
+		var bDone = true;
 		var getPage = function(event)
 		{
-			AN.shared('log', '正在準備轉頁...');
 			if(event) event.preventDefault();
+			
+			if(!bDone) return;
+			bDone = false;
+			
+			AN.shared('log', '正在準備轉頁...');
 			toggleTimer(false);
 
 			var handleLeftOver = function(jDiv)
@@ -91,6 +96,7 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 				handleLeftOver();
 				AN.shared('log', '轉頁完成');
 				getReplies();
+				bDone = true;
 			}
 			else
 			{
@@ -98,7 +104,8 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 				$.getDoc(AN.util.getURL({ page: nTargetPageNo }), function(jNewDoc)
 				{
 					var jNewDiv = jNewDoc.find('.repliers:first').up('div');
-					//if(!jNewDiv.length) return AN.shared('log', '下一頁找不到回覆, 可能是本帖部份回覆被刪所致');
+					
+					if(!jNewDiv.length) return this.error();
 
 					jNewDiv
 					.prepend(jNewDiv.prev())
@@ -134,7 +141,8 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 					AN.shared('log', '轉頁完成');
 					AN.modFn.execMods(jNewDiv);
 
-					toggleTimer(true, false);
+					toggleTimer(true, true);
+					bDone = true;
 				});
 			}
 		};
@@ -261,7 +269,7 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 		if(AN.util.getOptions('bCheckOnBottom'))
 		{
 			AN.shared('addInfo', '距離更新: <span id="an-info-ajaxtimer">N/A</span>');
-			toggleTimer(true, false);
+			toggleTimer(true, true);
 		}
 
 		if(AN.util.getOptions('bAddCheckBtn')) jDoc.defer(2, '加入讀取按扭', function(){ AN.shared('addButton', '更新帖子', function(){ getReplies(true); }); });

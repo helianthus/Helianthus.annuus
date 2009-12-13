@@ -440,7 +440,7 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 				fillBoolean = function(bSwitchOn)
 				{
 					var jScope = (bFillAll) ? $('#an-settings-main-panels') : jFieldsets.filter(':visible');
-					jScope.find('.an-settings-switch').attr('checked', bSwitchOn)
+					jScope.find('.an-settings-switch').attr('checked', bSwitchOn);
 					jScope.find('.an-settings-option').attr('disabled', !bSwitchOn);
 				};
 
@@ -802,7 +802,7 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 			#an-links-bottom li { border-top-width: 1px; } \
 			', AN.util.getOptions('bAutoShowLinks') ? '' : 'display: none;'));
 
-			var jMod = $('<div id="an-links" class="an-mod"><ul id="an-links-top" class="an-menu"></ul><ul id="an-links-middle" class="an-menu"></ul><ul id="an-links-bottom" class="an-menu"></ul></div>').appendTo('#an-ui');
+			jMod = $('<div id="an-links" class="an-mod"><ul id="an-links-top" class="an-menu"></ul><ul id="an-links-middle" class="an-menu"></ul><ul id="an-links-bottom" class="an-menu"></ul></div>').appendTo('#an-ui');
 
 			jDoc.defer(1, '調整連結元件位置', function() // after all links are added
 			{

@@ -11,6 +11,6 @@ var JSON = window.JSON || {};
 var jQuery, $;
 var AN = window.AN = { mod: {}, version: '${AN_VERSION}' };
 
-if(document.body && document.body.firstChild.className == 'webkit-line-gutter-backdrop') return;
+if(document.body && document.body.firstChild.className == 'webkit-line-gutter-backdrop' || /\.(?:gif|jpe?g|png|asmx)$/i.test(location.href)) return;
 
 document.domain = 'hkgolden.com';

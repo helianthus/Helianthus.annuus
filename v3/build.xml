@@ -1,149 +1,11 @@
 ﻿<project name="Helianthus.annuus">
 	<property name="dist_prefix" value="../../dist/v3" />
-
+	
+	<!--** test **-->
+	<target name="test" depends="_build,_build_cont" />
+	
 	<!--** build **-->
-	<target name="build" depends="_beta">
-		<propertyfile file="build.ini">
-			<entry key="_AN_VERSION" default="0" />
-			<entry key="MAIN_VERSION" default="0" />
-			
-			<entry key="BUILD_NUMBER" default="0" type="int" operation="+" />
-		</propertyfile>
-		
-		<property file="build.ini" />
-		
-		<tstamp>
-			<format property="BUILD_TIME" pattern="yyyy-MM-dd HH:mm:ss" />
-		</tstamp>
-		<property name="AN_VERSION" value="${MAIN_VERSION}.${_AN_VERSION}.${BUILD_NUMBER}" />
-		<property name="AN_VERSION_STABLE" value="${MAIN_VERSION}.${_AN_VERSION}.${BUILD_NUMBER_STABLE}" />
-		
-		<delete dir="test" />
-		<mkdir dir="test" />
-		
-		<!--
-		<replaceregexp match="}\s*$" replace="}," encoding="UTF-8">
-			<fileset dir="src/modules" includes="*.js" erroronmissingdir="false" />
-		</replaceregexp>
-		-->
-		
-		<tempfile property="script_body" destdir="test" suffix=".js" deleteonexit="true" />
-		<tempfile property="temp" destdir="test" suffix=".js" deleteonexit="true" />
-
-		<concat destfile="${script_body}" fixlastline="true" encoding="UTF-8">
-			<!-- lib -->
-			<fileset file="src/script/lib/jquery.js" />
-			<fileset dir="src/script/lib" includes="*.js" excludes="jquery.js" />
-			<!-- modules -->
-			<fileset dir="src/script/modules" includes="*.js" />
-			<!-- kernel -->
-			<fileset file="src/script/kernel/init.js" />
-		</concat>
-
-		<!-- annuus.js -->
-		<concat destfile="test/annuus-raw.js" fixlastline="true" encoding="UTF-8">
-			<filterchain>
-				<expandproperties/>
-			</filterchain>
-
-			<fileset file="src/BOM" />
-			<fileset file="src/script/header.js" />
-			<fileset file="src/script/intro.js" />
-			<fileset file="${script_body}" />
-			<fileset file="src/script/outro.js" />
-		</concat>
-		
-		<!-- minify -->
-		<java jar="build/yuicompressor/yuicompressor.jar" fork="true" failonerror="true">
-			<arg line="test/annuus-raw.js -o ${temp} --charset UTF-8" />
-		</java>
-		
-		<concat destfile="test/annuus.js" encoding="UTF-8">
-			<filterchain>
-				<expandproperties/>
-			</filterchain>
-			
-			<fileset file="src/BOM" />
-			<fileset file="src/script/header.js" />
-			<fileset file="${temp}" />
-		</concat>
-
-		<!-- annuus.user.js -->
-		<copy file="test/annuus.js" tofile="test/user/annuus.user.js" overwrite="true" />
-
-		<!-- annuus.opera.js -->
-		<concat destfile="test/annuus-raw.opera.js" fixlastline="true" encoding="UTF-8">
-			<filterchain>
-				<expandproperties/>
-			</filterchain>
-			
-			<fileset file="src/BOM" />
-			<fileset file="src/script/header.js" />
-			<fileset file="src/script/intro.js" />
-
-			<filelist dir="src/script/opera">
-				<file name="opera9.js" />
-				<file name="rubbish.js" />
-			</filelist>
-
-			<fileset file="${script_body}" />
-			<fileset file="src/script/outro.js" />
-		</concat>
-		
-		<!-- minify -->
-		<java jar="build/yuicompressor/yuicompressor.jar" fork="true" failonerror="true">
-			<arg line="test/annuus-raw.opera.js -o ${temp} --charset UTF-8" />
-		</java>
-		
-		<concat destfile="test/opera/annuus.opera.js" encoding="UTF-8">
-			<filterchain>
-				<expandproperties/>
-			</filterchain>
-			
-			<fileset file="src/BOM" />
-			<fileset file="src/script/header.js" />
-			<fileset file="${temp}" />
-		</concat>
-
-		<!-- annuus.chrome.js -->
-		<copy file="src/chrome/chrome.js" tofile="test/chrome/annuus.chrome.user.js" overwrite="true" encoding="UTF-8">
-			<filterchain>
-				<expandproperties/>
-			</filterchain>
-		</copy>
-
-		<!-- m2f -->
-		<copy todir="test" overwrite="true">
-			<fileset dir="src" includes="m2f/" />
-		</copy>
-
-		<copy file="src/m2f/Helianthus.annuus.xml" todir="test/m2f" overwrite="true" encoding="UTF-8">
-			<filterchain>
-				<expandproperties/>
-			</filterchain>
-		</copy>
-
-		<copy file="test/annuus.js" todir="test/m2f/Helianthus.annuus/Scripts" />
-
-		<!-- crx -->
-		<copy todir="test" overwrite="true" encoding="UTF-8">
-			<filterchain>
-				<expandproperties/>
-			</filterchain>
-
-			<fileset dir="src" includes="crx/" />
-		</copy>
-		<copy file="test/annuus.js" tofile="test/crx/annuus.js" overwrite="true" />
-		
-		<!-- privoxy -->
-		<copy todir="test/privoxy" overwrite="true" encoding="UTF-8">
-			<filterchain>
-				<expandproperties/>
-			</filterchain>
-			
-			<fileset dir="src/privoxy" includes="**/*" />
-		</copy>
-	</target>
+	<target name="build" depends="_build,_minify,_build_cont" />
 
 	<!--** stable **-->
 	<target name="stable" depends="_stable, _clean, build, _dist">
@@ -190,6 +52,120 @@
 	</target>
 
 	<!--** internals **-->
+	
+	<target name="_build" depends="_beta">
+		<propertyfile file="build.ini">
+			<entry key="_AN_VERSION" default="0" />
+			<entry key="MAIN_VERSION" default="0" />
+			
+			<entry key="BUILD_NUMBER" default="0" type="int" pattern="0000" operation="+" />
+		</propertyfile>
+		
+		<property file="build.ini" />
+		
+		<tstamp>
+			<format property="BUILD_TIME" pattern="yyyy-MM-dd HH:mm:ss" />
+		</tstamp>
+		<property name="AN_VERSION" value="${MAIN_VERSION}.${_AN_VERSION}.${BUILD_NUMBER}" />
+		
+		<delete dir="test" />
+		<mkdir dir="test" />
+		
+		<!--
+		<replaceregexp match="}\s*$" replace="}," encoding="UTF-8">
+			<fileset dir="src/modules" includes="*.js" erroronmissingdir="false" />
+		</replaceregexp>
+		-->
+
+		<!-- annuus.js -->
+		<concat destfile="test/annuus.js" fixlastline="true" encoding="UTF-8">
+			<filterchain>
+				<expandproperties/>
+			</filterchain>
+
+			<fileset file="src/BOM" />
+			<fileset file="src/script/header.js" />
+			<fileset file="src/script/intro.js" />
+			
+			<!-- lib -->
+			<fileset file="src/script/lib/jquery.js" />
+			<fileset dir="src/script/lib" includes="*.js" excludes="jquery.js" />
+			<!-- modules -->
+			<fileset dir="src/script/modules" includes="*.js" />
+			<!-- kernel -->
+			<fileset file="src/script/kernel/init.js" />
+			
+			<fileset file="src/script/outro.js" />
+		</concat>
+	</target>
+	
+	<target name="_minify">
+		<move file="test/annuus.js" tofile="test/annuus-raw.js" />
+	
+		<!-- minify -->
+		<tempfile property="temp" destdir="test" suffix=".js" deleteonexit="true" />
+		
+		<java jar="build/yuicompressor/yuicompressor.jar" fork="true" failonerror="true">
+			<arg line="test/annuus-raw.js -o ${temp} --charset UTF-8" />
+		</java>
+		
+		<concat destfile="test/annuus.js" encoding="UTF-8">
+			<filterchain>
+				<expandproperties/>
+			</filterchain>
+			
+			<fileset file="src/BOM" />
+			<fileset file="src/script/header.js" />
+			<fileset file="${temp}" />
+		</concat>
+	</target>
+	
+	<target name="_build_cont">
+		<!-- annuus.user.js -->
+		<copy file="test/annuus.js" tofile="test/user/annuus.user.js" overwrite="true" />
+
+		<!-- annuus.opera.js -->
+		<copy file="test/annuus.js" tofile="test/opera/annuus.opera.js" overwrite="true" />
+
+		<!-- annuus.chrome.js -->
+		<copy file="src/chrome/chrome.js" tofile="test/chrome/annuus.chrome.user.js" overwrite="true" encoding="UTF-8">
+			<filterchain>
+				<expandproperties/>
+			</filterchain>
+		</copy>
+
+		<!-- m2f -->
+		<copy todir="test" overwrite="true">
+			<fileset dir="src" includes="m2f/" />
+		</copy>
+
+		<copy file="src/m2f/Helianthus.annuus.xml" todir="test/m2f" overwrite="true" encoding="UTF-8">
+			<filterchain>
+				<expandproperties/>
+			</filterchain>
+		</copy>
+
+		<copy file="test/annuus.js" todir="test/m2f/Helianthus.annuus/Scripts" />
+
+		<!-- crx -->
+		<copy todir="test" overwrite="true" encoding="UTF-8">
+			<filterchain>
+				<expandproperties/>
+			</filterchain>
+
+			<fileset dir="src" includes="crx/" />
+		</copy>
+		<copy file="test/annuus.js" tofile="test/crx/annuus.js" overwrite="true" />
+		
+		<!-- privoxy -->
+		<copy todir="test/privoxy" overwrite="true" encoding="UTF-8">
+			<filterchain>
+				<expandproperties/>
+			</filterchain>
+			
+			<fileset dir="src/privoxy" includes="**/*" />
+		</copy>
+	</target>
 
 	<target name="_dist">
 		<!-- scripts -->

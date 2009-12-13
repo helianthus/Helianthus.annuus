@@ -301,12 +301,12 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	{
 		if(!AN.util.isLoggedIn()) return;
 
-		var jTbody = $('#ctl00_ContentPlaceHolder1_QuickReplyTable tbody:eq(2)');
-		if(AN.util.getOptions('bRemNameRow')) jTbody.children('tr:eq(0)').hide();
-		if(AN.util.getOptions('bRemTopicRow')) jTbody.children('tr:eq(1)').hide();
-		if(AN.util.getOptions('bRemClassicRow')) jTbody.children('tr:eq(3)').hide();
-		if(AN.util.getOptions('bRemTempRow') && jTbody.children().length > 5) jTbody.children('tr:eq(4)').next().andSelf().hide();
-		if(AN.util.getOptions('bRemPreviewRow')) jTbody.children('tr:last').hide();
+		var jRows = $('#ctl00_ContentPlaceHolder1_QuickReplyTable tbody:eq(2)').children();
+		if(AN.util.getOptions('bRemNameRow')) jRows.eq(0).hide();
+		if(AN.util.getOptions('bRemTopicRow')) jRows.eq(1).hide();
+		if(AN.util.getOptions('bRemClassicRow')) jRows.eq(3).hide();
+		if(AN.util.getOptions('bRemTempRow') && jRows.length > 5) jRows.eq(3).nextAll(':not(:last)').hide();
+		if(AN.util.getOptions('bRemPreviewRow')) jRows.last().hide();
 	}
 },
 

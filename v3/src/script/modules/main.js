@@ -38,12 +38,13 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			32: $.sprintf('\
 			#ctl00_ContentPlaceHolder1_view_form > script:first-child + div { width: 100% !important; } \
 			#ctl00_ContentPlaceHolder1_view_form > script:first-child + div + div { display: none; } \
-			div[style*="58px"] , /* top & bottom ads */\
+			div[style*="58px"], /* top & bottom ads */\
 			#ctl00_ContentPlaceHolder1_view_form > div > table[width="100%"] > tbody > tr + tr /* inline ads */\
 				{ display: none; } \
-			#ctl00_ContentPlaceHolder1_view_form > div[style^="%(border)s"], #ctl00_ContentPlaceHolder1_view_form > div[style*="100%"] > div[style^="%(border)s"] { border-bottom: 0 !important; } \
+			div[style*="%s"] { border-bottom: 0 !important; } \
 			',
-			{ border: $.browser.msie ? 'BORDER' : 'border' })
+			$.browser.msie ? 'PADDING-BOTTOM: 18px' : 'padding: 18px'
+			)
 			,
 			// topics, search, tags, view
 			60: '\
@@ -119,6 +120,8 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	},
 	infinite: function()
 	{
+		if($.browser.msie && $().pageCode() == 32) $('div[style*="PADDING-BOTTOM: 18px"]').css('border-bottom', 0); // yet another IE8 bug!?
+
 		if(AN.util.getOptions('bRetroHideAds'))
 		{
 			$('td[height="52"]').parent().hide();
@@ -448,7 +451,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 
 			var complete = function(bForce)
 			{
-				if(aLeft.length == 0 || bForce)
+				if(aLeft.length === 0 || bForce)
 				{
 					alert($.sprintf('登入完成!%s\n\n點擊確定重新整理頁面.', aLeft.length ? $.sprintf('\n\n伺服器%s登入失敗!', aLeft.join(',')) : ''));
 					location.reload();
@@ -529,7 +532,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 
 			var complete = function(bForce)
 			{
-				if(aLeft.length == 0 || bForce)
+				if(aLeft.length === 0 || bForce)
 				{
 					alert($.sprintf('登出完成!%s\n\n點擊確定重新整理頁面.', aLeft.length ? $.sprintf('\n\n伺服器%s登出失敗!', aLeft.join(',')) : ''));
 					location.reload();
@@ -920,11 +923,11 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			}
 		},
 		{
-			regex: 'tudou\\.com/program/',
+			regex: 'tudou\\.com/programs/',
 			fn: function()
 			{
-				if(nWidth > 400) nWidth = 400;
-				nHeight = nWidth / 4 * 3 + 40;
+				if(nWidth > 420) nWidth = 420;
+				nHeight = nWidth / 4 * 3 + 48;
 				sUrl = $.sprintf('http://www.tudou.com/v/%s', sUrl.replace(/.+?view\/([^\/]+).*/i, '$1'));
 			}
 		}];
@@ -952,7 +955,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 
 			$('<div></div>').insertAfter(this).toFlash(sUrl, { width: nWidth, height: nHeight.toFixed(0) }, { wmode: 'opaque', allowfullscreen: 'true' });
 		};
-		
+
 		$('#ctl00_ContentPlaceHolder1_view_form').click(function(event)
 		{
 			var jTarget = $(event.target);
@@ -960,7 +963,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			event.preventDefault();
 			jTarget.next().toggle();
 		});
-		
+
 		var oFn = this;
 		if(AN.util.getOptions('bConvertOnClick')) $('#ctl00_ContentPlaceHolder1_view_form').click(function(event)
 		{
@@ -1079,7 +1082,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 
 		$(document).mousedown(function(event)
 		{
-			if(down == 0) setTimeout(reset, 500);
+			if(down === 0) setTimeout(reset, 500);
 
 			if(++down == 3)
 			{
@@ -1167,24 +1170,26 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			if(nCount) AN.shared('log', $.sprintf('%s個標題已被過濾', nCount));
 		};
 
-		if(AN.util.getOptions('bAddFilterButton')) AN.shared('addButton', '新增過濾器', function(){ addFilter() });
+		if(AN.util.getOptions('bAddFilterButton')) AN.shared('addButton', '新增過濾器', addFilter);
 
 		if(AN.util.getOptions('bFilterListButton')) AN.shared('addButton', '標題過濾列表', function()
 		{
 			if(!$('#an-filterlist').length)
 			{
-				AN.util.addStyle('\
+				AN.util.addStyle($.sprintf('\
 				#an-filterlist > ul { margin: 5px; } \
 				#an-filterlist > ul > li { padding: 2px 0; } \
-				#an-filterlist > ul > li > a { border: 1px solid black; background-color: pink; margin-right: 5px; padding: 0 5px; } \
-				');
+				#an-filterlist > ul > li > span { margin-right: 5px; border: 1px solid black; padding: 0 5px; background-color: %(sMainHeaderBgColor)s; color: %(sMainHeaderFontColor)s; cursor: pointer; } \
+				',
+				AN.util.getOptions()
+				));
 
 				AN.shared.box('an-filterlist', '標題過濾列表', 500);
 
 				$('#an-filterlist').click(function(event)
 				{
 					var jTarget = $(event.target);
-					if(!jTarget.is('a')) return;
+					if(!jTarget.is('span')) return;
 
 					var sFilter = jTarget.next().html();
 
@@ -1201,7 +1206,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			{
 				$.each(aFilter, function(i, sFilter)
 				{
-					sHTML += $.sprintf('<li><a href="javascript:">X</a><span>%s</span></li>', sFilter);
+					sHTML += $.sprintf('<li><span>X</span>%s</li>', sFilter);
 				});
 			}
 			else
@@ -1284,28 +1289,347 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 
 'a7484cf2-9cbd-47aa-ac28-472f55a1b8f4':
 {
-	desc: '需要時自動加入[img]代碼插入按扭',
+	desc: '需要時自動加入代碼插入按扭',
 	page: { 288: true },
 	type: 6,
 	once: function()
 	{
-		var pattern, jTextarea, jSubmit, text, match;
-		
+		var jTextarea, rUrl, jUrlBtn, rImg, jImgBtn, text, match;
+
 		$('#ctl00_ContentPlaceHolder1_messagetext').bind('keyup mouseup change', function()
 		{
-			if(!pattern)
+			if(!jTextarea)
 			{
-				pattern = /http:\/\/\S+?\/\S+?\.(?:jpg|png|gif)(?!\s*\[\/(?:img|url)])/gi;
 				jTextarea = $(this);
-				jMsg = $('<button type="button" style="vertical-align: top; margin-left: 5px; display: none;" />').insertAfter('#ctl00_ContentPlaceHolder1_btn_Submit').click(function()
+
+				rUrl = /(?:https?|ftp):\/\/(?:[\w-]+\.)+[a-z]{2,3}(?:\/[\w-_.!~*'();,\/?:@&=+$]*)?(?![\w-_.!~*'();,\/?:@&=+$]|\s*\[\/(?:img|url)])/gi;
+				jUrlBtn = $('<button type="button" style="vertical-align: top; margin-left: 5px; display: none;" />').insertAfter('#ctl00_ContentPlaceHolder1_btn_Submit').click(function()
 				{
-					jTextarea.val(text.replace(pattern, '[img]$&[/img]'));
-					jMsg.hide();
+					jTextarea.val(text.replace(rUrl, '[url]$&[/url]'));
+					jUrlBtn.hide();
+				});
+
+				rImg = /http:\/\/(?:[\w-]+\.)+[a-z]{2,3}\/[\w-_.!~*'();,\/?:@&=+$]+?\.(?:jpg|png|gif)(?![\w-_.!~*'();,\/?:@&=+$]|\s*\[\/(?:img|url)])/gi;
+				jImgBtn = $('<button type="button" style="vertical-align: top; margin-left: 5px; display: none;" />').insertAfter(jUrlBtn).click(function()
+				{
+					jTextarea.val(text.replace(rImg, '[img]$&[/img]'));
+					jImgBtn.hide();
 				});
 			}
-			
+
 			text = jTextarea.val();
-			(match = text.match(pattern)) ? jMsg.html($.sprintf('為%s個圖片連結加上[img]代碼', match.length)).show() : jMsg.hide();
+			(match = text.match(rUrl)) ? jUrlBtn.html($.sprintf('為%s個連結加上[url]代碼', match.length)).show() : jUrlBtn.hide();
+			(match = text.match(rImg)) ? jImgBtn.html($.sprintf('為%s個圖片連結加上[img]代碼', match.length)).show() : jImgBtn.hide();
+		});
+	}
+},
+
+'74cd7f38-b0ad-4fca-ab39-673b0e2ee4c7':
+{
+	desc: '修正跳頁控件位置',
+	page: { 32: true },
+	type: 3,
+	once: function()
+	{
+		AN.util.stackStyle($.sprintf('div[style^="%s: center"] { margin: 0 100px; }', $.browser.msie ? 'TEXT-ALIGN' : 'text-align'));
+	}
+},
+
+'7f9780a6-395d-4b24-a0a8-dc58c4539408':
+{
+	desc: '改進字型大小/顏色插入控件',
+	page: { 288: true },
+	type: 4,
+	once: function()
+	{
+		$('#ctl00_ContentPlaceHolder1_QuickReplyTable select[onchange]').change(function()
+		{
+			this.selectedIndex = 0;
+		});
+	}
+},
+
+'1fb17624-7c6f-43aa-af11-9331f1f948cb':
+{
+	desc: '強化表情圖示列',
+	page: { 288: true },
+	type: 6,
+	once: function()
+	{
+		if(!$('#ctl00_ContentPlaceHolder1_messagetext').length) return;
+
+		var jSmileyTr = $('#ctl00_ContentPlaceHolder1_messagetext').up('tr').next();
+		if(jSmileyTr.nextAll().length > 1) jSmileyTr.nextAll(':not(:last)').hide();
+
+		// jQuery('#TABLE_ID').outer().replace(/>\s+</g, '><').replace(/&nbsp;\s+/g, '&nbsp;').replace(/'/g,'\\\'');
+
+		var smileys = [
+			{
+				desc: '特殊圖示',
+				html: {
+					path: 'faces',
+					table: [
+						[
+							['#good2#', 'ThumbUp'],
+							['#bad#', 'ThumbDown'],
+							['[img]/faces/surprise2.gif[/img]', 'surprise2'],
+							['[img]/faces/beer.gif[/img]', 'beer']
+						]
+					]
+				}
+			},
+			{
+				desc: '聖誕表情圖示',
+				html: '<table style="display: none;" cellpadding="0" cellspacing="0"><tbody><tr><td colspan="2"><a href="javascript:InsertText(\'[O:-)x]\',false)"><img style="border-width: 0px;" src="faces/xmas/angel.gif" alt="[O:-)x]"></a>&nbsp;<a href="javascript:InsertText(\'[xx(x]\',false)"><img style="border-width: 0px;" src="faces/xmas/dead.gif" alt="[xx(x]"></a>&nbsp;<a href="javascript:InsertText(\'[:)x]\',false)"><img style="border-width: 0px;" src="faces/xmas/smile.gif" alt="[:)x]"></a>&nbsp;<a href="javascript:InsertText(\'[:o)x]\',false)"><img style="border-width: 0px;" src="faces/xmas/clown.gif" alt="[:o)x]"></a>&nbsp;<a href="javascript:InsertText(\'[:o)jx]\',false)"><img style="border-width: 0px;" src="faces/xmas/clown_jesus.gif" alt="[:o)jx]"></a>&nbsp;<a href="javascript:InsertText(\'[:-(x]\',false)"><img style="border-width: 0px;" src="faces/xmas/frown.gif" alt="[:-(x]"></a>&nbsp;<a href="javascript:InsertText(\'[:~(x]\',false)"><img style="border-width: 0px;" src="faces/xmas/cry.gif" alt="[:~(x]"></a>&nbsp;<a href="javascript:InsertText(\'[;-)x]\',false)"><img style="border-width: 0px;" src="faces/xmas/wink.gif" alt="[;-)x]"></a>&nbsp;<a href="javascript:InsertText(\'[:-[x]\',false)"><img style="border-width: 0px;" src="faces/xmas/angry.gif" alt="[:-[x]"></a>&nbsp;<a href="javascript:InsertText(\'[:-]x]\',false)"><img style="border-width: 0px;" src="faces/xmas/devil.gif" alt="[:-]x]"></a>&nbsp;<a href="javascript:InsertText(\'[:Dx]\',false)"><img style="border-width: 0px;" src="faces/xmas/biggrin.gif" alt="[:Dx]"></a>&nbsp;<a href="javascript:InsertText(\'[:Ox]\',false)"><img style="border-width: 0px;" src="faces/xmas/oh.gif" alt="[:Ox]"></a>&nbsp;<a href="javascript:InsertText(\'[:Px]\',false)"><img style="border-width: 0px;" src="faces/xmas/tongue.gif" alt="[:Px]"></a>&nbsp;<a href="javascript:InsertText(\'[^3^x]\',false)"><img style="border-width: 0px;" src="faces/xmas/kiss.gif" alt="[^3^x]"></a>&nbsp;<a href="javascript:InsertText(\'[?_?x]\',false)"><img style="border-width: 0px;" src="faces/xmas/wonder.gif" alt="[?_?x]"></a>&nbsp;<a href="javascript:InsertText(\'#yupx#\',false)"><img style="border-width: 0px;" src="faces/xmas/agree.gif" alt="#yupx#"></a>&nbsp;<a href="javascript:InsertText(\'#ngx#\',false)"><img style="border-width: 0px;" src="faces/xmas/donno.gif" alt="#ngx#"></a>&nbsp;<a href="javascript:InsertText(\'#hehex#\',false)"><img style="border-width: 0px;" src="faces/xmas/hehe.gif" alt="#hehex#"></a>&nbsp;<a href="javascript:InsertText(\'#lovex#\',false)"><img style="border-width: 0px;" src="faces/xmas/love.gif" alt="#lovex#"></a>&nbsp;<a href="javascript:InsertText(\'#ohx#\',false)"><img style="border-width: 0px;" src="faces/xmas/surprise.gif" alt="#ohx#"></a>&nbsp;</td></tr><tr><td><a href="javascript:InsertText(\'#assx#\',false)"><img style="border-width: 0px;" src="faces/xmas/ass.gif" alt="#assx#"></a>&nbsp;<a href="javascript:InsertText(\'[sosadx]\',false)"><img style="border-width: 0px;" src="faces/xmas/sosad.gif" alt="[sosadx]"></a>&nbsp;<a href="javascript:InsertText(\'#goodx#\',false)"><img style="border-width: 0px;" src="faces/xmas/good.gif" alt="#goodx#"></a>&nbsp;<a href="javascript:InsertText(\'#hohox#\',false)"><img style="border-width: 0px;" src="faces/xmas/hoho.gif" alt="#hohox#"></a>&nbsp;<a href="javascript:InsertText(\'#killx#\',false)"><img style="border-width: 0px;" src="faces/xmas/kill.gif" alt="#killx#"></a>&nbsp;<a href="javascript:InsertText(\'#byex#\',false)"><img style="border-width: 0px;" src="faces/xmas/bye.gif" alt="#byex#"></a>&nbsp;<a href="javascript:InsertText(\'[Z_Zx]\',false)"><img style="border-width: 0px;" src="faces/xmas/z.gif" alt="[Z_Zx]"></a>&nbsp;<a href="javascript:InsertText(\'[@_@x]\',false)"><img style="border-width: 0px;" src="faces/xmas/@.gif" alt="[@_@x]"></a>&nbsp;<a href="javascript:InsertText(\'#adorex#\',false)"><img style="border-width: 0px;" src="faces/xmas/adore.gif" alt="#adorex#"></a>&nbsp;<a href="javascript:InsertText(\'#adore2x#\',false)"><img style="border-width: 0px;" src="faces/xmas/adore2.gif" alt="#adore2x#"></a>&nbsp;<a href="javascript:InsertText(\'[???x]\',false)"><img style="border-width: 0px;" src="faces/xmas/wonder2.gif" alt="[???x]"></a>&nbsp;<a href="javascript:InsertText(\'[bangheadx]\',false)"><img style="border-width: 0px;" src="faces/xmas/banghead.gif" alt="[bangheadx]"></a>&nbsp;<a href="javascript:InsertText(\'[bouncerx]\',false)"><img style="border-width: 0px;" src="faces/xmas/bouncer.gif" alt="[bouncerx]"></a>&nbsp;</td><td rowspan="2" valign="bottom"><a href="javascript:InsertText(\'[offtopicx]\',false)"><img style="border-width: 0px;" src="faces/xmas/offtopic.gif" alt="[offtopicx]"></a>&nbsp;</td></tr><tr><td><a href="javascript:InsertText(\'[censoredx]\',false)"><img style="border-width: 0px;" src="faces/xmas/censored.gif" alt="[censoredx]"></a>&nbsp;<a href="javascript:InsertText(\'[flowerfacex]\',false)"><img style="border-width: 0px;" src="faces/xmas/flowerface.gif" alt="[flowerfacex]"></a>&nbsp;<a href="javascript:InsertText(\'[shockingx]\',false)"><img style="border-width: 0px;" src="faces/xmas/shocking.gif" alt="[shockingx]"></a>&nbsp;<a href="javascript:InsertText(\'[photox]\',false)"><img style="border-width: 0px;" src="faces/xmas/photo.gif" alt="[photox]"></a>&nbsp;<a href="javascript:InsertText(\'[yipesx]\',false)"><img style="border-width: 0px;" src="faces/xmas/yipes.gif" alt="[yipesx]"></a>&nbsp;<a href="javascript:InsertText(\'[yipes2x]\',false)"><img style="border-width: 0px;" src="faces/xmas/yipes2.gif" alt="[yipes2x]"></a>&nbsp;<a href="javascript:InsertText(\'[yipes3x]\',false)"><img style="border-width: 0px;" src="faces/xmas/yipes3.gif" alt="[yipes3x]"></a>&nbsp;<a href="javascript:InsertText(\'[yipes4x]\',false)"><img style="border-width: 0px;" src="faces/xmas/yipes4.gif" alt="[yipes4x]"></a>&nbsp;<a href="javascript:InsertText(\'[369x]\',false)"><img style="border-width: 0px;" src="faces/xmas/369.gif" alt="[369x]"></a>&nbsp;<a href="javascript:InsertText(\'[bombx]\',false)"><img style="border-width: 0px;" src="faces/xmas/bomb.gif" alt="[bombx]"></a>&nbsp;<a href="javascript:InsertText(\'[slickx]\',false)"><img style="border-width: 0px;" src="faces/xmas/slick.gif" alt="[slickx]"></a>&nbsp;<a href="javascript:InsertText(\'[fuckx]\',false)"><img style="border-width: 0px;" src="faces/xmas/diu.gif" alt="[fuckx]"></a>&nbsp;<a href="javascript:InsertText(\'#nox#\',false)"><img style="border-width: 0px;" src="faces/xmas/no.gif" alt="#nox#"></a>&nbsp;<a href="javascript:InsertText(\'#kill2x#\',false)"><img style="border-width: 0px;" src="faces/xmas/kill2.gif" alt="#kill2x#"></a>&nbsp;</td></tr><tr><td><a href="javascript:InsertText(\'#kill3x#\',false)"><img style="border-width: 0px;" src="faces/xmas/kill3.gif" alt="#kill3x#"></a>&nbsp;<a href="javascript:InsertText(\'#cnx#\',false)"><img style="border-width: 0px;" src="faces/xmas/chicken.gif" alt="#cnx#"></a>&nbsp;<a href="javascript:InsertText(\'#cn2x#\',false)"><img style="border-width: 0px;" src="faces/xmas/chicken2.gif" alt="#cn2x#"></a>&nbsp;<a href="javascript:InsertText(\'[bouncyx]\',false)"><img style="border-width: 0px;" src="faces/xmas/bouncy.gif" alt="[bouncyx]"></a>&nbsp;<a href="javascript:InsertText(\'[bouncy2x]\',false)"><img style="border-width: 0px;" src="faces/xmas/bouncy2.gif" alt="[bouncy2x]"></a>&nbsp;<a href="javascript:InsertText(\'#firex#\',false)"><img style="border-width: 0px;" src="faces/xmas/fire.gif" alt="#firex#"></a>&nbsp;</td></tr></tbody></table>'
+			},
+			{
+				desc: '綠帽表情圖示',
+				html: {
+					path: 'faces/xmas/green',
+					table: [
+						[
+							['[:)gx]', 'smile'],
+							['[:o)gx]', 'clown'],
+							['[:-(gx]', 'frown'],
+							['[:~(gx]', 'cry'],
+							['#yupgx#', 'agree']
+						],
+						[
+							['[sosadgx]', 'sosad'],
+							['#goodgx#', 'good'],
+							['#byegx#', 'bye']
+						],
+						[
+							['[369gx]', '369'],
+							['[fuckgx]', 'diu']
+						]
+					]
+				}
+			},
+			{
+				desc: '新年表情圖示',
+				html: {
+					path: 'faces/newyear',
+					table: [
+						[
+							['[:o)n]', 'clown'],
+							['[:o)2n]', 'clown2'],
+							['[:o)3n]', 'clown3']
+						],
+						[
+							['[sosadn]', 'sosad'],
+							['[sosad2n]', 'sosad2'],
+							['[sosad3n]', 'sosad3'],
+							['[bangheadn]', 'banghead'],
+							['[banghead2n]', 'banghead2'],
+							['[bouncern]', 'bouncer']
+						],
+						[
+							['[yipesn]', 'yipes'],
+							['[369n]', '369'],
+							['[3692n]', '3692'],
+							['[fuckn]', 'diu']
+						]
+					],
+					span: [
+							['#assn#', 'ass'],
+						['[offtopicn]', 'offtopic'],
+						['[offtopic2n]', 'offtopic2']
+					]
+				}
+			},
+			{
+				desc: '腦魔表情圖示',
+				html: '<table style="display: none;" cellpadding="0" cellspacing="0"><tbody><tr><td><a href="javascript:InsertText(\'[:-[lm]\',false)"><img style="border-width: 0px;" src="faces/lomore/angry.gif" alt="[:-[lm]"></a>&nbsp;<a href="javascript:InsertText(\'[:Dlm]\',false)"><img style="border-width: 0px;" src="faces/lomore/biggrin.gif" alt="[:Dlm]"></a>&nbsp;<a href="javascript:InsertText(\'[:Olm]\',false)"><img style="border-width: 0px;" src="faces/lomore/oh.gif" alt="[:Olm]"></a>&nbsp;<a href="javascript:InsertText(\'[:Plm]\',false)"><img style="border-width: 0px;" src="faces/lomore/tongue.gif" alt="[:Plm]"></a>&nbsp;<a href="javascript:InsertText(\'#lovelm#\',false)"><img style="border-width: 0px;" src="faces/lomore/love.gif" alt="#lovelm#"></a>&nbsp;<a href="javascript:InsertText(\'#goodlm#\',false)"><img style="border-width: 0px;" src="faces/lomore/good.gif" alt="#goodlm#"></a>&nbsp;<a href="javascript:InsertText(\'#hoholm#\',false)"><img style="border-width: 0px;" src="faces/lomore/hoho.gif" alt="#hoholm#"></a>&nbsp;<a href="javascript:InsertText(\'#killlm#\',false)"><img style="border-width: 0px;" src="faces/lomore/kill.gif" alt="#killlm#"></a>&nbsp;<a href="javascript:InsertText(\'[???lm]\',false)"><img style="border-width: 0px;" src="faces/lomore/wonder2.gif" alt="[???lm]"></a>&nbsp;<a href="javascript:InsertText(\'[flowerfacelm]\',false)"><img style="border-width: 0px;" src="faces/lomore/flowerface.gif" alt="[flowerfacelm]"></a>&nbsp;<a href="javascript:InsertText(\'[shockinglm]\',false)"><img style="border-width: 0px;" src="faces/lomore/shocking.gif" alt="[shockinglm]"></a>&nbsp;<a href="javascript:InsertText(\'[yipeslm]\',false)"><img style="border-width: 0px;" src="faces/lomore/yipes.gif" alt="[yipeslm]"></a>&nbsp;<a href="javascript:InsertText(\'[offtopiclm]\',false)"><img style="border-width: 0px;" src="faces/lomore/offtopic.gif" alt="[offtopiclm]"></a>&nbsp;</td></tr><tr><td><a href="javascript:InsertText(\'[369lm]\',false)"><img style="border-width: 0px;" src="faces/lomore/369.gif" alt="[369lm]"></a>&nbsp;<a href="javascript:InsertText(\'[@_@lm]\',false)"><img style="border-width: 0px;" src="faces/lomore/@.gif" alt="[@_@lm]"></a>&nbsp;<a href="javascript:InsertText(\'#hehelm#\',false)"><img style="border-width: 0px;" src="faces/lomore/hehe.gif" alt="#hehelm#"></a>&nbsp;<a href="javascript:InsertText(\'[fucklm]\',false)"><img style="border-width: 0px;" src="faces/lomore/diu.gif" alt="[fucklm]"></a>&nbsp;<a href="javascript:InsertText(\'[bouncerlm]\',false)"><img style="border-width: 0px;" src="faces/lomore/bouncer.gif" alt="[bouncerlm]"></a>&nbsp;</td></tr></tbody></table>'
+			},
+			{
+				desc: 'SARS表情圖示',
+				html: {
+					path: 'faces/sick',
+					table: [
+						[
+							['[O:-)sk]', 'angel'],
+							['[:o)sk]', 'clown'],
+							['[:-[sk]', 'angry'],
+							['[:-]sk]', 'devil'],
+							['#yupsk#', 'agree'],
+							['#ngsk#', 'donno'],
+							['#cnsk#', 'chicken']
+						],
+						[
+							['#asssk#', 'ass'],
+							['[sosadsk]', 'sosad'],
+							['#hohosk#', 'hoho'],
+							['#hoho2sk#', 'hoho2'],
+							['#killsk#', 'kill'],
+							['#byesk#', 'bye'],
+							['[@_@sk]', '@'],
+							['#adoresk# ', 'adore'],
+							['[bangheadsk]', 'banghead']
+						],
+						[
+							['[flowerfacesk]', 'flowerface'],
+							['[shockingsk]', 'shocking'],
+							['[photosk]', 'photo'],
+							['#firesk#', 'fire'],
+							['[369sk]', '369'],
+							['[fucksk]', 'diu']
+						]
+					]
+				}
+			}
+		];
+		
+		function buildTable(data)
+		{
+			function writeLink(smileyNo, smiley)
+			{
+				tableHTML += $.sprintf(
+					'<a href="javascript:InsertText(\'%(code)s\',false)"><img style="border: 0" src="%(path)s/%(filename)s.gif" alt="%(code)s" /></a>&nbsp;',
+					{ code: smiley[0], path: data.path, filename: smiley[1] }
+				);
+			}
+			
+			var tableHTML = '<table style="display: none" cellpadding="0" cellspacing="0"><tbody>';
+			
+			$.each(data.table, function(rowNo, row)
+			{
+				tableHTML += '<tr>';
+				
+				tableHTML += rowNo == 0 ? '<td colspan="2">' : '<td>';
+				$.each(row, writeLink);
+				tableHTML += '</td>';
+				
+				if(rowNo == 1 && data.span)
+				{
+					tableHTML += '<td valign="bottom" rowspan="2">';
+					$.each(data.span, writeLink);
+					tableHTML += '</td>';
+				}
+				
+				tableHTML += '</tr>';
+			});
+			
+			tableHTML += '</tbody></table>';
+
+			return tableHTML;
+		}
+
+		var selectHTML = '<select><option>經典表情圖示</option>';
+		$.each(smileys, function()
+		{
+			selectHTML += '<option>' + this.desc + '</option>';
+			jSmileyTr.children(':last').append(typeof this.html == 'string' ? this.html : buildTable(this.html));
+		});
+		selectHTML += '</select>';
+
+		$(selectHTML).change(function()
+		{
+			jSmileyTr.children(':last').children().hide().eq(this.selectedIndex).show();
+		}).appendTo(jSmileyTr.children(':first').empty()).after(':');
+	}
+},
+
+'e336d377-bec0-4d88-b6f8-52e122f4d1c9':
+{
+	desc: '加入自訂文字插入控件',
+	page: { 288: true },
+	type: 5,
+	once: function()
+	{
+		if(!$('#ctl00_ContentPlaceHolder1_messagetext').length) return;
+		
+		var snippets = AN.util.data('snippets') || [
+			['家姐潮文', '講起我就扯火啦\n我家姐一路都在太古廣場一間名店做sales\n間店有好多有錢人同名人幫襯\n做了很多年，已經是senior\n咁多年黎都好俾心機做，經理亦好 like佢\n因為收入不錯又隱定，家姐原本諗住同拍拖多年既bf結婚\n咁多年黎我家姐好少俾人投訴\n而且同好多大客既關係都唔錯\n前排關心研去過我家姐間店幫襯\n不過serve佢既不是我家姐，但佢一買就買左好多野\n過左個幾星期，佢又再去間店行\n上次serve果個Day-off, 咁我家姐就頂上serve佢\n開頭已經好有禮貌介紹d新貨俾佢, 仲話俾折頭佢\n佢就無乜反應，望一望另一堆客\n果堆客係大陸人，三至四個，講野好大聲\n關小姐就同我家姐講話可唔可以關左間鋪一陣\n等佢揀衫\n 我家姐同我講，佢公司一向唔俾佢地咁做\n驚做壞個頭，除非真係有乜大人物，好多記者好混亂先可以咁做\n但佢見到關小姐黑口黑面，都識做話打電話去問一問老闆\n老闆梗係話唔得啦，至多俾多d折頭她\n咁關小姐就發老脾，鬧到我家姐一面屁\nd說話勁難聽，又話自己買野既錢多過我家姐搵幾年既錢\n我家姐都唔敢得罪佢，一味道歉\n跟住關小姐就走左人，家姐就同老闆備案\n老闆瞭解左情況就無再追問\n過左兩日佢接到老闆電話話收到complaint \n話有人投訴佢態度唔好，唔理顧客感受\n公司policy一向唔話俾佢地知係邊次事件\n我家姐估黎估去都淨係得失過關小姐一人\n總之俾老闆話左兩句\n又過幾日，關小姐又黎\n這次和件西裝友一齊，但好在成店都無其他客\n我家姐怕又惹事，叫左個junior過去serve佢\n點知條老西友係要點番我家姐serve.\n根住關小姐就玩野，試衫，但話d衫俾其他人試過污糟\n要開新衫試，我家姐雖然知公司唔俾咁做，\n但怕左佢，唯有照做\n點知試左兩三件，件件佢都要咁試又無話要\n我家姐終於話唔好意思，其實唔可以咁做\n(根本明知她玩野啦.....)\n又係至多俾多d折頭佢\n跟住佢件西裝友就鬧我家姐話"係咪話我地無錢買你地d野?"\n我家姐話唔係，但佢照鬧\n鬧左十幾分鐘\nd同事見咁幫手，又照鬧\n最終打俾老闆備案\n之後連收兩封warning letter\n早兩日接埋大信封\n年尾俾人炒左']
+		];
+		var jSelect = $('<select></select>');
+		
+		function writeSelect()
+		{
+			var selectHTML = '<option>自訂文字</option>';
+			$.each(snippets, function(textNo)
+			{
+				selectHTML += $.sprintf('<option value="%s">%s</option>', textNo, this[0]);
+			});
+			selectHTML += '<option value="customize">自訂...</option>';
+			
+			jSelect.html(selectHTML);
+		}
+		
+		writeSelect();
+		
+		var jSnippets;
+		jSelect.insertBefore($('#ctl00_ContentPlaceHolder1_messagetext').prev()).change(function()
+		{
+			if(this.value == 'customize') {
+				if(!jSnippets) {
+					AN.util.addStyle($.sprintf('\
+					#an-snippets { padding: 5px; } \
+					#an-snippets > ul { float: left; } \
+					#an-snippets > ul > li { padding: 2px 0; } \
+					#an-snippets > ul > li > span { margin-right: 5px; border: 1px solid black; padding: 0 5px; background-color: %(sMainHeaderBgColor)s; color: %(sMainHeaderFontColor)s; cursor: pointer; } \
+					#an-snippets > div { float: right; margin-left: 10px; padding-left: 10px; text-align: center; border-left: 1px solid gray; } \
+					#an-snippets > div > textarea { display: block; width: 400px; height: 300px; } \
+					',
+					AN.util.getOptions()
+					));
+					
+					var index, jDesc, jContent;
+					jSnippets = AN.shared.box('an-snippets', '自訂文字', 700).append('<ul></ul><div><input /><textarea></textarea><button type="button">ok</button><button type="button">cancel</button></div>').click(function(event)
+					{
+						var jTarget = $(event.target);
+						if(!jTarget.is('span,button')) return;
+						
+						var type = jTarget.text();
+						if(type == 'cancel') {
+							jSnippets.children('div').css('opacity', '0.5').children().attr('disabled', true);
+						}
+						else if(type == 'E' || type == '+') {
+							// index = jTarget.parent().index(); // cant use this due to a problem with FF+GM
+							var testElem = jTarget.parent().parent().children()[0];
+							index = 0;
+							while(testElem != jTarget.parent()[0]) {
+								testElem = testElem.nextSibling;
+								index++;
+							}
+							jDesc.val(type == 'E' ? snippets[index][0] : '').next().val(type == 'E' ? snippets[index][1] : '').parent().css('opacity', '1').children().attr('disabled', false);
+						}
+						else
+						{
+							if(type == 'ok') {
+								snippets.push([jDesc.val(), jContent.val()]);
+							}
+							else if(type == 'X' && confirm('確定移除?')) {
+								snippets.splice(index, 1);
+							}
+							AN.util.data('snippets', snippets);
+							writeSnippets();
+							writeSelect();
+						}
+					});
+				}
+				jDesc = jSnippets.find('> div > input');
+				jContent = jDesc.next();
+					
+				function writeSnippets()
+				{
+					var sHTML = '';
+					$.each(snippets, function()
+					{
+						sHTML += '<li><span>X</span><span>E</span>' + this[0] + '</li>';
+					});
+					sHTML += '<li><span>+</span>...</li>';
+					jSnippets.children('ul').html(sHTML).next().css('opacity', '0.5').children().val('').attr('disabled', true);
+				}
+				
+				writeSnippets();
+				AN.shared.gray(true, 'an-snippets');
+			}
+			else {
+				window.InsertText(snippets[this.value][1], false);
+			}
+			
+			this.selectedIndex = 0;
 		});
 	}
 }

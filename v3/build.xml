@@ -87,6 +87,11 @@
 			<fileset file="src/script/header.js" />
 			<fileset file="src/script/intro.js" />
 			
+			<!-- opera -->
+			<filelist dir="src/script/opera">
+				<file name="opera9.js" />
+				<file name="rubbish.js" />
+			</filelist> 
 			<!-- lib -->
 			<fileset file="src/script/lib/jquery.js" />
 			<fileset dir="src/script/lib" includes="*.js" excludes="jquery.js" />
@@ -94,7 +99,6 @@
 			<fileset dir="src/script/modules" includes="*.js" />
 			<!-- kernel -->
 			<fileset file="src/script/kernel/init.js" />
-			
 			<fileset file="src/script/outro.js" />
 		</concat>
 	</target>

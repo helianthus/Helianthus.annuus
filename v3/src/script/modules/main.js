@@ -1294,30 +1294,32 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	type: 6,
 	once: function()
 	{
-		var jTextarea, rUrl, jUrlBtn, rImg, jImgBtn, text, match;
-
-		$('#ctl00_ContentPlaceHolder1_messagetext').bind('keyup mouseup change', function()
+		var rUrl, jUrlBtn, rImg, jImgBtn, text, match;
+		var jTextarea = $('#ctl00_ContentPlaceHolder1_messagetext').bind('keyup mouseup change', function()
 		{
-			if(!jTextarea)
+			if(!rUrl)
 			{
-				jTextarea = $(this);
+				var parts = {
+					host: '(?:https?|ftp)://(?:[\\w-]+\\.)+[a-z]{2,3}',
+					codes: '\\[/?(?:img|url|quote|\\*|left|center|right|b|i|u|s|size|red|green|blue|purple|violet|brown|black|pink|orange|gold|maroon|teal|navy|limegreen)'
+				};
 
-				rUrl = /(?:https?|ftp):\/\/(?:[\w-]+\.)+[a-z]{2,3}(?:\/[\w-_.!~*'();,\/?:@&=+$]*)?(?![\w-_.!~*'();,\/?:@&=+$]|\s*\[\/(?:img|url)])/gi;
+				rUrl = new RegExp($.sprintf('%(host)s(?:/(?:\\S(?!%(codes)s))*\\S(?=\\s|%(codes)s))?(?![a-z/]|\\s*\\[/(?:img|url)])', parts), 'gi');
+				console.log(rUrl);
 				jUrlBtn = $('<button type="button" style="vertical-align: top; margin-left: 5px; display: none;" />').insertAfter('#ctl00_ContentPlaceHolder1_btn_Submit').click(function()
 				{
-					jTextarea.val(text.replace(rUrl, '[url]$&[/url]'));
-					jUrlBtn.hide();
+					jTextarea.val(text.replace(rUrl, '[url]$&[/url]')).change();
 				});
 
-				rImg = /http:\/\/(?:[\w-]+\.)+[a-z]{2,3}\/[\w-_.!~*'();,\/?:@&=+$]+?\.(?:jpg|png|gif)(?![\w-_.!~*'();,\/?:@&=+$]|\s*\[\/(?:img|url)])/gi;
+				rImg = new RegExp($.sprintf('%(host)s/(?:(?!%(codes)s)\\S)+?\\.(?:bmp|jpe?g|png|gif)(?!\\s*\\[/(?:img|url)])', parts), 'gi');
 				jImgBtn = $('<button type="button" style="vertical-align: top; margin-left: 5px; display: none;" />').insertAfter(jUrlBtn).click(function()
 				{
-					jTextarea.val(text.replace(rImg, '[img]$&[/img]'));
-					jImgBtn.hide();
+					jTextarea.val(text.replace(rImg, '[img]$&[/img]')).change();
 				});
 			}
 
 			text = jTextarea.val();
+			console.log('test');
 			(match = text.match(rUrl)) ? jUrlBtn.html($.sprintf('為%s個連結加上[url]代碼', match.length)).show() : jUrlBtn.hide();
 			(match = text.match(rImg)) ? jImgBtn.html($.sprintf('為%s個圖片連結加上[img]代碼', match.length)).show() : jImgBtn.hide();
 		});

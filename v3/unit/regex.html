@@ -1,0 +1,130 @@
+﻿<!doctype html>
+<html>
+<head>
+<link rel="stylesheet" href="http://github.com/jquery/qunit/raw/master/qunit/qunit.css" />
+<script src="http://github.com/jquery/qunit/raw/master/qunit/qunit.js"></script>
+<script>
+test('rUrl regex', function()
+{
+var parts = {
+		host: '(?:https?|ftp)://(?:[\\w-]+\\.)+[a-z]{2,3}(?![a-z])',
+		codes: '\\[/?(?:img|url|quote|\\*|left|center|right|b|i|u|s|size|red|green|blue|purple|violet|brown|black|pink|orange|gold|maroon|teal|navy|limegreen)'
+	};
+	var rUrl = new RegExp('%(host)s(?:/(?:(?!%(codes)s)\\S)*)?(?!(\\S*?| *)\\[/(?:img|url)])'.replace(/%\(codes\)s/g, parts.codes).replace(/%\(host\)s/g, parts.host), 'gi');
+	
+	var tests = [
+		['http://www.google.com', ['http://www.google.com']],
+		['https://www.google.com', ['https://www.google.com']],
+		['ftp://www.google.com', ['ftp://www.google.com']],
+		['http://www.google.com/', ['http://www.google.com/']],
+		['http://www.google.com/s', ['http://www.google.com/s']],
+		['http://www.google.com測試', ['http://www.google.com']],
+		['http://www.google.com//', ['http://www.google.com//']],
+		['http://www.google.com/測試', ['http://www.google.com/測試']],
+		['http://www.google.com/ 測試', ['http://www.google.com/']],
+		['http://www.google.com/[/quote]', ['http://www.google.com/']],
+		['http://www.google.com/ [/quote]', ['http://www.google.com/']],
+		['http://www.google.com/[url]', ['http://www.google.com/']],
+		['http://www.google.com/ [url]', ['http://www.google.com/']],
+		['http://www.google.com/[img]', ['http://www.google.com/']],
+		['http://www.google.com/ [img]', ['http://www.google.com/']],
+		['http://www.google.com/[abc].htm', ['http://www.google.com/[abc].htm']],
+		['http://www.google.com/[/abc].htm', ['http://www.google.com/[/abc].htm']],
+		['http://www.google.com/%20.htm', ['http://www.google.com/%20.htm']],
+		
+		['http://www.aaa.com 測試 http://www.bbb.com', ['http://www.aaa.com', 'http://www.bbb.com']],
+		['http://www.aaa.com[/url]http://www.bbb.com', ['http://www.bbb.com']],
+		['http://www.aaa.com 測試 http://www.bbb.com[/url]', ['http://www.aaa.com']],
+		['http://www.aaa.com[/img]http://www.bbb.com', ['http://www.bbb.com']],
+		['http://www.aaa.com 測試 http://www.bbb.com[/img]', ['http://www.aaa.com']],
+		['http://www.aaa.com/ 測試 http://www.bbb.com/', ['http://www.aaa.com/', 'http://www.bbb.com/']],
+		['http://www.aaa.com/[/url]http://www.bbb.com/', ['http://www.bbb.com/']],
+		['http://www.aaa.com/ 測試 http://www.bbb.com/[/url]', ['http://www.aaa.com/']],
+		['http://www.aaa.com/[/img]http://www.bbb.com/', ['http://www.bbb.com/']],
+		['http://www.aaa.com/ 測試 http://www.bbb.com/[/img]', ['http://www.aaa.com/']],
+		['http://www.aaa.com/s 測試 http://www.bbb.com/s', ['http://www.aaa.com/s', 'http://www.bbb.com/s']],
+		['http://www.aaa.com/s[/url]http://www.bbb.com/s', ['http://www.bbb.com/s']],
+		['http://www.aaa.com/s 測試 http://www.bbb.com/s[/url]', ['http://www.aaa.com/s']],
+		['http://www.aaa.com/s[/img]http://www.bbb.com/s', ['http://www.bbb.com/s']],
+		['http://www.aaa.com/s 測試 http://www.bbb.com/s[/img]', ['http://www.aaa.com/s']],
+		
+		['http://', null],
+		['http://aaa', null],
+		['http://aaaa.aaaa', null]
+	];
+	var tests2 = [];
+	
+	for(var i=0; i<tests.length; i++) {
+		var match = tests[i][0].match(rUrl);
+		same(match, tests[i][1]);
+		if(match) tests2.push(match[0] + '[/url]');
+	}
+	
+	for(var i=0; i<tests2.length; i++) {
+		equals(tests2[i].match(rUrl), null);
+	}
+});
+
+test('rImg regex', function()
+{
+	var parts = {
+		host: '(?:https?|ftp)://(?:[\\w-]+\\.)+[a-z]{2,3}(?![a-z])',
+		codes: '\\[/?(?:img|url|quote|\\*|left|center|right|b|i|u|s|size|red|green|blue|purple|violet|brown|black|pink|orange|gold|maroon|teal|navy|limegreen)'
+	};
+	var rImg = new RegExp('%(host)s/(?:(?!%(codes)s)\\S)+?\\.(?:bmp|jpe?g|png|gif)(?! *\\[/(?:img|url)])'.replace(/%\(codes\)s/g, parts.codes).replace(/%\(host\)s/g, parts.host), 'gi');
+	
+	var tests = [
+		['http://www.google.com/test.jpg', ['http://www.google.com/test.jpg']],
+		['http://www.google.com/test.jpeg', ['http://www.google.com/test.jpeg']],
+		['http://www.google.com/test.bmp', ['http://www.google.com/test.bmp']],
+		['http://www.google.com/test.png', ['http://www.google.com/test.png']],
+		['http://www.google.com/test.gif', ['http://www.google.com/test.gif']],
+		['http://www.google.com/test.jpg', ['http://www.google.com/test.jpg']],
+		['ftp://www.google.com/test.jpg', ['ftp://www.google.com/test.jpg']],
+		['http://www.google.com/測試.jpg', ['http://www.google.com/測試.jpg']],
+		['http://www.google.com//test.jpg', ['http://www.google.com//test.jpg']],
+		['http://www.google.com/test.jpg[/quote]', ['http://www.google.com/test.jpg']],
+		['http://www.google.com/test.jpg [/quote]', ['http://www.google.com/test.jpg']],
+		['http://www.google.com/test.jpg[url]', ['http://www.google.com/test.jpg']],
+		['http://www.google.com/test.jpg [url]', ['http://www.google.com/test.jpg']],
+		['http://www.google.com/test.jpg[img]', ['http://www.google.com/test.jpg']],
+		['http://www.google.com/test.jpg [img]', ['http://www.google.com/test.jpg']],
+		['http://www.google.com/[aaa].jpg', ['http://www.google.com/[aaa].jpg']],
+		['http://www.google.com/[/aaa].jpg', ['http://www.google.com/[/aaa].jpg']],
+		['http://www.google.com/%20.jpg', ['http://www.google.com/%20.jpg']],
+		
+		['http://www.aaa.com/test.jpg 測試 http://www.bbb.com/test.jpg', ['http://www.aaa.com/test.jpg', 'http://www.bbb.com/test.jpg']],
+		['http://www.aaa.com/test.jpg[/url]http://www.bbb.com/test.jpg', ['http://www.bbb.com/test.jpg']],
+		['http://www.aaa.com/test.jpg [/url]http://www.bbb.com/test.jpg', ['http://www.bbb.com/test.jpg']],
+		['http://www.aaa.com/test.jpg[/img]http://www.bbb.com/test.jpg', ['http://www.bbb.com/test.jpg']],
+		['http://www.aaa.com/test.jpg [/img]http://www.bbb.com/test.jpg', ['http://www.bbb.com/test.jpg']],
+		['http://www.aaa.com/test.jpg 測試 http://www.bbb.com/test.jpg[/img]', ['http://www.aaa.com/test.jpg']],
+		['http://www.aaa.com/test.jpg 測試 http://www.bbb.com/test.jpg [/img]', ['http://www.aaa.com/test.jpg']],
+		['http://www.aaa.com/test.jpg 測試 http://www.bbb.com/test.jpg[/url]', ['http://www.aaa.com/test.jpg']],
+		['http://www.aaa.com/test.jpg 測試 http://www.bbb.com/test.jpg [/url]', ['http://www.aaa.com/test.jpg']],
+		['http://www.aaa.com/test.jpg 測試 http://www.bbb.com[/url]', ['http://www.aaa.com/test.jpg']],
+		
+		['http://www.google.com/ test.jpg', null]
+	];
+	var tests2 = [];
+	
+	for(var i=0; i<tests.length; i++) {
+		var match = tests[i][0].match(rImg);
+		same(match, tests[i][1]);
+		if(match) tests2.push(match[0] + '[/img]');
+	}
+	
+	for(var i=0; i<tests2.length; i++) {
+		equals(tests2[i].match(rImg), null);
+	}
+});
+</script>
+  
+</head>
+<body>
+	<h1 id="qunit-header">Helianthus.annuus</h1>
+	<h2 id="qunit-banner"></h2>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+</body>
+</html>

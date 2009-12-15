@@ -1300,18 +1300,17 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			if(!rUrl)
 			{
 				var parts = {
-					host: '(?:https?|ftp)://(?:[\\w-]+\\.)+[a-z]{2,3}',
+					host: '(?:https?|ftp)://(?:[\\w-]+\\.)+[a-z]{2,3}(?![a-z])',
 					codes: '\\[/?(?:img|url|quote|\\*|left|center|right|b|i|u|s|size|red|green|blue|purple|violet|brown|black|pink|orange|gold|maroon|teal|navy|limegreen)'
 				};
 
-				rUrl = new RegExp($.sprintf('%(host)s(?:/(?:\\S(?!%(codes)s))*\\S(?=\\s|%(codes)s))?(?![a-z/]|\\s*\\[/(?:img|url)])', parts), 'gi');
-				console.log(rUrl);
+				rUrl = new RegExp($.sprintf('%(host)s(?:/(?:(?!%(codes)s)\\S)*)?(?!(\\S*?| *)\\[/(?:img|url)])', parts), 'gi');
 				jUrlBtn = $('<button type="button" style="vertical-align: top; margin-left: 5px; display: none;" />').insertAfter('#ctl00_ContentPlaceHolder1_btn_Submit').click(function()
 				{
 					jTextarea.val(text.replace(rUrl, '[url]$&[/url]')).change();
 				});
 
-				rImg = new RegExp($.sprintf('%(host)s/(?:(?!%(codes)s)\\S)+?\\.(?:bmp|jpe?g|png|gif)(?!\\s*\\[/(?:img|url)])', parts), 'gi');
+				rImg = new RegExp($.sprintf('%(host)s/(?:(?!%(codes)s)\\S)+?\\.(?:bmp|jpe?g|png|gif)(?! *\\[/(?:img|url)])', parts), 'gi');
 				jImgBtn = $('<button type="button" style="vertical-align: top; margin-left: 5px; display: none;" />').insertAfter(jUrlBtn).click(function()
 				{
 					jTextarea.val(text.replace(rImg, '[img]$&[/img]')).change();
@@ -1319,7 +1318,6 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			}
 
 			text = jTextarea.val();
-			console.log('test');
 			(match = text.match(rUrl)) ? jUrlBtn.html($.sprintf('為%s個連結加上[url]代碼', match.length)).show() : jUrlBtn.hide();
 			(match = text.match(rImg)) ? jImgBtn.html($.sprintf('為%s個圖片連結加上[img]代碼', match.length)).show() : jImgBtn.hide();
 		});

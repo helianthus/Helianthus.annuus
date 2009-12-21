@@ -110,8 +110,6 @@
 		<!-- minify -->
 		<tempfile property="temp" destdir="test" suffix=".js" deleteonexit="true" />
 		
-		<tempfile property="temp" destdir="test" suffix=".js" deleteonexit="true" />
-		
 		<java jar="build/yuicompressor/yuicompressor.jar" fork="true" failonerror="true">
 			<arg line="test/annuus-raw.js -o ${temp} --charset UTF-8" />
 		</java>

@@ -24,8 +24,6 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 		
 		AN.util.stackStyle('.repliers { border: 0; }');
 
-		var jPageTools;
-
 		var handlePage = function(jScope)
 		{
 			var jTable = $('.repliers:last', jScope).up('table');
@@ -137,7 +135,7 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 					AN.shared('log', '轉頁完成');
 					AN.modFn.execMods(jNewDiv);
 
-					toggleTimer(true, true);
+					toggleTimer(true, false);
 					bDone = true;
 				});
 			}

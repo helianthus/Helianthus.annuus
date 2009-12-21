@@ -1,15 +1,16 @@
 (function()
 {
 
-var window, self, content = self = window = typeof unsafeWindow != 'undefined' ? unsafeWindow : this;
-var parent = window.parent;
-var top = window.top;
-var document = window.document;
-var navigator = window.navigator;
-var console = window.console;
-var JSON = window.JSON || {};
-var jQuery, $;
-var AN = window.AN = { mod: {}, version: '${AN_VERSION}' };
+var window = typeof unsafeWindow != 'undefined' ? unsafeWindow : this,
+self = window,
+parent = window.parent,
+top = window.top,
+document = window.document,
+navigator = window.navigator,
+console = window.console,
+JSON = window.JSON || {},
+jQuery, $, $d,
+AN = window.AN = { mod: {}, version: '${AN_VERSION}' };
 
 if(document.body && document.body.firstChild.className == 'webkit-line-gutter-backdrop' || /\.(?:gif|jpe?g|png|asmx)$/i.test(location.href)) return;
 

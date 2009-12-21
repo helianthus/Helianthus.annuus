@@ -934,7 +934,7 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 				sHTML += '<dt>[元件]</dt>';
 				$.each(AN.mod, function(sMod)
 				{
-					sHTML += $.sprintf('<dd>%s by %s: %s</dd>', sMod, this.author, this.ver);
+					sHTML += $.sprintf('<dd>%s</dd>', sMod);
 				});
 
 				jAbout.find('dl').append(sHTML);

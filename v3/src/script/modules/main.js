@@ -64,18 +64,18 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			.main_table1 tr[style], .main_table1 tr:first-child, #ctl00_ContentPlaceHolder1_ProfileForm > table > tbody > tr > td > table:first-child .main_table1 tr { display: table-row; } \
 			'
 		},
-		function(nPageCode){ $().pageCode() & nPageCode && AN.util.stackStyle(this); });
+		function(nPageCode){ $d.pageCode() & nPageCode && AN.util.stackStyle(this); });
 
 		if(AN.util.getOptions('bRetroHideAds'))
 		{
 			AN.util.stackStyle('td[height="52"] { display: none; }');
 		}
-		else if($().pageCode() & 28)
+		else if($d.pageCode() & 28)
 		{
 			if($.browser.msie)
 			{
 				AN.util.stackStyle($.sprintf(
-				$().pageName() == 'topics'
+				$d.pageName() == 'topics'
 				?
 				'\
 				#HotTopics tr:first-child+tr%(extra)s, \
@@ -100,7 +100,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			else
 			{
 				AN.util.stackStyle($.sprintf(
-				$().pageName() == 'topics'
+				$d.pageName() == 'topics'
 				?
 				'\
 				#HotTopics tr:nth-child(11n+%(num)s) \
@@ -120,7 +120,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	},
 	infinite: function()
 	{
-		if($.browser.msie && $().pageCode() == 32) $('div[style*="PADDING-BOTTOM: 18px"]').css('border-bottom', 0); // yet another IE8 bug!?
+		if($.browser.msie && $d.pageCode() == 32) $('div[style*="PADDING-BOTTOM: 18px"]').css('border-bottom', 0); // yet another IE8 bug!?
 
 		if(AN.util.getOptions('bRetroHideAds'))
 		{
@@ -573,7 +573,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	type: 5,
 	once: function()
 	{
-		//if($().pageName() == 'topics') return;
+		//if($d.pageName() == 'topics') return;
 		AN.shared('addLink', '吹水台', '/topics.aspx?type=BW', 1);
 	}
 },
@@ -1324,17 +1324,6 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	}
 },
 
-'74cd7f38-b0ad-4fca-ab39-673b0e2ee4c7':
-{
-	desc: '修正跳頁控件位置',
-	page: { 32: true },
-	type: 3,
-	once: function()
-	{
-		AN.util.stackStyle($.sprintf('div[style^="%s: center"] { margin: 0 100px; }', $.browser.msie ? 'TEXT-ALIGN' : 'text-align'));
-	}
-},
-
 '7f9780a6-395d-4b24-a0a8-dc58c4539408':
 {
 	desc: '改進字型大小/顏色插入控件',
@@ -1354,30 +1343,17 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	desc: '強化表情圖示列',
 	page: { 288: true },
 	type: 6,
+	options: { sSmileySelectMethod: { desc: '圖示選擇方式', defaultValue: '列表', type: 'select', choices: ['列表', '連結'] } },
 	once: function()
 	{
 		if(!$('#ctl00_ContentPlaceHolder1_messagetext').length) return;
 
 		var jSmileyTr = $('#ctl00_ContentPlaceHolder1_messagetext').up('tr').next();
-		if(jSmileyTr.nextAll().length > 1) jSmileyTr.nextAll(':not(:last)').hide();
+		//if(jSmileyTr.nextAll().length > 1) jSmileyTr.nextAll(':not(:last)').hide();
 
 		// jQuery('#TABLE_ID').outer().replace(/>\s+</g, '><').replace(/&nbsp;\s+/g, '&nbsp;').replace(/'/g,'\\\'');
 
 		var smileys = [
-			{
-				desc: '特殊圖示',
-				html: {
-					path: 'faces',
-					table: [
-						[
-							['#good2#', 'ThumbUp'],
-							['#bad#', 'ThumbDown'],
-							['[img]/faces/surprise2.gif[/img]', 'surprise2'],
-							['[img]/faces/beer.gif[/img]', 'beer']
-						]
-					]
-				}
-			},
 			{
 				desc: '聖誕表情圖示',
 				html: '<table style="display: none;" cellpadding="0" cellspacing="0"><tbody><tr><td colspan="2"><a href="javascript:InsertText(\'[O:-)x]\',false)"><img style="border-width: 0px;" src="faces/xmas/angel.gif" alt="[O:-)x]"></a>&nbsp;<a href="javascript:InsertText(\'[xx(x]\',false)"><img style="border-width: 0px;" src="faces/xmas/dead.gif" alt="[xx(x]"></a>&nbsp;<a href="javascript:InsertText(\'[:)x]\',false)"><img style="border-width: 0px;" src="faces/xmas/smile.gif" alt="[:)x]"></a>&nbsp;<a href="javascript:InsertText(\'[:o)x]\',false)"><img style="border-width: 0px;" src="faces/xmas/clown.gif" alt="[:o)x]"></a>&nbsp;<a href="javascript:InsertText(\'[:o)jx]\',false)"><img style="border-width: 0px;" src="faces/xmas/clown_jesus.gif" alt="[:o)jx]"></a>&nbsp;<a href="javascript:InsertText(\'[:-(x]\',false)"><img style="border-width: 0px;" src="faces/xmas/frown.gif" alt="[:-(x]"></a>&nbsp;<a href="javascript:InsertText(\'[:~(x]\',false)"><img style="border-width: 0px;" src="faces/xmas/cry.gif" alt="[:~(x]"></a>&nbsp;<a href="javascript:InsertText(\'[;-)x]\',false)"><img style="border-width: 0px;" src="faces/xmas/wink.gif" alt="[;-)x]"></a>&nbsp;<a href="javascript:InsertText(\'[:-[x]\',false)"><img style="border-width: 0px;" src="faces/xmas/angry.gif" alt="[:-[x]"></a>&nbsp;<a href="javascript:InsertText(\'[:-]x]\',false)"><img style="border-width: 0px;" src="faces/xmas/devil.gif" alt="[:-]x]"></a>&nbsp;<a href="javascript:InsertText(\'[:Dx]\',false)"><img style="border-width: 0px;" src="faces/xmas/biggrin.gif" alt="[:Dx]"></a>&nbsp;<a href="javascript:InsertText(\'[:Ox]\',false)"><img style="border-width: 0px;" src="faces/xmas/oh.gif" alt="[:Ox]"></a>&nbsp;<a href="javascript:InsertText(\'[:Px]\',false)"><img style="border-width: 0px;" src="faces/xmas/tongue.gif" alt="[:Px]"></a>&nbsp;<a href="javascript:InsertText(\'[^3^x]\',false)"><img style="border-width: 0px;" src="faces/xmas/kiss.gif" alt="[^3^x]"></a>&nbsp;<a href="javascript:InsertText(\'[?_?x]\',false)"><img style="border-width: 0px;" src="faces/xmas/wonder.gif" alt="[?_?x]"></a>&nbsp;<a href="javascript:InsertText(\'#yupx#\',false)"><img style="border-width: 0px;" src="faces/xmas/agree.gif" alt="#yupx#"></a>&nbsp;<a href="javascript:InsertText(\'#ngx#\',false)"><img style="border-width: 0px;" src="faces/xmas/donno.gif" alt="#ngx#"></a>&nbsp;<a href="javascript:InsertText(\'#hehex#\',false)"><img style="border-width: 0px;" src="faces/xmas/hehe.gif" alt="#hehex#"></a>&nbsp;<a href="javascript:InsertText(\'#lovex#\',false)"><img style="border-width: 0px;" src="faces/xmas/love.gif" alt="#lovex#"></a>&nbsp;<a href="javascript:InsertText(\'#ohx#\',false)"><img style="border-width: 0px;" src="faces/xmas/surprise.gif" alt="#ohx#"></a>&nbsp;</td></tr><tr><td><a href="javascript:InsertText(\'#assx#\',false)"><img style="border-width: 0px;" src="faces/xmas/ass.gif" alt="#assx#"></a>&nbsp;<a href="javascript:InsertText(\'[sosadx]\',false)"><img style="border-width: 0px;" src="faces/xmas/sosad.gif" alt="[sosadx]"></a>&nbsp;<a href="javascript:InsertText(\'#goodx#\',false)"><img style="border-width: 0px;" src="faces/xmas/good.gif" alt="#goodx#"></a>&nbsp;<a href="javascript:InsertText(\'#hohox#\',false)"><img style="border-width: 0px;" src="faces/xmas/hoho.gif" alt="#hohox#"></a>&nbsp;<a href="javascript:InsertText(\'#killx#\',false)"><img style="border-width: 0px;" src="faces/xmas/kill.gif" alt="#killx#"></a>&nbsp;<a href="javascript:InsertText(\'#byex#\',false)"><img style="border-width: 0px;" src="faces/xmas/bye.gif" alt="#byex#"></a>&nbsp;<a href="javascript:InsertText(\'[Z_Zx]\',false)"><img style="border-width: 0px;" src="faces/xmas/z.gif" alt="[Z_Zx]"></a>&nbsp;<a href="javascript:InsertText(\'[@_@x]\',false)"><img style="border-width: 0px;" src="faces/xmas/@.gif" alt="[@_@x]"></a>&nbsp;<a href="javascript:InsertText(\'#adorex#\',false)"><img style="border-width: 0px;" src="faces/xmas/adore.gif" alt="#adorex#"></a>&nbsp;<a href="javascript:InsertText(\'#adore2x#\',false)"><img style="border-width: 0px;" src="faces/xmas/adore2.gif" alt="#adore2x#"></a>&nbsp;<a href="javascript:InsertText(\'[???x]\',false)"><img style="border-width: 0px;" src="faces/xmas/wonder2.gif" alt="[???x]"></a>&nbsp;<a href="javascript:InsertText(\'[bangheadx]\',false)"><img style="border-width: 0px;" src="faces/xmas/banghead.gif" alt="[bangheadx]"></a>&nbsp;<a href="javascript:InsertText(\'[bouncerx]\',false)"><img style="border-width: 0px;" src="faces/xmas/bouncer.gif" alt="[bouncerx]"></a>&nbsp;</td><td rowspan="2" valign="bottom"><a href="javascript:InsertText(\'[offtopicx]\',false)"><img style="border-width: 0px;" src="faces/xmas/offtopic.gif" alt="[offtopicx]"></a>&nbsp;</td></tr><tr><td><a href="javascript:InsertText(\'[censoredx]\',false)"><img style="border-width: 0px;" src="faces/xmas/censored.gif" alt="[censoredx]"></a>&nbsp;<a href="javascript:InsertText(\'[flowerfacex]\',false)"><img style="border-width: 0px;" src="faces/xmas/flowerface.gif" alt="[flowerfacex]"></a>&nbsp;<a href="javascript:InsertText(\'[shockingx]\',false)"><img style="border-width: 0px;" src="faces/xmas/shocking.gif" alt="[shockingx]"></a>&nbsp;<a href="javascript:InsertText(\'[photox]\',false)"><img style="border-width: 0px;" src="faces/xmas/photo.gif" alt="[photox]"></a>&nbsp;<a href="javascript:InsertText(\'[yipesx]\',false)"><img style="border-width: 0px;" src="faces/xmas/yipes.gif" alt="[yipesx]"></a>&nbsp;<a href="javascript:InsertText(\'[yipes2x]\',false)"><img style="border-width: 0px;" src="faces/xmas/yipes2.gif" alt="[yipes2x]"></a>&nbsp;<a href="javascript:InsertText(\'[yipes3x]\',false)"><img style="border-width: 0px;" src="faces/xmas/yipes3.gif" alt="[yipes3x]"></a>&nbsp;<a href="javascript:InsertText(\'[yipes4x]\',false)"><img style="border-width: 0px;" src="faces/xmas/yipes4.gif" alt="[yipes4x]"></a>&nbsp;<a href="javascript:InsertText(\'[369x]\',false)"><img style="border-width: 0px;" src="faces/xmas/369.gif" alt="[369x]"></a>&nbsp;<a href="javascript:InsertText(\'[bombx]\',false)"><img style="border-width: 0px;" src="faces/xmas/bomb.gif" alt="[bombx]"></a>&nbsp;<a href="javascript:InsertText(\'[slickx]\',false)"><img style="border-width: 0px;" src="faces/xmas/slick.gif" alt="[slickx]"></a>&nbsp;<a href="javascript:InsertText(\'[fuckx]\',false)"><img style="border-width: 0px;" src="faces/xmas/diu.gif" alt="[fuckx]"></a>&nbsp;<a href="javascript:InsertText(\'#nox#\',false)"><img style="border-width: 0px;" src="faces/xmas/no.gif" alt="#nox#"></a>&nbsp;<a href="javascript:InsertText(\'#kill2x#\',false)"><img style="border-width: 0px;" src="faces/xmas/kill2.gif" alt="#kill2x#"></a>&nbsp;</td></tr><tr><td><a href="javascript:InsertText(\'#kill3x#\',false)"><img style="border-width: 0px;" src="faces/xmas/kill3.gif" alt="#kill3x#"></a>&nbsp;<a href="javascript:InsertText(\'#cnx#\',false)"><img style="border-width: 0px;" src="faces/xmas/chicken.gif" alt="#cnx#"></a>&nbsp;<a href="javascript:InsertText(\'#cn2x#\',false)"><img style="border-width: 0px;" src="faces/xmas/chicken2.gif" alt="#cn2x#"></a>&nbsp;<a href="javascript:InsertText(\'[bouncyx]\',false)"><img style="border-width: 0px;" src="faces/xmas/bouncy.gif" alt="[bouncyx]"></a>&nbsp;<a href="javascript:InsertText(\'[bouncy2x]\',false)"><img style="border-width: 0px;" src="faces/xmas/bouncy2.gif" alt="[bouncy2x]"></a>&nbsp;<a href="javascript:InsertText(\'#firex#\',false)"><img style="border-width: 0px;" src="faces/xmas/fire.gif" alt="#firex#"></a>&nbsp;</td></tr></tbody></table>'
@@ -1477,6 +1453,20 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 						]
 					]
 				}
+			},
+			{
+				desc: '特殊圖示',
+				html: {
+					path: 'faces',
+					table: [
+						[
+							['#good2#', 'ThumbUp'],
+							['#bad#', 'ThumbDown'],
+							['[img]/faces/surprise2.gif[/img]', 'surprise2'],
+							['[img]/faces/beer.gif[/img]', 'beer']
+						]
+					]
+				}
 			}
 		];
 		
@@ -1515,18 +1505,42 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			return tableHTML;
 		}
 
-		var selectHTML = '<select><option>經典表情圖示</option>';
-		$.each(smileys, function()
+		if(AN.util.getOptions('sSmileySelectMethod') == this.options.sSmileySelectMethod.choices[0])
 		{
-			selectHTML += '<option>' + this.desc + '</option>';
-			jSmileyTr.children(':last').append(typeof this.html == 'string' ? this.html : buildTable(this.html));
-		});
-		selectHTML += '</select>';
+			var selectHTML = '<select><option>經典表情圖示</option>';
+			$.each(smileys, function()
+			{
+				selectHTML += '<option>' + this.desc + '</option>';
+				jSmileyTr.children(':last').append(typeof this.html == 'string' ? this.html : buildTable(this.html));
+			});
+			selectHTML += '</select>';
 
-		$(selectHTML).change(function()
+			$(selectHTML).change(function()
+			{
+				jSmileyTr.children(':last').children().hide().eq(this.selectedIndex).show();
+			}).appendTo(jSmileyTr.children(':first').empty()).after(':');
+		}
+		else
 		{
-			jSmileyTr.children(':last').children().hide().eq(this.selectedIndex).show();
-		}).appendTo(jSmileyTr.children(':first').empty()).after(':');
+			AN.util.stackStyle('\
+			#an-smileyselector { list-style: none; margin: 0; padding: 0; font-size: 80%; } \
+			');
+			var listHTML = '<ul id="an-smileyselector"><li><a href="javascript:">經典表情圖示</a></li>';
+			$.each(smileys, function()
+			{
+				listHTML += '<li><a href="javascript:">' + this.desc + '</a></li>';
+				jSmileyTr.children(':last').append(typeof this.html == 'string' ? this.html : buildTable(this.html));
+			});
+			listHTML += '</ul>';
+			
+			$(listHTML).click(function(event)
+			{
+				var jTarget = $(event.target);
+				if(!jTarget.is('a')) return;
+				
+				jSmileyTr.children(':last').children().hide().eq(jTarget.parent().index()).show();
+			}).appendTo(jSmileyTr.children(':first').empty());
+		}
 	}
 },
 

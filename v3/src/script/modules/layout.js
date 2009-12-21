@@ -161,7 +161,7 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 		#ctl00_ContentPlaceHolder1_MiddleAdSpace1 > div { padding: 0 !important; } \
 		');
 		
-		if($().pageName() == 'topics')
+		if($d.pageName() == 'topics')
 			AN.util.stackStyle('\
 			.Topic_FunctionPanel { margin-top: 3px; } \
 			#ctl00_ContentPlaceHolder1_MiddleAdSpace1 { margin-top: 5px !important; } \
@@ -181,7 +181,7 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	type: 3,
 	once: function()
 	{
-		if($().pageName() == 'topics')
+		if($d.pageName() == 'topics')
 			AN.util.stackStyle('#forum_list, #forum_list + br { display: none; }');
 		else
 			AN.util.stackStyle('#ctl00_ContentPlaceHolder1_topics_form > div + table table:first-child { display: none; }');
@@ -221,14 +221,47 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	}
 },
 
-'964d6cf5-9e46-43f6-ba1a-b11adf1292b1':
+'74cd7f38-b0ad-4fca-ab39-673b0e2ee4c7':
 {
-	desc: '隱藏高級會員頭像',
-	page: { 32: false },
+	desc: '修正跳頁控件位置',
+	page: { 32: true },
 	type: 3,
 	once: function()
 	{
-		AN.util.stackStyle('img[alt="Logo"] { display: none; }');
+		AN.util.stackStyle($.sprintf('div[style] > div[style^="%s: center"] { margin: 0 100px; }', $.browser.msie ? 'TEXT-ALIGN' : 'text-align'));
+	}
+},
+
+'0941e559-3875-445a-9c56-799987fbdf87':
+{
+	desc: '隱藏名稱欄物件',
+	page: { 32: false },
+	type: 3,
+	options: {
+		bHideNameSpace: { desc: '隱藏多餘空白', defaultValue: true, type: 'checkbox' },
+		bHideAvatar: { desc: '隱藏高級會員頭像', defaultValue: false, type: 'checkbox' },
+		bHideMemberLevel: { desc: '隱藏會員級別圖片', defaultValue: false, type: 'checkbox' },
+		bHideAward: { desc: '隱藏(善)圖像', defaultValue: false, type: 'checkbox' }
+	},
+	once: function()
+	{
+		var css = [];
+		$.each({
+			bHideAvatar: 'div[id^="ThreadUser"] > a',
+			bHideMemberLevel: 'div[id^="ThreadUser"] > img',
+			bHideAward: 'div[id^="ThreadUser"] ~ *'
+		}, function(name, selector)
+		{
+			if(AN.util.getOptions(name)) css.push(selector);
+		});
+		
+		if(AN.util.getOptions('bHideNameSpace')) css.push(
+			AN.util.getOptions('bHideAvatar')
+			? 'div[id^="ThreadUser"] > br'
+			: 'div[id^="ThreadUser"] > br:first-child, div[id^="ThreadUser"] > br:first-child + br'
+		);
+		
+		AN.util.stackStyle(css.join(',') + ' { display: none; }');
 	}
 },
 

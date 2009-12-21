@@ -30,7 +30,9 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 			AN.util.data('AN-version', AN_VER);
 		}
 
-		if($().pageName() == 'view') $('select[name=page]').val(AN.util.getPageNo(location.href)); // for FF3 where select box does not reset
+		if($d.pageName() == 'view') $('select[name=page]').val(AN.util.getPageNo(location.href)); // for FF3 where select box does not reset
+		
+		$('script').empty();
 		
 		$('script').empty();
 	}
@@ -50,11 +52,11 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 		AN.util.getOptions.oOptions['bAutoShowLog'] = true;
 		AN.util.getOptions.oOptions['bShowDetailLog'] = true;
 
-		if($().pageCode() & 92)
+		if($d.pageCode() & 92)
 		{
 			jDoc.topics();
 		}
-		else if($().pageName() == 'view')
+		else if($d.pageName() == 'view')
 		{
 			jDoc.replies();
 		}
@@ -154,9 +156,9 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 					{
 						var sPrefix = 'http://helianthus-annuus.googlecode.com/svn/dist/v3/' + sType;
 						
-						if(navigator.userAgent.indexOf('MAXTHON 2.0') != -1) window.open(sPrefix + '/annuus.m2f', '_self');
-						else if($.browser.mozilla && typeof unsafeWindow != 'undefined') window.open(sPrefix + '/user/annuus.user.js', '_self');
-						//else if(navigator.userAgent.indexOf('Chrome') == -1) window.open(sPrefix + '/annuus.crx', '_self');
+						if(navigator.userAgent.indexOf('MAXTHON 2.0') != -1) window.open(sPrefix + 'annuus.m2f', '_self');
+						//else if($.browser.mozilla && typeof unsafeWindow != 'undefined') window.open(sPrefix + 'annuus.user.js', '_self');
+						//else if(navigator.userAgent.indexOf('Chrome') == -1) window.open(sPrefix + 'annuus.crx', '_self');
 						
 						window.open('http://code.google.com/p/helianthus-annuus/wiki/Changelog', '_blank');
 					}

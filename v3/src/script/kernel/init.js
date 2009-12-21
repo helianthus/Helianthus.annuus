@@ -278,7 +278,7 @@ $.fn.extend(
 
 	treeTop: function()
 	{
-		return (this[0] === document || $(document.documentElement).contains(this)) ? $() : this;
+		return (this[0] === document || $(document.documentElement).contains(this)) ? $d : this;
 	},
 
 	topicTable: function()
@@ -398,7 +398,7 @@ $.extend(AN,
 			if(AN.util.stackStyle.sStyle === undefined)
 			{
 				AN.util.stackStyle.sStyle = '';
-				$().bind('an.defer5', function()
+				$d.bind('an.defer5', function()
 				{
 					AN.util.addStyle(AN.util.stackStyle.sStyle);
 					AN.util.stackStyle.sStyle = '';
@@ -586,7 +586,7 @@ $.extend(AN,
 				{
 					$.each(this, function(sPage, uValue)
 					{
-						if($().pageCode() & sPage)
+						if($d.pageCode() & sPage)
 						{
 							oOptions[sName] = uValue;
 							return false;
@@ -692,7 +692,7 @@ $.extend(AN,
 				{
 					$.each(AN.box.oSwitches[sMod][sId], function()
 					{
-						if(oFn.page[this] != 'disabled' && this in oFn.page && $().pageCode() & this)
+						if(oFn.page[this] != 'disabled' && this in oFn.page && $d.pageCode() & this)
 						{
 							var aHandler = [];
 							if(!AN.firstRan && oFn.once) aHandler.push(oFn.once);
@@ -759,7 +759,7 @@ $.extend(AN,
 
 				for(var i=1; i<=5; i++)
 				{
-					$().trigger('an.defer' + i);
+					$d.trigger('an.defer' + i);
 					if(jDoc.aDefer && jDoc.aDefer[i])
 					{
 						$.each(jDoc.aDefer[i], function(){ execFn(this); });

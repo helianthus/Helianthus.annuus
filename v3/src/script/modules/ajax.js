@@ -78,7 +78,7 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 				});
 			}
 			
-			$('td > strong').text(jScope.find('td > strong').text());
+			$('#ctl00_ContentPlaceHolder1_view_form > div[style*="100%"] td > strong').text(jScope.find('strong:first').text());
 		}
 		
 		function handleNewPage(jScope, sNewPageNo)

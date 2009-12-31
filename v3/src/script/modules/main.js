@@ -278,7 +278,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	{
 		window.Search = function()
 		{
-			var sType = $('#st').val(); // $('#st option:selected')[0].value;
+			var sType = $('#st').val();
 			var sQuery = escape($('#searchstring').val());
 
 			window.open(sType == 'tag' ? 'tags.aspx?tagword='.concat(sQuery) : $.sprintf('search.aspx?st=%s&searchstring=%s', sType, sQuery), '_blank');
@@ -294,28 +294,39 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	page: { 4: false, 24: false, 64: false },
 	type: 4,
 	options: { bTopicLinksOnly: { desc: '只限帖子連結', defaultValue: false, type: 'checkbox' } },
-	infinite: function(jDoc)
+	once: function()
 	{
-		if(AN.util.getOptions('bTopicLinksOnly'))
+		$d.click(function(event)
 		{
-			jDoc.topics().jTitleCells.find('a').attr('target', '_blank');
-		}
-		else
-		{
-			$('#aspnetForm a').filter(function(){ return /(?:ProfilePage|newmessages|view|search)\.aspx/.test(this.href); }).attr('target', '_blank');
-		}
+			var jTarget = $(event.target);
+			if(jTarget.parent('a').length) jTarget = jTarget.parent();
+			if(!jTarget.is('a') || !(AN.util.getOptions('bTopicLinksOnly') ? /view\.aspx/i : /^(?!javascript|#)/i).test(jTarget.attr('href'))) return;
+			
+			event.preventDefault();
+			window.open(jTarget.attr('href'), '_blank');
+		});
 	}
 },
 
 '2ab2f404-0d35-466f-98a5-c88fdbdaa031':
 {
 	desc: '外鏈連結開新頁',
-	defer: 1, // after links are created
+	defer: 3,
 	page: { 32: true },
 	type: 4,
 	infinite: function(jDoc)
 	{
-		jDoc.replies().jContents.find('a').attr('target', '_blank');
+		$d.click(function(event)
+		{
+			var jTarget = $(event.target);
+			if(jTarget.parent('a').length) jTarget = jTarget.parent();
+			if(!jTarget.is('.repliers_right > tbody > tr:first-child a')) return;
+			
+			if(event.isDefaultPrevented()) return;
+			
+			event.preventDefault();
+			window.open(jTarget.attr('href'), '_blank');
+		});
 	}
 },
 
@@ -426,7 +437,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		AN.shared('addButton', '一鍵留名', function()
 		{
 			$('#ctl00_ContentPlaceHolder1_messagetext').val(AN.util.getOptions('sLeaveNameMsg'));
-			$('#ctl00_ContentPlaceHolder1_btn_Submit').click();
+			$('#aspnetForm').submit();
 		});
 	}
 },
@@ -854,7 +865,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			oFn.showAlert = function(event)
 			{
 				$('#an-alertbox').find('span').text($(this).data('an-suskeyword'));
-				$(document).bind('mousemove.an-alert', function(event)
+				$d.bind('mousemove.an-alert', function(event)
 				{
 					var jAlert = $('#an-alertbox');
 					jAlert.show().css({ top: event.pageY - jAlert.height() - 10, left: event.pageX - jAlert.width() / 2 });
@@ -863,7 +874,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 
 			oFn.hideAlert = function()
 			{
-				$(document).unbind('.an-alert');
+				$d.unbind('.an-alert');
 				$('#an-alertbox').fadeOut('fast');
 			};
 		};
@@ -956,7 +967,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			$('<div></div>').insertAfter(this).toFlash(sUrl, { width: nWidth, height: nHeight.toFixed(0) }, { wmode: 'opaque', allowfullscreen: 'true' });
 		};
 
-		$('#ctl00_ContentPlaceHolder1_view_form').click(function(event)
+		$d.click(function(event)
 		{
 			var jTarget = $(event.target);
 			if(!jTarget.is('.an-videolink')) return;
@@ -965,7 +976,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		});
 
 		var oFn = this;
-		if(AN.util.getOptions('bConvertOnClick')) $('#ctl00_ContentPlaceHolder1_view_form').click(function(event)
+		if(AN.util.getOptions('bConvertOnClick')) $d.click(function(event)
 		{
 			var jTarget = $(event.target);
 			if(!jTarget.is('a') || jTarget.is('.an-videolink') || !oFn.rLink.test(jTarget.attr('href'))) return;
@@ -1080,7 +1091,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		var down = 0;
 		var reset = function(){ down = 0; };
 
-		$(document).mousedown(function(event)
+		$d.mousedown(function(event)
 		{
 			if(down === 0) setTimeout(reset, 500);
 
@@ -1117,7 +1128,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 				addFilter(jCurTarget.find('a:first').html().replace(/<img[^>]+?alt="([^"]+)[^>]*>/ig, '$1'));
 			});
 
-		$(document).mouseover(function(event)
+		$d.mouseover(function(event)
 		{
 			var jTarget = $(event.target);
 			if(jTarget[0] == jButton[0]) return;
@@ -1249,7 +1260,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 				oFn.toggleReplies(null, sUserId, nIndex == -1);
 			});
 
-		$(document).mouseover(function(event)
+		$d.mouseover(function(event)
 		{
 			var jTarget = $(event.target);
 			if(jTarget[0] == jButton[0]) return;
@@ -1589,7 +1600,9 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 					));
 					
 					var index, jDesc, jContent;
-					jSnippets = AN.shared.box('an-snippets', '自訂文字', 700).append('<ul></ul><div><input /><textarea></textarea><button type="button">ok</button><button type="button">cancel</button></div>').click(function(event)
+					jSnippets = AN.shared.box('an-snippets', '自訂文字', 700)
+					.append('<ul></ul><div><input /><textarea></textarea><button type="button">ok</button><button type="button">cancel</button></div>')
+					.click(function(event)
 					{
 						var jTarget = $(event.target);
 						if(!jTarget.is('span,button')) return;
@@ -1599,17 +1612,10 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 							jSnippets.children('div').css('opacity', '0.5').children().attr('disabled', true);
 						}
 						else if(type == 'E' || type == '+') {
-							// index = jTarget.parent().index(); // cant use this due to a problem with FF+GM
-							var testElem = jTarget.parent().parent().children()[0];
-							index = 0;
-							while(testElem != jTarget.parent()[0]) {
-								testElem = testElem.nextSibling;
-								index++;
-							}
+							index = jTarget.parent().index();
 							jDesc.val(type == 'E' ? snippets[index][0] : '').next().val(type == 'E' ? snippets[index][1] : '').parent().css('opacity', '1').children().attr('disabled', false);
 						}
-						else
-						{
+						else {
 							if(type == 'ok') {
 								snippets.push([jDesc.val(), jContent.val()]);
 							}
@@ -1644,6 +1650,26 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			}
 			
 			this.selectedIndex = 0;
+		});
+	}
+},
+
+'b73d2968-8301-4c5e-8700-a89541d274fc':
+{
+	desc: '回復傳統用戶連結',
+	defer: 1,
+	page: { 32: false },
+	type: 4,
+	once: function()
+	{
+		$d
+		.unbind('.userlinkbox')
+		.bind('mouseover', function(event)
+		{
+			var jTarget = $(event.target);
+			if(!jTarget.is('a[href^="javascript: ToggleUserDetail"]')) return;
+			
+			jTarget.attr('href', $.sprintf('ProfilePage.aspx?userid=%s', jTarget.up('tr').attr('userid')));
 		});
 	}
 }

@@ -112,36 +112,10 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 	{
 		(function()
 		{
-			var testServers;
-
 			AN.shared.serverTable = function()
 			{
 				if(!$('#an-server').length)
 				{
-					var jTestImages = $([]);
-
-					testServers = function()
-					{
-						$('.an-server-reposonse').html('等待回應中...');
-
-						jTestImages.each(function(i)
-						{
-							var nTime = $.time();
-							$(this).data('nTime', nTime).attr('src', $.sprintf('http://forum%s.hkgolden.com/images/spacer.gif?tId=%s', i+1, nTime));
-						});
-					};
-
-					var showResult = function(eImg, sStatus)
-					{
-						var jImg = $(eImg);
-
-						$('.an-server-reposonse').eq(jImg.data('nServer') - 1).html(
-						{
-							ok: $.sprintf('~%s ms', $.time() - jImg.data('nTime')),
-							dead: '發生錯誤'
-						}[sStatus]);
-					};
-
 					AN.util.addStyle(' \
 					#an-server div { padding: 0.5em; } \
 					#an-server caption { padding-top: 0.5em; text-align: center; caption-side: bottom; } \
@@ -151,22 +125,36 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 
 					AN.shared.box('an-server', '伺服器狀態', 300).append('<div><table><caption><a href="javascript:">進行測試</a></caption><thead><tr><td>伺服器</td><td>回應時間</td></tr></thead><tbody></tbody></table></div>');
 
-					var jImg = $(new Image).load(function(){ showResult(this, 'ok'); }).error(function(){ showResult(this, 'dead'); });
 					var sURL = (location.href.indexOf('aspxerrorpath=') > 0) ? $.sprintf('http://%s/topics.aspx?type=BW', location.hostname) : location.href;
-
-					var sHTML = '';
+					var tableHTML = '', imgHTML = '';
 					for(var nServer=1; nServer<=8; nServer++)
 					{
-						jTestImages.push(jImg.clone(true).data('nServer', nServer)[0]);
-						sHTML += $.sprintf('<tr><td><a href="%s">Forum %s</a></td><td class="an-server-reposonse"></td></tr>', sURL.replace(/forum\d/i, 'forum' + nServer), nServer);
+						tableHTML += $.sprintf('<tr><td><a href="%s">Forum %s</a></td><td class="an-server-response"></td></tr>', sURL.replace(/forum\d/i, 'forum' + nServer), nServer);
+						imgHTML += '<img />';
 					}
-					$('#an-server').find('caption').click(testServers).end().find('tbody').html(sHTML);
+					
+					var jTestImages = $('<div>' + imgHTML + '</div>').children().bind('load error', function(event)
+					{
+						var jImg = $(event.target);
+						$('#an-server .an-server-response').eq(jImg.index()).html(event.type == 'load' ? $.sprintf('~%s ms', $.time() - jImg.data('nTime')) : '發生錯誤');
+					});
+					
+					$('#an-server')
+					.find('caption').click(function()
+					{
+						$('#an-server .an-server-response').html('等待回應中...');
 
-					jImg = sURL = sHTML = null;
+						jTestImages.each(function(i)
+						{
+							var nTime = $.time();
+							$(this).data('nTime', nTime).attr('src', $.sprintf('http://forum%s.hkgolden.com/images/spacer.gif?tId=%s', i+1, nTime));
+						});
+					})
+					.end().find('tbody').html(tableHTML);
 				}
 
 				AN.shared.gray(true, 'an-server');
-				testServers();
+				$('#an-server caption').click();
 			};
 		})();
 	}
@@ -886,8 +874,7 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 		AN.shared.addInfo = function(sInfo)
 		{
 			getMod();
-			if(!sInfo) return;
-			$('<li>' + sInfo + '</li>').appendTo('#an-info-content').fadeIn('slow');
+			if(sInfo) return $('<li>' + sInfo + '</li>').appendTo('#an-info-content').fadeIn('slow');
 		};
 	}
 },

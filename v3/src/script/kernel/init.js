@@ -93,12 +93,12 @@ $.extend(
 
 	winWidth: function(nMutiply)
 	{
-		return Math.round($(window).width() * (nMutiply || 1));
+		return Math.round($w.width() * (nMutiply || 1));
 	},
 
 	winHeight: function(nMutiply)
 	{
-		return Math.round($(window).height() * (nMutiply || 1));
+		return Math.round($w.height() * (nMutiply || 1));
 	}
 });
 
@@ -211,7 +211,7 @@ $.fn.extend(
 
 		return this.sPageName =
 			$('#ctl00_ContentPlaceHolder1_SystemMessageBoard', this).length && 'message' ||
-			$('#aspnetForm', this).length && $('#aspnetForm', this).attr('action').match(/[^.]+/)[0].toLowerCase() ||
+			$('#aspnetForm', this).length && $('#aspnetForm', this).attr('action').match(/[a-z]+(?=\.aspx)/i)[0].toLowerCase() ||
 			$('body > :first', this).is('b') && 'terms' ||
 			'error';
 	},
@@ -345,7 +345,7 @@ $.extend(AN,
 {
 	shared: function(sFnName)
 	{
-		if(AN.shared[sFnName]) AN.shared[sFnName].apply(null, Array.prototype.slice.call(arguments, 1));
+		if(AN.shared[sFnName]) return AN.shared[sFnName].apply(null, Array.prototype.slice.call(arguments, 1));
 	},
 
 	box:
@@ -766,7 +766,7 @@ $.extend(AN,
 					}
 				}
 				jDoc.aDefer = null;
-				jDoc.splice(0, jDoc.length);
+				//jDoc.splice(0, jDoc.length);
 
 				AN.box.aBenchmark.push({ type: 'end', name: '延期執行項目' });
 
@@ -781,6 +781,9 @@ $.extend(AN,
 
 //////////////////// END OF - [AN Extension] ////////////////////
 //////////////////// START OF - [Initialization] ////////////////////
+
+if(location.hash.indexOf('#page=') != -1 && AN.util.getPageNo(location.search) != AN.util.getPageNo(location.hash))
+	location.replace(location.pathname + AN.util.getURL({ page: location.hash.replace(/#page=/, '') }));
 
 $.support.localStorage = !!(window.localStorage || window.globalStorage || false);
 

@@ -59,7 +59,7 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 		
 		function updateElements(jScope)
 		{			
-			$('#ctl00_ContentPlaceHolder1_view_form > div[style*="100%"] td > strong').text(jScope.find('strong:first').text());
+			$('table[width="99%"] > tbody > tr > td > strong').text(jScope.find('table[width="99%"] > tbody > tr > td > strong:first').text());
 		}
 		
 		function handleNewPage(jScope, sNewPageNo)

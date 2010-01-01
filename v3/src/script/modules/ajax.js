@@ -7,11 +7,11 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 	type: 7,
 	options:
 	{
+		viewAjaxDisplayMode: { desc: '顯示模式', type: 'select', choices: ['單頁模式', '延展模式', '延展模式(隱藏轉頁格)'], defaultValue: '延展模式' },
+		nCheckInterval: { desc: '自動更新間隔(秒)', defaultValue: 30, type: 'text' }
 		//bCheckOnBottom: { desc: '到頁底自動更新帖子', defaultValue: true, type: 'checkbox' },
-		//nCheckInterval: { desc: '自動更新間隔(秒)', defaultValue: 30, type: 'text' },
 		//bAddCheckBtn: { desc: '加入更新帖子按扭', defaultValue: true, type: 'checkbox' },
 		//bAppendReplies: { desc: '延展帖子回覆', defaultValue: false, type: 'checkbox' },
-		bRemovePageBoxes: { desc: '隱藏轉頁格', defauleValue: false, type: 'checkbox' }
 		//bAjaxifyReplying: { desc: 'AJAX化回覆', defaultValue: true, type: 'checkbox' },
 		//bShowPageNo: { desc: '顯示資料: 本頁頁數', defaultValue: true, type: 'checkbox' }
 	},
@@ -52,32 +52,13 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 		
 		AN.util.stackStyle('.repliers { border: 0; }'); // this is for FF
 		
-		var cache = {};
+		var pages = {};
 		var curPageNo = jDoc.pageNo();
-		var lastPageNo;
+		var lastPageNo = $('select[name="page"]:first').children().length;
+		var displayMode = $.inArray(AN.util.getOptions('viewAjaxDisplayMode'), this.options.viewAjaxDisplayMode.choices);
 		
 		function updateElements(jScope)
-		{
-			var last = $('select[name="page"]:first', jScope).children().length;
-			
-			if(!jScope) {
-				lastPageNo = last;
-				return;
-			}
-			
-			if(last != lastPageNo) {
-				lastPageNo = last;
-				
-				$('select[name="page"]').each(function()
-				{
-					var jThis = $(this);
-					var max = jThis.children().length;
-					while(max < last) {
-						jThis.append($.sprintf('<option value="%(pageNo)s">%(pageNo)s</option>', { pageNo: ++max }));
-					}
-				});
-			}
-			
+		{			
 			$('#ctl00_ContentPlaceHolder1_view_form > div[style*="100%"] td > strong').text(jScope.find('strong:first').text());
 		}
 		
@@ -88,26 +69,28 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 			.prepend(jDiv.prev())
 			.children('div:eq(1)').nextAll()[jScope ? 'remove' : 'insertAfter'](jScope ? undefined : jDiv);
 			
-			var jSelect = jDiv.find('select[name="page"]');
-			jSelect.data('an-pageno', jSelect.val());
+			if(displayMode != 2) {
+				var jSelect = jDiv.find('select[name="page"]');
+				jSelect.data('an-pageno', jSelect.val());
+			}
 			
 			updateElements(jDiv);
 			
 			if(jScope) {
 				AN.modFn.execMods(jDiv);
 				
-				for(var pageNo = 1; pageNo <= cache.last; pageNo++) {
-					if(cache[pageNo] && sNewPageNo < pageNo) {
-						jDiv.insertBefore(cache[pageNo]);
+				for(var pageNo = 1; pageNo <= pages.last; pageNo++) {
+					if(pages[pageNo] && sNewPageNo < pageNo) {
+						jDiv.insertBefore(pages[pageNo]);
 						break;
 					}
 				}
-				if(pageNo > cache.last) jDiv.insertAfter(cache[cache.last]);
+				if(pageNo > pages.last) jDiv.insertAfter(pages[pages.last]);
 			}
 			
-			if(!cache.last || sNewPageNo && sNewPageNo > cache.last) cache.last = sNewPageNo || curPageNo;
+			if(!pages.last || sNewPageNo && sNewPageNo > pages.last) pages.last = sNewPageNo || curPageNo;
 			
-			cache[sNewPageNo || curPageNo] = jDiv;
+			pages[sNewPageNo || curPageNo] = jDiv;
 			
 			return jDiv;
 		}
@@ -115,6 +98,7 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 		function changePage(sTargetPageNo, isAuto)
 		{
 			function handlePageChange(jDiv) {
+				if(displayMode === 0) pages[curPageNo].hide();
 				location.hash = 'page=' + sTargetPageNo;
 				if(!isAuto) jDiv[0].scrollIntoView();//sTargetPageNo > curPageNo);
 				curPageNo = sTargetPageNo;
@@ -126,8 +110,8 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 			
 			AN.shared('log', $.sprintf('正在轉至第%s頁...', sTargetPageNo));
 			
-			if(cache[sTargetPageNo]) {
-				handlePageChange(cache[sTargetPageNo]);
+			if(pages[sTargetPageNo]) {
+				handlePageChange(pages[sTargetPageNo].show());
 			}
 			else {
 				$.getDoc(AN.util.getURL({ page: sTargetPageNo }), function(jNewDoc)
@@ -139,13 +123,13 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 		
 		function getReplies(isAuto)
 		{
-			if(cache.last == 41) {
+			if(pages.last == 41) {
 				AN.shared('log', '1001!');
 				return;
 			}
 			
-			if(cache[cache.last].find('select[name="page"]:first').children().length < lastPageNo) {
-				changePage(cache.last + 1, isAuto);
+			if(displayMode === 0 ? curPageNo != lastPageNo && !isAuto : pages.last != lastPageNo) {
+				changePage((displayMode === 0 ? curPageNo : pages.last) + 1, isAuto);
 				return;
 			}
 			
@@ -153,16 +137,18 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 			
 			AN.shared('log', '正在讀取最新回覆...');
 			
-			$.getDoc(AN.util.getURL({ page: cache.last }), function(jNewDoc)
+			$.getDoc(AN.util.getURL({ page: pages.last }), function(jNewDoc)
 			{
 				updateElements(jNewDoc);
-				
+			
 				var jNewReplies = jNewDoc.find('.repliers').closest('div > table');
 				var jNewSelect = jNewDoc.find('select[name="page"]:first');
 				
-				var oldLength = cache[cache.last].find('.repliers').length;
-				var difference = jNewReplies.length - oldLength;
-				var hasNextPage = jNewSelect.children().length > cache.last;
+				var oldReplyNum = pages[pages.last].find('.repliers').length;
+				var newLastPageNo = jNewSelect.children().length;
+				
+				var difference = jNewReplies.length - oldReplyNum;
+				var hasNextPage = newLastPageNo > lastPageNo;
 
 				if(difference <= 0 && !hasNextPage) {
 					AN.shared('log', '沒有新回覆');
@@ -171,14 +157,32 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 					var jNewElements = $();
 					
 					if(difference > 0) {
-						jNewElements = jNewElements.add(jNewReplies.slice(oldLength).insertAfter(cache[cache.last].children('table:last')));
+						jNewElements = jNewElements.add(jNewReplies.slice(oldReplyNum).insertAfter(pages[pages.last].children('table:last')));
 						AN.shared('log', $.sprintf('加入%s個新回覆', difference));
 					}
 
 					if(hasNextPage) {
-						jNewElements = jNewElements.add(jNewSelect.up('div', 3).replaceAll(cache[cache.last].find('select[name="page"]').up('div', 3)));
-						//AN.shared('log', '發現下一頁, 連結建立');
-						changePage(cache.last + 1, isAuto);
+						lastPageNo = newLastPageNo;
+				
+						if(displayMode != 2) {
+							$('select[name="page"]').each(function()
+							{
+								var jThis = $(this);
+								var max = jThis.children().length;
+								while(max < newLastPageNo) {
+									jThis.append($.sprintf('<option value="%(pageNo)s">%(pageNo)s</option>', { pageNo: ++max }));
+								}
+							});
+							
+							jNewElements = jNewElements.add(jNewSelect.up('div', 3).replaceAll(pages[pages.last].find('select[name="page"]').up('div', 3)));
+						}
+						
+						if(displayMode === 0) {
+							AN.shared('log', '發現下一頁, 連結建立');
+						}
+						else {
+							changePage(pages.last + 1, isAuto);
+						}
 					}
 					
 					AN.modFn.execMods(jNewElements);
@@ -202,15 +206,15 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 				$('#previewArea').empty();
 				AN.shared('log', '回覆發送完成');
 				
-				getReplies();
+				getReplies(true);
 			});
 		});
 		
 		var isWorking = false;
 		
-		$d
-		.bind('workstart workend', function(event){ isWorking = (event.type == 'workstart'); })
-		.bind('click', function(event)
+		$d.bind('workstart workend', function(event){ isWorking = (event.type == 'workstart'); });
+		
+		$d.bind('click', function(event)
 		{
 			if(!(!isWorking && event.button === 0)) return;
 			
@@ -220,23 +224,29 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 			
 			event.preventDefault();
 			changePage(AN.util.getPageNo(jTarget.attr('href')));
-		})
-		.bind('change', function(event)
-		{
-			if(isWorking) return;
-			
-			var jTarget = $(event.target);
-			if(!jTarget.is('select[name="page"]')) return;
-			
-			var target = jTarget.val();
-			jTarget.val(jTarget.data('an-pageno'));
-			changePage(target);
 		});
+		
+		if(displayMode == 2) {
+			AN.util.stackStyle($.sprintf('%(pageDiv)s > div, %(pageDiv)s > br, %(pageDiv)s + br { display: none; }', { pageDiv: '#ctl00_ContentPlaceHolder1_view_form > div[style*="100%"]' }));
+		}
+		else {
+			$d.bind('change', function(event)
+			{
+				if(isWorking) return;
+				
+				var jTarget = $(event.target);
+				if(!jTarget.is('select[name="page"]')) return;
+				
+				var target = jTarget.val();
+				jTarget.val(jTarget.data('an-pageno'));
+				changePage(target);
+			});
+		}
 		
 		handleNewPage();
 		
 		(function()
-		{
+		{			
 			var jTimer = $('<span>N/A</span>').appendTo(AN.shared('addInfo', '距離更新: '));
 			var tCheck;
 			
@@ -252,28 +262,30 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 			
 			function checkBottom()
 			{
-				if(cache[cache.last].offset().top + cache[cache.last].height() - $d.scrollTop() - $w.height() > 500) {
+				if(pages[pages.last].offset().top + pages[pages.last].height() - $d.scrollTop() - $w.height() > 500) {
 					return true;
 				}
 				
 				getReplies(true);
 			}
 			
+			var interval = AN.util.getOptions('nCheckInterval');
+			if(!interval || interval < 30) interval = 30;
+			
 			$d.bind('workstart workend', function(event)
 			{
 				$.doTimeout('checkbottom');
 				jTimer.text('N/A');
 				
-				if(event.type == 'workend') $.doTimeout('checkbottom', 1000, countdown, { time: event.isPageChangeEnd && cache.last != lastPageNo ? 3 : 30 });
+				if(event.type == 'workend' && (displayMode !== 0 || curPageNo == lastPageNo)) {
+					$.doTimeout('checkbottom', 1000, countdown, { time: event.isPageChangeEnd && pages.last != lastPageNo ? 3 : interval });
+				}
 			});
 			
-			$.doTimeout('checkbottom', 1000, countdown, { time: cache.last != lastPageNo ? 3 : 30 });
+			$d.trigger({ type: 'workend', isPageChangeEnd: true });
 		})();
 		
 		jDoc.defer(2, '加入讀取按扭', function(){ AN.shared('addButton', '更新帖子', function(){ if(!isWorking) getReplies(); }); });
-		
-		if(AN.util.getOptions('bRemovePageBoxes'))
-			AN.util.stackStyle($.sprintf('%(pageDiv)s > div, %(pageDiv)s > br, %(pageDiv)s + br { display: none; }', { pageDiv: '#ctl00_ContentPlaceHolder1_view_form > div[style*="100%"]' }));
 	}
 },
 

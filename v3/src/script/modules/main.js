@@ -596,8 +596,8 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	type: 5,
 	once: function()
 	{
-		AN.shared('addLink', '最頂', function(){ scrollTo(0,0); }, 0);
-		AN.shared('addLink', '最底', function(){ $('body')[0].scrollIntoView(false); }, 2);
+		AN.shared('addLink', '最頂', function(){ document.body.scrollIntoView(); }, 0);
+		AN.shared('addLink', '最底', function(){ document.body.scrollIntoView(false); }, 2);
 	}
 },
 

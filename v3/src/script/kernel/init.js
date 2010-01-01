@@ -783,7 +783,7 @@ $.extend(AN,
 //////////////////// START OF - [Initialization] ////////////////////
 
 if(location.hash.indexOf('#page=') != -1 && AN.util.getPageNo(location.search) != AN.util.getPageNo(location.hash))
-	location.replace(location.pathname + AN.util.getURL({ page: location.hash.replace(/#page=/, '') }));
+	location.replace( AN.util.getURL({ page: location.hash.replace(/#page=/, '') }).replace(/&highlight_id=0\b/, '') );
 
 $.support.localStorage = !!(window.localStorage || window.globalStorage || false);
 

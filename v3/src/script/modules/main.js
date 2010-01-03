@@ -298,6 +298,8 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	{
 		$d.click(function(event)
 		{
+			if(event.button !== 0) return;
+			
 			var jTarget = $(event.target);
 			if(jTarget.parent('a').length) jTarget = jTarget.parent();
 			if(!jTarget.is('a') || !(AN.util.getOptions('bTopicLinksOnly') ? /view\.aspx/i : /^(?!javascript|#)/i).test(jTarget.attr('href'))) return;
@@ -318,6 +320,8 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	{
 		$d.click(function(event)
 		{
+			if(event.button !== 0) return;
+			
 			var jTarget = $(event.target);
 			if(jTarget.parent('a').length) jTarget = jTarget.parent();
 			if(!jTarget.is('.repliers_right > tbody > tr:first-child a')) return;
@@ -969,6 +973,8 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 
 		$d.click(function(event)
 		{
+			if(event.button !== 0) return;
+
 			var jTarget = $(event.target);
 			if(!jTarget.is('.an-videolink')) return;
 			event.preventDefault();
@@ -978,6 +984,8 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		var oFn = this;
 		if(AN.util.getOptions('bConvertOnClick')) $d.click(function(event)
 		{
+			if(event.button !== 0) return;
+
 			var jTarget = $(event.target);
 			if(!jTarget.is('a') || jTarget.is('.an-videolink') || !oFn.rLink.test(jTarget.attr('href'))) return;
 			event.preventDefault();

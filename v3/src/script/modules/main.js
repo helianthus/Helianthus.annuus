@@ -1213,7 +1213,10 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			AN.shared.gray(true, 'an-filterlist');
 		});
 	},
-	infinite: this.filterTopics
+	infinite: function(jDoc)
+	{
+		this.filterTopics(jDoc);
+	}
 },
 
 'db770fdc-9bf5-46b9-b3fa-78807f242c3c':
@@ -1270,7 +1273,10 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			});
 		};
 	},
-	infinite: this.toggleReplies
+	infinite: function(jDoc)
+	{
+		this.toggleReplies(jDoc);
+	}
 },
 
 'a7484cf2-9cbd-47aa-ac28-472f55a1b8f4':

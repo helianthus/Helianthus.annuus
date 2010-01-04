@@ -255,19 +255,19 @@ $.fn.extend(
 
 		jReplies.extend(
 		{
-			jContents: $([]),
-			jNameLinks: $([])
+			jContents: $(),
+			jNameLinks: $()
 		});
 
 		jReplies.each(function()
 		{
-			var jThis = $(this), jNameLink = jThis.find('.repliers_left a:first');
+			var jThis = $(this), jTr = jThis.find('.repliers_left').parent();
 
 			jThis
-			.data('jContent', jThis.find('.repliers_right td:first'))
-			.data('jNameLink', jNameLink)
-			.data('sUserid', jNameLink.attr('href').replace(/.+?userid=(\d+).*/, '$1'))
-			.data('sUserName', jNameLink.html());
+			.data('jContent', jTr.find('.repliers_right td:first'))
+			.data('jNameLink', jTr.find('a:first'))
+			.data('sUserid', jTr.attr('userid'))
+			.data('sUserName', jTr.attr('username'));
 
 			jReplies.jContents.push(jThis.data('jContent')[0]);
 			jReplies.jNameLinks.push(jThis.data('jNameLink')[0]);
@@ -563,8 +563,8 @@ $.extend(AN,
 				{
 					$.get('/view.aspx?message=' + window.messageid, function(sHTML)
 					{
-						var jLink = $.doc(sHTML).find('.repliers_left:first a:first');
-						oInfo = { sId: jLink.attr('href').replace(/.+?userid=(\d+).*/, '$1'), sName: jLink.html() };
+						var jTr = $.doc(sHTML).find('.repliers_left:first').parent();
+						oInfo = { sId: jTr.attr('userid'), sName: jTr.attr('username') };
 						fToExec(oInfo);
 					});
 				}
@@ -612,7 +612,7 @@ $.extend(AN,
 		getURL: function(oParam)
 		{
 			var oSearch = {};
-			var aParam = location.search.replace(/^\?/, '').split('&');
+			var aParam = location.search.substr(1).split('&');
 			$.each(aParam, function()
 			{
 				var aPair = this.split('=');
@@ -781,9 +781,6 @@ $.extend(AN,
 
 //////////////////// END OF - [AN Extension] ////////////////////
 //////////////////// START OF - [Initialization] ////////////////////
-
-if(location.hash.indexOf('#page=') != -1 && AN.util.getPageNo(location.search) != AN.util.getPageNo(location.hash))
-	location.replace( AN.util.getURL({ page: location.hash.replace(/#page=/, '') }).replace(/&highlight_id=0\b/, '') );
 
 $.support.localStorage = !!(window.localStorage || window.globalStorage || false);
 

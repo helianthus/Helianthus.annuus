@@ -130,18 +130,6 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 },
 
 // 修正修改 //
-'11f1c5ca-9455-4f8e-baa7-054b42d9a2c4':
-{
-	desc: '自動轉向正確頁面',
-	page: { 2: true },
-	type: 4,
-	once: function()
-	{
-		if(document.referrer.indexOf('/login.aspx') > 0) location.replace('/topics.aspx?type=BW');
-		else if(!location.pathname.match(/^\/(?:default.aspx)?$/i)) location.reload();
-	}
-},
-
 'b7ef89eb-1190-4466-899a-c19b3621d6b1':
 {
 	desc: 'Opera: 修正無法使用Enter搜尋的錯誤',
@@ -152,20 +140,6 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		$('#aspnetForm').submit(function(event)
 		{
 			event.preventDefault();
-		});
-	}
-},
-
-'2d4e139c-224c-44fb-824e-606170276c76':
-{
-	desc: 'IE: 修正用戶名稱搜尋連結',
-	page: { 92: $.browser.msie || 'disabled' },
-	type: 4,
-	infinite: function(jDoc)
-	{
-		jDoc.topics().jNameLinks.each(function()
-		{
-			this.href = '/search.aspx?st=A&searchstring=' + escape($(this).html());
 		});
 	}
 },
@@ -187,26 +161,6 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		});
 	}
 },
-
-/*
-'c2d9eedb-bb6c-4cb4-be11-ea2ec9612f63':
-{
-	desc: '修正底部的論壇功能',
-	page: { 28: true },
-	type: 4,
-	once: function()
-	{
-		$('select').filter(function(){ return /^(?:page|md|mt)$/.test(this.name); }).change(function(event)
-		{
-			event.stopImmediatePropagation();
-
-			var oParam = {};
-			oParam[this.name] = $(this).val();
-			location.assign(AN.util.getURL(oParam));
-		});
-	}
-},
-*/
 
 '0293c9da-468f-4ed5-a2d7-ecb0067e713f':
 {
@@ -232,26 +186,40 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			var sHighlight = (window.highlight_id) ? ('&highlight_id=' + window.highlight_id) : '';
 			location.assign($.sprintf('/view.aspx?message=%s%s%s', window.messageid, sPage, sHighlight));
 		};
-	},
-	infinite: function(jDoc)
-	{
-		jDoc.find('select[name=page]').up('tr').find('a').each(function()
+
+		var regex = /&(?:page=1(?!\d)|highlight_id=0)/g;
+		$d.mouseover(function(event)
 		{
-				this.href = this.href.replace(/&(?:page=1(?!\d)|highlight_id=0)/g, '');
+			var jTarget = $(event.target);
+			if(!(jTarget.is('a') && regex.test(jTarget.attr('href')))) return;
+
+			jTarget.attr('href', jTarget.attr('href').replace(regex, ''));
 		});
 	}
 },
 
 'b6b232c8-1f26-449e-bb0d-2b7826bf95ef':
 {
-	desc: '優化圖片縮放',
+	desc: '去除論壇原有的圖片縮小功能',
 	page: { 32: true, 192: true },
 	type: 4,
-	once: function(jDoc)
+	once: function()
 	{
 		window.DrawImage = $.blank;
 
 		AN.util.stackStyle('img[onload] { width: auto; height: auto; max-width: 100% }');
+	}
+},
+
+'d7adafa8-cc14-45f9-b3e9-bc36eab05d4f':
+{
+	desc: '縮小引用中的圖片',
+	page: { 32: false },
+	type: 4,
+	options: { nQuoteImgMaxHeight: { desc: '圖片最大高度(px)', defaultValue: 100, type: 'text' } },
+	once: function()
+	{
+		AN.util.stackStyle($.sprintf('.repliers_right blockquote img { width: auto; height: auto; max-height: %spx; }', AN.util.getOptions('nQuoteImgMaxHeight')));
 	}
 },
 
@@ -260,11 +228,15 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	desc: '移除帖子連結高亮部份',
 	page: { 64: false },
 	type: 4,
-	infinite: function(jDoc)
+	once: function()
 	{
-		jDoc.topics().jTitleCells.find('a').each(function()
+		var regex = /&highlight_id=\d+/;
+		$d.mouseover(function(event)
 		{
-				this.href = this.href.replace(/&highlight_id=\d+/, '');
+			var jTarget = $(event.target);
+			if(!(jTarget.is('a') && regex.test(jTarget.attr('href')))) return;
+
+			jTarget.attr('href', jTarget.attr('href').replace(regex, ''));
 		});
 	}
 },
@@ -299,11 +271,11 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		$d.click(function(event)
 		{
 			if(event.button !== 0) return;
-			
+
 			var jTarget = $(event.target);
 			if(jTarget.parent('a').length) jTarget = jTarget.parent();
 			if(!jTarget.is('a') || !(AN.util.getOptions('bTopicLinksOnly') ? /view\.aspx/i : /^(?!javascript|#)/i).test(jTarget.attr('href'))) return;
-			
+
 			event.preventDefault();
 			window.open(jTarget.attr('href'), '_blank');
 		});
@@ -316,18 +288,18 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	defer: 3,
 	page: { 32: true },
 	type: 4,
-	infinite: function(jDoc)
+	once: function()
 	{
 		$d.click(function(event)
 		{
 			if(event.button !== 0) return;
-			
+
 			var jTarget = $(event.target);
 			if(jTarget.parent('a').length) jTarget = jTarget.parent();
 			if(!jTarget.is('.repliers_right > tbody > tr:first-child a')) return;
-			
+
 			if(event.isDefaultPrevented()) return;
-			
+
 			event.preventDefault();
 			window.open(jTarget.attr('href'), '_blank');
 		});
@@ -588,7 +560,6 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	type: 5,
 	once: function()
 	{
-		//if($d.pageName() == 'topics') return;
 		AN.shared('addLink', '吹水台', '/topics.aspx?type=BW', 1);
 	}
 },
@@ -713,6 +684,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	}
 },
 
+/*
 'e24ec5f6-5734-4c2c-aa54-320ca29a3932':
 {
 	desc: '移除死圖',
@@ -735,18 +707,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		});
 	}
 },
-
-'d7adafa8-cc14-45f9-b3e9-bc36eab05d4f':
-{
-	desc: '縮小引用中的圖片',
-	page: { 32: false },
-	type: 6,
-	options: { nQuoteImgMaxHeight: { desc: '圖片最大高度(px)', defaultValue: 100, type: 'text' } },
-	once: function()
-	{
-		AN.util.stackStyle($.sprintf('.repliers_right blockquote img { max-height: %spx; }', AN.util.getOptions('nQuoteImgMaxHeight')));
-	}
-},
+*/
 
 '8e1783cd-25d5-4b95-934c-48a650c5c042':
 {
@@ -783,36 +744,173 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 
 'e33bf00c-9fc5-46ab-866a-03c4c7ca5056':
 {
-	desc: '智能地將文字轉換成連結',
+	desc: '轉換文字連結成連結',
 	page: { 32: true },
 	type: 6,
+	once: function()
+	{
+		AN.util.stackStyle('\
+		.an-linkified:before { padding-right: 2px; content: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAepJREFUeNpi/P//PwMlgImBQjDwBrD4+fkxsLGxGTMyMuoA+RxIcj+A4XMFxMAl9+vXr7MsQIapiIiIR3x8fJy4uLgS0DCmv3///nvx4sWDysrKeSDVra2tCehy8+fPX/D06VMmRldX19Ta2pryffv2vZw0afKpT58+/W5paSkVFBREcer79+8Zampquvn4+Fjz8nLNnJycxJubWzpZvn79yisoKCQDNHHJx48fG4DO7bKysmQAugqIRUHOB2t+8+YN2CCgmkKg2obg4JAKkF6QAX/u33/6PD4+1WzSpN6iz58/f9y6dRvWAAN69yMvL28RSC1ID0gvI1DASVZWPqSoqNJXQ0NHUkBAiPnr1y9/r1698Lynp3UzSCOy3PIHLAxM7+5+WtuRsfTx44drGIHyQszMzK5Ap2pjCemb0FhQh8np1h+MA/L/vT27ZcPD9W01LECx78CQ3Q+kD2NztlLyrH5uRWMNGP8PA8PLrEQjvWkM7NYKfFJBjPgSiVTUJAZOecMz+Vk2xjc+MTB8/oOQE2NnYNiw8MhZnAbwmscw8JrFgAJu5v9//4yR5RSivYwfLN12lpGJaQJBA/79/cvw9w/EahD718+fZ8DhAtTMxcOzhIWUdP8ZmB6ATjoLCi92bu4lIDGAAAMAzw7hysSu92QAAAAASUVORK5CYII="); } \
+		');
+	},
 	infinite: function(jDoc)
 	{
-		var rLink = /(?:ftp|https?):\/\/[\w.\/?:;~!@#$%^&*()+=-]+/i;
-		var aMatch;
-
-		var checkNode = function(nTarget)
-		{
-			if(nTarget.nextSibling) checkNode(nTarget.nextSibling);
-
-			if(nTarget.nodeType == 3)
-			{
-				if(aMatch = rLink.exec(nTarget.data))
-				{
-					nTarget.splitText(RegExp.leftContext.length + aMatch[0].length);
-					$(nTarget.splitText(RegExp.leftContext.length)).wrap($.sprintf('<a href="%s"></a>', aMatch[0])).parent().before('<span class="an-content-note" title="文字已轉換為連結">[L]</span>');
-				}
-			}
-			else if(nTarget.firstChild && !$(nTarget).is('a,button,script,style'))
-			{
-				checkNode(nTarget.firstChild);
-			}
-		};
-
+		var rLink = /(?:https?|ftp):\/\/(?:[\w-]+\.)+[a-z]{2,3}(?![a-z])(?:\/[\w.\/?:;~!@#$%^&*()+=-]*)?/i;
 		jDoc.replies().jContents.each(function()
 		{
-			checkNode(this.firstChild);
+			if(rLink.test($(this).text())) {
+				var node, match, next = this.firstChild;
+				while(node = next) {
+					if(node.nodeType === 3 && (match = rLink.exec(node.data))) {
+						node.splitText(match.index + match[0].length);
+						$(node.splitText(match.index)).wrap($.sprintf('<span title="已轉換文字為連結" class="an-linkified"><a href="%s"></a></span>', match[0]));
+						node = node.nextSibling;
+					}
+				
+					next = !/^(?:a|button|script|style)$/i.test(node.nodeName) && node.firstChild || node.nextSibling;
+					while(!next && (node = node.parentNode)) next = node.nextSibling;
+				}
+			}
 		});
+	}
+},
+
+'d761d6f7-8ef7-4d5b-84e9-db16a274f616':
+{
+	desc: '轉換圖片連結成圖片',
+	page: { 32: false },
+	type: 6,
+	options: {
+		imageConvertMode: { desc: '轉換模式', type: 'select', choices: ['自動轉換', '自動轉換(引用中的連結除外)', '手動轉換'], defaultValue: '自動轉換(引用中的連結除外)' }
+	},
+	once: function()
+	{
+		AN.util.stackStyle('\
+		.an-imagified:before { padding-left: 2px; content: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAfxJREFUeNrEU79rFEEYfbM7+/PuvD0w5s7jOA4iKSxMoRIO7dImJwS0yB8g/gsaMGAwILGxMYUoKVJYBAzpDFqIgphCELQIFhLCgQnxzI+9u52Z3fHbLdLKkSIfPGaKeY/3Ht8wrTVOMwZOOfz23NwknRcH5LXJ+XomECtVXZ2ffz4Ie3p29t6JA6WUkVAPNxb6MCmQzYGEaoljoOgBeUfDt4GrdcCX3+Aah+j3epwAKUQmwBQJXG8w5OhxSlIJYJJ6KigUFcWA0TKw/fM37rRaeLq87FGEa90w3ORSSkMlCf7+WUK5dgWXLoxTswyBr9E56qIbdqDFHn5t7UOIPtq7u/iysvLkcqt1n0QMroQwUwebP95ja+crppsKzdFxyNhA7byPQq2AUq6Bom9QPHbSw/e1tceNiYmHXAiROWjvHKLjSrzYf4nVD29QG6qjWhpG4LlwoGHKCIoczExNoVapoNxsPmKMveMyijKBSv4WbNuFb+VQMPOADtBDANcL4BTz8M+52Pv8KiMHY2MLRH7reN6n1IEZUwTH8QgObILJLWjN0I80jo8l3SWEtBDbQ3iwuIjhajWMer2P3LLAjw4ObJNzrD+b+f8C3JwklzZeb2wYKTkdlh8ZuWvmcvVBFikOw+2k213KBAgOoTTAv6AtQYcQZQJn/hv/CTAAYePONgK3hw4AAAAASUVORK5CYII="); } \
+		.an-imageifed > a { display: block; } \
+		.an-imagified > a > img { border: 0; } \
+		');
+		
+		$d.bind('click imageconvert', function(event)
+		{
+			if(event.button !== 0) return;
+			
+			var jTarget = $(event.target);
+			if(jTarget.next('.an-imagified').length) {
+				event.preventDefault();
+				jTarget.next().toggle();
+			}
+			else if(jTarget.children().length === 0 && jTarget.is('.repliers_right tr:first-child a') && /\.(?:jpe?g|gif|png|bmp)\b/i.test(event.target.href)) {
+				event.preventDefault();
+				
+				$('<span title="已轉換連結為圖片" class="an-imagified"></span>')
+				.append( jTarget.clone().html($.sprintf('<img onload="DrawImage(this)" src="%s" alt="%s" />', event.target.href, event.target.href)) )
+				.insertAfter(jTarget);
+			}
+		});
+	},
+	infinite: function(jDoc)
+	{
+		var convertMode = $.inArray(AN.util.getOptions('imageConvertMode'), this.options.imageConvertMode.choices);
+		if(convertMode !== 2) jDoc.replies().jContents.find(convertMode === 0 ? 'a' : 'a:not(blockquote a)').trigger({ type: 'imageconvert', button: 0 });
+	}
+},
+
+'039d820f-d3c7-4539-8647-dde974ceec0b':
+{
+	desc: '轉換視頻網站連結成影片',
+	page: { 32: true },
+	type: 6,
+	defer: 2, // after layout is fixed
+	options: {
+		videoConvertMode: { desc: '轉換模式', type: 'select', choices: ['自動轉換', '自動轉換(引用中的連結除外)', '手動轉換'], defaultValue: '自動轉換(引用中的連結除外)' }
+	},
+	once: function()
+	{
+		var nWidth, nHeight, sUrl;
+		var aSites =
+		[{
+			regex: 'youtube\\.com/watch\\?',
+			fn: function()
+			{
+				if(nWidth > 640) nWidth = 640;
+				nHeight = nWidth / 16 * 9 + 25;
+				sUrl = $.sprintf('http://www.youtube.com/v/%s&fs=1&rel=0&ap=%%2526fmt%%3D22', sUrl.replace(/.+?v=([^&]+).*/i, '$1'));
+			}
+		},
+		{
+			regex: 'vimeo\\.com/\\d',
+			fn: function()
+			{
+				if(nWidth > 504) nWidth = 504;
+				nHeight = nWidth / 1.5;
+				sUrl = $.sprintf('http://vimeo.com/moogaloop.swf?clip_id=%s&show_title=1&fullscreen=1', sUrl.replace(/.+vimeo\.com\/(\d+).*/i, '$1'));
+			}
+		},
+		{
+			regex: 'youku\\.com/v_show/',
+			fn: function()
+			{
+				if(nWidth > 480) nWidth = 480;
+				nHeight = nWidth / 4 * 3 + 40;
+				sUrl = $.sprintf('http://player.youku.com/player.php/sid/%s/v.swf', sUrl.replace(/.+?id_([^\/]+).*/i, '$1'));
+			}
+		},
+		{
+			regex: 'tudou\\.com/programs/',
+			fn: function()
+			{
+				if(nWidth > 420) nWidth = 420;
+				nHeight = nWidth / 4 * 3 + 48;
+				sUrl = $.sprintf('http://www.tudou.com/v/%s', sUrl.replace(/.+?view\/([^\/]+).*/i, '$1'));
+			}
+		}];
+		var rLink = (function()
+		{
+			var aReg = [];
+			$.each(aSites, function(){ aReg.push(this.regex); });
+			return new RegExp(aReg.join('|'), 'i');
+		})();
+		
+		AN.util.stackStyle('\
+		.an-videoified:before { padding-left: 2px; content: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAnlJREFUeNqMU01oE0EU/mZnN9s0f5qW0h+s2F+sh56Kx949SWgh0AakFBFB8dCLKD150ItYsSA1IFoigdbgQajgpYIHLwqe2garonjoQSXNzzbdnRnfxE3aWkQH3r6ZN9988817b5lSCoZhXADQ49v/jI++3Tf9QE8ulxtIJBLibvZdQkhFIQalHRQkTRTFGANmUiM5H1s7WCcwKPCBfC+YgrPr1g5qAs2hVep5uVDajzVQ/2i/vLzcT54rKekmQjN9SEK4LpxyBRtrX7C+/lVjuY81DigYGxv7RL7PKboolqsQngAzJGIxAzvSgSs9UsPq2MMKlpaWTmh2oRgs20K0NYTOjgiORzgG24Lo7IwiFA3XFPjYgwrGx8e1vv7mWBM43a7fXKhUIbmCaXFwM4Du3vh+7AECns1mu5LJJH9679KaDmxtbYl8Pl/9s36MMY3tJuy32trvgwV/f2B24f2okAyFsgchVOOgxkkpsHD19Cta5v3w+UYOMplMu1bSFLTBLRN2k4XmUKBhobCNcCSIwam5wWuPV0cOPWFiYuI7+VYojl1HgBsGzMDvbSkkPCqnR/1hd5yMPN+E1T56rqjM4B7B4uJiPJVKmdWiJAIF1/XgeQ7yVLmKwSmRBgxmYqdcwpWZsy1zpdKQdbRrsp6DJz7R0Oz85nBlh26jSlhBjtUfBUxOjWB9Gyh6e8lss4Fnj16/Nf0EhdLptDU9PR1R4AiGyaIBcM5wZLuAh/Or4LXuBD5vrlX7Ll+0V249KFjxY3dqCqg0t4nnFNnwv37D0JmbLfSeirvxYiUQbUvWc3CdLLqvM/86XDN2Qzk/37gbLzO7tP4lwABpfwoFZg8hfAAAAABJRU5ErkJggg=="); } \
+		.an-videoified > object { display: block; } \
+		');
+
+		$d.bind('click videoconvert', function(event)
+		{
+			if(event.button !== 0) return;
+
+			var jTarget = $(event.target);
+			if(jTarget.next('.an-videoified').length) {
+				event.preventDefault();
+				jTarget.next().toggle();
+			}
+			else if(jTarget.is('.repliers_right tr:first-child a') && rLink.test(event.target.href)) {
+				event.preventDefault();
+				
+				sUrl = event.target.href;
+				nWidth = jTarget.up('td,div').width();
+				$.each(aSites, function()
+				{
+					if(RegExp(this.regex, 'i').test(sUrl)) {
+						this.fn();
+						return false;
+					}
+				});
+				
+				$('<div></div>')
+				.appendTo($('<span title="已轉換連結為影片" class="an-videoified"></span>').insertAfter(jTarget))
+				.toFlash(sUrl, { width: nWidth, height: nHeight.toFixed(0) }, { wmode: 'opaque', allowfullscreen: 'true' });
+				
+				$($.sprintf('<iframe style="display: none" src="%s" />', event.target.href)).appendTo('body').doTimeout(5000, function(){ $(this).remove(); });
+			}
+		});
+	},
+	infinite: function(jDoc, oFn)
+	{
+		var convertMode = $.inArray(AN.util.getOptions('videoConvertMode'), this.options.videoConvertMode.choices);
+		if(convertMode !== 2) jDoc.replies().jContents.find(convertMode === 0 ? 'a' : 'a:not(blockquote a)').trigger({ type: 'videoconvert', button: 0 });
 	}
 },
 
@@ -821,21 +919,20 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	desc: '轉換論壇連結的伺服器位置',
 	page: { 32: true },
 	type: 6,
-	infinite: function(jDoc)
+	once: function()
 	{
 		var rForum = /forum\d*.hkgolden\.com/i;
-
-		jDoc.replies().jContents.find('a').each(function()
+		$d.mousedown(function(event)
 		{
-			var jThis = $(this);
-			if(!jThis.children().length && rForum.test(this.hostname) && this.hostname != location.hostname)
-			{
-				jThis.attr('href', this.href.replace(rForum, location.hostname)).before('<span class="an-content-note" title="已轉換伺服器位置">[C]</span>');
-			}
+			var jTarget = $(event.target);
+			if(!( jTarget.is('.repliers_right tr:first-child a') && rForum.test(jTarget.attr('href')) )) return;
+
+			jTarget.attr('href', jTarget.attr('href').replace(rForum, location.hostname));
 		});
 	}
 },
 
+/*
 '8db8b611-e229-4d60-a74b-6142af1bacd8':
 {
 	desc: '提示可疑連結',
@@ -896,130 +993,13 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		});
 	}
 },
+*/
 
-'039d820f-d3c7-4539-8647-dde974ceec0b':
-{
-	desc: '轉換視頻網站連結為影片',
-	page: { 32: true },
-	type: 6,
-	defer: 2, // after layout is fixed
-	options:
-	{
-		bConvertOnClick: { desc: '點擊連結才轉換', defaultValue: false, type: 'checkbox' }
-	},
-	once: function()
-	{
-		var aSites =
-		[{
-			regex: 'youtube\\.com/watch\\?',
-			fn: function()
-			{
-				if(nWidth > 640) nWidth = 640;
-				nHeight = nWidth / 16 * 9 + 25;
-				sUrl = $.sprintf('http://www.youtube.com/v/%s&fs=1&rel=0&ap=%2526fmt%3D22', sUrl.replace(/.+?v=([^&]+).*/i, '$1'));
-			}
-		},
-		{
-			regex: 'vimeo\\.com/\\d',
-			fn: function()
-			{
-				if(nWidth > 504) nWidth = 504;
-				nHeight = nWidth / 1.5;
-				sUrl = $.sprintf('http://vimeo.com/moogaloop.swf?clip_id=%s&show_title=1&fullscreen=1', sUrl.replace(/.+vimeo\.com\/(\d+).*/i, '$1'));
-			}
-		},
-		{
-			regex: 'youku\\.com/v_show/',
-			fn: function()
-			{
-				if(nWidth > 480) nWidth = 480;
-				nHeight = nWidth / 4 * 3 + 40;
-				sUrl = $.sprintf('http://player.youku.com/player.php/sid/%s/v.swf', sUrl.replace(/.+?id_([^\/]+).*/i, '$1'));
-			}
-		},
-		{
-			regex: 'tudou\\.com/programs/',
-			fn: function()
-			{
-				if(nWidth > 420) nWidth = 420;
-				nHeight = nWidth / 4 * 3 + 48;
-				sUrl = $.sprintf('http://www.tudou.com/v/%s', sUrl.replace(/.+?view\/([^\/]+).*/i, '$1'));
-			}
-		}];
-
-		this.rLink = (function()
-		{
-			var aReg = [];
-			$.each(aSites, function(){ aReg.push(this.regex); });
-			return new RegExp(aReg.join('|'), 'i');
-		})();
-
-		var nWidth, nHeight, sUrl;
-		this.convert = function()
-		{
-			sUrl = this.href;
-			nWidth = $(this).addClass('an-videolink').up('td,div').width();
-			$.each(aSites, function()
-			{
-				if(RegExp(this.regex, 'i').test(sUrl))
-				{
-					this.fn();
-					return false;
-				}
-			});
-
-			$('<div></div>').insertAfter(this).toFlash(sUrl, { width: nWidth, height: nHeight.toFixed(0) }, { wmode: 'opaque', allowfullscreen: 'true' });
-		};
-
-		$d.click(function(event)
-		{
-			if(event.button !== 0) return;
-
-			var jTarget = $(event.target);
-			if(!jTarget.is('.an-videolink')) return;
-			event.preventDefault();
-			jTarget.next().toggle();
-		});
-
-		var oFn = this;
-		if(AN.util.getOptions('bConvertOnClick')) $d.click(function(event)
-		{
-			if(event.button !== 0) return;
-
-			var jTarget = $(event.target);
-			if(!jTarget.is('a') || jTarget.is('.an-videolink') || !oFn.rLink.test(jTarget.attr('href'))) return;
-			event.preventDefault();
-			$($.sprintf('<iframe style="display: none" src="%s" />', jTarget.attr('href'))).appendTo('body').doTimeout(500, function(){ this.remove(); });
-			oFn.convert.call(jTarget[0]);
-		});
-	},
-	infinite: function(jDoc, oFn)
-	{
-		if(!AN.util.getOptions('bConvertOnClick')) jDoc.replies().jContents.find('a').filter(function(){ return oFn.rLink.test(this.href); }).each(oFn.convert);
-	}
-},
-
-'d761d6f7-8ef7-4d5b-84e9-db16a274f616':
-{
-	desc: '轉換圖片連結為圖片',
-	page: { 32: false },
-	type: 6,
-	infinite: function(jDoc)
-	{
-		jDoc.replies().jContents.find('a').each(function()
-		{
-			if(!$(this).children().length && /jpg|gif|png|bmp/i.test(this.href))
-			{
-				$(this).attr('target', '_blank').html($.sprintf('<img style="border-style: none" onLoad="DrawImage(this)" src="%s" alt="死圖" />', this.href, this.href)).before('<span class="an-content-note" title="已轉換連結為圖片">[P]</span>');
-			}
-		});
-	}
-},
-
+/*
 '85950fa3-c5f0-4456-a81a-30a90ba6425c':
 {
-	desc: '顯示防盜鏈/域名被禁圖片 [FF: 建議改用RefControl] [暫時停用]',
-	page: { 32: 'disabled'/* !$.browser.mozilla */ },
+	desc: '顯示防盜鏈/域名被禁圖片 [FF: 建議改用RefControl]',
+	page: { 32: 'disabled' },
 	type: 6,
 	options: { sImgProxy: { desc: '圖片代理', defaultValue: 'http://www.pomo.cn/showpic.asp?url=', type: 'text' } },
 	infinite: function(jDoc)
@@ -1035,6 +1015,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		});
 	}
 },
+*/
 
 'ea19d7f6-9c2c-42de-b4f9-8cab40ccf544':
 {
@@ -1067,7 +1048,6 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	},
 	infinite: function(jDoc)
 	{
-		//jDoc.replies().jContents.wrapInner('<div class="an-replywrapper"></div>');
 		jDoc.replies().jContents.wrapInner('<div class="an-replywrapper"><div></div></div>');
 	}
 },
@@ -1198,7 +1178,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 				AN.util.addStyle($.sprintf('\
 				#an-filterlist > ul { margin: 5px; } \
 				#an-filterlist > ul > li { padding: 2px 0; } \
-				#an-filterlist > ul > li > span { margin-right: 5px; border: 1px solid black; padding: 0 5px; background-color: %(sMainHeaderBgColor)s; color: %(sMainHeaderFontColor)s; cursor: pointer; } \
+				#an-filterlist > ul > li > span:first-child { margin-right: 5px; border: 1px solid black; padding: 0 5px; background-color: %(sMainHeaderBgColor)s; color: %(sMainHeaderFontColor)s; cursor: pointer; } \
 				',
 				AN.util.getOptions()
 				));
@@ -1208,7 +1188,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 				$('#an-filterlist').click(function(event)
 				{
 					var jTarget = $(event.target);
-					if(!jTarget.is('span')) return;
+					if(!jTarget.is('span:first-child')) return;
 
 					var sFilter = jTarget.next().html();
 
@@ -1225,7 +1205,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			{
 				$.each(aFilter, function(i, sFilter)
 				{
-					sHTML += $.sprintf('<li><span>X</span>%s</li>', sFilter);
+					sHTML += $.sprintf('<li><span>X</span><span>%s</span></li>', sFilter);
 				});
 			}
 			else
@@ -1488,7 +1468,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 				}
 			}
 		];
-		
+
 		function buildTable(data)
 		{
 			function writeLink(smileyNo, smiley)
@@ -1498,27 +1478,27 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 					{ code: smiley[0], path: data.path, filename: smiley[1] }
 				);
 			}
-			
+
 			var tableHTML = '<table style="display: none" cellpadding="0" cellspacing="0"><tbody>';
-			
+
 			$.each(data.table, function(rowNo, row)
 			{
 				tableHTML += '<tr>';
-				
+
 				tableHTML += rowNo == 0 ? '<td colspan="2">' : '<td>';
 				$.each(row, writeLink);
 				tableHTML += '</td>';
-				
+
 				if(rowNo == 1 && data.span)
 				{
 					tableHTML += '<td valign="bottom" rowspan="2">';
 					$.each(data.span, writeLink);
 					tableHTML += '</td>';
 				}
-				
+
 				tableHTML += '</tr>';
 			});
-			
+
 			tableHTML += '</tbody></table>';
 
 			return tableHTML;
@@ -1551,12 +1531,12 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 				jSmileyTr.children(':last').append(typeof this.html == 'string' ? this.html : buildTable(this.html));
 			});
 			listHTML += '</ul>';
-			
+
 			$(listHTML).click(function(event)
 			{
 				var jTarget = $(event.target);
 				if(!jTarget.is('a')) return;
-				
+
 				jSmileyTr.children(':last').children().hide().eq(jTarget.parent().index()).show();
 			}).appendTo(jSmileyTr.children(':first').empty());
 		}
@@ -1571,12 +1551,12 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	once: function()
 	{
 		if(!$('#ctl00_ContentPlaceHolder1_messagetext').length) return;
-		
+
 		var snippets = AN.util.data('snippets') || [
 			['家姐潮文', '講起我就扯火啦\n我家姐一路都在太古廣場一間名店做sales\n間店有好多有錢人同名人幫襯\n做了很多年，已經是senior\n咁多年黎都好俾心機做，經理亦好 like佢\n因為收入不錯又隱定，家姐原本諗住同拍拖多年既bf結婚\n咁多年黎我家姐好少俾人投訴\n而且同好多大客既關係都唔錯\n前排關心研去過我家姐間店幫襯\n不過serve佢既不是我家姐，但佢一買就買左好多野\n過左個幾星期，佢又再去間店行\n上次serve果個Day-off, 咁我家姐就頂上serve佢\n開頭已經好有禮貌介紹d新貨俾佢, 仲話俾折頭佢\n佢就無乜反應，望一望另一堆客\n果堆客係大陸人，三至四個，講野好大聲\n關小姐就同我家姐講話可唔可以關左間鋪一陣\n等佢揀衫\n 我家姐同我講，佢公司一向唔俾佢地咁做\n驚做壞個頭，除非真係有乜大人物，好多記者好混亂先可以咁做\n但佢見到關小姐黑口黑面，都識做話打電話去問一問老闆\n老闆梗係話唔得啦，至多俾多d折頭她\n咁關小姐就發老脾，鬧到我家姐一面屁\nd說話勁難聽，又話自己買野既錢多過我家姐搵幾年既錢\n我家姐都唔敢得罪佢，一味道歉\n跟住關小姐就走左人，家姐就同老闆備案\n老闆瞭解左情況就無再追問\n過左兩日佢接到老闆電話話收到complaint \n話有人投訴佢態度唔好，唔理顧客感受\n公司policy一向唔話俾佢地知係邊次事件\n我家姐估黎估去都淨係得失過關小姐一人\n總之俾老闆話左兩句\n又過幾日，關小姐又黎\n這次和件西裝友一齊，但好在成店都無其他客\n我家姐怕又惹事，叫左個junior過去serve佢\n點知條老西友係要點番我家姐serve.\n根住關小姐就玩野，試衫，但話d衫俾其他人試過污糟\n要開新衫試，我家姐雖然知公司唔俾咁做，\n但怕左佢，唯有照做\n點知試左兩三件，件件佢都要咁試又無話要\n我家姐終於話唔好意思，其實唔可以咁做\n(根本明知她玩野啦.....)\n又係至多俾多d折頭佢\n跟住佢件西裝友就鬧我家姐話"係咪話我地無錢買你地d野?"\n我家姐話唔係，但佢照鬧\n鬧左十幾分鐘\nd同事見咁幫手，又照鬧\n最終打俾老闆備案\n之後連收兩封warning letter\n早兩日接埋大信封\n年尾俾人炒左']
 		];
 		var jSelect = $('<select></select>');
-		
+
 		function writeSelect()
 		{
 			var selectHTML = '<option>自訂文字</option>';
@@ -1585,12 +1565,12 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 				selectHTML += $.sprintf('<option value="%s">%s</option>', textNo, this[0]);
 			});
 			selectHTML += '<option value="customize">自訂...</option>';
-			
+
 			jSelect.html(selectHTML);
 		}
-		
+
 		writeSelect();
-		
+
 		var jSnippets;
 		jSelect.insertBefore($('#ctl00_ContentPlaceHolder1_messagetext').prev()).change(function()
 		{
@@ -1606,7 +1586,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 					',
 					AN.util.getOptions()
 					));
-					
+
 					var index, jDesc, jContent;
 					jSnippets = AN.shared.box('an-snippets', '自訂文字', 700)
 					.append('<ul></ul><div><input /><textarea></textarea><button type="button">ok</button><button type="button">cancel</button></div>')
@@ -1614,7 +1594,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 					{
 						var jTarget = $(event.target);
 						if(!jTarget.is('span,button')) return;
-						
+
 						var type = jTarget.text();
 						if(type == 'cancel') {
 							jSnippets.children('div').css('opacity', '0.5').children().attr('disabled', true);
@@ -1638,7 +1618,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 				}
 				jDesc = jSnippets.find('> div > input');
 				jContent = jDesc.next();
-					
+
 				function writeSnippets()
 				{
 					var sHTML = '';
@@ -1649,14 +1629,14 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 					sHTML += '<li><span>+</span>...</li>';
 					jSnippets.children('ul').html(sHTML).next().css('opacity', '0.5').children().val('').attr('disabled', true);
 				}
-				
+
 				writeSnippets();
 				AN.shared.gray(true, 'an-snippets');
 			}
 			else {
 				window.InsertText(snippets[this.value][1], false);
 			}
-			
+
 			this.selectedIndex = 0;
 		});
 	}
@@ -1676,7 +1656,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		{
 			var jTarget = $(event.target);
 			if(!jTarget.is('a[href^="javascript: ToggleUserDetail"]')) return;
-			
+
 			jTarget.attr('href', $.sprintf('ProfilePage.aspx?userid=%s', jTarget.up('tr').attr('userid')));
 		});
 	}

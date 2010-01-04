@@ -816,7 +816,7 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 
 			if(!sDec) return;
 
-			jLinks.children().eq(nPos).append(
+			jLinks.children().eq(nPos)[nPos == 2 ? 'append' : 'prepend'](
 				(typeof uExtra == 'string') ?
 				$.sprintf('<li><a href="%s">%s</a></li>', uExtra, sDec) :
 				$('<li><a href="javascript:">' + sDec + '</a></li>').click(uExtra)
@@ -905,8 +905,7 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 				var sHTML = '';
 
 				sHTML += '<dt>[程式]</dt>';
-				$.each(
-				{
+				$.each({
 					'名稱': 'Helianthus.annuus',
 					'作者': '<a target="_blank" href="ProfilePage.aspx?userid=148720">向日</a>',
 					'主頁': '<a target="_blank" href="http://code.google.com/p/helianthus-annuus/">http://code.google.com/p/helianthus-annuus/</a>',
@@ -918,10 +917,52 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 					sHTML += $.sprintf('<dd>%s: %s</dd>', sName, sValue);
 				});
 
-				sHTML += '<dt>[元件]</dt>';
-				$.each(AN.mod, function(sMod)
+				sHTML += '<dt>[Credits]</dt>';
+				$.each([
 				{
-					sHTML += $.sprintf('<dd>%s</dd>', sMod);
+					name: 'jQuery',
+					author: 'John Resig',
+					url: 'http://jquery.com',
+					license: 'Dual licensed under the MIT or GPL Version 2 licenses',
+					licenseUrl: 'http://docs.jquery.com/License'
+				},
+				{
+					name: 'json2.js',
+					author: 'Douglas Crockford',
+					url: 'http://www.json.org/js.html',
+					license: 'Public Domain',
+					licenseUrl: '#'
+				},
+				{
+					name: 'jquery.sprintf',
+					author: 'Sabin Iacob',
+					url: 'http://plugins.jquery.com/project/printf',
+					license: 'GPL Version 3',
+					licenseUrl: 'http://www.gnu.org/licenses/gpl.html'
+				},
+				{
+					name: 'jQuery doTimeout',
+					author: 'Ben Alman',
+					url: 'http://plugins.jquery.com/project/printf',
+					license: 'Dual licensed under the MIT and GPL licenses',
+					licenseUrl: 'http://benalman.com/about/license/'
+				},
+				{
+					name: 'Daily Items Icons',
+					author: 'Igarashi Susumu',
+					url: 'http://www.iconarchive.com/category/vintage/daily-items-icons-by-mozco.html',
+					license: 'eMailware',
+					licenseUrl: 'http://www.iconarchive.com/icons/mozco/daily-items/ReadMe.html'
+				},
+				{
+					name: 'Fugue Icons',
+					author: 'Yusuke Kamiyamane',
+					url: 'http://www.pinvoke.com/',
+					license: 'Creative Commons Attribution 3.0 license',
+					licenseUrl: 'http://creativecommons.org/licenses/by/3.0/'
+				}], function()
+				{
+					sHTML += $.sprintf('<dt>%(name)s</dt><dd>by %(author)s</dd><dd><a href="%(url)s">%(url)s</a></dd><dd>License: <a href="%(licenseUrl)s">%(license)s</a></dd>', this);
 				});
 
 				jAbout.find('dl').append(sHTML);

@@ -36,6 +36,20 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 	}
 },
 
+'11f1c5ca-9455-4f8e-baa7-054b42d9a2c4':
+{
+	desc: '自動轉向正確頁面',
+	page: { 65534: true },
+	type: 4,
+	once: function()
+	{
+		if(document.referrer.indexOf('/login.aspx') > 0) location.replace('/topics.aspx?type=BW');
+
+		if(location.hash.indexOf('#page=') != -1 && AN.util.getPageNo(location.search) != AN.util.getPageNo(location.hash))
+			return location.replace( AN.util.getURL({ page: location.hash.replace(/#page=/, '') }).replace(/&highlight_id=0\b/, '') );
+	}
+},
+
 'a599dafa-b550-4b28-921a-019c72f481e5':
 {
 	desc: '除錯模式 [除錯按扭、更準確評測結果等]',
@@ -95,7 +109,7 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 		#an, #an legend { color: %(sMainFontColor)s; } \
 		\
 		.an-forum, .an-forum textarea { background-color: %(sSecBgColor)s; } \
-		.an-forum input[type="text"], .an-forum select { background-color: %(sMainBgColor)s; border: 1px solid %(sMainBorderColor)s; } \
+		.an-forum input[type="text"], .an-forum select { background-color: %(sMainBgColor)s; border: 1px solid %(sMainBorderColor)s; color: graytext; } \
 		.an-forum, .an-forum h4, .an-forum div, .an-forum td, .an-forum dl, .an-forum dt, .an-forum dd, .an-forum ul, .an-forum li, .an-forum a, .an-forum fieldset, .an-forum hr { border: 0 solid %(sMainBorderColor)s; } \
 		.an-forum * { color: %(sMainFontColor)s; } \
 		.an-forum a { text-decoration: none; } \

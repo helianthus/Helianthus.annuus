@@ -750,7 +750,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	once: function()
 	{
 		AN.util.stackStyle('\
-		.an-linkified:before { padding-right: 2px; content: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAepJREFUeNpi/P//PwMlgImBQjDwBrD4+fkxsLGxGTMyMuoA+RxIcj+A4XMFxMAl9+vXr7MsQIapiIiIR3x8fJy4uLgS0DCmv3///nvx4sWDysrKeSDVra2tCehy8+fPX/D06VMmRldX19Ta2pryffv2vZw0afKpT58+/W5paSkVFBREcer79+8Zampquvn4+Fjz8nLNnJycxJubWzpZvn79yisoKCQDNHHJx48fG4DO7bKysmQAugqIRUHOB2t+8+YN2CCgmkKg2obg4JAKkF6QAX/u33/6PD4+1WzSpN6iz58/f9y6dRvWAAN69yMvL28RSC1ID0gvI1DASVZWPqSoqNJXQ0NHUkBAiPnr1y9/r1698Lynp3UzSCOy3PIHLAxM7+5+WtuRsfTx44drGIHyQszMzK5Ap2pjCemb0FhQh8np1h+MA/L/vT27ZcPD9W01LECx78CQ3Q+kD2NztlLyrH5uRWMNGP8PA8PLrEQjvWkM7NYKfFJBjPgSiVTUJAZOecMz+Vk2xjc+MTB8/oOQE2NnYNiw8MhZnAbwmscw8JrFgAJu5v9//4yR5RSivYwfLN12lpGJaQJBA/79/cvw9w/EahD718+fZ8DhAtTMxcOzhIWUdP8ZmB6ATjoLCi92bu4lIDGAAAMAzw7hysSu92QAAAAASUVORK5CYII="); } \
+		.an-linkified { padding-left: 18px; background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABhUlEQVR42mNgGAVgEBwcbBwSEhIPxOlIOB4kjk8OrNnHx8c0PT299tixY7fv3r379/Hjx/8fPHjw98SJE3cdHR2rQRibHEgPSC+Dq6tr6qFDB+80NNQfFRIS6mdhYenq6Oj4P3PmTBQMEgPJgdSA1IL0gPQyWFlZFV2+fPmHvLxcA8hFIEVAyf/Xrl39/+rVq/+vX7/+f+vWrf9AV4ANAKkBqQXpAell0NfXz9u0acf9urrmbQICAkXMzMzV5eXl/7FhkBxIDUgtSA9ILwMvL6+TlpbOtDlzlj4+cuTinytXHv8/efL6n3nzlj8GiaPLVW95/r920ZGPIHGQXpCLhIAmhwOd1wRyIhJuAopHgzCynGHz0RdGLceeyQdWTQPpBRnACcRiQCyFDSslz1qp23L2IjKe/vT/fxCtED8lhWAaUa48fGbS4///s67+/x97EYGLb/z/D5IjaIBkzvaZEllbzyBji6P//4NooFwMyamWN2b5GRDmi1sZQ1ayZwucMxOI4ZoBsGkPUwBKpQ4AAAAASUVORK5CYII=") no-repeat left center; } \
 		');
 	},
 	infinite: function(jDoc)
@@ -763,8 +763,10 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 				while(node = next) {
 					if(node.nodeType === 3 && (match = rLink.exec(node.data))) {
 						node.splitText(match.index + match[0].length);
-						$(node.splitText(match.index)).wrap($.sprintf('<span title="已轉換文字為連結" class="an-linkified"><a href="%s"></a></span>', match[0]));
-						node = node.nextSibling;
+						$(node.splitText(match.index)).wrap($.sprintf('<a href="%s"></a>', match[0])).parent().before('<span title="已轉換文字為連結" class="an-linkified"></span>');
+						
+						node = node.nextSibling.nextSibling.nextSibling;
+						continue;
 					}
 				
 					next = !/^(?:a|button|script|style)$/i.test(node.nodeName) && node.firstChild || node.nextSibling;
@@ -786,9 +788,9 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	once: function()
 	{
 		AN.util.stackStyle('\
-		.an-imagified:before { padding-left: 2px; content: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAfxJREFUeNrEU79rFEEYfbM7+/PuvD0w5s7jOA4iKSxMoRIO7dImJwS0yB8g/gsaMGAwILGxMYUoKVJYBAzpDFqIgphCELQIFhLCgQnxzI+9u52Z3fHbLdLKkSIfPGaKeY/3Ht8wrTVOMwZOOfz23NwknRcH5LXJ+XomECtVXZ2ffz4Ie3p29t6JA6WUkVAPNxb6MCmQzYGEaoljoOgBeUfDt4GrdcCX3+Aah+j3epwAKUQmwBQJXG8w5OhxSlIJYJJ6KigUFcWA0TKw/fM37rRaeLq87FGEa90w3ORSSkMlCf7+WUK5dgWXLoxTswyBr9E56qIbdqDFHn5t7UOIPtq7u/iysvLkcqt1n0QMroQwUwebP95ja+crppsKzdFxyNhA7byPQq2AUq6Bom9QPHbSw/e1tceNiYmHXAiROWjvHKLjSrzYf4nVD29QG6qjWhpG4LlwoGHKCIoczExNoVapoNxsPmKMveMyijKBSv4WbNuFb+VQMPOADtBDANcL4BTz8M+52Pv8KiMHY2MLRH7reN6n1IEZUwTH8QgObILJLWjN0I80jo8l3SWEtBDbQ3iwuIjhajWMer2P3LLAjw4ObJNzrD+b+f8C3JwklzZeb2wYKTkdlh8ZuWvmcvVBFikOw+2k213KBAgOoTTAv6AtQYcQZQJn/hv/CTAAYePONgK3hw4AAAAASUVORK5CYII="); } \
-		.an-imageifed > a { display: block; } \
-		.an-imagified > a > img { border: 0; } \
+		.an-imagified { padding-left: 18px; background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAB6ElEQVR42sWTMWgTYRSAv7tc7kys2A7WxFJURAUL2sEGDS4S6SCESEHcnIOT4FIsbcEOEYmLULAohSoB0UFotkIGQTuok4NQ0VBUUpqisTGX5P673POa0cnQwQ++8X08HjxNRNgNOrtEuzo7mwYO0RsVESkCMDE1lZUe2ZkJZEfD8zzdF+FCrk1IB9MAX6DTgf0R6LOEqAlnD0PU/cAevU671TICcZXqBjRPhMRRjb2WdIc8H0LQDSoPdA1OxuDr502uZTLcX1qKiMhY07bfGa7r6p7v8+vnQ2LDZzg+eA4djf6oUPvdpGnXELXF+qcfKNWmUq3ytlC4N5LJ3BYRnYvZ7M1tpeTUjbScn7wu+eUVWV2ry6uPDXn/pSlrFUeq2544ri9/cySVmtGVUt0NKt/rrJerPC4ucuvRJPPFeQql5zwrvWRx+QUPnj7h7sIC3zY2AIglk3PBHUq66zjdQLzvCoPRDAPhy+wLXQIZo8Vp2pEExFJERyZwHIfheJz+0dGc02qtiMgbQykV6ohgWZFACzMwZIQR0Wg7QqPhIuKi3DAd8wBT+TwHh4bsIPDaCIfRjo2PT68Wi3eCEP+CaZok0+kZYA7A2CyXqycSiRw90LHtLb/ZBEADLGCgh7/wgRrgAPz/b/wDyPozmVUBpGMAAAAASUVORK5CYII=") no-repeat right center; } \
+		.an-imageifed + a { display: block; } \
+		.an-imagified + a > img { border: 0; } \
 		');
 		
 		$d.bind('click imageconvert', function(event)
@@ -798,13 +800,13 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			var jTarget = $(event.target);
 			if(jTarget.next('.an-imagified').length) {
 				event.preventDefault();
-				jTarget.next().toggle();
+				jTarget.next().next().toggle();
 			}
 			else if(jTarget.children().length === 0 && jTarget.is('.repliers_right tr:first-child a') && /\.(?:jpe?g|gif|png|bmp)\b/i.test(event.target.href)) {
 				event.preventDefault();
 				
 				$('<span title="已轉換連結為圖片" class="an-imagified"></span>')
-				.append( jTarget.clone().html($.sprintf('<img onload="DrawImage(this)" src="%s" alt="%s" />', event.target.href, event.target.href)) )
+				.after( jTarget.clone().html($.sprintf('<img onload="DrawImage(this)" src="%s" alt="%s" />', event.target.href, event.target.href)) )
 				.insertAfter(jTarget);
 			}
 		});
@@ -873,8 +875,8 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		})();
 		
 		AN.util.stackStyle('\
-		.an-videoified:before { padding-left: 2px; content: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAnlJREFUeNqMU01oE0EU/mZnN9s0f5qW0h+s2F+sh56Kx949SWgh0AakFBFB8dCLKD150ItYsSA1IFoigdbgQajgpYIHLwqe2garonjoQSXNzzbdnRnfxE3aWkQH3r6ZN9988817b5lSCoZhXADQ49v/jI++3Tf9QE8ulxtIJBLibvZdQkhFIQalHRQkTRTFGANmUiM5H1s7WCcwKPCBfC+YgrPr1g5qAs2hVep5uVDajzVQ/2i/vLzcT54rKekmQjN9SEK4LpxyBRtrX7C+/lVjuY81DigYGxv7RL7PKboolqsQngAzJGIxAzvSgSs9UsPq2MMKlpaWTmh2oRgs20K0NYTOjgiORzgG24Lo7IwiFA3XFPjYgwrGx8e1vv7mWBM43a7fXKhUIbmCaXFwM4Du3vh+7AECns1mu5LJJH9679KaDmxtbYl8Pl/9s36MMY3tJuy32trvgwV/f2B24f2okAyFsgchVOOgxkkpsHD19Cta5v3w+UYOMplMu1bSFLTBLRN2k4XmUKBhobCNcCSIwam5wWuPV0cOPWFiYuI7+VYojl1HgBsGzMDvbSkkPCqnR/1hd5yMPN+E1T56rqjM4B7B4uJiPJVKmdWiJAIF1/XgeQ7yVLmKwSmRBgxmYqdcwpWZsy1zpdKQdbRrsp6DJz7R0Oz85nBlh26jSlhBjtUfBUxOjWB9Gyh6e8lss4Fnj16/Nf0EhdLptDU9PR1R4AiGyaIBcM5wZLuAh/Or4LXuBD5vrlX7Ll+0V249KFjxY3dqCqg0t4nnFNnwv37D0JmbLfSeirvxYiUQbUvWc3CdLLqvM/86XDN2Qzk/37gbLzO7tP4lwABpfwoFZg8hfAAAAABJRU5ErkJggg=="); } \
-		.an-videoified > object { display: block; } \
+		.an-videoified { padding-left: 18px; background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACXElEQVR4Xo2STUhUURiGn3PPvTNO6kypSCoZ+UsGuJKWum4Vg4KgEyESERQBbYJwVVCbyEgIEyJkQtAkIDBoYxDQxqCVOmRFEiBQMY7ze+89X1MzY2mAPfDC4fKcl++7HCUiWJZ1EWgr5b/4WM5DmxJti4uLXdFo1L8/9y7qGwEUIgCCEUGMoBRci/Utll0AKgVW8cMHoB0lZAsuIIiAACKlczq587drAViVgoWFhU5AizEoJVCMiMF3XbLpDOurX1hb2wTQZdfaM8Hg4OAnoCObckml8/iej7IMkYhFzmRxjYegKu6/E8zPz58AtC8KJ+gQbqimuamW47Wa7sYQzc1hqsM1ALrs7p1gaGhoE+g8FKlCez4ikMzkMVqwHY22A7S21+26+wv03Nxcy/DwsH724PIqwNbWlp9IJPLsQyn1y20tul8BKu9gmhJdE9Pv+32jSKY9fF+oICIY4zN9/fRrIEGJC7srxOPxxpGREV0VCpIrGIJVijJ7SrrHJrsHB3ojt84NrOxZoXj5G9CAaApZH21Z2IFSv/ENnuviFVyCTSdrX2zgHO0/nxI79Kdgdna2LhaL2fmUKRYIruvheVkSCjKWxnYsLGWTS+9w9drZ+smdnR7nSMto5R88pUTPxNRGbybn4nk+Tkiz/D3J6Fgfa9uQ8tilMQjPn7xZscu7Vc/MzDjj4+O1giZUU0w4gNaKw9tJHk8to5WAgs8bq/mOK5eCS3ceJZ26Y/d+T6CUugucAno5gOozt+uxnYy7/nIpEG4ctilxAwgDFgfg2pGbkv3x1l1/FS8APwH/5BEQGBT1zwAAAABJRU5ErkJggg==") no-repeat right center; } \
+		.an-videoified + object { display: block; } \
 		');
 
 		$d.bind('click videoconvert', function(event)
@@ -884,7 +886,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			var jTarget = $(event.target);
 			if(jTarget.next('.an-videoified').length) {
 				event.preventDefault();
-				jTarget.next().toggle();
+				jTarget.next().next().toggle();
 			}
 			else if(jTarget.is('.repliers_right tr:first-child a') && rLink.test(event.target.href)) {
 				event.preventDefault();
@@ -900,7 +902,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 				});
 				
 				$('<div></div>')
-				.appendTo($('<span title="已轉換連結為影片" class="an-videoified"></span>').insertAfter(jTarget))
+				.insertAfter( $('<span title="已轉換連結為影片" class="an-videoified"></span>').insertAfter(jTarget) )
 				.toFlash(sUrl, { width: nWidth, height: nHeight.toFixed(0) }, { wmode: 'opaque', allowfullscreen: 'true' });
 				
 				$($.sprintf('<iframe style="display: none" src="%s" />', event.target.href)).appendTo('body').doTimeout(5000, function(){ $(this).remove(); });
@@ -1103,13 +1105,12 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		bFilterListButton: { desc: '加入標題過濾列表按扭', defaultValue: true, type: 'checkbox' },
 		bAddFilterButton: { desc: '加入新增過濾器按扭', defauleValue: false, type: 'checkbox' }
 	},
-	once: function(jDoc, oFn)
+	once: function()
 	{
 		var aFilter = AN.util.data('aTopicFilter') || [];
 		var jCurTarget;
-		var jButton= $($.sprintf('\
-			<span style="display: none; position: absolute; text-align: center; background-color: %(sMainHeaderBgColor)s; color: %(sMainHeaderFontColor)s; cursor: pointer;">X</span> \
-			', AN.util.getOptions()))
+		var jHiddenImg = $();
+		var jButton = $('<img style="display: none; position: absolute; cursor: pointer;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACN0lEQVR4XpWNTUgTYBjH/+ZAp4vhvgyIQYoIbEkwT0MQcTBAsckM1ZPoRc8VXoIIKKCgS1RRtFBWm19BWlNMKIIyQJaTNtJ9YIPmmDHVy0TEp+eBl1gwgf7wg+d9nv+PF6dlCmhkPiga8T95BRiCwHyqo+O3IDPvzKcKL7nA3PUDFxg7z9PrLS2/9kdHaW9khL63tm7z7o3cpCNdcaCCCWAl09t7EKys/Dap1a7FXK7czvAwbXR30w+Ph7KDgxRtb98J8i3AnWRX14E4UIEP+MzCSXpggH7295Nk1eX6B0mip4fiXi9t9fWdiAMVPAOWk17v8Senk4oj71K7Nbf7WByo4DEwE+vsPFxubqapujqSFAoFymazlEqlKB6PUzKZpKc1NeQzm2nBbj8UByp4ADxabWvbf+9w0GJTE70wGikcDlMkEqFYLEaJRIJ8LI8rZq3WPXYeQgX3geshmy2zZLfTtMlEk1wqltPptOwEmuG732DIsHMNKrgHuPnXzY/19TRfQs5kMpTL5eRGCxYLPdFqN8WBCm4D+jtlZStfGhqOiuVZFgSR8/m8QEsm05F0xUFxbgE3x/X6rbf8g8hzLH5VyCyy7J5XVGxJF5JibgDGq8BiQK/fDhmNtG4wUIQFBb1j/FVV29KRLkrlMmAdAibGNJronE63u8GSIPNYeXlUbtIp5Z5hdIylFjh/CRi6AoQC1dU5QWbZyQ1ArXSV8zcadbAxDuEs4OTfXnsYmWWnuMicUw7+AKvQcvS+6EM5AAAAAElFTkSuQmCC" />')
 			.appendTo('#an')
 			.click(function()
 			{
@@ -1122,16 +1123,15 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			if(jTarget[0] == jButton[0]) return;
 
 			jTarget = jTarget.closest('#HotTopics tr');
-			if(jTarget.length && !jTarget.is(':first-child'))
-			{
+			if(jTarget.length && !jTarget.is(':first-child')) {
+				jHiddenImg.css('visibility', 'visible');
 				jCurTarget = jTarget;
-				var offset = jTarget.offset();
-				var jImgCell = jTarget.children(':first');
-				var nHeight = jImgCell.outerHeight();
-				jButton.css({ top: offset.top, left: offset.left, width: jImgCell.outerWidth() + 1, height: nHeight, lineHeight: nHeight + 'px' }).show();
+				jHiddenImg = jTarget.find('img:first').css('visibility', 'hidden');
+				var offset = jHiddenImg.offset();
+				jButton.css({ top: offset.top, left: offset.left - 2 }).show();
 			}
-			else
-			{
+			else {
+				jHiddenImg.css('visibility', 'visible');
 				jButton.hide();
 			}
 		});
@@ -1143,10 +1143,10 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 
 			aFilter.push(sFilter);
 			AN.util.data('aTopicFilter', aFilter);
-			oFn.filterTopics();
+			filterTopics();
 		};
 
-		this.filterTopics = function(jScope)
+		var filterTopics = this.filterTopics = function(jScope)
 		{
 			if(!aFilter.length) return;
 
@@ -1157,8 +1157,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 				var sTitle = jThis.data('sTitle');
 				$.each(aFilter, function(i, sFilter)
 				{
-					if(sTitle.indexOf(sFilter) != -1)
-					{
+					if(sTitle.indexOf(sFilter) != -1) {
 						nCount++;
 						jThis.hide();
 						return false;
@@ -1171,10 +1170,8 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 
 		if(AN.util.getOptions('bAddFilterButton')) AN.shared('addButton', '新增過濾器', addFilter);
 
-		if(AN.util.getOptions('bFilterListButton')) AN.shared('addButton', '標題過濾列表', function()
-		{
-			if(!$('#an-filterlist').length)
-			{
+		if(AN.util.getOptions('bFilterListButton')) AN.shared('addButton', '標題過濾列表', function() {
+			if(!$('#an-filterlist').length) {
 				AN.util.addStyle($.sprintf('\
 				#an-filterlist > ul { margin: 5px; } \
 				#an-filterlist > ul > li { padding: 2px 0; } \
@@ -1201,15 +1198,13 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			}
 
 			var sHTML = '';
-			if(aFilter.length)
-			{
+			if(aFilter.length) {
 				$.each(aFilter, function(i, sFilter)
 				{
 					sHTML += $.sprintf('<li><span>X</span><span>%s</span></li>', sFilter);
 				});
 			}
-			else
-			{
+			else {
 				sHTML += '<li>沒有任何過濾器</li>';
 			}
 
@@ -1218,10 +1213,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			AN.shared.gray(true, 'an-filterlist');
 		});
 	},
-	infinite: function(jDoc)
-	{
-		this.filterTopics(jDoc);
-	}
+	infinite: this.filterTopics
 },
 
 'db770fdc-9bf5-46b9-b3fa-78807f242c3c':
@@ -1229,23 +1221,23 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	desc: '用戶屏敝功能',
 	page: { 32: true },
 	type: 6,
-	once: function(jDoc, oFn)
+	once: function()
 	{
 		var aBamList = AN.util.data('aBamList') || [];
 		var jCurTarget;
-		var jButton= $($.sprintf('\
-			<span style="display: none; position: absolute; padding: 2px 5px; background-color: %(sMainHeaderBgColor)s; color: %(sMainHeaderFontColor)s; cursor: pointer;">X</span> \
-			', AN.util.getOptions()))
+		var jButton = $('<img style="display: none; position: absolute; margin: 5px; cursor: pointer;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACN0lEQVR4XpWNTUgTYBjH/+ZAp4vhvgyIQYoIbEkwT0MQcTBAsckM1ZPoRc8VXoIIKKCgS1RRtFBWm19BWlNMKIIyQJaTNtJ9YIPmmDHVy0TEp+eBl1gwgf7wg+d9nv+PF6dlCmhkPiga8T95BRiCwHyqo+O3IDPvzKcKL7nA3PUDFxg7z9PrLS2/9kdHaW9khL63tm7z7o3cpCNdcaCCCWAl09t7EKys/Dap1a7FXK7czvAwbXR30w+Ph7KDgxRtb98J8i3AnWRX14E4UIEP+MzCSXpggH7295Nk1eX6B0mip4fiXi9t9fWdiAMVPAOWk17v8Senk4oj71K7Nbf7WByo4DEwE+vsPFxubqapujqSFAoFymazlEqlKB6PUzKZpKc1NeQzm2nBbj8UByp4ADxabWvbf+9w0GJTE70wGikcDlMkEqFYLEaJRIJ8LI8rZq3WPXYeQgX3geshmy2zZLfTtMlEk1wqltPptOwEmuG732DIsHMNKrgHuPnXzY/19TRfQs5kMpTL5eRGCxYLPdFqN8WBCm4D+jtlZStfGhqOiuVZFgSR8/m8QEsm05F0xUFxbgE3x/X6rbf8g8hzLH5VyCyy7J5XVGxJF5JibgDGq8BiQK/fDhmNtG4wUIQFBb1j/FVV29KRLkrlMmAdAibGNJronE63u8GSIPNYeXlUbtIp5Z5hdIylFjh/CRi6AoQC1dU5QWbZyQ1ArXSV8zcadbAxDuEs4OTfXnsYmWWnuMicUw7+AKvQcvS+6EM5AAAAAElFTkSuQmCC" />')
 			.appendTo('#an')
 			.click(function()
 			{
-				var sUserId = jCurTarget.find('a:first').attr('href').replace(/.+?userid=(\d+).*/, '$1');
+				var sUserId = jCurTarget.attr('userid');
 
 				var nIndex = $.inArray(sUserId, aBamList);
 				nIndex == -1 ? aBamList.push(sUserId) : aBamList.splice(nIndex, 1);
 
 				AN.util.data('aBamList', aBamList);
-				oFn.toggleReplies(null, sUserId, nIndex == -1);
+				toggleReplies(null, sUserId, nIndex == -1);
+				
+				jButton.hide();
 			});
 
 		$d.mouseover(function(event)
@@ -1253,15 +1245,13 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			var jTarget = $(event.target);
 			if(jTarget[0] == jButton[0]) return;
 
-			jTarget = jTarget.closest('.repliers_left');
-			if(jTarget.length)
-			{
+			jTarget = jTarget.closest('.repliers_left').parent();
+			if(jTarget.length) {
 				jCurTarget = jTarget;
 				var offset = jTarget.offset();
 				jButton.css({ top: offset.top, left: offset.left }).show();
 			}
-			else
-			{
+			else {
 				jButton.hide();
 			}
 		});
@@ -1271,7 +1261,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		.an-bammed .repliers_left > table > tbody > tr:first-child ~ tr, .an-bammed .repliers_right > tbody > tr:first-child { display: none; } \
 		');
 
-		this.toggleReplies = function(jScope)
+		var toggleReplies = this.toggleReplies = function(jScope)
 		{
 			(jScope || $(document)).replies().each(function()
 			{
@@ -1280,10 +1270,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			});
 		};
 	},
-	infinite: function(jDoc)
-	{
-		this.toggleReplies(jDoc);
-	}
+	infinite: this.toggleReplies
 },
 
 'a7484cf2-9cbd-47aa-ac28-472f55a1b8f4':

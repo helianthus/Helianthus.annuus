@@ -304,7 +304,7 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 			
 		$d.trigger({ type: 'workend', isPageChangeEnd: true });
 		
-		jDoc.defer(2, '加入讀取按扭', function(){ AN.shared('addButton', '更新帖子', getReplies); });
+		jDoc.defer(2, '加入讀取按扭', function(){ AN.shared('addButton', '更新帖子', function(){ getReplies(false); }); });
 		
 		if(AN.util.getOptions('addViewAjaxPageLinks')) {
 			//jDoc.defer(1, '加入轉頁連結', function()

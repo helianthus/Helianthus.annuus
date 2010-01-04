@@ -22,7 +22,8 @@ AN.mod['Style Editor'] = { ver: 'N/A', author: '向日', fn: {
 		sMainLinkFontColor: { desc: '普通連結顏色', defaultValue: '#1066d2', type: 'text' },
 		sMainVisitedColor: { desc: '已訪問連結顏色', defaultValue: '#800080', type: 'text' },
 		sMainHoverColor: { desc: '連結懸浮顏色', defaultValue: '', type: 'text' },
-		bRemoveLinkUnderline: { desc: '移除連結底線', defaultValue: false, type: 'checkbox' }
+		bRemoveLinkUnderline: { desc: '移除連結底線', defaultValue: false, type: 'checkbox' },
+		removeLinkOutline: { desc: '移除焦點為連結時的框線', defaultValue: true, type: 'checkbox' }
 	},
 	once: function()
 	{
@@ -37,6 +38,8 @@ AN.mod['Style Editor'] = { ver: 'N/A', author: '向日', fn: {
 		',
 		AN.util.getOptions()
 		));
+		
+		if(AN.util.getOptions('removeLinkOutline')) AN.util.stackStyle('a:focus { outline: 0; }');
 	}
 },
 
@@ -71,9 +74,9 @@ AN.mod['Style Editor'] = { ver: 'N/A', author: '向日', fn: {
 		AN.util.stackStyle($.sprintf(' \
 		/* Global stuff */\
 		body { background-color: %(sMainBgColor)s; } \
-		p, td { color: %(sMainFontColor)s; } \
+		body, p, td, .addthis_toolbox > a, .addthis_toolbox > span { color: %(sMainFontColor)s; } \
 		/* main border */\
-		.repliers_header, .repliers_left, .repliers, .repliers td, .Topic_ForumInfoPanel table, .Topic_ForumInfoPanel th { border-color: %(sMainBorderColor)s !important; } \
+		div[style*="0, 0, 0"], div[style*="000000"], .DivMarkThread, .repliers_header, .repliers_left, .repliers, .repliers td, .Topic_ForumInfoPanel table, .Topic_ForumInfoPanel th { border-color: %(sMainBorderColor)s !important; } \
 		#aspnetForm table[cellspacing="1"][cellpadding="2"], #ctl00_ContentPlaceHolder1_PMMsgTable, #ctl00_ContentPlaceHolder1_QuickReplyTable, #ctl00_ContentPlaceHolder1_QuickReplyLoginTable { background-color: %(sMainBorderColor)s !important; } \
 		*[style*="128, 128, 128"], *[style*="808080"] { background-color: transparent !important; } \
 		/* sec border */\
@@ -81,7 +84,7 @@ AN.mod['Style Editor'] = { ver: 'N/A', author: '向日', fn: {
 		/* nearly-white backgrounds */\
 		*[style*="rgb(23"], *[style*="rgb(24"], *[style*="#E"], *[style*="#F"], *[style*="#e"], *[style*="#f"], .Topic_ForumInfoPanel table td { background-color: %(sSecBgColor)s !important; } \
 		/* PM Box & white table cells */\
-		.ListPMText, *[style*="255, 255, 255"], *[style*="#FFFFFF"], *[style*="background-color: white"], *[style*="BACKGROUND-COLOR: white"], *[bgcolor="#f8f8f8"] { background-color: %(sMainBgColor)s !important; } \
+		.DivMarkThread, .ListPMText, *[style*="255, 255, 255"], *[style*="#FFFFFF"], *[style*="background-color: white"], *[style*="BACKGROUND-COLOR: white"], *[bgcolor="#f8f8f8"] { background-color: %(sMainBgColor)s !important; } \
 		/* headers */\
 		.repliers_header, *[style*="51, 102, 153"], *[style*="#336699"], .Topic_ForumInfoPanel table th, .Topic_ListPanel table th { color: %(sMainHeaderFontColor)s !important; background-color: %(sMainHeaderBgColor)s !important; } \
 		/* under logo links, footer text, username links, bookmarkbar */\
@@ -93,10 +96,10 @@ AN.mod['Style Editor'] = { ver: 'N/A', author: '向日', fn: {
 		#ctl00_TopBarHomeLink { display: block; background: url(%(sLogoBgImage)s) no-repeat; } \
 		#ctl00_TopBarHomeLink img { visibility: hidden; } \
 		/* thin bars icon */\
-		.title:first-child, *[bgcolor="#6ea0c4"]:first-child, .redhottitle:first-child { background-image: url(%(sBlueBarBgImage)s); } \
+		.ProfileBoxTitle:first-child, .DivResizableBoxTitle:first-child, .title:first-child, *[bgcolor="#6ea0c4"]:first-child, .redhottitle:first-child { background: url(%(sBlueBarBgImage)s) no-repeat; } \
 		*[src*="/p.jpg"], *[src*="/redhotp.jpg"] { visibility: hidden; } \
 		/* blue bars , red bars, and main forum page bars */\
-		.title, *[bgcolor="#6ea0c4"], *[colspan="6"] { background-color: %(sBlueBarBgColor)s !important; color: %(sBlueBarFontColor)s; } \
+		.ProfileBoxTitle, .DivResizableBoxTitle, .title, *[bgcolor="#6ea0c4"], *[colspan="6"] { background-color: %(sBlueBarBgColor)s !important; color: %(sBlueBarFontColor)s; } \
 		.redhottitle { background-color: %(sRedTitleBgColor)s; color: %(sRedTitleFontColor)s; } \
 		/* hot people */\
 		table[style*="255, 85, 96"], tr[style*="255, 85, 96"], table[style*="#ff5560"], tr[style*="#ff5560"] { background-color: %(sRedHeaderBgColor)s !important; } \
@@ -107,6 +110,7 @@ AN.mod['Style Editor'] = { ver: 'N/A', author: '向日', fn: {
 		.HitSearchText { color: %(sMainHeaderFontColor)s; } \
 		a.hitsearch_link { color: %(sMainFontColor)s; } \
 		/* annoucements, profilepage tabs */\
+		.DivResizableBoxDetails, .ProfileBoxDetails { border-color: %(sBlueSecBgColor)s; } \
 		*[bgcolor="#ccddea"], .ajax__tab_tab, #advarea tr:first-child + tr td { background-color: %(sBlueSecBgColor)s !important; } \
 		.p__tab_xp .ajax__tab_tab { color: %(sMainFontColor)s; } \
 		.p__tab_xp .ajax__tab_active .ajax__tab_tab, .p__tab_xp .ajax__tab_hover .ajax__tab_tab { color: %(sMainHoverColor)s; } \
@@ -129,6 +133,7 @@ AN.mod['Style Editor'] = { ver: 'N/A', author: '向日', fn: {
 		.hkg_bottombar, .hkg_bottombar *, .hkg_bbMenu, .hkg_bbMenu * { background-color: %(sSecBgColor)s; border-color: %(sMainBorderColor)s; color: %(sMainFontColor)s; } \
 		.hkg_bb_bookmark_TitleBox, .hkg_bb_bookmark_TitleBox *, .hkg_bb_bookmarkItem_Hover, .hkg_bb_bookmarkItem_Hover a div { background-color: %(sMainHeaderBgColor)s; color: %(sMainHeaderFontColor)s; } \
 		.hkg_bb_bookmarkItem a div { background-color: transparent; color: inherit; } \
+		.hkg_bbItem_MiniFunc, .hkg_bbItem_MiniFunc_Hover, .hkg_bbItem, .hkg_bbItem_Hover, .hkg_bbItem_Selected { border: 0; } \
 		',
 		AN.util.getOptions()
 		));

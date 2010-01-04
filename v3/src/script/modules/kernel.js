@@ -109,7 +109,8 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 		#an, #an legend { color: %(sMainFontColor)s; } \
 		\
 		.an-forum, .an-forum textarea { background-color: %(sSecBgColor)s; } \
-		.an-forum input[type="text"], .an-forum select { background-color: %(sMainBgColor)s; border: 1px solid %(sMainBorderColor)s; color: graytext; } \
+		.an-forum input[type="text"], .an-forum select { background-color: %(sMainBgColor)s; border: 1px solid %(sMainBorderColor)s; } \
+		.an-forum input[type="text"]:disabled, .an-forum select:disabled { color: graytext; } \
 		.an-forum, .an-forum h4, .an-forum div, .an-forum td, .an-forum dl, .an-forum dt, .an-forum dd, .an-forum ul, .an-forum li, .an-forum a, .an-forum fieldset, .an-forum hr { border: 0 solid %(sMainBorderColor)s; } \
 		.an-forum * { color: %(sMainFontColor)s; } \
 		.an-forum a { text-decoration: none; } \

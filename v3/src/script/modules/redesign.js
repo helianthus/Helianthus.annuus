@@ -11,15 +11,17 @@ AN.mod['Component Redesigner'] = { ver: 'N/A', author: '向日', fn: {
 	},
 	once: function()
 	{
-		AN.util.stackStyle('blockquote + br, blockquote > div > br:first-child { display: none; }');
+		//AN.util.stackStyle('blockquote + br, blockquote > div > br:first-child { display: none; }');
+		AN.util.stackStyle('blockquote + br { display: none; }');
 		
 		var styleNo = this.styleNo = $.inArray(AN.util.getOptions('quoteStyle'), this.options.quoteStyle.choices);
+		var placeHolder = this.placeHolder = $('#ctl00_ContentPlaceHolder1_view_form')[0];
 		
 		switch(styleNo) {
 			case 0:
 				AN.util.stackStyle('\
-				blockquote { margin: 0; padding: 0 0 1em 40px; } \
-				.an-hiddenquote { padding: 0; } \
+				blockquote { margin: 0 0 15px 1px; padding-left: 40px; } \
+				.an-hiddenquote { padding-left: 0; } \
 				.an-hiddenquote:before { content: url("'+ $r['balloon--plus'] +'"); } \
 				.an-hiddenquote > div { display: none; } \
 				');
@@ -29,14 +31,13 @@ AN.mod['Component Redesigner'] = { ver: 'N/A', author: '向日', fn: {
 					.appendTo('#an')
 					.click(function(event)
 					{
+						event.stopPropagation();
 						if(event.button !== 0) return;
 						
-						event.stopPropagation();
 						jCurTarget.toggleClass('an-hiddenquote');
 						jButton.hide();
 					});
 				
-				var placeHolder = $('#ctl00_ContentPlaceHolder1_view_form')[0];
 				$d.mouseover(function(event)
 				{
 					if(event.target === jButton[0]) {
@@ -57,12 +58,38 @@ AN.mod['Component Redesigner'] = { ver: 'N/A', author: '向日', fn: {
 			break;
 			case 1:
 				AN.util.stackStyle('\
-				blockquote:before { content: "+"; position: relative; margin-left: -3px; color: #999; } \
-				td > blockquote { margin-left: 3px; } \
-				blockquote { margin: 0; padding: 0 0 1em 0; } \
+				blockquote:before { content: ""; width: 20px; height: 20px; position: absolute; top 0; left: -4px; margin-top: -18px; color: #999; } \
+				td > blockquote { margin: 15px 0 10px 3px; } \
+				blockquote { position: relative; margin: 0 0 10px 0; padding: 0; } \
 				blockquote > div { border-left: 2px solid #999; padding-left: 5px; } \
-				.an-hiddenquote { display: none; } \
+				.an-hiddenquote:before { content: "+"; } \
+				.an-hiddenquote > div > blockquote { display: none; } \
 				');
+				
+				var jCurTarget = $();
+				var jButton = $('<span style="position: absolute; margin: -18px 0 0 -4px; color: #999; cursor: pointer;"></span>')
+					.appendTo('#an')
+					.click(function(event)
+					{
+						event.stopPropagation();
+						if(event.button !== 0) return;
+						
+						jCurTarget.toggleClass('an-hiddenquote');
+						jButton.hide();
+					});
+				
+				$d.mouseover(function(event)
+				{
+					if(event.target === jButton[0]) return;
+					
+					jCurTarget = $(event.target).closest('blockquote', placeHolder);
+					if(jCurTarget.children().children('blockquote').length) {
+						jButton.text(jCurTarget.hasClass('an-hiddenquote') ? '+' : '--').css(jCurTarget.offset()).show();
+					}
+					else {
+						jButton.hide();
+					}
+				});
 			break;
 			case 2:
 				AN.util.stackStyle($.sprintf('\
@@ -77,8 +104,8 @@ AN.mod['Component Redesigner'] = { ver: 'N/A', author: '向日', fn: {
 	},
 	infinite: function(jDoc)
 	{
-		var placeHolder = $('#ctl00_ContentPlaceHolder1_view_form')[0];
-		var level = AN.util.getOptions('quoteMaskLevel') - 1;
+		var placeHolder = this.placeHolder;
+		var level = AN.util.getOptions('quoteMaskLevel') - (this.styleNo === 0 ? 1 : 2);
 		if(level < 0) return;
 		
 		jDoc.replies().jContents.find('blockquote').filter(function(){ return $(this).parentsUntil(placeHolder, 'blockquote').length === level; }).addClass('an-hiddenquote');

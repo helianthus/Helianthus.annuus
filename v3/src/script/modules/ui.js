@@ -960,6 +960,13 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 					url: 'http://www.pinvoke.com/',
 					license: 'Creative Commons Attribution 3.0 license',
 					licenseUrl: 'http://creativecommons.org/licenses/by/3.0/'
+				},
+				{
+					name: 'Still Life',
+					author: 'Julian Turner ',
+					url: 'http://art.gnome.org/themes/icon/1111',
+					license: 'Creative Commons (Attribution-Share Alike 2.0 Generic)',
+					licenseUrl: 'http://creativecommons.org/licenses/by-sa/2.0/'
 				}], function()
 				{
 					sHTML += $.sprintf('<dt>%(name)s</dt><dd>by %(author)s</dd><dd><a href="%(url)s">%(url)s</a></dd><dd>License: <a href="%(licenseUrl)s">%(license)s</a></dd>', this);

@@ -169,7 +169,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	type: 4,
 	once: function()
 	{
-		AN.util.stackStyle('blockquote { opacity: 1 !important; }');
+		AN.util.stackStyle('blockquote { opacity: 1; }');
 	}
 },
 
@@ -207,7 +207,10 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	{
 		window.DrawImage = $.blank;
 
-		AN.util.stackStyle('img[onload] { width: auto; height: auto; max-width: 100% }');
+		AN.util.stackStyle('\
+		img[onload] { width: auto; height: auto; max-width: 100% } \
+		.repliers_right tr:first-child a[target]:focus { outline: 0; } \
+		');
 	}
 },
 
@@ -302,6 +305,40 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 
 			event.preventDefault();
 			window.open(jTarget.attr('href'), '_blank');
+		});
+	}
+},
+
+'b73d2968-8301-4c5e-8700-a89541d274fc':
+{
+	desc: '回復傳統用戶連結',
+	defer: 1,
+	page: { 32: false },
+	type: 4,
+	once: function()
+	{
+		$d
+		.unbind('.userlinkbox')
+		.bind('mouseover', function(event)
+		{
+			var jTarget = $(event.target);
+			if(!jTarget.is('a[href^="javascript: ToggleUserDetail"]')) return;
+
+			jTarget.attr('href', $.sprintf('ProfilePage.aspx?userid=%s', jTarget.up('tr').attr('userid')));
+		});
+	}
+},
+
+'7f9780a6-395d-4b24-a0a8-dc58c4539408':
+{
+	desc: '修正字型大小/顏色插入控件',
+	page: { 384: true },
+	type: 4,
+	once: function()
+	{
+		$('#ctl00_ContentPlaceHolder1_QuickReplyTable select[onchange]').change(function()
+		{
+			this.selectedIndex = 0;
 		});
 	}
 },
@@ -684,61 +721,21 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	}
 },
 
-/*
-'e24ec5f6-5734-4c2c-aa54-320ca29a3932':
+'7b36188f-c566-46eb-b48d-5680a4331c1f':
 {
-	desc: '移除死圖',
-	page: { 32: false },
+	desc: '轉換論壇連結的伺服器位置',
+	page: { 32: true },
 	type: 6,
-	defer: 1, // after all images are created
 	once: function()
 	{
-		this.removeDead = function()
+		var rForum = /forum\d*.hkgolden\.com/i;
+		$d.mousedown(function(event)
 		{
-			$(this).parent().css('text-decoration', 'none').html('<a href="javascript:" class="an-content-line">死圖已被移除</a>');
-		};
-	},
-	infinite: function(jDoc, oFn)
-	{
-		jDoc.replies().jContents.find('img[onLoad]').each(function()
-		{
-			var sSrc = this.src;
-			$(this).error(oFn.removeDead).attr('src', sSrc);
+			var jTarget = $(event.target);
+			if(!( jTarget.is('.repliers_right tr:first-child a') && rForum.test(jTarget.attr('href')) )) return;
+
+			jTarget.attr('href', jTarget.attr('href').replace(rForum, location.hostname));
 		});
-	}
-},
-*/
-
-'8e1783cd-25d5-4b95-934c-48a650c5c042':
-{
-	desc: '屏蔽圖片 (點擊顯示)',
-	page: { 32: false },
-	type: 6,
-	defer: 1, // after all images are created
-	once: function(jDoc, oFn)
-	{
-		oFn.bAreMasked = true;
-
-		AN.shared('addButton', '切換屏蔽圖片', function()
-		{
-			(oFn.bAreMasked = !oFn.bAreMasked) ? $('.an-maskimg').fadeOut().next().show() : $('.an-maskimg').next().hide().end().fadeIn();
-		});
-
-		this.unmaskIt = function()
-		{
-			var jBox = $(this).children('a');
-			if(jBox.is(':visible'))
-			{
-				jBox.hide().prev().fadeIn();
-				return false;
-			}
-		};
-	},
-	infinite: function(jDoc, oFn)
-	{
-		if(!this.bAreMasked) return;
-
-		jDoc.replies().jContents.find('img[onLoad]').addClass('an-maskimg').hide().after('<a class="an-content-box" href="javascript:">點擊顯示圖片</a>').parent().css('text-decoration', 'none').click(oFn.unmaskIt);
 	}
 },
 
@@ -749,9 +746,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	type: 6,
 	once: function()
 	{
-		AN.util.stackStyle('\
-		.an-linkified { padding-left: 18px; background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABhUlEQVR42mNgGAVgEBwcbBwSEhIPxOlIOB4kjk8OrNnHx8c0PT299tixY7fv3r379/Hjx/8fPHjw98SJE3cdHR2rQRibHEgPSC+Dq6tr6qFDB+80NNQfFRIS6mdhYenq6Oj4P3PmTBQMEgPJgdSA1IL0gPQyWFlZFV2+fPmHvLxcA8hFIEVAyf/Xrl39/+rVq/+vX7/+f+vWrf9AV4ANAKkBqQXpAell0NfXz9u0acf9urrmbQICAkXMzMzV5eXl/7FhkBxIDUgtSA9ILwMvL6+TlpbOtDlzlj4+cuTinytXHv8/efL6n3nzlj8GiaPLVW95/r920ZGPIHGQXpCLhIAmhwOd1wRyIhJuAopHgzCynGHz0RdGLceeyQdWTQPpBRnACcRiQCyFDSslz1qp23L2IjKe/vT/fxCtED8lhWAaUa48fGbS4///s67+/x97EYGLb/z/D5IjaIBkzvaZEllbzyBji6P//4NooFwMyamWN2b5GRDmi1sZQ1ayZwucMxOI4ZoBsGkPUwBKpQ4AAAAASUVORK5CYII=") no-repeat left center; } \
-		');
+		AN.util.stackStyle($.sprintf('.an-linkified { padding-left: 18px; background: url("%s") no-repeat left center; }', $r['chain--arrow']));
 	},
 	infinite: function(jDoc)
 	{
@@ -787,11 +782,11 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	},
 	once: function()
 	{
-		AN.util.stackStyle('\
-		.an-imagified { padding-left: 18px; background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAB6ElEQVR42sWTMWgTYRSAv7tc7kys2A7WxFJURAUL2sEGDS4S6SCESEHcnIOT4FIsbcEOEYmLULAohSoB0UFotkIGQTuok4NQ0VBUUpqisTGX5P673POa0cnQwQ++8X08HjxNRNgNOrtEuzo7mwYO0RsVESkCMDE1lZUe2ZkJZEfD8zzdF+FCrk1IB9MAX6DTgf0R6LOEqAlnD0PU/cAevU671TICcZXqBjRPhMRRjb2WdIc8H0LQDSoPdA1OxuDr502uZTLcX1qKiMhY07bfGa7r6p7v8+vnQ2LDZzg+eA4djf6oUPvdpGnXELXF+qcfKNWmUq3ytlC4N5LJ3BYRnYvZ7M1tpeTUjbScn7wu+eUVWV2ry6uPDXn/pSlrFUeq2544ri9/cySVmtGVUt0NKt/rrJerPC4ucuvRJPPFeQql5zwrvWRx+QUPnj7h7sIC3zY2AIglk3PBHUq66zjdQLzvCoPRDAPhy+wLXQIZo8Vp2pEExFJERyZwHIfheJz+0dGc02qtiMgbQykV6ohgWZFACzMwZIQR0Wg7QqPhIuKi3DAd8wBT+TwHh4bsIPDaCIfRjo2PT68Wi3eCEP+CaZok0+kZYA7A2CyXqycSiRw90LHtLb/ZBEADLGCgh7/wgRrgAPz/b/wDyPozmVUBpGMAAAAASUVORK5CYII=") no-repeat right center; } \
+		AN.util.stackStyle($.sprintf('\
+		.an-imagified { padding-left: 18px; background: url("%s") no-repeat right center; } \
 		.an-imageifed + a { display: block; } \
 		.an-imagified + a > img { border: 0; } \
-		');
+		', $r['image-export']));
 		
 		$d.bind('click imageconvert', function(event)
 		{
@@ -874,10 +869,10 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			return new RegExp(aReg.join('|'), 'i');
 		})();
 		
-		AN.util.stackStyle('\
-		.an-videoified { padding-left: 18px; background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACXElEQVR4Xo2STUhUURiGn3PPvTNO6kypSCoZ+UsGuJKWum4Vg4KgEyESERQBbYJwVVCbyEgIEyJkQtAkIDBoYxDQxqCVOmRFEiBQMY7ze+89X1MzY2mAPfDC4fKcl++7HCUiWJZ1EWgr5b/4WM5DmxJti4uLXdFo1L8/9y7qGwEUIgCCEUGMoBRci/Utll0AKgVW8cMHoB0lZAsuIIiAACKlczq587drAViVgoWFhU5AizEoJVCMiMF3XbLpDOurX1hb2wTQZdfaM8Hg4OAnoCObckml8/iej7IMkYhFzmRxjYegKu6/E8zPz58AtC8KJ+gQbqimuamW47Wa7sYQzc1hqsM1ALrs7p1gaGhoE+g8FKlCez4ikMzkMVqwHY22A7S21+26+wv03Nxcy/DwsH724PIqwNbWlp9IJPLsQyn1y20tul8BKu9gmhJdE9Pv+32jSKY9fF+oICIY4zN9/fRrIEGJC7srxOPxxpGREV0VCpIrGIJVijJ7SrrHJrsHB3ojt84NrOxZoXj5G9CAaApZH21Z2IFSv/ENnuviFVyCTSdrX2zgHO0/nxI79Kdgdna2LhaL2fmUKRYIruvheVkSCjKWxnYsLGWTS+9w9drZ+smdnR7nSMto5R88pUTPxNRGbybn4nk+Tkiz/D3J6Fgfa9uQ8tilMQjPn7xZscu7Vc/MzDjj4+O1giZUU0w4gNaKw9tJHk8to5WAgs8bq/mOK5eCS3ceJZ26Y/d+T6CUugucAno5gOozt+uxnYy7/nIpEG4ctilxAwgDFgfg2pGbkv3x1l1/FS8APwH/5BEQGBT1zwAAAABJRU5ErkJggg==") no-repeat right center; } \
+		AN.util.stackStyle($.sprintf('\
+		.an-videoified { padding-left: 18px; background: url("%s") no-repeat right center; } \
 		.an-videoified + object { display: block; } \
-		');
+		', $r['film--arrow']));
 
 		$d.bind('click videoconvert', function(event)
 		{
@@ -905,7 +900,11 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 				.insertAfter( $('<span title="已轉換連結為影片" class="an-videoified"></span>').insertAfter(jTarget) )
 				.toFlash(sUrl, { width: nWidth, height: nHeight.toFixed(0) }, { wmode: 'opaque', allowfullscreen: 'true' });
 				
-				$($.sprintf('<iframe style="display: none" src="%s" />', event.target.href)).appendTo('body').doTimeout(5000, function(){ $(this).remove(); });
+				/*
+				if(!$.browser.firefox || sUrl.indexOf('youku.com') === -1) {
+					$($.sprintf('<iframe style="display: none" src="%s" />', event.target.href)).appendTo('body').doTimeout(1000, function(){ $(this).remove(); });
+				}
+				*/
 			}
 		});
 	},
@@ -916,109 +915,64 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	}
 },
 
-'7b36188f-c566-46eb-b48d-5680a4331c1f':
+'8e1783cd-25d5-4b95-934c-48a650c5c042':
 {
-	desc: '轉換論壇連結的伺服器位置',
-	page: { 32: true },
-	type: 6,
-	once: function()
-	{
-		var rForum = /forum\d*.hkgolden\.com/i;
-		$d.mousedown(function(event)
-		{
-			var jTarget = $(event.target);
-			if(!( jTarget.is('.repliers_right tr:first-child a') && rForum.test(jTarget.attr('href')) )) return;
-
-			jTarget.attr('href', jTarget.attr('href').replace(rForum, location.hostname));
-		});
-	}
-},
-
-/*
-'8db8b611-e229-4d60-a74b-6142af1bacd8':
-{
-	desc: '提示可疑連結',
+	desc: '屏蔽圖片',
 	page: { 32: false },
 	type: 6,
-	options:
-	{
-		sSusKey:
-		{
-			desc: '可疑關鍵字 [regular expression]',
-			defaultValue: '[?&]r(?:ef(?:er[^=]+)?)?=|logout|tinyurl|urlpire|linkbucks|seriousurls|qvvo|viraldatabase|youfap|qkzone\\.com/t\\?',
-			type: 'text'
-		},
-		sSusColor: { desc: '可疑關鍵字顏色', defaultValue: '#FF0000', type: 'text' }
+	options: {
+		imageMaskMode: { desc: '屏蔽模式', type: 'select', choices: ['自動屏蔽', '自動屏蔽(只限引用中的圖片)', '手動屏蔽'], defaultValue: '自動屏蔽(只限引用中的圖片)' }
 	},
-	infinite: function(jDoc, oFn)
+	once: function()
 	{
-		var addBox = function()
+		AN.util.stackStyle('\
+		.an-maskedLink { display: inline-block; width: 48px; height: 52px; background: url("' + $r['gnome-mime-image-bmp'] + '") no-repeat; } \
+		.an-maskedLink > img { display: none; } \
+		');
+
+		function clickHandler(event)
 		{
-			AN.util.addStyle($.sprintf(' \
-			#an-alertbox { display: none; position: absolute; border-width: 1px; } \
-			#an-alertbox div { height: 2px; } \
-			#an-alertbox p { margin: 0; padding: 0 0.2em; } \
-			#an-alertbox span { color: %s; } \
-			',
-			AN.util.getOptions('sSusColor')
-			));
-
-			$('#an').append('<div id="an-alertbox" class="an-forum"><div class="an-forum-header"></div><p>發現可疑連結! keyword: <span></span></p></div>');
-
-			oFn.showAlert = function(event)
-			{
-				$('#an-alertbox').find('span').text($(this).data('an-suskeyword'));
-				$d.bind('mousemove.an-alert', function(event)
-				{
-					var jAlert = $('#an-alertbox');
-					jAlert.show().css({ top: event.pageY - jAlert.height() - 10, left: event.pageX - jAlert.width() / 2 });
-				});
-			};
-
-			oFn.hideAlert = function()
-			{
-				$d.unbind('.an-alert');
-				$('#an-alertbox').fadeOut('fast');
-			};
-		};
-
-		var rSus = RegExp(AN.util.getOptions('sSusKey'), 'i');
-		var aMatch;
-
-		jDoc.replies().jContents.find('a').each(function()
+			if(event.button !== 0) return;
+			
+			if(event.target === jButton[0]) {
+				event.stopPropagation();
+				jCurTarget.parent().addClass('an-maskedLink');
+				jButton.hide();
+			}
+			else if(event.type === 'imagemask' || $(event.target).is('.an-maskedLink')) {
+				event.preventDefault();
+				$(event.target).toggleClass('an-maskedLink');
+			}
+		}
+		
+		var jCurTarget;
+		var jButton = $($.sprintf('<img style="display: none; position: absolute; cursor: pointer;" src="%s" />', $r['picture--minus']))
+			.appendTo('#an')
+			.click(clickHandler);
+			
+		$d.bind('click imagemask', clickHandler);
+			
+		$d.mouseover(function(event)
 		{
-			if(aMatch = rSus.exec(this.href))
-			{
-				if(!$('#an-alertbox').length) addBox();
-				$(this).data('an-suskeyword', aMatch[0]).hover(oFn.showAlert, oFn.hideAlert);
+			if(event.target === jButton[0]) return;
+
+			jCurTarget = $(event.target);
+			if(jCurTarget.is('img[onload]') && jCurTarget.parent('.an-maskedLink').length === 0) {
+				jButton.css(jCurTarget.offset()).show();
+			}
+			else {
+				jButton.hide();
 			}
 		});
-	}
-},
-*/
-
-/*
-'85950fa3-c5f0-4456-a81a-30a90ba6425c':
-{
-	desc: '顯示防盜鏈/域名被禁圖片 [FF: 建議改用RefControl]',
-	page: { 32: 'disabled' },
-	type: 6,
-	options: { sImgProxy: { desc: '圖片代理', defaultValue: 'http://www.pomo.cn/showpic.asp?url=', type: 'text' } },
+	},
 	infinite: function(jDoc)
 	{
-		var sImgProxy = AN.util.getOptions('sImgProxy');
-
-		jDoc.replies().jContents.find('img').each(function()
-		{
-			if(/imageshack\.us|hiphotos\.baidu\.com|\.tianya\.cn/i.test(this.src))
-			{
-				this.src = sImgProxy + encodeURIComponent(this.src);
-			}
-		});
+		var maskMode = $.inArray(AN.util.getOptions('imageMaskMode'), this.options.imageMaskMode.choices);
+		if(maskMode !== 2) jDoc.replies().jContents.find(maskMode === 0 ? 'a[target]' : 'a[target]:not(blockquote a)').trigger({ type: 'imagemask', button: 0 });
 	}
 },
-*/
 
+/*
 'ea19d7f6-9c2c-42de-b4f9-8cab40ccf544':
 {
 	desc: '限制回覆格高度',
@@ -1053,6 +1007,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		jDoc.replies().jContents.wrapInner('<div class="an-replywrapper"><div></div></div>');
 	}
 },
+*/
 
 'fc07ccda-4e76-4703-8388-81dac9427d7c':
 {
@@ -1071,6 +1026,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	}
 },
 
+/*
 'e19a8d96-151f-4f86-acfc-0af12b53b99b':
 {
 	desc: '快速3擊左鍵關閉頁面 [FF: 只能配合連結開新頁使用]',
@@ -1094,6 +1050,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		});
 	}
 },
+*/
 
 'b69c5067-2726-43f8-b3de-dfb907355b71':
 {
@@ -1110,28 +1067,29 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		var aFilter = AN.util.data('aTopicFilter') || [];
 		var jCurTarget;
 		var jHiddenImg = $();
-		var jButton = $('<img style="display: none; position: absolute; cursor: pointer;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACN0lEQVR4XpWNTUgTYBjH/+ZAp4vhvgyIQYoIbEkwT0MQcTBAsckM1ZPoRc8VXoIIKKCgS1RRtFBWm19BWlNMKIIyQJaTNtJ9YIPmmDHVy0TEp+eBl1gwgf7wg+d9nv+PF6dlCmhkPiga8T95BRiCwHyqo+O3IDPvzKcKL7nA3PUDFxg7z9PrLS2/9kdHaW9khL63tm7z7o3cpCNdcaCCCWAl09t7EKys/Dap1a7FXK7czvAwbXR30w+Ph7KDgxRtb98J8i3AnWRX14E4UIEP+MzCSXpggH7295Nk1eX6B0mip4fiXi9t9fWdiAMVPAOWk17v8Senk4oj71K7Nbf7WByo4DEwE+vsPFxubqapujqSFAoFymazlEqlKB6PUzKZpKc1NeQzm2nBbj8UByp4ADxabWvbf+9w0GJTE70wGikcDlMkEqFYLEaJRIJ8LI8rZq3WPXYeQgX3geshmy2zZLfTtMlEk1wqltPptOwEmuG732DIsHMNKrgHuPnXzY/19TRfQs5kMpTL5eRGCxYLPdFqN8WBCm4D+jtlZStfGhqOiuVZFgSR8/m8QEsm05F0xUFxbgE3x/X6rbf8g8hzLH5VyCyy7J5XVGxJF5JibgDGq8BiQK/fDhmNtG4wUIQFBb1j/FVV29KRLkrlMmAdAibGNJronE63u8GSIPNYeXlUbtIp5Z5hdIylFjh/CRi6AoQC1dU5QWbZyQ1ArXSV8zcadbAxDuEs4OTfXnsYmWWnuMicUw7+AKvQcvS+6EM5AAAAAElFTkSuQmCC" />')
+		var jButton = $($.sprintf('<img style="display: none; position: absolute; margin-left: -2px; cursor: pointer;" src="%s" />', $r['cross-shield']))
 			.appendTo('#an')
-			.click(function()
+			.click(function(event)
 			{
+				event.stopPropagation();
 				addFilter(jCurTarget.find('a:first').html().replace(/<img[^>]+?alt="([^"]+)[^>]*>/ig, '$1'));
 			});
 
 		$d.mouseover(function(event)
 		{
-			var jTarget = $(event.target);
-			if(jTarget[0] == jButton[0]) return;
-
-			jTarget = jTarget.closest('#HotTopics tr');
-			if(jTarget.length && !jTarget.is(':first-child')) {
+			if(event.target === jButton[0]) return;
+			
+			jCurTarget = $(event.target).closest('#HotTopics tr:not(:first-child)');
+			if(jCurTarget.length) {
 				jHiddenImg.css('visibility', 'visible');
-				jCurTarget = jTarget;
-				jHiddenImg = jTarget.find('img:first').css('visibility', 'hidden');
-				var offset = jHiddenImg.offset();
-				jButton.css({ top: offset.top, left: offset.left - 2 }).show();
+				jHiddenImg = jCurTarget.find('img:first').css('visibility', 'hidden');
+				
+				jButton.css(jHiddenImg.offset()).show();
 			}
 			else {
 				jHiddenImg.css('visibility', 'visible');
+				jHiddenImg = $();
+				
 				jButton.hide();
 			}
 		});
@@ -1221,38 +1179,36 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 
 'db770fdc-9bf5-46b9-b3fa-78807f242c3c':
 {
-	desc: '用戶屏敝功能',
+	desc: '用戶屏蔽功能',
 	page: { 32: true },
 	type: 6,
 	once: function()
 	{
 		var aBamList = AN.util.data('aBamList') || [];
 		var jCurTarget;
-		var jButton = $('<img style="display: none; position: absolute; margin: 5px; cursor: pointer;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACN0lEQVR4XpWNTUgTYBjH/+ZAp4vhvgyIQYoIbEkwT0MQcTBAsckM1ZPoRc8VXoIIKKCgS1RRtFBWm19BWlNMKIIyQJaTNtJ9YIPmmDHVy0TEp+eBl1gwgf7wg+d9nv+PF6dlCmhkPiga8T95BRiCwHyqo+O3IDPvzKcKL7nA3PUDFxg7z9PrLS2/9kdHaW9khL63tm7z7o3cpCNdcaCCCWAl09t7EKys/Dap1a7FXK7czvAwbXR30w+Ph7KDgxRtb98J8i3AnWRX14E4UIEP+MzCSXpggH7295Nk1eX6B0mip4fiXi9t9fWdiAMVPAOWk17v8Senk4oj71K7Nbf7WByo4DEwE+vsPFxubqapujqSFAoFymazlEqlKB6PUzKZpKc1NeQzm2nBbj8UByp4ADxabWvbf+9w0GJTE70wGikcDlMkEqFYLEaJRIJ8LI8rZq3WPXYeQgX3geshmy2zZLfTtMlEk1wqltPptOwEmuG732DIsHMNKrgHuPnXzY/19TRfQs5kMpTL5eRGCxYLPdFqN8WBCm4D+jtlZStfGhqOiuVZFgSR8/m8QEsm05F0xUFxbgE3x/X6rbf8g8hzLH5VyCyy7J5XVGxJF5JibgDGq8BiQK/fDhmNtG4wUIQFBb1j/FVV29KRLkrlMmAdAibGNJronE63u8GSIPNYeXlUbtIp5Z5hdIylFjh/CRi6AoQC1dU5QWbZyQ1ArXSV8zcadbAxDuEs4OTfXnsYmWWnuMicUw7+AKvQcvS+6EM5AAAAAElFTkSuQmCC" />')
+		var jButton = $('<img style="display: none; position: absolute; padding: 7px; cursor: pointer;" />')
 			.appendTo('#an')
-			.click(function()
+			.click(function(event)
 			{
+				event.stopPropagation();
 				var sUserId = jCurTarget.attr('userid');
 
 				var nIndex = $.inArray(sUserId, aBamList);
-				nIndex == -1 ? aBamList.push(sUserId) : aBamList.splice(nIndex, 1);
+				nIndex === -1 ? aBamList.push(sUserId) : aBamList.splice(nIndex, 1);
 
 				AN.util.data('aBamList', aBamList);
-				toggleReplies(null, sUserId, nIndex == -1);
+				toggleReplies(null, sUserId, nIndex === -1);
 				
 				jButton.hide();
 			});
 
 		$d.mouseover(function(event)
 		{
-			var jTarget = $(event.target);
-			if(jTarget[0] == jButton[0]) return;
+			if(event.target === jButton[0]) return;
 
-			jTarget = jTarget.closest('.repliers_left').parent();
-			if(jTarget.length) {
-				jCurTarget = jTarget;
-				var offset = jTarget.offset();
-				jButton.css({ top: offset.top, left: offset.left }).show();
+			jCurTarget = $(event.target).closest('.repliers_left').parent();
+			if(jCurTarget.length) {
+				jButton.attr('src', $r[jCurTarget.up('.repliers').hasClass('an-bammed') ? 'tick-shield': 'cross-shield']).css(jCurTarget.offset()).show();
 			}
 			else {
 				jButton.hide();
@@ -1312,20 +1268,6 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			text = jTextarea.val();
 			(match = text.match(rUrl)) ? jUrlBtn.html($.sprintf('為%s個連結加上[url]代碼', match.length)).show() : jUrlBtn.hide();
 			(match = text.match(rImg)) ? jImgBtn.html($.sprintf('為%s個圖片連結加上[img]代碼', match.length)).show() : jImgBtn.hide();
-		});
-	}
-},
-
-'7f9780a6-395d-4b24-a0a8-dc58c4539408':
-{
-	desc: '改進字型大小/顏色插入控件',
-	page: { 288: true },
-	type: 4,
-	once: function()
-	{
-		$('#ctl00_ContentPlaceHolder1_QuickReplyTable select[onchange]').change(function()
-		{
-			this.selectedIndex = 0;
 		});
 	}
 },
@@ -1408,7 +1350,34 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			},
 			{
 				desc: '腦魔表情圖示',
-				html: '<table style="display: none;" cellpadding="0" cellspacing="0"><tbody><tr><td><a href="javascript:InsertText(\'[:-[lm]\',false)"><img style="border-width: 0px;" src="faces/lomore/angry.gif" alt="[:-[lm]"></a>&nbsp;<a href="javascript:InsertText(\'[:Dlm]\',false)"><img style="border-width: 0px;" src="faces/lomore/biggrin.gif" alt="[:Dlm]"></a>&nbsp;<a href="javascript:InsertText(\'[:Olm]\',false)"><img style="border-width: 0px;" src="faces/lomore/oh.gif" alt="[:Olm]"></a>&nbsp;<a href="javascript:InsertText(\'[:Plm]\',false)"><img style="border-width: 0px;" src="faces/lomore/tongue.gif" alt="[:Plm]"></a>&nbsp;<a href="javascript:InsertText(\'#lovelm#\',false)"><img style="border-width: 0px;" src="faces/lomore/love.gif" alt="#lovelm#"></a>&nbsp;<a href="javascript:InsertText(\'#goodlm#\',false)"><img style="border-width: 0px;" src="faces/lomore/good.gif" alt="#goodlm#"></a>&nbsp;<a href="javascript:InsertText(\'#hoholm#\',false)"><img style="border-width: 0px;" src="faces/lomore/hoho.gif" alt="#hoholm#"></a>&nbsp;<a href="javascript:InsertText(\'#killlm#\',false)"><img style="border-width: 0px;" src="faces/lomore/kill.gif" alt="#killlm#"></a>&nbsp;<a href="javascript:InsertText(\'[???lm]\',false)"><img style="border-width: 0px;" src="faces/lomore/wonder2.gif" alt="[???lm]"></a>&nbsp;<a href="javascript:InsertText(\'[flowerfacelm]\',false)"><img style="border-width: 0px;" src="faces/lomore/flowerface.gif" alt="[flowerfacelm]"></a>&nbsp;<a href="javascript:InsertText(\'[shockinglm]\',false)"><img style="border-width: 0px;" src="faces/lomore/shocking.gif" alt="[shockinglm]"></a>&nbsp;<a href="javascript:InsertText(\'[yipeslm]\',false)"><img style="border-width: 0px;" src="faces/lomore/yipes.gif" alt="[yipeslm]"></a>&nbsp;<a href="javascript:InsertText(\'[offtopiclm]\',false)"><img style="border-width: 0px;" src="faces/lomore/offtopic.gif" alt="[offtopiclm]"></a>&nbsp;</td></tr><tr><td><a href="javascript:InsertText(\'[369lm]\',false)"><img style="border-width: 0px;" src="faces/lomore/369.gif" alt="[369lm]"></a>&nbsp;<a href="javascript:InsertText(\'[@_@lm]\',false)"><img style="border-width: 0px;" src="faces/lomore/@.gif" alt="[@_@lm]"></a>&nbsp;<a href="javascript:InsertText(\'#hehelm#\',false)"><img style="border-width: 0px;" src="faces/lomore/hehe.gif" alt="#hehelm#"></a>&nbsp;<a href="javascript:InsertText(\'[fucklm]\',false)"><img style="border-width: 0px;" src="faces/lomore/diu.gif" alt="[fucklm]"></a>&nbsp;<a href="javascript:InsertText(\'[bouncerlm]\',false)"><img style="border-width: 0px;" src="faces/lomore/bouncer.gif" alt="[bouncerlm]"></a>&nbsp;</td></tr></tbody></table>'
+				html: {
+					path: 'faces/lomore',
+					table: [
+						[
+							['[:-[lm]', 'angry'],
+							['[:Dlm]', 'biggrin'],
+							['[:Olm]', 'oh'],
+							['[:Plm]', 'tongue'],
+							['#lovelm#', 'love'],
+							['#goodlm#', 'good'],
+							['#hoholm#', 'hoho'],
+							['#killlm#', 'kill'],
+							['[???lm]', 'wonder2'],
+							['[flowerfacelm]', 'flowerface'],
+							['[shockinglm]', 'shocking'],
+							['[yipeslm]', 'yipes'],
+							['[offtopiclm]', 'offtopic']
+						],
+						[
+							['[369lm]', '369'],
+							['[@_@lm]', '@'],
+							['#hehelm#', 'hehe'],
+							['[fucklm]', 'diu'],
+							['[bouncerlm]', 'bouncer'],
+							['[sosadlm]', 'sosad']
+						]
+					]
+				}
 			},
 			{
 				desc: 'SARS表情圖示',
@@ -1631,26 +1600,6 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			}
 
 			this.selectedIndex = 0;
-		});
-	}
-},
-
-'b73d2968-8301-4c5e-8700-a89541d274fc':
-{
-	desc: '回復傳統用戶連結',
-	defer: 1,
-	page: { 32: false },
-	type: 4,
-	once: function()
-	{
-		$d
-		.unbind('.userlinkbox')
-		.bind('mouseover', function(event)
-		{
-			var jTarget = $(event.target);
-			if(!jTarget.is('a[href^="javascript: ToggleUserDetail"]')) return;
-
-			jTarget.attr('href', $.sprintf('ProfilePage.aspx?userid=%s', jTarget.up('tr').attr('userid')));
 		});
 	}
 }

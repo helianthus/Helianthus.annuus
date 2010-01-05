@@ -5,103 +5,83 @@ AN.mod['Component Redesigner'] = { ver: 'N/A', author: '向日', fn: {
 	desc: '改變引用風格',
 	page: { 32: true },
 	type: 8,
-	defer: 1, // after linkify to improve effieciency, note: this is a part of layout changing
-	options:
-	{
-		bOuterOnly: { desc: '隱藏內層引用', type: 'checkbox', defaultValue: true },
-		nOuterNum: { desc: '外層引用的顯示數目', type: 'text', defaultValue: 1 }
+	options: {
+		quoteStyle: { desc: '引用風格', type: 'select', choices: ['預設', '復古', '現代'], defaultValue: '預設' },
+		quoteMaskLevel: { desc: '引用屏蔽層級', type: 'text', defaultValue: 2 }
 	},
-	once: function(jDoc, oFn)
+	once: function()
 	{
-		this.bGlobalOuterOnly = AN.util.getOptions('bOuterOnly');
-
-		this.toggleAll = (function()
-		{
-			var sSelector = '.an-quote-outermostheader';
-			var n = AN.util.getOptions('nOuterNum');
-			while(--n)
-			{
-				sSelector += ' + div > blockquote > div:first-child';
-			}
-
-			return function()
-			{
-				oFn.toggleQuote($(sSelector), oFn.bGlobalOuterOnly);
-			};
-		})();
-
-		this.toggleQuote = function(jTarget, bOuterOnly)
-		{
-			if(bOuterOnly === undefined) // jTarget now is actually the event object
-			{
-				jTarget = $(this.parentNode);
-				bOuterOnly = !jTarget.hasClass('an-quote-header-hideinner');
-			}
-
-			jTarget.toggleClass('an-quote-header-hideinner', bOuterOnly).children('b').html(bOuterOnly ? '＋' : '－');
-		};
-
-		AN.shared('addButton', '切換最外層引用', function()
-		{
-			oFn.bGlobalOuterOnly = !oFn.bGlobalOuterOnly;
-			oFn.toggleAll();
-		});
-
-		AN.util.stackStyle($.sprintf(' \
-		.repliers_right blockquote { margin: 5px 0; border: 1px solid %s; } \
-		.repliers_right blockquote blockquote { margin-top: 0; border-right: 0; } \
-		.repliers_right blockquote > div { padding: 0 0 5px 2px; } \
-		.an-quote-header { margin-bottom: 2px; padding: 0 3px !important; font-size: 12px; line-height: 15px; overflow: hidden; } \
-		.an-quote-header > b { float: right; cursor: pointer; font-weight: 900; } \
-		.an-quote-innermostheader > b { display: none; } \
-		.an-quote-header-hideinner { margin-bottom: 5px; } \
-		.an-quote-header-hideinner + div > blockquote { display: none; } \
-		',
-		AN.util.getOptions('sMainBorderColor')
-		));
+		AN.util.stackStyle('blockquote + br, blockquote > div > br:first-child { display: none; }');
+		
+		var styleNo = this.styleNo = $.inArray(AN.util.getOptions('quoteStyle'), this.options.quoteStyle.choices);
+		
+		switch(styleNo) {
+			case 0:
+				AN.util.stackStyle('\
+				blockquote { margin: 0; padding: 0 0 1em 40px; } \
+				.an-hiddenquote { padding: 0; } \
+				.an-hiddenquote:before { content: url("'+ $r['balloon--plus'] +'"); } \
+				.an-hiddenquote > div { display: none; } \
+				');
+				
+				var jCurTarget = $();
+				var jButton = $('<img style="display: none; position: absolute; cursor: pointer;" />')
+					.appendTo('#an')
+					.click(function(event)
+					{
+						if(event.button !== 0) return;
+						
+						event.stopPropagation();
+						jCurTarget.toggleClass('an-hiddenquote');
+						jButton.hide();
+					});
+				
+				var placeHolder = $('#ctl00_ContentPlaceHolder1_view_form')[0];
+				$d.mouseover(function(event)
+				{
+					if(event.target === jButton[0]) {
+						if(!jCurTarget.is('.an-hiddenquote')) jCurTarget.css('outline', '1px dashed gray');
+						return;
+					}
+					
+					if(jCurTarget.is('blockquote')) jCurTarget.css('outline', '0');
+					
+					jCurTarget = $(event.target).closest('blockquote', placeHolder);
+					if(jCurTarget.length) {
+						jButton.attr('src', $r[jCurTarget.hasClass('an-hiddenquote') ? 'balloon--plus' : 'balloon--minus']).css(jCurTarget.offset()).show();
+					}
+					else {
+						jButton.hide();
+					}
+				});
+			break;
+			case 1:
+				AN.util.stackStyle('\
+				blockquote:before { content: "+"; position: relative; margin-left: -3px; color: #999; } \
+				td > blockquote { margin-left: 3px; } \
+				blockquote { margin: 0; padding: 0 0 1em 0; } \
+				blockquote > div { border-left: 2px solid #999; padding-left: 5px; } \
+				.an-hiddenquote { display: none; } \
+				');
+			break;
+			case 2:
+				AN.util.stackStyle($.sprintf('\
+				blockquote:before { content: "引用:"; display: block; margin-bottom: 2px; padding: 0 2px; font-size: 75%; line-height: 1.5; background-color: %(sMainHeaderBgColor)s; color: %(sMainHeaderFontColor)s; } \
+				td > blockquote { border-right-width: 1px; } \
+				blockquote { margin: 0 0 5px 0; border: 1px solid %(sMainBorderColor)s; border-right-width: 0; } \
+				blockquote > div { padding: 0 0 5px 2px; } \
+				.an-hiddenquote { display: none; } \
+				', AN.util.getOptions()));
+			break;
+		}
 	},
 	infinite: function(jDoc)
 	{
-		jDoc.find('blockquote').each(function()
-		{
-			var jQuote = $(this);
-
-			while(true)
-			{
-				var eNext = this.nextSibling;
-
-				if(eNext)
-				{
-					if($(eNext).is('br') || eNext.nodeType == 3 && /^\s+$/.test(eNext.nodeValue))
-					{
-						$(eNext).remove();
-						continue;
-					}
-				}
-				else if(jQuote.parent().parent('blockquote').length)
-				{
-					jQuote.parent().parent().replaceWith(jQuote); // is an empty quote && not outermost
-					continue;
-				}
-
-				break;
-			}
-
-			var jHeader = $('<div class="an-forum-header an-quote-header">引用:<b>－</b></div>').prependTo(jQuote);
-
-			if(!jQuote.find('blockquote').length) // innermost or single-layer
-			{
-				jHeader.addClass('an-quote-innermostheader');
-			}
-			if(!jQuote.parent().parent('blockquote').length) // outermost or single-layer
-			{
-				jHeader.addClass('an-quote-outermostheader');
-			}
-		});
-
-		$('.an-quote-header > b').click(this.toggleQuote);
-
-		if(this.bGlobalOuterOnly) jDoc.defer(3, '隱藏最外層以外的引用', this.toggleAll);
+		var placeHolder = $('#ctl00_ContentPlaceHolder1_view_form')[0];
+		var level = AN.util.getOptions('quoteMaskLevel') - 1;
+		if(level < 0) return;
+		
+		jDoc.replies().jContents.find('blockquote').filter(function(){ return $(this).parentsUntil(placeHolder, 'blockquote').length === level; }).addClass('an-hiddenquote');
 	}
 },
 

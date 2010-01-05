@@ -22,8 +22,7 @@ AN.mod['Style Editor'] = { ver: 'N/A', author: '向日', fn: {
 		sMainLinkFontColor: { desc: '普通連結顏色', defaultValue: '#1066d2', type: 'text' },
 		sMainVisitedColor: { desc: '已訪問連結顏色', defaultValue: '#800080', type: 'text' },
 		sMainHoverColor: { desc: '連結懸浮顏色', defaultValue: '', type: 'text' },
-		bRemoveLinkUnderline: { desc: '移除連結底線', defaultValue: false, type: 'checkbox' },
-		removeLinkOutline: { desc: '移除焦點為連結時的框線', defaultValue: true, type: 'checkbox' }
+		bRemoveLinkUnderline: { desc: '移除連結底線', defaultValue: false, type: 'checkbox' }
 	},
 	once: function()
 	{
@@ -38,8 +37,6 @@ AN.mod['Style Editor'] = { ver: 'N/A', author: '向日', fn: {
 		',
 		AN.util.getOptions()
 		));
-		
-		if(AN.util.getOptions('removeLinkOutline')) AN.util.stackStyle('a:focus { outline: 0; }');
 	}
 },
 

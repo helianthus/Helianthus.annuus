@@ -11,32 +11,24 @@ AN.mod['Component Redesigner'] = { ver: 'N/A', author: '向日', fn: {
 	},
 	once: function()
 	{
-		//AN.util.stackStyle('blockquote + br, blockquote > div > br:first-child { display: none; }');
 		AN.util.stackStyle('blockquote + br { display: none; }');
 		
-		var styleNo = this.styleNo = $.inArray(AN.util.getOptions('quoteStyle'), this.options.quoteStyle.choices);
-		var placeHolder = this.placeHolder = $('#ctl00_ContentPlaceHolder1_view_form')[0];
+		var
+		styleNo = this.styleNo = $.inArray(AN.util.getOptions('quoteStyle'), this.options.quoteStyle.choices),
+		placeHolder = this.placeHolder = $('#ctl00_ContentPlaceHolder1_view_form')[0],
+		jCurTarget = $(),
+		jButton;
 		
 		switch(styleNo) {
 			case 0:
 				AN.util.stackStyle('\
-				blockquote { margin: 0 0 15px 1px; padding-left: 40px; } \
+				blockquote { margin: 0 0 8px 1px; padding: 0 0 7px 40px; } \
 				.an-hiddenquote { padding-left: 0; } \
 				.an-hiddenquote:before { content: url("'+ $r['balloon--plus'] +'"); } \
 				.an-hiddenquote > div { display: none; } \
 				');
 				
-				var jCurTarget = $();
-				var jButton = $('<img style="display: none; position: absolute; cursor: pointer;" />')
-					.appendTo('#an')
-					.click(function(event)
-					{
-						event.stopPropagation();
-						if(event.button !== 0) return;
-						
-						jCurTarget.toggleClass('an-hiddenquote');
-						jButton.hide();
-					});
+				jButton = $('<img style="display: none; position: absolute; cursor: pointer;" />');
 				
 				$d.mouseover(function(event)
 				{
@@ -58,25 +50,17 @@ AN.mod['Component Redesigner'] = { ver: 'N/A', author: '向日', fn: {
 			break;
 			case 1:
 				AN.util.stackStyle('\
-				blockquote:before { content: ""; width: 20px; height: 20px; position: absolute; top 0; left: -4px; margin-top: -18px; color: #999; } \
+				.an-quotetogglebutton { display: none; margin: -18px 0 0 -4px; cursor: pointer; } \
+				.an-quotetogglebutton, blockquote:before { position: absolute; color: #999; } \
+				blockquote:before { content: ""; width: 20px; height: 20px; top 0; left: -4px; margin-top: -18px; } \
 				td > blockquote { margin: 15px 0 10px 3px; } \
-				blockquote { position: relative; margin: 0 0 10px 0; padding: 0; } \
+				blockquote { position: relative; margin: 0 0 10px 0; } \
 				blockquote > div { border-left: 2px solid #999; padding-left: 5px; } \
 				.an-hiddenquote:before { content: "+"; } \
 				.an-hiddenquote > div > blockquote { display: none; } \
 				');
 				
-				var jCurTarget = $();
-				var jButton = $('<span style="position: absolute; margin: -18px 0 0 -4px; color: #999; cursor: pointer;"></span>')
-					.appendTo('#an')
-					.click(function(event)
-					{
-						event.stopPropagation();
-						if(event.button !== 0) return;
-						
-						jCurTarget.toggleClass('an-hiddenquote');
-						jButton.hide();
-					});
+				jButton = $('<span class="an-quotetogglebutton"></span>');
 				
 				$d.mouseover(function(event)
 				{
@@ -93,14 +77,43 @@ AN.mod['Component Redesigner'] = { ver: 'N/A', author: '向日', fn: {
 			break;
 			case 2:
 				AN.util.stackStyle($.sprintf('\
-				blockquote:before { content: "引用:"; display: block; margin-bottom: 2px; padding: 0 2px; font-size: 75%; line-height: 1.5; background-color: %(sMainHeaderBgColor)s; color: %(sMainHeaderFontColor)s; } \
+				.an-quotetogglebutton { display: none; position: absolute; margin: 2px 0 0 -15px; font-weight: bold; cursor: pointer; } \
+				.an-quotetogglebutton, blockquote:before, .an-hiddenquote:after { font-size: 12px; color: %(sMainHeaderFontColor)s; } \
+				blockquote:before { content: "引用:"; display: block; margin-bottom: 2px; padding-left: 3px; line-height: 1.3; background-color: %(sMainHeaderBgColor)s; } \
 				td > blockquote { border-right-width: 1px; } \
 				blockquote { margin: 0 0 5px 0; border: 1px solid %(sMainBorderColor)s; border-right-width: 0; } \
 				blockquote > div { padding: 0 0 5px 2px; } \
-				.an-hiddenquote { display: none; } \
+				.an-hiddenquote { position: relative; } \
+				.an-hiddenquote:after { content: "＋"; position: absolute; top: 1px; right: 3px; font-weight: bold; } \
+				.an-hiddenquote > div > blockquote { display: none; } \
 				', AN.util.getOptions()));
+				
+				jButton = $($.sprintf('<span class="an-quotetogglebutton"></span>', AN.util.getOptions()));
+				
+				$d.mouseover(function(event)
+				{
+					if(event.target === jButton[0]) return;
+					
+					jCurTarget = $(event.target).closest('blockquote', placeHolder);
+					if(jCurTarget.children().children('blockquote').length) {
+						var offset = jCurTarget.offset();
+						jButton.text(jCurTarget.hasClass('an-hiddenquote') ? '＋' : '－').css({ top: offset.top, left: offset.left + jCurTarget.width() }).show();
+					}
+					else {
+						jButton.hide();
+					}
+				});
 			break;
 		}
+		
+		jButton.appendTo('#an').click(function(event)
+		{
+			event.stopPropagation();
+			if(event.button !== 0) return;
+			
+			jCurTarget.toggleClass('an-hiddenquote');
+			jButton.hide();
+		});
 	},
 	infinite: function(jDoc)
 	{
@@ -108,7 +121,7 @@ AN.mod['Component Redesigner'] = { ver: 'N/A', author: '向日', fn: {
 		var level = AN.util.getOptions('quoteMaskLevel') - (this.styleNo === 0 ? 1 : 2);
 		if(level < 0) return;
 		
-		jDoc.replies().jContents.find('blockquote').filter(function(){ return $(this).parentsUntil(placeHolder, 'blockquote').length === level; }).addClass('an-hiddenquote');
+		jDoc.replies().jContents.find('blockquote:has(blockquote)').filter(function(){ return $(this).parentsUntil(placeHolder, 'blockquote').length === level; }).addClass('an-hiddenquote');
 	}
 },
 

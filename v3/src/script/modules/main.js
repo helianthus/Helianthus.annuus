@@ -784,7 +784,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	{
 		AN.util.stackStyle($.sprintf('\
 		.an-imagified { padding-left: 18px; background: url("%s") no-repeat right center; } \
-		.an-imageifed + a { display: block; } \
+		.an-imagified + a { display: block; } \
 		.an-imagified + a > img { border: 0; } \
 		', $r['image-export']));
 		
@@ -968,46 +968,9 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	infinite: function(jDoc)
 	{
 		var maskMode = $.inArray(AN.util.getOptions('imageMaskMode'), this.options.imageMaskMode.choices);
-		if(maskMode !== 2) jDoc.replies().jContents.find(maskMode === 0 ? 'a[target]' : 'a[target]:not(blockquote a)').trigger({ type: 'imagemask', button: 0 });
+		if(maskMode !== 2) jDoc.replies().jContents.find(maskMode === 0 ? 'a[target]' : 'blockquote a[target]').trigger({ type: 'imagemask', button: 0 });
 	}
 },
-
-/*
-'ea19d7f6-9c2c-42de-b4f9-8cab40ccf544':
-{
-	desc: '限制回覆格高度',
-	page: { 32: false },
-	type: 6,
-	defer: 2, // after layout is fixed
-	options:
-	{
-		bAltScrollBarStyle: { desc: '將滾動條置於外層 [buggy w/ ajax fn@IE,FF,Chrome]', defaultValue: false, type: 'checkbox' },
-		nMaxReplyHeight: { desc: '最大回覆高度(px)', defaultValue: 2000, type: 'text' }
-	},
-	once: function(jDoc)
-	{
-		if(AN.util.getOptions('bAltScrollBarStyle'))
-		{
-			var nWidth = jDoc.replies().jContents.eq(0).width();
-
-			AN.util.stackStyle($.sprintf('\
-			.repliers_right { overflow-x: visible; } \
-			.an-replywrapper { overflow-y: auto; position: relative; z-index: 2; max-height: %spx; width: %spx; } \
-			.an-replywrapper > div { padding-right: 1px; width: %spx; } \
-			',
-			AN.util.getOptions('nMaxReplyHeight'), nWidth + 30, nWidth));
-		}
-		else
-		{
-			AN.util.stackStyle($.sprintf('.an-replywrapper { overflow-y: auto; max-height: %spx; }', AN.util.getOptions('nMaxReplyHeight')));
-		}
-	},
-	infinite: function(jDoc)
-	{
-		jDoc.replies().jContents.wrapInner('<div class="an-replywrapper"><div></div></div>');
-	}
-},
-*/
 
 'fc07ccda-4e76-4703-8388-81dac9427d7c':
 {
@@ -1025,32 +988,6 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		});
 	}
 },
-
-/*
-'e19a8d96-151f-4f86-acfc-0af12b53b99b':
-{
-	desc: '快速3擊左鍵關閉頁面 [FF: 只能配合連結開新頁使用]',
-	page: { 32: false },
-	type: 6,
-	once: function()
-	{
-		var down = 0;
-		var reset = function(){ down = 0; };
-
-		$d.mousedown(function(event)
-		{
-			if(down === 0) setTimeout(reset, 500);
-
-			if(++down == 3)
-			{
-				window.opener = window;
-				window.open('', '_parent');
-				window.close();
-			}
-		});
-	}
-},
-*/
 
 'b69c5067-2726-43f8-b3de-dfb907355b71':
 {

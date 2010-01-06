@@ -51,8 +51,6 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 			}
 		});
 		
-		AN.util.stackStyle('.repliers { border: 0; }'); // this is for FF
-		
 		var pages = {};
 		var curPageNo = jDoc.pageNo();
 		var lastPageNo = $('select[name="page"]:first').children().length;

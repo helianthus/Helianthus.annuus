@@ -121,7 +121,10 @@ AN.mod['Component Redesigner'] = { ver: 'N/A', author: '向日', fn: {
 		var level = AN.util.getOptions('quoteMaskLevel') - (this.styleNo === 0 ? 1 : 2);
 		if(level < 0) return;
 		
-		jDoc.replies().jContents.find('blockquote:has(blockquote)').filter(function(){ return $(this).parentsUntil(placeHolder, 'blockquote').length === level; }).addClass('an-hiddenquote');
+		jDoc.replies().jContents
+		.find(this.styleNo === 0 ? 'blockquote' : 'blockquote:has(blockquote)')
+		.filter(function(){ return $(this).parentsUntil(placeHolder, 'blockquote').length === level; })
+		.addClass('an-hiddenquote');
 	}
 },
 

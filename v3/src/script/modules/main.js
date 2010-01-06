@@ -1184,20 +1184,107 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	type: 6,
 	once: function()
 	{
-		var aBamList = AN.util.data('aBamList') || [];
+		AN.util.stackStyle('\
+		.an-togglebambutton, .an-bammed-msg { display: none; position: absolute; } \
+		.an-togglebambutton { padding: 7px; cursor: pointer; } \
+		.an-bammed-msg { color: #999; font-size: 10px; text-align: center; } \
+		.an-bammed-msg > span { cursor: pointer; } \
+		.an-bammed > td { opacity: 0.5; } \
+		.an-bammed > .repliers_left > div > a:first-child ~ *, .an-bammed > td > .repliers_right { display: none; } \
+		');
+		
+		var
+		bamList = AN.util.data('aBamList') || [],
+		jCurTarget,
+		jButton = $('<img class="an-togglebambutton" />').appendTo('#an').click(function(event)
+		{
+			event.stopPropagation();
+			var sUserId = jCurTarget.parent().attr('userid');
+
+			var nIndex = $.inArray(sUserId, bamList);
+			nIndex === -1 ? bamList.push(sUserId) : bamList.splice(nIndex, 1);
+
+			AN.util.data('aBamList', bamList);
+			toggleReplies(null);
+			
+			jButton.hide();
+		}),
+		tempShown = false,
+		jMsg = $('<div class="an-bammed-msg">( <span></span> )</div>').appendTo('#an').children().click(function(event)
+		{
+			event.stopPropagation();
+			tempShown = true;
+			jMsg.hide();
+			jCurTarget.parent().toggleClass('an-bammed');
+		}).end();
+
+		$d.mouseover(function(event)
+		{
+			if(event.target === jButton[0] || event.target === jMsg[0] || event.target === jMsg.children()[0]) return;
+
+			if(tempShown) {
+				if(jCurTarget.has(event.target).length) return;
+				tempShown = false;
+				jCurTarget.parent().addClass('an-bammed');
+			}
+			
+			var jTarget = $(event.target);
+			if((jCurTarget = jTarget.closest('.repliers_left')).length) {
+				jMsg.hide();
+				jButton.attr('src', $r[$.inArray(jCurTarget.parent().attr('userid'), bamList) === -1 ? 'cross-shield' : 'tick-shield']).css(jCurTarget.offset()).show();
+			}
+			else {
+				jButton.hide();
+				
+				if((jCurTarget = jTarget.filter('.repliers_left + td')).length && jCurTarget.parent().hasClass('an-bammed')) {
+					var height = jCurTarget.outerHeight();
+					
+					jMsg
+					.children().text($.sprintf('Show Blocked User - %s', jCurTarget.parent().attr('username'))).end()
+					.css($.extend(jCurTarget.offset(), { width: jCurTarget.outerWidth(), height: height, lineHeight: height + 'px' }))
+					.show();
+				}
+				else {
+					jMsg.hide();
+				}
+			}
+		});
+
+		var toggleReplies = this.toggleReplies = function(jScope)
+		{
+			(jScope || $(document)).replies().each(function()
+			{
+				var jThis = $(this);
+				jThis.find('tr[userid]').toggleClass('an-bammed', $.inArray(jThis.data('sUserid'), bamList) != -1);
+			});
+		};
+	},
+	infinite: function(jDoc)
+	{
+		this.toggleReplies(jDoc);
+	}
+},
+
+'7906be8e-1809-40c1-8e27-96df3aa229d8':
+{
+	desc: '用戶高亮功能',
+	page: { 32: true },
+	type: 6,
+	once: function()
+	{
+		var highlightList = [];
 		var jCurTarget;
-		var jButton = $('<img style="display: none; position: absolute; padding: 7px; cursor: pointer;" />')
+		var jButton = $('<img style="display: none; position: absolute; margin-top: 23px; padding: 7px; cursor: pointer;" />')
 			.appendTo('#an')
 			.click(function(event)
 			{
 				event.stopPropagation();
 				var sUserId = jCurTarget.attr('userid');
 
-				var nIndex = $.inArray(sUserId, aBamList);
-				nIndex === -1 ? aBamList.push(sUserId) : aBamList.splice(nIndex, 1);
+				var nIndex = $.inArray(sUserId, highlightList);
+				nIndex === -1 ? highlightList.push(sUserId) : highlightList.splice(nIndex, 1);
 
-				AN.util.data('aBamList', aBamList);
-				toggleReplies(null, sUserId, nIndex === -1);
+				toggleReplies(null);
 				
 				jButton.hide();
 			});
@@ -1207,25 +1294,22 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			if(event.target === jButton[0]) return;
 
 			jCurTarget = $(event.target).closest('.repliers_left').parent();
-			if(jCurTarget.length) {
-				jButton.attr('src', $r[jCurTarget.up('.repliers').hasClass('an-bammed') ? 'tick-shield': 'cross-shield']).css(jCurTarget.offset()).show();
+			if(jCurTarget.length && !jCurTarget.hasClass('an-bammed')) {
+				jButton.attr('src', $r[jCurTarget.hasClass('an-highlighted') ? 'highlighter--minus': 'highlighter--plus']).css(jCurTarget.offset()).show();
 			}
 			else {
 				jButton.hide();
 			}
 		});
 
-		AN.util.stackStyle('\
-		.an-bammed { opacity: 0.5; filter: alpha(opacity=50); } \
-		.an-bammed .repliers_left > table > tbody > tr:first-child ~ tr, .an-bammed .repliers_right > tbody > tr:first-child { display: none; } \
-		');
+		AN.util.stackStyle($.sprintf('.an-highlighted > td { background-color: %s !important; }', AN.util.getOptions('sHighlightBgColor')));
 
 		var toggleReplies = this.toggleReplies = function(jScope)
 		{
 			(jScope || $(document)).replies().each(function()
 			{
 				var jThis = $(this);
-				jThis.toggleClass('an-bammed', $.inArray(jThis.data('sUserid'), aBamList) != -1);
+				jThis.find('tr[userid]').toggleClass('an-highlighted', $.inArray(jThis.data('sUserid'), highlightList) != -1);
 			});
 		};
 	},

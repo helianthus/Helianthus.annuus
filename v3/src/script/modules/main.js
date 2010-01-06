@@ -332,7 +332,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 '7f9780a6-395d-4b24-a0a8-dc58c4539408':
 {
 	desc: '修正字型大小/顏色插入控件',
-	page: { 384: true },
+	page: { 416: true },
 	type: 4,
 	once: function()
 	{
@@ -1570,11 +1570,13 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 					AN.util.getOptions()
 					));
 
-					var index, jDesc, jContent;
+					var index, editing, jDesc, jContent;
 					jSnippets = AN.shared.box('an-snippets', '自訂文字', 700)
 					.append('<ul></ul><div><input /><textarea></textarea><button type="button">ok</button><button type="button">cancel</button></div>')
 					.click(function(event)
 					{
+						event.stopPropagation();
+						
 						var jTarget = $(event.target);
 						if(!jTarget.is('span,button')) return;
 
@@ -1583,15 +1585,22 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 							jSnippets.children('div').css('opacity', '0.5').children().attr('disabled', true);
 						}
 						else if(type == 'E' || type == '+') {
+							editing = (type === 'E');
 							index = jTarget.parent().index();
 							jDesc.val(type == 'E' ? snippets[index][0] : '').next().val(type == 'E' ? snippets[index][1] : '').parent().css('opacity', '1').children().attr('disabled', false);
 						}
 						else {
 							if(type == 'ok') {
-								snippets.push([jDesc.val(), jContent.val()]);
+								if(editing) {
+									snippets[index] = [jDesc.val(), jContent.val()];
+									editing = false;
+								}
+								else {
+									snippets.push([jDesc.val(), jContent.val()]);
+								}
 							}
 							else if(type == 'X' && confirm('確定移除?')) {
-								snippets.splice(index, 1);
+								snippets.splice(jTarget.parent().index(), 1);
 							}
 							AN.util.data('snippets', snippets);
 							writeSnippets();

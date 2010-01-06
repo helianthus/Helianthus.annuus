@@ -142,12 +142,15 @@ AN.mod['Component Redesigner'] = { ver: 'N/A', author: '向日', fn: {
 	{
 		if(!AN.util.isLoggedIn()) return;
 
-		var jQR = $('#newmessage');
-		var nWidth = 938; //jQR.width() + 1;
-		var nRight = 50 - nWidth;
-		
-		var sMethod = AN.util.getOptions('sQRHideMethod');
-		var aChoices = this.options.sQRHideMethod.choices;
+		var
+		jQR = $('#newmessage'),
+		jQRHeader = jQR.find('td:eq(1)').attr('id', 'an-qr-header').html('快速回覆'),
+		jToggle = (hideMode === 0 ? jQR : jQR.find('tr:eq(2)')).hide(),
+		jPreview = $('#previewArea'),
+		jTextarea = $('#ctl00_ContentPlaceHolder1_messagetext'),
+		nWidth = 938, //jQR.width() + 1,
+		nRight = 50 - nWidth,
+		hideMode = $.inArray(AN.util.getOptions('sQRHideMethod'), this.options.sQRHideMethod.choices);
 
 		AN.util.stackStyle($.sprintf('\
 		#newmessage { %s; z-index: 3; position: fixed; width: %spx; bottom: 0px; right: %spx; } \
@@ -157,70 +160,56 @@ AN.mod['Component Redesigner'] = { ver: 'N/A', author: '向日', fn: {
 		',
 		AN.util.getOpacityStr(AN.util.getOptions('nQROpacity')),
 		nWidth,
-		sMethod == aChoices[3] ? nRight : Math.ceil(($.winWidth() - nWidth) / 2),
+		hideMode === 3 ? nRight : Math.ceil(($.winWidth() - nWidth) / 2),
 		nWidth - 149
 		));
 		
-		var jToggle = (sMethod == aChoices[0] ? jQR : jQR.find('tr:eq(2)')).hide();
-		
-		var isNotNeeded = function(bToShow)
+		function toggleQR(toShow, callback)
 		{
-			return typeof bToShow == 'boolean' && bToShow == (jToggle.css('display') != 'none');
-		};
-
-		var isToShow = function(bToShow)
-		{
-			return typeof bToShow == 'boolean' ? bToShow : jToggle.css('display') == 'none';
-		};
-		
-		var toggleQR = function(bToShow, fCallback)
-		{
-			if(isNotNeeded(bToShow)) return;
-
-			jToggle.toggle(isToShow(bToShow));
-			$('#previewArea').empty();
-			if(fCallback) fCallback();
+			var isVisible = jToggle.is(':visible');
+			if(toShow === undefined) toShow = !isVisible;
+			else if(isVisible === toShow) return;
+			
+			jPreview.empty();
+			jToggle.toggle(toShow);
+			if(toShow) {
+				window.moveEnd();
+				jTextarea.scrollTop(99999);
+			}
+			if(callback) callback();
 		};
 		
-		if(sMethod == aChoices[3])
+		if(hideMode === 3) toggleQR = (function(_toggleQR)
 		{
-			toggleQR = (function(_toggleQR)
+			return function(toShow)
 			{
-				return function(bToShow)
-				{
-					if(isNotNeeded(bToShow)) return;
-
-					isToShow(bToShow) ? jQR.animate({ right: Math.ceil(($.winWidth() - nWidth) / 2) }, 'slow', _toggleQR) : _toggleQR(false, function(){ jQR.animate({ right: nRight }, 'slow'); });
-				};
-			})(toggleQR);
-		}
+				toShow 
+				? jQR.animate({ right: Math.ceil(($.winWidth() - nWidth) / 2) }, 'slow', function(){ _toggleQR(true); })
+				: _toggleQR(false, function(){ jQR.animate({ right: nRight }, 'slow'); });
+			};
+		})(toggleQR);
 		
-		var jQRHeader = jQR.find('td:eq(1)').attr('id', 'an-qr-header').html('快速回覆');
-		
-		sMethod == aChoices[1] ? jQR.bind('mouseenter mouseleave', toggleQR) : jQRHeader.click(toggleQR);
+		hideMode === 1
+		? jQR.bind('mouseenter mouseleave', function(event){ toggleQR(event.type === 'mouseenter'); })
+		: jQRHeader.click(function(){ toggleQR(); });
 
 		$('#aspnetForm').submit(function()
 		{
 			toggleQR(false);
 		});
 
-		window._OnQuoteSucceeded = function(result)
+		window.OnQuoteSucceeded = function(result)
 		{
 			toggleQR(true);
-			$('#ctl00_ContentPlaceHolder1_messagetext').val(unescape(result) + '\n').scrollTop(99999);
-			window.moveEnd();
+			jTextarea.val(unescape(result) + '\n');
 		};
-		
-		window.OnQuoteSucceeded = new window.Function('result', 'window._OnQuoteSucceeded(result);');
 		
 		window.doPreview = (function(_doPreview)
 		{
-			var jPreview = $('#previewArea');
-			
 			return function()
 			{
-				jPreview.css('max-height', $.winHeight() - jQR.height() - jPreview.height());
 				_doPreview();
+				jPreview.css('max-height', $.winHeight() - jQR.height() - jPreview.height());
 			};
 		})(window.doPreview);
 	}

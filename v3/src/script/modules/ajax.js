@@ -101,20 +101,22 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 			if(targetPageNo < 1) return document.body.scrollIntoView();
 			if(targetPageNo > lastPageNo) return document.body.scrollIntoView(false);
 			
+			var previouslyCached = !!pages[targetPageNo];
+			
 			function handlePageChange(jDiv) {
 				if(displayMode === 0) pages[curPageNo].hide();
 				location.hash = 'page=' + targetPageNo;
 				if(!isAuto) jDiv[0].scrollIntoView();//targetPageNo > curPageNo);
 				curPageNo = targetPageNo;
 				AN.shared('log', '轉頁完成');
-				$d.trigger({ type: 'workend', isPageChangeEnd: true });
+				$d.trigger({ type: 'workend', isPageChangeEnd: true, previouslyCached: previouslyCached });
 			}
 			
 			$d.trigger('workstart');
 			
 			AN.shared('log', $.sprintf('正在轉至第%s頁...', targetPageNo));
 			
-			if(pages[targetPageNo]) {
+			if(previouslyCached) {
 				handlePageChange(pages[targetPageNo].show());
 			}
 			else {
@@ -286,7 +288,7 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 				jTimer.text('N/A');
 				
 				if(event.type == 'workend' && (displayMode !== 0 || curPageNo == lastPageNo)) {
-					$.doTimeout('checkbottom', 1000, countdown, { time: event.isPageChangeEnd && pages.last != lastPageNo ? 3 : interval });
+					$.doTimeout('checkbottom', 1000, countdown, { time: event.isPageChangeEnd && (event.previouslyCached || pages.last != lastPageNo) ? 3 : interval });
 				}
 			});
 		})();

@@ -871,7 +871,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		
 		AN.util.stackStyle($.sprintf('\
 		.an-videoified { padding-left: 18px; background: url("%s") no-repeat right center; } \
-		.an-videoified + object { display: block; } \
+		.an-videoified + object { display: block; outline: 0; } \
 		', $r['film--arrow']));
 
 		$d.bind('click videoconvert', function(event)

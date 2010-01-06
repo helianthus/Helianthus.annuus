@@ -143,14 +143,14 @@ AN.mod['Component Redesigner'] = { ver: 'N/A', author: '向日', fn: {
 		if(!AN.util.isLoggedIn()) return;
 
 		var
+		hideMode = $.inArray(AN.util.getOptions('sQRHideMethod'), this.options.sQRHideMethod.choices),
 		jQR = $('#newmessage'),
 		jQRHeader = jQR.find('td:eq(1)').attr('id', 'an-qr-header').html('快速回覆'),
 		jToggle = (hideMode === 0 ? jQR : jQR.find('tr:eq(2)')).hide(),
 		jPreview = $('#previewArea'),
 		jTextarea = $('#ctl00_ContentPlaceHolder1_messagetext'),
 		nWidth = 938, //jQR.width() + 1,
-		nRight = 50 - nWidth,
-		hideMode = $.inArray(AN.util.getOptions('sQRHideMethod'), this.options.sQRHideMethod.choices);
+		nRight = 50 - nWidth;
 
 		AN.util.stackStyle($.sprintf('\
 		#newmessage { %s; z-index: 3; position: fixed; width: %spx; bottom: 0px; right: %spx; } \

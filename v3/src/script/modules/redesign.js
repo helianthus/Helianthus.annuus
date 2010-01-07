@@ -170,24 +170,29 @@ AN.mod['Component Redesigner'] = { ver: 'N/A', author: '向日', fn: {
 			if(toShow === undefined) toShow = !isVisible;
 			else if(isVisible === toShow) return;
 			
-			jPreview.empty();
-			jToggle.toggle(toShow);
-			if(toShow) {
-				window.moveEnd();
-				jTextarea.scrollTop(99999);
-			}
-			if(callback) callback();
-		};
-		
-		if(hideMode === 3) toggleQR = (function(_toggleQR)
-		{
-			return function(toShow)
+			function toggle()
 			{
-				toShow 
-				? jQR.animate({ right: Math.ceil(($.winWidth() - nWidth) / 2) }, 'slow', function(){ _toggleQR(true); })
-				: _toggleQR(false, function(){ jQR.animate({ right: nRight }, 'slow'); });
-			};
-		})(toggleQR);
+				jPreview.empty();
+				jToggle.toggle(toShow);
+				if(toShow) {
+					window.moveEnd();
+					jTextarea.scrollTop(99999);
+				}
+			}
+			
+			if(hideMode === 3) {
+				if(toShow) {
+					jQR.animate({ right: Math.ceil(($.winWidth() - nWidth) / 2) }, 'slow', toggle);
+				}
+				else {
+					toggle();
+					jQR.animate({ right: nRight }, 'slow');
+				}
+			}
+			else {
+				toggle();
+			}
+		};
 		
 		hideMode === 1
 		? jQR.bind('mouseenter mouseleave', function(event){ toggleQR(event.type === 'mouseenter'); })

@@ -76,8 +76,6 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 			updateElements(jDiv);
 			
 			if(jScope) {
-				AN.modFn.execMods(jDiv);
-				
 				for(var pageNo = 1; pageNo <= pages.last; pageNo++) {
 					if(pages[pageNo] && newPageNo < pageNo) {
 						jDiv.insertBefore(pages[pageNo]);
@@ -85,6 +83,8 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 					}
 				}
 				if(pageNo > pages.last) jDiv.insertAfter(pages[pages.last]);
+				
+				AN.modFn.execMods(jDiv);
 			}
 			
 			if(!pages.last || newPageNo && newPageNo > pages.last) pages.last = newPageNo || curPageNo;

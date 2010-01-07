@@ -977,15 +977,13 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	desc: '強制顯示空白用戶名連結',
 	page: { 32: true },
 	type: 6,
+	once: function()
+	{
+		AN.util.stackStyle('.an-nameforcedshown:before { content: "<空白名稱>"; font-style: italic; }');
+	},
 	infinite: function(jDoc)
 	{
-		jDoc.replies().each(function()
-		{
-			if(/^\s*$/.test($(this).data('sUserName')))
-			{
-				$(this).data('jNameLink').html('<span style="color: black">&lt;空白名稱&gt;</span>');
-			}
-		});
+		jDoc.replies().jNameLinks.filter(function(){ return $(this).width() === 0; }).addClass('an-nameforcedshown');
 	}
 },
 

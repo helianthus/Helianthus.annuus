@@ -197,10 +197,10 @@ $.fn.extend(
 			}
 		});
 	},
-
-	contains: function(jNode)
+	
+	own: function(target)
 	{
-		return this[0].contains ? this[0].contains(jNode[0]) : !!(this[0].compareDocumentPosition(jNode[0]) & 16);
+		return this.is(target) || !!this.has(target).length;
 	},
 
 	//--------[AN Related]--------//
@@ -278,7 +278,7 @@ $.fn.extend(
 
 	treeTop: function()
 	{
-		return (this[0] === document || $(document.documentElement).contains(this)) ? $d : this;
+		return (this[0] === document || $(document.documentElement).own(this)) ? $d : this;
 	},
 
 	topicTable: function()
@@ -398,7 +398,7 @@ $.extend(AN,
 			if(AN.util.stackStyle.sStyle === undefined)
 			{
 				AN.util.stackStyle.sStyle = '';
-				$d.bind('an.defer5', function()
+				$d.bind('defer5', function()
 				{
 					AN.util.addStyle(AN.util.stackStyle.sStyle);
 					AN.util.stackStyle.sStyle = '';
@@ -759,7 +759,7 @@ $.extend(AN,
 
 				for(var i=1; i<=5; i++)
 				{
-					$d.trigger('an.defer' + i);
+					$d.trigger('defer' + i);
 					if(jDoc.aDefer && jDoc.aDefer[i])
 					{
 						$.each(jDoc.aDefer[i], function(){ execFn(this); });
@@ -781,6 +781,27 @@ $.extend(AN,
 
 //////////////////// END OF - [AN Extension] ////////////////////
 //////////////////// START OF - [Initialization] ////////////////////
+
+if(JSON.stringify(document.createElement("input").value)!== "" ) {
+	(function(_stringify)
+	{
+		JSON.stringify = function(o, f, s)
+		{
+			return _stringify(o === '' ? '' : o , f, s);
+		};
+	})(JSON.stringify);
+}
+
+$.event.special.click = {
+	add: function(handler)
+	{
+		return function(event)
+		{
+			if(event.type === 'click' && event.which !== 1) return;
+			handler.apply(this, arguments);
+		};
+	}
+};
 
 $.support.localStorage = !!(window.localStorage || window.globalStorage || false);
 

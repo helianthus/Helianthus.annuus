@@ -136,8 +136,13 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 				return;
 			}
 			
-			if(displayMode === 0 ? curPageNo != lastPageNo && !isAuto : pages.last != lastPageNo) {
-				changePage((displayMode === 0 ? curPageNo : pages.last) + 1, isAuto);
+			if(displayMode === 0 && curPageNo != lastPageNo) {
+				if(!isAuto) changePage(curPageNo + 1, isAuto);
+				return;
+			}
+			
+			if(displayMode !== 0 && pages.last != lastPageNo) {
+				changePage(pages.last + 1, isAuto);
 				return;
 			}
 			
@@ -228,8 +233,6 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 		
 		$d.bind('click', function(event)
 		{
-			if(event.button !== 0) return;
-			
 			var jTarget = $(event.target);
 			if(jTarget.parent('a').length) jTarget = jTarget.parent();
 			if(!(jTarget.is('a') && $('select[name="page"]').parent().parent().has(jTarget[0]).length)) return;

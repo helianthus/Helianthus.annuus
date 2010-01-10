@@ -157,6 +157,42 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 				$('#an-server caption').click();
 			};
 		})();
+		
+		$.userButton = function(src)
+		{
+			var jContainer = $('#an-userbuttons');
+			if(!jContainer.length) {
+				AN.util.addStyle('\
+				#an-userbuttons { display: none; position: absolute; } \
+				#an-userbuttons > img:first-child { padding-top: 7px; } \
+				#an-userbuttons > img { display: block; padding: 3.5px 7px; cursor: pointer; } \
+				');
+				
+				jContainer = $('<div id="an-userbuttons"></div>').appendTo('#an').click(function(event)
+				{
+					event.stopPropagation();
+					jContainer.hide();
+				});
+				
+				$d.mouseover(function(event)
+				{
+					var jTarget = $(event.target).closest('.repliers_left,#an-userbuttons');
+					if(jTarget[0] === jContainer[0] || jContainer.is(':visible') && $.userButton.jTr.own(jTarget)) return;
+					
+					if(jTarget.is('.repliers_left')) {
+						$.userButton.jTr = jTarget.parent();
+						$d.trigger('userbuttonsshow');
+						
+						jContainer.css(jTarget.offset()).show();
+					}
+					else {
+						jContainer.hide();
+					}
+				});
+			}
+			
+			return $(src ? $.sprintf('<img src="%s" />', src) : '<img />').appendTo(jContainer);
+		};
 	}
 },
 

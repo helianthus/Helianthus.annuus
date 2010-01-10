@@ -273,8 +273,6 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	{
 		$d.click(function(event)
 		{
-			if(event.button !== 0) return;
-
 			var jTarget = $(event.target);
 			if(jTarget.parent('a').length) jTarget = jTarget.parent();
 			if(!jTarget.is('a') || !(AN.util.getOptions('bTopicLinksOnly') ? /view\.aspx/i : /^(?!javascript|#)/i).test(jTarget.attr('href'))) return;
@@ -295,8 +293,6 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	{
 		$d.click(function(event)
 		{
-			if(event.button !== 0) return;
-
 			var jTarget = $(event.target);
 			if(jTarget.parent('a').length) jTarget = jTarget.parent();
 			if(!jTarget.is('.repliers_right > tbody > tr:first-child a')) return;
@@ -336,7 +332,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	type: 4,
 	once: function()
 	{
-		$('#ctl00_ContentPlaceHolder1_QuickReplyTable select[onchange]').change(function()
+		$('#ctl00_ContentPlaceHolder1_messagetext').siblings('select[onchange]').change(function()
 		{
 			this.selectedIndex = 0;
 		});
@@ -790,8 +786,6 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		
 		$d.bind('click imageconvert', function(event)
 		{
-			if(event.button !== 0) return;
-			
 			var jTarget = $(event.target);
 			if(jTarget.next('.an-imagified').length) {
 				event.preventDefault();
@@ -809,7 +803,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	infinite: function(jDoc)
 	{
 		var convertMode = $.inArray(AN.util.getOptions('imageConvertMode'), this.options.imageConvertMode.choices);
-		if(convertMode !== 2) jDoc.replies().jContents.find(convertMode === 0 ? 'a' : 'a:not(blockquote a)').trigger({ type: 'imageconvert', button: 0 });
+		if(convertMode !== 2) jDoc.replies().jContents.find(convertMode === 0 ? 'a' : 'a:not(blockquote a)').trigger('imageconvert');
 	}
 },
 
@@ -876,8 +870,6 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 
 		$d.bind('click videoconvert', function(event)
 		{
-			if(event.button !== 0) return;
-
 			var jTarget = $(event.target);
 			if(jTarget.next('.an-videoified').length) {
 				event.preventDefault();
@@ -899,19 +891,13 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 				$('<div></div>')
 				.insertAfter( $('<span title="已轉換連結為影片" class="an-videoified"></span>').insertAfter(jTarget) )
 				.toFlash(sUrl, { width: nWidth, height: nHeight.toFixed(0) }, { wmode: 'opaque', allowfullscreen: 'true' });
-				
-				/*
-				if(!$.browser.firefox || sUrl.indexOf('youku.com') === -1) {
-					$($.sprintf('<iframe style="display: none" src="%s" />', event.target.href)).appendTo('body').doTimeout(1000, function(){ $(this).remove(); });
-				}
-				*/
 			}
 		});
 	},
 	infinite: function(jDoc, oFn)
 	{
 		var convertMode = $.inArray(AN.util.getOptions('videoConvertMode'), this.options.videoConvertMode.choices);
-		if(convertMode !== 2) jDoc.replies().jContents.find(convertMode === 0 ? 'a' : 'a:not(blockquote a)').trigger({ type: 'videoconvert', button: 0 });
+		if(convertMode !== 2) jDoc.replies().jContents.find(convertMode === 0 ? 'a' : 'a:not(blockquote a)').trigger('videoconvert');
 	}
 },
 
@@ -932,8 +918,6 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 
 		function clickHandler(event)
 		{
-			if(event.button !== 0) return;
-			
 			if(event.target === jButton[0]) {
 				event.stopPropagation();
 				jCurTarget.parent().addClass('an-maskedLink');
@@ -968,7 +952,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	infinite: function(jDoc)
 	{
 		var maskMode = $.inArray(AN.util.getOptions('imageMaskMode'), this.options.imageMaskMode.choices);
-		if(maskMode !== 2) jDoc.replies().jContents.find(maskMode === 0 ? 'a[target]' : 'blockquote a[target]').trigger({ type: 'imagemask', button: 0 });
+		if(maskMode !== 2) jDoc.replies().jContents.find(maskMode === 0 ? 'a[target]' : 'blockquote a[target]').trigger('imagemask');
 	}
 },
 
@@ -1120,68 +1104,59 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	once: function()
 	{
 		AN.util.stackStyle('\
-		.an-togglebambutton, .an-bammed-msg { display: none; position: absolute; } \
-		.an-togglebambutton { padding: 7px; cursor: pointer; } \
-		.an-bammed-msg { color: #999; font-size: 10px; text-align: center; } \
+		.an-bammed-msg { display: none; color: #999; font-size: 10px; text-align: center; } \
 		.an-bammed-msg > span { cursor: pointer; } \
 		.an-bammed > td { opacity: 0.5; } \
 		.an-bammed > .repliers_left > div > a:first-child ~ *, .an-bammed > td > .repliers_right { display: none; } \
 		');
 		
 		var
-		bamList = AN.util.data('aBamList') || [],
-		jCurTarget,
-		jButton = $('<img class="an-togglebambutton" />').appendTo('#an').click(function(event)
+		bamList = this.bamList = AN.util.data('aBamList') || [],
+		jButton = $.userButton().click(function(event)
 		{
-			event.stopPropagation();
-			var sUserId = jCurTarget.parent().attr('userid');
-
-			var nIndex = $.inArray(sUserId, bamList);
-			nIndex === -1 ? bamList.push(sUserId) : bamList.splice(nIndex, 1);
+			var userid = $.userButton.jTr.attr('userid');
+			var index = $.inArray(userid, bamList);
+			index === -1 ? bamList.push(userid) : bamList.splice(index, 1);
 
 			AN.util.data('aBamList', bamList);
 			toggleReplies(null);
-			
-			jButton.hide();
 		}),
-		tempShown = false,
+		jTempShown,
 		jMsg = $('<div class="an-bammed-msg">( <span></span> )</div>').appendTo('#an').children().click(function(event)
 		{
 			event.stopPropagation();
-			tempShown = true;
+			jTempShown = null;
 			jMsg.hide();
 			jCurTarget.parent().toggleClass('an-bammed');
 		}).end();
+		
+		$d.bind('userbuttonsshow', function()
+		{
+			var isBammed = $.userButton.jTr.hasClass('an-bammed');
+			jButton.attr('src', $r[isBammed ? 'tick-shield' : 'cross-shield']).siblings().toggle(!isBammed);
+		});
 
 		$d.mouseover(function(event)
 		{
-			if(event.target === jButton[0] || event.target === jMsg[0] || event.target === jMsg.children()[0]) return;
+			if(jMsg.own(event.target)) return;
 
-			if(tempShown) {
-				if(jCurTarget.has(event.target).length) return;
-				tempShown = false;
-				jCurTarget.parent().addClass('an-bammed');
+			if(jTempShown && jTempShown.length) {
+				if(jTempShown.own(event.target)) return;
+				jTempShown.parent().addClass('an-bammed');
 			}
 			
-			var jTarget = $(event.target);
-			if((jCurTarget = jTarget.closest('.repliers_left')).length) {
-				jMsg.hide();
-				jButton.attr('src', $r[$.inArray(jCurTarget.parent().attr('userid'), bamList) === -1 ? 'cross-shield' : 'tick-shield']).css(jCurTarget.offset()).show();
+			jTempShown = $(event.target).filter('.an-bammed > .repliers_left + td');
+			
+			if(jTempShown.length) {
+				var height = jCurTarget.outerHeight();
+				
+				jMsg
+				.children().text($.sprintf('Show Blocked User - %s', jCurTarget.parent().attr('username'))).end()
+				.css($.extend(jCurTarget.offset(), { width: jCurTarget.outerWidth(), height: height, lineHeight: height + 'px' }))
+				.show();
 			}
 			else {
-				jButton.hide();
-				
-				if((jCurTarget = jTarget.filter('.repliers_left + td')).length && jCurTarget.parent().hasClass('an-bammed')) {
-					var height = jCurTarget.outerHeight();
-					
-					jMsg
-					.children().text($.sprintf('Show Blocked User - %s', jCurTarget.parent().attr('username'))).end()
-					.css($.extend(jCurTarget.offset(), { width: jCurTarget.outerWidth(), height: height, lineHeight: height + 'px' }))
-					.show();
-				}
-				else {
-					jMsg.hide();
-				}
+				jMsg.hide();
 			}
 		});
 
@@ -1196,7 +1171,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	},
 	infinite: function(jDoc)
 	{
-		this.toggleReplies(jDoc);
+		if(this.bamList.length) this.toggleReplies(jDoc);
 	}
 },
 
@@ -1207,34 +1182,20 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	type: 6,
 	once: function()
 	{
-		var highlightList = [];
-		var jCurTarget;
-		var jButton = $('<img style="display: none; position: absolute; margin-top: 23px; padding: 7px; cursor: pointer;" />')
-			.appendTo('#an')
-			.click(function(event)
-			{
-				event.stopPropagation();
-				var sUserId = jCurTarget.attr('userid');
-
-				var nIndex = $.inArray(sUserId, highlightList);
-				nIndex === -1 ? highlightList.push(sUserId) : highlightList.splice(nIndex, 1);
-
-				toggleReplies(null);
-				
-				jButton.hide();
-			});
-
-		$d.mouseover(function(event)
+		var
+		highlightList = this.highlightList = [],
+		jButton = $.userButton().click(function(event)
 		{
-			if(event.target === jButton[0]) return;
+			var userid = $.userButton.jTr.attr('userid');
+			var index = $.inArray(userid, highlightList);
+			index === -1 ? highlightList.push(userid) : highlightList.splice(index, 1);
 
-			jCurTarget = $(event.target).closest('.repliers_left').parent();
-			if(jCurTarget.length && !jCurTarget.hasClass('an-bammed')) {
-				jButton.attr('src', $r[jCurTarget.hasClass('an-highlighted') ? 'highlighter--minus': 'highlighter--plus']).css(jCurTarget.offset()).show();
-			}
-			else {
-				jButton.hide();
-			}
+			toggleReplies(null);
+		});
+		
+		$d.bind('userbuttonsshow', function()
+		{
+			jButton.attr('src', $r[$.userButton.jTr.hasClass('an-highlighted') ? 'highlighter--minus': 'highlighter--plus']);
 		});
 
 		AN.util.stackStyle($.sprintf('.an-highlighted > td { background-color: %s !important; }', AN.util.getOptions('sHighlightBgColor')));
@@ -1250,7 +1211,43 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	},
 	infinite: function(jDoc)
 	{
-		this.toggleReplies(jDoc);
+		if(this.highlightList.length) this.toggleReplies(jDoc);
+	}
+},
+
+'e82aa0ba-aa34-4277-99ea-41219dcdacf2':
+{
+	desc: '用戶單獨顯示功能',
+	defer: 1,
+	page: { 32: true },
+	type: 6,
+	once: function()
+	{
+		var
+		oFn = this,
+		jButton = $.userButton($r['magnifier']).click(function(event)
+		{
+			oFn.targetId = oFn.targetId ? null : $.userButton.jTr.attr('userid');
+			toggleReplies(null);
+		});
+		
+		$d.bind('userbuttonsshow', function()
+		{
+			jButton.attr('src', $r[oFn.targetId ? 'magnifier-zoom-out' : 'magnifier-zoom-in']);
+		});
+		
+		var toggleReplies = this.toggleReplies = function(jScope)
+		{
+			(jScope || $(document)).replies().each(function()
+			{
+				var jThis = $(this);
+				jThis.closest('div > table').toggle(!oFn.targetId || jThis.data('sUserid') === oFn.targetId);
+			});
+		};
+	},
+	infinite: function(jDoc)
+	{
+		if(this.targetId) this.toggleReplies(jDoc);
 	}
 },
 
@@ -1267,7 +1264,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			if(!rUrl)
 			{
 				var parts = {
-					host: '(?:https?|ftp)://(?:[\\w-]+\\.)+[a-z]{2,3}(?![a-z])',
+					host: 'http://(?:[\\w-]+\\.)+[a-z]{2,3}(?![a-z])',
 					codes: '\\[/?(?:img|url|quote|\\*|left|center|right|b|i|u|s|size|red|green|blue|purple|violet|brown|black|pink|orange|gold|maroon|teal|navy|limegreen)'
 				};
 

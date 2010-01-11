@@ -52,7 +52,7 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 			<div id="an-backlayer"></div> \
 			<ul id="an-mainmenu" class="an-mod an-menu"></ul> \
 		</div> \
-		');
+		').click(function(event){ event.stopPropagation(); });
 
 		AN.shared.gray = function(bClickToQuit, uExtra)
 		{
@@ -172,7 +172,9 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 				{
 					event.stopPropagation();
 					$d.scrollTop($.userButton.jTr.offset().top - $.userButton.difference);
+					
 					jContainer.hide();
+					$.userButton.jTr.children('.repliers_left').mouseover();
 				});
 				
 				$d.mouseover(function(event)

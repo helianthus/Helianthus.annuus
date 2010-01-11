@@ -736,7 +736,6 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			.appendTo('#an')
 			.click(function(event)
 			{
-				event.stopPropagation();
 				addFilter(jCurTarget.find('a:first').html().replace(/<img[^>]+?alt="([^"]+)[^>]*>/ig, '$1'));
 			});
 
@@ -1059,7 +1058,6 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		.appendTo('#an')
 		.click(function(event)
 		{
-			event.stopPropagation();
 			jCurTarget.addClass('an-maskedImage');
 			jButton.hide();
 		});
@@ -1117,7 +1115,6 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		jTempShown,
 		jMsg = $('<div class="an-bammed-msg">( <span></span> )</div>').appendTo('#an').children().click(function(event)
 		{
-			event.stopPropagation();
 			jTempShown = null;
 			jMsg.hide();
 			jCurTarget.parent().toggleClass('an-bammed');
@@ -1563,8 +1560,6 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 					.append('<ul></ul><div><input /><textarea></textarea><button type="button">ok</button><button type="button">cancel</button></div>')
 					.click(function(event)
 					{
-						event.stopPropagation();
-						
 						var jTarget = $(event.target);
 						if(!jTarget.is('span,button')) return;
 

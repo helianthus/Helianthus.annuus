@@ -108,8 +108,6 @@ AN.mod['Component Redesigner'] = { ver: 'N/A', author: '向日', fn: {
 		
 		jButton.appendTo('#an').click(function(event)
 		{
-			event.stopPropagation();
-			
 			jCurTarget.toggleClass('an-hiddenquote');
 			jButton.hide();
 		});

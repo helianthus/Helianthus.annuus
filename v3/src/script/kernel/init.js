@@ -797,7 +797,7 @@ $.event.special.click = {
 	{
 		return function(event)
 		{
-			if(event.type === 'click' && event.which !== 1) return;
+			if(event.type === 'click' && event.button !== 0) return;
 			handler.apply(this, arguments);
 		};
 	}

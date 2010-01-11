@@ -171,6 +171,7 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 				jContainer = $('<div id="an-userbuttons"></div>').appendTo('#an').click(function(event)
 				{
 					event.stopPropagation();
+					$d.scrollTop($.userButton.jTr.offset().top - $.userButton.difference);
 					jContainer.hide();
 				});
 				
@@ -181,6 +182,7 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 					
 					if(jTarget.is('.repliers_left')) {
 						$.userButton.jTr = jTarget.parent();
+						$.userButton.difference = $.userButton.jTr.offset().top - $d.scrollTop();
 						$d.trigger('userbuttonsshow');
 						
 						jContainer.css(jTarget.offset()).show();

@@ -235,7 +235,7 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 		{
 			var jTarget = $(event.target);
 			if(jTarget.parent('a').length) jTarget = jTarget.parent();
-			if(!(jTarget.is('a') && jTarget.parent().parent().has('select[name="page"]').length)) return;
+			if(!(jTarget.is('a') && jTarget.parent('div').siblings('div').children('select[name="page"]').length)) return;
 			
 			event.preventDefault();
 			changePage(AN.util.getPageNo(jTarget.attr('href')));

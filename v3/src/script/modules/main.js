@@ -1094,7 +1094,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		AN.util.stackStyle(selector + 'img[onload].an-maskedImage { padding: 52px 48px 0 0; width: 0; height: 0; background: url('+$r['gnome-mime-image-bmp']+') no-repeat; }');
 
 		if(maskMode !== 2) {
-			AN.util.stackStyle('img[onload].an-unmaskedImage { padding: 0; width: auto; height: auto; background: none; }');
+			AN.util.stackStyle('img[src][onload].an-unmaskedImage { padding: 0; width: auto; height: auto; background: none; }');
 		}
 
 		var jButton = $('<img />', { src: $r['picture--minus'], css: { 'margin-top': '-2px' } })
@@ -1106,9 +1106,10 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 
 		$d.bind('click', function(event)
 		{
-			if($(event.target).width() === 0) {
+			var jTarget = $(event.target);
+			if(jTarget.is('img[onload]') && jTarget.width() === 0) {
 				event.preventDefault();
-				$(event.target).addClass('an-unmaskedImage').removeClass('an-maskedImage').mouseover();
+				jTarget.addClass('an-unmaskedImage').removeClass('an-maskedImage').mouseover();
 			}
 		});
 	},

@@ -160,7 +160,12 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 
 		(function()
 		{
-			var jHoverObjects, objectSets = [];
+			var jHoverObjects, objectSets = [], recordOffset = function()
+			{
+				var data = $(this).data('hoverize');
+				data.fixScroll_difference = data.jTarget[data.fixScroll]() - $d.scrollTop();
+			};
+
 			$.fn.hoverize = function(selector, option)
 			{
 				if(!jHoverObjects) {
@@ -246,11 +251,7 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 					objectSets.push({ selector: selector, jObject: jObject });
 					this.data('hoverize', $.extend({ fixScroll: false, autoToggle: true, autoPosition: true, filter: null }, option)).appendTo(jHoverObjects);
 
-					if(this.data('hoverize').fixScroll) this.click(function()
-					{
-						var data = $(this).data('hoverize');
-						data.fixScroll_difference = data.jTarget[data.fixScroll]() - $d.scrollTop();
-					});
+					if(this.data('hoverize').fixScroll && this.is(':not(div)')) this.click(recordOffset);
 				}
 
 				return this;
@@ -259,7 +260,12 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 
 		(function()
 		{
-			var jUserButtons;
+			var jUserButtons, recordOffset = function()
+			{
+				var data = jUserButtons.data('hoverize');
+				data.fixScroll_difference = data.jTarget.top() - $d.scrollTop();
+			};
+
 			$.userButton = function(src)
 			{
 				if(!jUserButtons) {
@@ -287,7 +293,7 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 					});
 				}
 
-				return $(src ? $.sprintf('<img src="%s" />', src) : '<img />').appendTo(jUserButtons);
+				return $('<img />', { src: src, click: recordOffset }).appendTo(jUserButtons);
 			};
 		})();
 	}

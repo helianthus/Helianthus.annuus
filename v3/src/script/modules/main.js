@@ -208,7 +208,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		window.DrawImage = $.blank;
 
 		AN.util.stackStyle('\
-		img[onload] { width: auto; height: auto; max-width: 100% } \
+		.repliers_right img[onload] { width: auto; height: auto; max-width: 100% } \
 		.repliers_right tr:first-child a[target]:focus { outline: 0; } \
 		');
 	}
@@ -222,7 +222,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	options: { nQuoteImgMaxHeight: { desc: '圖片最大高度(px)', defaultValue: 100, type: 'text' } },
 	once: function()
 	{
-		AN.util.stackStyle($.sprintf('.repliers_right blockquote img { width: auto; height: auto; max-height: %spx; }', AN.util.getOptions('nQuoteImgMaxHeight')));
+		AN.util.stackStyle($.sprintf('.repliers_right blockquote img[onload] { width: auto; height: auto; max-height: %spx; }', AN.util.getOptions('nQuoteImgMaxHeight')));
 	}
 },
 
@@ -480,10 +480,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 
 			var login = function(nForum)
 			{
-				var doc = this.contentWindow.document;
-				var jThis = $(this);
-
-				if(!doc.getElementById('aspnetForm')) // error page
+				if(!this.contentWindow.document.getElementById('aspnetForm')) // error page
 				{
 					AN.shared('log', $.sprintf('伺服器%s登入失敗!', nForum));
 					complete();
@@ -729,32 +726,22 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	},
 	once: function()
 	{
-		var aFilter = AN.util.data('aTopicFilter') || [];
-		var jCurTarget;
-		var jHiddenImg = $();
-		var jButton = $($.sprintf('<img style="display: none; position: absolute; margin-left: -2px; cursor: pointer;" src="%s" />', $r['cross-shield']))
-			.appendTo('#an')
-			.click(function(event)
+		var aFilter = AN.util.data('aTopicFilter') || [],
+		jHiddenImg,
+		jButton = $('<img />', { src: $r['cross-shield'], css: { 'margin-left': '-1.5px' } }).hoverize('#HotTopics tr:not(:first-child)', { autoPosition: false })
+		.bind({
+			entertarget: function()
 			{
-				addFilter(jCurTarget.find('a:first').html().replace(/<img[^>]+?alt="([^"]+)[^>]*>/ig, '$1'));
-			});
-
-		$d.mouseover(function(event)
-		{
-			if(event.target === jButton[0]) return;
-			
-			jCurTarget = $(event.target).closest('#HotTopics tr:not(:first-child)');
-			if(jCurTarget.length) {
+				jHiddenImg = jButton.data('hoverize').jTarget.find('img:first').css('visibility', 'hidden');
+				jButton.css(jHiddenImg.offset());
+			},
+			leavetarget: function()
+			{
 				jHiddenImg.css('visibility', 'visible');
-				jHiddenImg = jCurTarget.find('img:first').css('visibility', 'hidden');
-				
-				jButton.css(jHiddenImg.offset()).show();
-			}
-			else {
-				jHiddenImg.css('visibility', 'visible');
-				jHiddenImg = $();
-				
-				jButton.hide();
+			},
+			click: function()
+			{
+				addFilter(jButton.data('hoverize').jTarget.find('a:first').html().replace(/<img[^>]+?alt="([^"]+)[^>]*>/ig, '$1'));
 			}
 		});
 
@@ -856,6 +843,47 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	}
 },
 
+'63333a86-1916-45c1-96e0-f34a5add67c1':
+{
+	desc: '限制回覆高度',
+	page: { 32: false },
+	type: 6,
+	options: {
+		replyMaxHeight: { desc: '最大高度(px)', type: 'text', defaultValue: 2000 }
+	},
+	once: function()
+	{
+		var maxHeight = AN.util.getOptions('replyMaxHeight');
+
+		AN.util.stackStyle('\
+		.repliers_right, .repliers_right > tbody, .repliers_right > tbody > tr, .repliers_right > tbody > tr > td { display: block; } \
+		.repliers_right > tbody > tr:first-child { max-height: '+maxHeight+'px; overflow-y: hidden; } \
+		.an-maxheightremoved > .repliers_right > tbody > tr:first-child { max-height: none; } \
+		');
+
+		var jButton = $('<img />', { css: { 'margin': '-7px 0 0 7px' } })
+		.hoverize('.repliers_left + td', {
+			filter: function(){ return $(this).hasClass('an-maxheightremoved') || $(this).find('td:first').height() > maxHeight; },
+			autoPosition: false,
+			fixScroll: 'bottom'
+		})
+		.bind({
+			entertarget: function()
+			{
+				var jTarget = jButton.data('hoverize').jTarget,
+				offset = jTarget.offset();
+				jButton
+				.css({ top: offset.top + jTarget.height(), left: offset.left })
+				.attr('src', $r[jTarget.hasClass('an-maxheightremoved') ? 'layout-join-vertical' : 'layout-split-vertical']);
+			},
+			click: function()
+			{
+				jButton.data('hoverize').jTarget.toggleClass('an-maxheightremoved');
+			}
+		});
+	}
+},
+
 '7b36188f-c566-46eb-b48d-5680a4331c1f':
 {
 	desc: '轉換論壇連結的伺服器位置',
@@ -881,7 +909,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	type: 6,
 	once: function()
 	{
-		AN.util.stackStyle($.sprintf('.an-linkified { padding-left: 18px; background: url("%s") no-repeat left center; }', $r['chain--arrow']));
+		AN.util.stackStyle('.an-linkified { padding-right: 2px; vertical-align: top; }');
 	},
 	infinite: function(jDoc)
 	{
@@ -893,12 +921,15 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 				while(node = next) {
 					if(node.nodeType === 3 && (match = rLink.exec(node.data))) {
 						node.splitText(match.index + match[0].length);
-						$(node.splitText(match.index)).wrap($.sprintf('<a href="%s"></a>', match[0])).parent().before('<span title="已轉換文字為連結" class="an-linkified"></span>');
-						
+
+						$(node.splitText(match.index))
+						.before('<img title="已轉換文字為連結" class="an-linkified" src="'+$r['chain--arrow']+'" />')
+						.wrap($.sprintf('<a href="%s"></a>', match[0]));
+
 						node = node.nextSibling.nextSibling.nextSibling;
 						continue;
 					}
-				
+
 					next = !/^(?:a|button|script|style)$/i.test(node.nodeName) && node.firstChild || node.nextSibling;
 					while(!next && (node = node.parentNode)) next = node.nextSibling;
 				}
@@ -917,12 +948,14 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	},
 	once: function()
 	{
-		AN.util.stackStyle($.sprintf('\
-		.an-imagified { padding-left: 18px; background: url("%s") no-repeat right center; } \
+		AN.util.stackStyle('\
+		.an-imagified { padding-left: 2px; vertical-align: middle; } \
 		.an-imagified + a { display: block; } \
 		.an-imagified + a > img { border: 0; } \
-		', $r['image-export']));
-		
+		');
+
+		var rImg = /\.(?:jpe?g|gif|png|bmp)\b/i;
+
 		$d.bind('click imageconvert', function(event)
 		{
 			var jTarget = $(event.target);
@@ -930,11 +963,11 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 				event.preventDefault();
 				jTarget.next().next().toggle();
 			}
-			else if(jTarget.children().length === 0 && jTarget.is('.repliers_right tr:first-child a') && /\.(?:jpe?g|gif|png|bmp)\b/i.test(event.target.href)) {
+			else if(jTarget.children().length === 0 && (event.type === 'imageconvert' || jTarget.is('.repliers_right tr:first-child a')) && rImg.test(event.target.href)) {
 				event.preventDefault();
-				
-				$('<span title="已轉換連結為圖片" class="an-imagified"></span>')
-				.after( jTarget.clone().attr('target', '_blank').html($.sprintf('<img onload="DrawImage(this)" src="%s" alt="%s" />', event.target.href, event.target.href)) )
+
+				$('<img title="已轉換連結為圖片" class="an-imagified" src="'+$r['image-export']+'" />')
+				.after($.sprintf('<a href="%(url)s" target="_blank"><img onload="DrawImage(this)" src="%(url)s" alt="%(url)s" /></a>', { url: event.target.href }))
 				.insertAfter(jTarget);
 			}
 		});
@@ -1001,11 +1034,11 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			$.each(aSites, function(){ aReg.push(this.regex); });
 			return new RegExp(aReg.join('|'), 'i');
 		})();
-		
-		AN.util.stackStyle($.sprintf('\
-		.an-videoified { padding-left: 18px; background: url("%s") no-repeat right center; } \
+
+		AN.util.stackStyle('\
+		.an-videoified { padding-left: 2px; vertical-align: top; } \
 		.an-videoified + object { display: block; outline: 0; } \
-		', $r['film--arrow']));
+		');
 
 		$d.bind('click videoconvert', function(event)
 		{
@@ -1014,9 +1047,9 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 				event.preventDefault();
 				jTarget.next().next().toggle();
 			}
-			else if(jTarget.is('.repliers_right tr:first-child a') && rLink.test(event.target.href)) {
+			else if((event.type === 'videoconvert' || jTarget.is('.repliers_right tr:first-child a')) && rLink.test(event.target.href)) {
 				event.preventDefault();
-				
+
 				sUrl = event.target.href;
 				nWidth = jTarget.up('td,div').width();
 				$.each(aSites, function()
@@ -1026,10 +1059,11 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 						return false;
 					}
 				});
-				
+
 				$('<div></div>')
-				.insertAfter( $('<span title="已轉換連結為影片" class="an-videoified"></span>').insertAfter(jTarget) )
-				.toFlash(sUrl, { width: nWidth, height: nHeight.toFixed(0) }, { wmode: 'opaque', allowfullscreen: 'true' });
+				.insertAfter(jTarget)
+				.toFlash(sUrl, { width: nWidth, height: nHeight.toFixed(0) }, { wmode: 'opaque', allowfullscreen: 'true' })
+				.before('<img title="已轉換連結為影片" class="an-videoified" src="'+$r['film--arrow']+'" />');
 			}
 		});
 	},
@@ -1050,38 +1084,37 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	},
 	once: function()
 	{
-		AN.util.stackStyle('img[onload].an-maskedImage { padding: 52px 48px 0 0; width: 0; height: 0; background: url("' + $r['gnome-mime-image-bmp'] + '") no-repeat; }');
-		
-		var
-		jCurTarget,
-		jButton = $('<img style="display: none; position: absolute; cursor: pointer;" src="'+$r['picture--minus']+'" />')
-		.appendTo('#an')
-		.click(function(event)
-		{
-			jCurTarget.addClass('an-maskedImage');
-			jButton.hide();
-		});
-			
-		$d.bind('mouseover click', function(event)
-		{
-			if(event.target === jButton[0]) return;
-			jCurTarget = $(event.target);
-			
-			if(event.type === 'click' && $(jCurTarget).is('.an-maskedImage')) {
-				event.preventDefault();
-				$(jCurTarget).removeClass('an-maskedImage');
-			}
+		var maskMode = $.inArray(AN.util.getOptions('imageMaskMode'), this.options.imageMaskMode.choices);
+		var selector = {
+			0: '.repliers_right img[onload],',
+			1: '.repliers_right blockquote img[onload],',
+			2: ''
+		}[maskMode];
 
-			if(jCurTarget.is('img[onload]:not(.an-maskedImage)')) {
-				jButton.css(jCurTarget.offset()).show();
-			}
-			else {
-				jButton.hide();
+		AN.util.stackStyle(selector + 'img[onload].an-maskedImage { padding: 52px 48px 0 0; width: 0; height: 0; background: url('+$r['gnome-mime-image-bmp']+') no-repeat; }');
+
+		if(maskMode !== 2) {
+			AN.util.stackStyle('img[onload].an-unmaskedImage { padding: 0; width: auto; height: auto; background: none; }');
+		}
+
+		var jButton = $('<img />', { src: $r['picture--minus'], css: { 'margin-top': '-2px' } })
+		.hoverize('.repliers_right img[onload]', { filter: function(){ return $(this).width(); } })
+		.click(function()
+		{
+			jButton.data('hoverize').jTarget.addClass('an-maskedImage').removeClass('an-unmaskedImage');
+		});
+
+		$d.bind('click', function(event)
+		{
+			if($(event.target).width() === 0) {
+				event.preventDefault();
+				$(event.target).addClass('an-unmaskedImage').removeClass('an-maskedImage').mouseover();
 			}
 		});
 	},
 	infinite: function(jDoc)
 	{
+		return;
 		var maskMode = $.inArray(AN.util.getOptions('imageMaskMode'), this.options.imageMaskMode.choices);
 		if(maskMode !== 2) jDoc.replies().jContents.find(maskMode === 0 ? 'img[onload]' : 'blockquote img[onload]').addClass('an-maskedImage');
 	}
@@ -1095,58 +1128,61 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	once: function()
 	{
 		AN.util.stackStyle('\
-		.an-bammed-msg { display: none; color: #999; font-size: 10px; text-align: center; } \
+		.an-bammed-msg { color: #999; font-size: 10px; text-align: center; } \
 		.an-bammed-msg > span { cursor: pointer; } \
 		.an-bammed > td { opacity: 0.5; } \
 		.an-bammed > .repliers_left > div > a:first-child ~ *, .an-bammed > td > .repliers_right { display: none; } \
 		');
-		
-		var
-		bamList = this.bamList = AN.util.data('aBamList') || [],
-		jButton = $.userButton().click(function(event)
-		{
-			var userid = $.userButton.jTr.attr('userid');
-			var index = $.inArray(userid, bamList);
-			index === -1 ? bamList.push(userid) : bamList.splice(index, 1);
 
-			AN.util.data('aBamList', bamList);
-			toggleReplies(null);
+		var bamList = this.bamList = AN.util.data('aBamList') || [],
+
+		jButton = $.userButton().bind({
+			click: function()
+			{
+				var userid = jButton.data('userButton').jTarget.attr('userid');
+				var index = $.inArray(userid, bamList);
+				index === -1 ? bamList.push(userid) : bamList.splice(index, 1);
+
+				AN.util.data('aBamList', bamList);
+				toggleReplies(null);
+			},
+			buttonshow: function()
+			{
+				var isBammed = jButton.data('userButton').jTarget.hasClass('an-bammed');
+				jButton.attr('src', $r[isBammed ? 'tick-shield' : 'cross-shield']).siblings().toggle(!isBammed);
+			}
 		}),
-		jTempShown,
-		jMsg = $('<div class="an-bammed-msg">( <span></span> )</div>').appendTo('#an').children().click(function(event)
-		{
-			jTempShown = null;
-			jMsg.hide();
-			jCurTarget.parent().toggleClass('an-bammed');
-		}).end();
-		
-		$d.bind('userbuttonsshow', function()
-		{
-			var isBammed = $.userButton.jTr.hasClass('an-bammed');
-			jButton.attr('src', $r[isBammed ? 'tick-shield' : 'cross-shield']).siblings().toggle(!isBammed);
-		});
 
-		$d.mouseover(function(event)
-		{
-			if(jMsg.own(event.target)) return;
+		tempShown,
+		jMsg = $('<div class="an-bammed-msg">( <span></span> )</div>').hoverize('.repliers_left + td', { autoToggle: false, autoPosition: false })
+		.bind({
+			entertarget: function()
+			{
+				var jTarget = jMsg.data('hoverize').jTarget;
+				if(!jTarget.parent().hasClass('an-bammed')) return;
 
-			if(jTempShown && jTempShown.length) {
-				if(jTempShown.own(event.target)) return;
-				jTempShown.parent().addClass('an-bammed');
-			}
-			
-			jTempShown = $(event.target).filter('.an-bammed > .repliers_left + td');
-			
-			if(jTempShown.length) {
-				var height = jCurTarget.outerHeight();
-				
+				var height = jTarget.innerHeight();
+
 				jMsg
-				.children().text($.sprintf('Show Blocked User - %s', jCurTarget.parent().attr('username'))).end()
-				.css($.extend(jCurTarget.offset(), { width: jCurTarget.outerWidth(), height: height, lineHeight: height + 'px' }))
+				.children().text('Show Blocked User - ' + jTarget.parent().attr('username')).end()
+				.css($.extend(jTarget.offset(), { width: jTarget.innerWidth(), height: height, lineHeight: height + 'px' }))
 				.show();
-			}
-			else {
+			},
+			leavetarget: function()
+			{
 				jMsg.hide();
+
+				if(tempShown) {
+					tempShown = false;
+					jMsg.data('hoverize').jTarget.parent().addClass('an-bammed');
+				}
+			},
+			click: function(event)
+			{
+				if(event.target === this) return;
+
+				tempShown = true;
+				jMsg.hide().data('hoverize').jTarget.parent().removeClass('an-bammed');
 			}
 		});
 
@@ -1172,20 +1208,21 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	type: 6,
 	once: function()
 	{
-		var
-		highlightList = this.highlightList = [],
-		jButton = $.userButton().click(function(event)
-		{
-			var userid = $.userButton.jTr.attr('userid');
-			var index = $.inArray(userid, highlightList);
-			index === -1 ? highlightList.push(userid) : highlightList.splice(index, 1);
+		var highlightList = this.highlightList = [],
 
-			toggleReplies(null);
-		});
-		
-		$d.bind('userbuttonsshow', function()
-		{
-			jButton.attr('src', $r[$.userButton.jTr.hasClass('an-highlighted') ? 'highlighter--minus': 'highlighter--plus']);
+		jButton = $.userButton().bind({
+			click: function()
+			{
+				var userid = jButton.data('userButton').jTarget.attr('userid');
+				var index = $.inArray(userid, highlightList);
+				index === -1 ? highlightList.push(userid) : highlightList.splice(index, 1);
+
+				toggleReplies(null);
+			},
+			buttonshow: function()
+			{
+				jButton.attr('src', $r[jButton.data('userButton').jTarget.hasClass('an-highlighted') ? 'highlighter--minus': 'highlighter--plus']);
+			}
 		});
 
 		AN.util.stackStyle($.sprintf('.an-highlighted > td { background-color: %s !important; }', AN.util.getOptions('sHighlightBgColor')));
@@ -1213,19 +1250,19 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	type: 6,
 	once: function()
 	{
-		var
-		oFn = this,
-		jButton = $.userButton($r['magnifier']).click(function(event)
-		{
-			oFn.targetId = oFn.targetId ? null : $.userButton.jTr.attr('userid');
-			toggleReplies(null);
+		var oFn = this,
+		jButton = $.userButton().bind({
+			click: function()
+			{
+				oFn.targetId = oFn.targetId ? null : jButton.data('userButton').jTarget.attr('userid');
+				toggleReplies(null);
+			},
+			buttonshow: function()
+			{
+				jButton.attr('src', $r[oFn.targetId ? 'magnifier-zoom-out' : 'magnifier-zoom-in']);
+			}
 		});
-		
-		$d.bind('userbuttonsshow', function()
-		{
-			jButton.attr('src', $r[oFn.targetId ? 'magnifier-zoom-out' : 'magnifier-zoom-in']);
-		});
-		
+
 		var toggleReplies = this.toggleReplies = function(jScope)
 		{
 			(jScope || $(document)).replies().each(function()
@@ -1286,228 +1323,102 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	options: { sSmileySelectMethod: { desc: '圖示選擇方式', defaultValue: '列表', type: 'select', choices: ['列表', '連結'] } },
 	once: function()
 	{
+		// jQuery('#TABLE_ID').outer().replace(/>\s+</g, '><').replace(/&nbsp;\s+/g, '&nbsp;').replace(/'/g,'\\\'');
 		if(!$('#ctl00_ContentPlaceHolder1_messagetext').length) return;
 
-		var jSmileyTr = $('#ctl00_ContentPlaceHolder1_messagetext').up('tr').next();
-		//if(jSmileyTr.nextAll().length > 1) jSmileyTr.nextAll(':not(:last)').hide();
+		AN.util.stackStyle('\
+		#ctl00_ContentPlaceHolder1_QuickReplyTable table table > tbody > tr:first-child + tr + tr + tr > td:first-child \
+			{ cursor: pointer; } \
+		#ctl00_ContentPlaceHolder1_QuickReplyTable table table > tbody > tr:first-child + tr + tr + tr > td:first-child:before \
+			{ content: url('+$r['smiley-twist']+'); margin-right: 2px; vertical-align: middle; } \
+		');
 
-		// jQuery('#TABLE_ID').outer().replace(/>\s+</g, '><').replace(/&nbsp;\s+/g, '&nbsp;').replace(/'/g,'\\\'');
-
-		var smileys = [
-			{
-				desc: '聖誕表情圖示',
-				html: '<table style="display: none;" cellpadding="0" cellspacing="0"><tbody><tr><td colspan="2"><a href="javascript:InsertText(\'[O:-)x]\',false)"><img style="border-width: 0px;" src="faces/xmas/angel.gif" alt="[O:-)x]"></a>&nbsp;<a href="javascript:InsertText(\'[xx(x]\',false)"><img style="border-width: 0px;" src="faces/xmas/dead.gif" alt="[xx(x]"></a>&nbsp;<a href="javascript:InsertText(\'[:)x]\',false)"><img style="border-width: 0px;" src="faces/xmas/smile.gif" alt="[:)x]"></a>&nbsp;<a href="javascript:InsertText(\'[:o)x]\',false)"><img style="border-width: 0px;" src="faces/xmas/clown.gif" alt="[:o)x]"></a>&nbsp;<a href="javascript:InsertText(\'[:o)jx]\',false)"><img style="border-width: 0px;" src="faces/xmas/clown_jesus.gif" alt="[:o)jx]"></a>&nbsp;<a href="javascript:InsertText(\'[:-(x]\',false)"><img style="border-width: 0px;" src="faces/xmas/frown.gif" alt="[:-(x]"></a>&nbsp;<a href="javascript:InsertText(\'[:~(x]\',false)"><img style="border-width: 0px;" src="faces/xmas/cry.gif" alt="[:~(x]"></a>&nbsp;<a href="javascript:InsertText(\'[;-)x]\',false)"><img style="border-width: 0px;" src="faces/xmas/wink.gif" alt="[;-)x]"></a>&nbsp;<a href="javascript:InsertText(\'[:-[x]\',false)"><img style="border-width: 0px;" src="faces/xmas/angry.gif" alt="[:-[x]"></a>&nbsp;<a href="javascript:InsertText(\'[:-]x]\',false)"><img style="border-width: 0px;" src="faces/xmas/devil.gif" alt="[:-]x]"></a>&nbsp;<a href="javascript:InsertText(\'[:Dx]\',false)"><img style="border-width: 0px;" src="faces/xmas/biggrin.gif" alt="[:Dx]"></a>&nbsp;<a href="javascript:InsertText(\'[:Ox]\',false)"><img style="border-width: 0px;" src="faces/xmas/oh.gif" alt="[:Ox]"></a>&nbsp;<a href="javascript:InsertText(\'[:Px]\',false)"><img style="border-width: 0px;" src="faces/xmas/tongue.gif" alt="[:Px]"></a>&nbsp;<a href="javascript:InsertText(\'[^3^x]\',false)"><img style="border-width: 0px;" src="faces/xmas/kiss.gif" alt="[^3^x]"></a>&nbsp;<a href="javascript:InsertText(\'[?_?x]\',false)"><img style="border-width: 0px;" src="faces/xmas/wonder.gif" alt="[?_?x]"></a>&nbsp;<a href="javascript:InsertText(\'#yupx#\',false)"><img style="border-width: 0px;" src="faces/xmas/agree.gif" alt="#yupx#"></a>&nbsp;<a href="javascript:InsertText(\'#ngx#\',false)"><img style="border-width: 0px;" src="faces/xmas/donno.gif" alt="#ngx#"></a>&nbsp;<a href="javascript:InsertText(\'#hehex#\',false)"><img style="border-width: 0px;" src="faces/xmas/hehe.gif" alt="#hehex#"></a>&nbsp;<a href="javascript:InsertText(\'#lovex#\',false)"><img style="border-width: 0px;" src="faces/xmas/love.gif" alt="#lovex#"></a>&nbsp;<a href="javascript:InsertText(\'#ohx#\',false)"><img style="border-width: 0px;" src="faces/xmas/surprise.gif" alt="#ohx#"></a>&nbsp;</td></tr><tr><td><a href="javascript:InsertText(\'#assx#\',false)"><img style="border-width: 0px;" src="faces/xmas/ass.gif" alt="#assx#"></a>&nbsp;<a href="javascript:InsertText(\'[sosadx]\',false)"><img style="border-width: 0px;" src="faces/xmas/sosad.gif" alt="[sosadx]"></a>&nbsp;<a href="javascript:InsertText(\'#goodx#\',false)"><img style="border-width: 0px;" src="faces/xmas/good.gif" alt="#goodx#"></a>&nbsp;<a href="javascript:InsertText(\'#hohox#\',false)"><img style="border-width: 0px;" src="faces/xmas/hoho.gif" alt="#hohox#"></a>&nbsp;<a href="javascript:InsertText(\'#killx#\',false)"><img style="border-width: 0px;" src="faces/xmas/kill.gif" alt="#killx#"></a>&nbsp;<a href="javascript:InsertText(\'#byex#\',false)"><img style="border-width: 0px;" src="faces/xmas/bye.gif" alt="#byex#"></a>&nbsp;<a href="javascript:InsertText(\'[Z_Zx]\',false)"><img style="border-width: 0px;" src="faces/xmas/z.gif" alt="[Z_Zx]"></a>&nbsp;<a href="javascript:InsertText(\'[@_@x]\',false)"><img style="border-width: 0px;" src="faces/xmas/@.gif" alt="[@_@x]"></a>&nbsp;<a href="javascript:InsertText(\'#adorex#\',false)"><img style="border-width: 0px;" src="faces/xmas/adore.gif" alt="#adorex#"></a>&nbsp;<a href="javascript:InsertText(\'#adore2x#\',false)"><img style="border-width: 0px;" src="faces/xmas/adore2.gif" alt="#adore2x#"></a>&nbsp;<a href="javascript:InsertText(\'[???x]\',false)"><img style="border-width: 0px;" src="faces/xmas/wonder2.gif" alt="[???x]"></a>&nbsp;<a href="javascript:InsertText(\'[bangheadx]\',false)"><img style="border-width: 0px;" src="faces/xmas/banghead.gif" alt="[bangheadx]"></a>&nbsp;<a href="javascript:InsertText(\'[bouncerx]\',false)"><img style="border-width: 0px;" src="faces/xmas/bouncer.gif" alt="[bouncerx]"></a>&nbsp;</td><td rowspan="2" valign="bottom"><a href="javascript:InsertText(\'[offtopicx]\',false)"><img style="border-width: 0px;" src="faces/xmas/offtopic.gif" alt="[offtopicx]"></a>&nbsp;</td></tr><tr><td><a href="javascript:InsertText(\'[censoredx]\',false)"><img style="border-width: 0px;" src="faces/xmas/censored.gif" alt="[censoredx]"></a>&nbsp;<a href="javascript:InsertText(\'[flowerfacex]\',false)"><img style="border-width: 0px;" src="faces/xmas/flowerface.gif" alt="[flowerfacex]"></a>&nbsp;<a href="javascript:InsertText(\'[shockingx]\',false)"><img style="border-width: 0px;" src="faces/xmas/shocking.gif" alt="[shockingx]"></a>&nbsp;<a href="javascript:InsertText(\'[photox]\',false)"><img style="border-width: 0px;" src="faces/xmas/photo.gif" alt="[photox]"></a>&nbsp;<a href="javascript:InsertText(\'[yipesx]\',false)"><img style="border-width: 0px;" src="faces/xmas/yipes.gif" alt="[yipesx]"></a>&nbsp;<a href="javascript:InsertText(\'[yipes2x]\',false)"><img style="border-width: 0px;" src="faces/xmas/yipes2.gif" alt="[yipes2x]"></a>&nbsp;<a href="javascript:InsertText(\'[yipes3x]\',false)"><img style="border-width: 0px;" src="faces/xmas/yipes3.gif" alt="[yipes3x]"></a>&nbsp;<a href="javascript:InsertText(\'[yipes4x]\',false)"><img style="border-width: 0px;" src="faces/xmas/yipes4.gif" alt="[yipes4x]"></a>&nbsp;<a href="javascript:InsertText(\'[369x]\',false)"><img style="border-width: 0px;" src="faces/xmas/369.gif" alt="[369x]"></a>&nbsp;<a href="javascript:InsertText(\'[bombx]\',false)"><img style="border-width: 0px;" src="faces/xmas/bomb.gif" alt="[bombx]"></a>&nbsp;<a href="javascript:InsertText(\'[slickx]\',false)"><img style="border-width: 0px;" src="faces/xmas/slick.gif" alt="[slickx]"></a>&nbsp;<a href="javascript:InsertText(\'[fuckx]\',false)"><img style="border-width: 0px;" src="faces/xmas/diu.gif" alt="[fuckx]"></a>&nbsp;<a href="javascript:InsertText(\'#nox#\',false)"><img style="border-width: 0px;" src="faces/xmas/no.gif" alt="#nox#"></a>&nbsp;<a href="javascript:InsertText(\'#kill2x#\',false)"><img style="border-width: 0px;" src="faces/xmas/kill2.gif" alt="#kill2x#"></a>&nbsp;</td></tr><tr><td><a href="javascript:InsertText(\'#kill3x#\',false)"><img style="border-width: 0px;" src="faces/xmas/kill3.gif" alt="#kill3x#"></a>&nbsp;<a href="javascript:InsertText(\'#cnx#\',false)"><img style="border-width: 0px;" src="faces/xmas/chicken.gif" alt="#cnx#"></a>&nbsp;<a href="javascript:InsertText(\'#cn2x#\',false)"><img style="border-width: 0px;" src="faces/xmas/chicken2.gif" alt="#cn2x#"></a>&nbsp;<a href="javascript:InsertText(\'[bouncyx]\',false)"><img style="border-width: 0px;" src="faces/xmas/bouncy.gif" alt="[bouncyx]"></a>&nbsp;<a href="javascript:InsertText(\'[bouncy2x]\',false)"><img style="border-width: 0px;" src="faces/xmas/bouncy2.gif" alt="[bouncy2x]"></a>&nbsp;<a href="javascript:InsertText(\'#firex#\',false)"><img style="border-width: 0px;" src="faces/xmas/fire.gif" alt="#firex#"></a>&nbsp;</td></tr></tbody></table>'
-			},
-			{
-				desc: '綠帽表情圖示',
-				html: {
-					path: 'faces/xmas/green',
-					table: [
-						[
-							['[:)gx]', 'smile'],
-							['[:o)gx]', 'clown'],
-							['[:-(gx]', 'frown'],
-							['[:~(gx]', 'cry'],
-							['#yupgx#', 'agree']
-						],
-						[
-							['[sosadgx]', 'sosad'],
-							['#goodgx#', 'good'],
-							['#byegx#', 'bye']
-						],
-						[
-							['[369gx]', '369'],
-							['[fuckgx]', 'diu']
-						]
-					]
-				}
-			},
-			{
-				desc: '新年表情圖示',
-				html: {
-					path: 'faces/newyear',
-					table: [
-						[
-							['[:o)n]', 'clown'],
-							['[:o)2n]', 'clown2'],
-							['[:o)3n]', 'clown3']
-						],
-						[
-							['[sosadn]', 'sosad'],
-							['[sosad2n]', 'sosad2'],
-							['[sosad3n]', 'sosad3'],
-							['[bangheadn]', 'banghead'],
-							['[banghead2n]', 'banghead2'],
-							['[bouncern]', 'bouncer']
-						],
-						[
-							['[yipesn]', 'yipes'],
-							['[369n]', '369'],
-							['[3692n]', '3692'],
-							['[fuckn]', 'diu']
-						]
-					],
-					span: [
-							['#assn#', 'ass'],
-						['[offtopicn]', 'offtopic'],
-						['[offtopic2n]', 'offtopic2']
-					]
-				}
-			},
-			{
-				desc: '腦魔表情圖示',
-				html: {
-					path: 'faces/lomore',
-					table: [
-						[
-							['[:-[lm]', 'angry'],
-							['[:Dlm]', 'biggrin'],
-							['[:Olm]', 'oh'],
-							['[:Plm]', 'tongue'],
-							['#lovelm#', 'love'],
-							['#goodlm#', 'good'],
-							['#hoholm#', 'hoho'],
-							['#killlm#', 'kill'],
-							['[???lm]', 'wonder2'],
-							['[flowerfacelm]', 'flowerface'],
-							['[shockinglm]', 'shocking'],
-							['[yipeslm]', 'yipes'],
-							['[offtopiclm]', 'offtopic']
-						],
-						[
-							['[369lm]', '369'],
-							['[@_@lm]', '@'],
-							['#hehelm#', 'hehe'],
-							['[fucklm]', 'diu'],
-							['[bouncerlm]', 'bouncer'],
-							['[sosadlm]', 'sosad']
-						]
-					]
-				}
-			},
-			{
-				desc: 'SARS表情圖示',
-				html: {
-					path: 'faces/sick',
-					table: [
-						[
-							['[O:-)sk]', 'angel'],
-							['[:o)sk]', 'clown'],
-							['[:-[sk]', 'angry'],
-							['[:-]sk]', 'devil'],
-							['#yupsk#', 'agree'],
-							['#ngsk#', 'donno'],
-							['#cnsk#', 'chicken']
-						],
-						[
-							['#asssk#', 'ass'],
-							['[sosadsk]', 'sosad'],
-							['#hohosk#', 'hoho'],
-							['#hoho2sk#', 'hoho2'],
-							['#killsk#', 'kill'],
-							['#byesk#', 'bye'],
-							['[@_@sk]', '@'],
-							['#adoresk# ', 'adore'],
-							['[bangheadsk]', 'banghead']
-						],
-						[
-							['[flowerfacesk]', 'flowerface'],
-							['[shockingsk]', 'shocking'],
-							['[photosk]', 'photo'],
-							['#firesk#', 'fire'],
-							['[369sk]', '369'],
-							['[fucksk]', 'diu']
-						]
-					]
-				}
-			},
-			{
-				desc: '特殊圖示',
-				html: {
-					path: 'faces',
-					table: [
-						[
-							['#good2#', 'ThumbUp'],
-							['#bad#', 'ThumbDown'],
-							['[img]/faces/surprise2.gif[/img]', 'surprise2'],
-							['[img]/faces/beer.gif[/img]', 'beer']
-						]
-					]
-				}
-			}
-		];
-
-		function buildTable(data)
+		$d.bind('click.smileyadder', function(event)
 		{
-			function writeLink(smileyNo, smiley)
-			{
-				tableHTML += $.sprintf(
-					'<a href="javascript:InsertText(\'%(code)s\',false)"><img style="border: 0" src="%(path)s/%(filename)s.gif" alt="%(code)s" /></a>&nbsp;',
-					{ code: smiley[0], path: data.path, filename: smiley[1] }
-				);
-			}
+			var jSmileyTr = $('#ctl00_ContentPlaceHolder1_messagetext').up('tr').next();
 
-			var tableHTML = '<table style="display: none" cellpadding="0" cellspacing="0"><tbody>';
+			if(jSmileyTr.length && jSmileyTr.children(':first')[0] !== event.target) return;
 
-			$.each(data.table, function(rowNo, row)
-			{
-				tableHTML += '<tr>';
+			$d.unbind('click.smileyadder');
 
-				tableHTML += rowNo == 0 ? '<td colspan="2">' : '<td>';
-				$.each(row, writeLink);
-				tableHTML += '</td>';
-
-				if(rowNo == 1 && data.span)
-				{
-					tableHTML += '<td valign="bottom" rowspan="2">';
-					$.each(data.span, writeLink);
-					tableHTML += '</td>';
-				}
-
-				tableHTML += '</tr>';
-			});
-
-			tableHTML += '</tbody></table>';
-
-			return tableHTML;
-		}
-
-		if(AN.util.getOptions('sSmileySelectMethod') == this.options.sSmileySelectMethod.choices[0])
-		{
-			var selectHTML = '<select><option>經典表情圖示</option>';
-			$.each(smileys, function()
-			{
-				selectHTML += '<option>' + this.desc + '</option>';
-				jSmileyTr.children(':last').append(typeof this.html == 'string' ? this.html : buildTable(this.html));
-			});
-			selectHTML += '</select>';
-
-			$(selectHTML).change(function()
-			{
-				jSmileyTr.children(':last').children().hide().eq(this.selectedIndex).show();
-			}).appendTo(jSmileyTr.children(':first').empty()).after(':');
-		}
-		else
-		{
-			AN.util.stackStyle('\
-			#an-smileyselector { list-style: none; margin: 0; padding: 0; font-size: 80%; } \
+			AN.util.addStyle('\
+			#ctl00_ContentPlaceHolder1_QuickReplyTable table table > tbody > tr:first-child + tr + tr + tr > td:first-child \
+				{ cursor: default; } \
+			#ctl00_ContentPlaceHolder1_QuickReplyTable table table > tbody > tr:first-child + tr + tr + tr > td:first-child:before \
+				{ content: ""; display: none; } \
 			');
-			var listHTML = '<ul id="an-smileyselector"><li><a href="javascript:">經典表情圖示</a></li>';
-			$.each(smileys, function()
+
+			jSmileyTr.children(':last').append(function()
 			{
-				listHTML += '<li><a href="javascript:">' + this.desc + '</a></li>';
-				jSmileyTr.children(':last').append(typeof this.html == 'string' ? this.html : buildTable(this.html));
+				var tableHTML = '';
+				$.each($s, function()
+				{
+					var html = this.html;
+
+					tableHTML += '<table style="display: none" cellpadding="0" cellspacing="0"><tbody>';
+
+					$.each(html.table, function(rowNo, row)
+					{
+						function writeLink(smileyNo, smiley)
+						{
+							tableHTML += $.sprintf(
+								'<a href="javascript:InsertText(\'%(code)s\',false)"><img style="border: 0" src="%(path)s/%(filename)s.gif" alt="%(code)s" /></a>&nbsp;',
+								{ code: smiley[0], path: html.path, filename: smiley[1] }
+							);
+						}
+
+						tableHTML += '<tr>';
+
+						tableHTML += rowNo == 0 ? '<td colspan="2">' : '<td>';
+						$.each(row, writeLink);
+						tableHTML += '</td>';
+
+						if(rowNo == 1 && html.span) {
+							tableHTML += '<td valign="bottom" rowspan="2">';
+							$.each(html.span, writeLink);
+							tableHTML += '</td>';
+						}
+
+						tableHTML += '</tr>';
+					});
+
+					tableHTML += '</tbody></table>';
+				});
+				return tableHTML;
 			});
-			listHTML += '</ul>';
 
-			$(listHTML).click(function(event)
-			{
-				var jTarget = $(event.target);
-				if(!jTarget.is('a')) return;
+			if(AN.util.getOptions('sSmileySelectMethod') === '列表') {
+				var selectHTML = '<select><option>經典表情圖示</option>';
+				$.each($s, function()
+				{
+					selectHTML += '<option>' + this.desc + '</option>';
+				});
+				selectHTML += '</select>';
 
-				jSmileyTr.children(':last').children().hide().eq(jTarget.parent().index()).show();
-			}).appendTo(jSmileyTr.children(':first').empty());
-		}
+				$(selectHTML).change(function()
+				{
+					jSmileyTr.children(':last').children().hide().eq(this.selectedIndex).show();
+				}).appendTo(jSmileyTr.children(':first').empty()).after(':');
+			}
+			else {
+				AN.util.addStyle('#an-smileyselector { list-style: none; margin: 0; padding: 0; font-size: 80%; }');
+
+				var listHTML = '<ul id="an-smileyselector"><li><a href="javascript:">經典表情圖示</a></li>';
+				$.each($s, function()
+				{
+					listHTML += '<li><a href="javascript:">' + this.desc + '</a></li>';
+				});
+				listHTML += '</ul>';
+
+				$(listHTML).click(function(event)
+				{
+					var jTarget = $(event.target);
+					if(!jTarget.is('a')) return;
+
+					jSmileyTr.children(':last').children().hide().eq(jTarget.parent().index()).show();
+				}).appendTo(jSmileyTr.children(':first').empty());
+			}
+		});
 	}
 },
 

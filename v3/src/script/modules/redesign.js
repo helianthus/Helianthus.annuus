@@ -11,116 +11,88 @@ AN.mod['Component Redesigner'] = { ver: 'N/A', author: '向日', fn: {
 	},
 	once: function()
 	{
-		AN.util.stackStyle('blockquote + br { display: none; }');
-		
+		AN.util.stackStyle('.repliers_right blockquote + br { display: none; }');
+
 		var
 		styleNo = this.styleNo = $.inArray(AN.util.getOptions('quoteStyle'), this.options.quoteStyle.choices),
-		placeHolder = this.placeHolder = $('#ctl00_ContentPlaceHolder1_view_form')[0],
-		jCurTarget = $(),
 		jButton;
-		
+
 		switch(styleNo) {
 			case 0:
 				AN.util.stackStyle('\
-				blockquote { margin: 0 0 8px 1px; padding: 0 0 7px 40px; } \
-				.an-hiddenquote { padding-left: 0; } \
-				.an-hiddenquote:before { content: url("'+ $r['balloon--plus'] +'"); } \
+				.repliers_right blockquote { margin: 0 0 8px 1px; padding: 0 0 7px 40px; } \
+				blockquote.an-hiddenquote { padding-left: 0; } \
+				.an-hiddenquote:before { content: url('+ $r['balloon--plus'] +'); } \
 				.an-hiddenquote > div { display: none; } \
 				');
-				
-				jButton = $('<img style="display: none; position: absolute; cursor: pointer;" />');
-				
-				$d.mouseover(function(event)
-				{
-					if(event.target === jButton[0]) {
-						if(!jCurTarget.is('.an-hiddenquote')) jCurTarget.css('outline', '1px dashed gray');
-						return;
-					}
-					
-					if(jCurTarget.is('blockquote')) jCurTarget.css('outline', '0');
-					
-					jCurTarget = $(event.target).closest('blockquote', placeHolder);
-					if(jCurTarget.length) {
-						jButton.attr('src', $r[jCurTarget.hasClass('an-hiddenquote') ? 'balloon--plus' : 'balloon--minus']).css(jCurTarget.offset()).show();
-					}
-					else {
-						jButton.hide();
+
+				jButton = $('<img />').hoverize('.repliers_right blockquote').bind({
+					'mouseover mouseout': function(event)
+					{
+						var jTarget = jButton.data('hoverize').jTarget;
+						jTarget.css('outline', event.type === 'mouseout' || jTarget.hasClass('an-hiddenquote') ? '0' : '1px dashed gray');
+					},
+					entertarget: function()
+					{
+						jButton.attr('src', $r[jButton.data('hoverize').jTarget.hasClass('an-hiddenquote') ? 'balloon--plus' : 'balloon--minus']);
 					}
 				});
 			break;
 			case 1:
 				AN.util.stackStyle('\
-				.an-quotetogglebutton { display: none; margin: -18px 0 0 -4px; cursor: pointer; } \
-				.an-quotetogglebutton, blockquote:before { position: absolute; color: #999; } \
-				blockquote:before { content: ""; width: 20px; height: 20px; top 0; left: -4px; margin-top: -18px; } \
-				td > blockquote { margin: 15px 0 10px 3px; } \
-				blockquote { position: relative; margin: 0 0 10px 0; } \
-				blockquote > div { border-left: 2px solid #999; padding-left: 5px; } \
-				.an-hiddenquote:before { content: "+"; } \
+				.an-quotetogglebutton { margin: -18px 0 0 -4px; } \
+				.an-quotetogglebutton, blockquote:before { color: #999; } \
+				.repliers_right blockquote:before { content: ""; position: absolute; width: 20px; height: 20px; top 0; left: -4px; margin-top: -18px; } \
+				.repliers_right td > blockquote { margin: 15px 0 10px 3px; } \
+				.repliers_right blockquote { position: relative; margin: 0 0 10px 0; } \
+				.repliers_right blockquote > div { border-left: 2px solid #999; padding-left: 5px; } \
+				blockquote.an-hiddenquote:before { content: "+"; } \
 				.an-hiddenquote > div > blockquote { display: none; } \
 				');
-				
-				jButton = $('<span class="an-quotetogglebutton"></span>');
-				
-				$d.mouseover(function(event)
+
+				jButton = $('<span class="an-quotetogglebutton"></span>').hoverize('blockquote', { filter: ':has(blockquote)' })
+				.bind('entertarget', function()
 				{
-					if(event.target === jButton[0]) return;
-					
-					jCurTarget = $(event.target).closest('blockquote', placeHolder);
-					if(jCurTarget.children().children('blockquote').length) {
-						jButton.text(jCurTarget.hasClass('an-hiddenquote') ? '+' : '--').css(jCurTarget.offset()).show();
-					}
-					else {
-						jButton.hide();
-					}
+					jButton.text(jButton.data('hoverize').jTarget.hasClass('an-hiddenquote') ? '+' : '--');
 				});
 			break;
 			case 2:
 				AN.util.stackStyle($.sprintf('\
-				.an-quotetogglebutton { display: none; position: absolute; margin: 2px 0 0 -15px; font-weight: bold; cursor: pointer; } \
+				.an-quotetogglebutton { margin: 2px 0 0 -15px; font-weight: bold; } \
 				.an-quotetogglebutton, blockquote:before, .an-hiddenquote:after { font-size: 12px; color: %(sMainHeaderFontColor)s; } \
-				blockquote:before { content: "引用:"; display: block; margin-bottom: 2px; padding-left: 3px; line-height: 1.3; background-color: %(sMainHeaderBgColor)s; } \
-				td > blockquote { border-right-width: 1px; } \
-				blockquote { margin: 0 0 5px 0; border: 1px solid %(sMainBorderColor)s; border-right-width: 0; } \
-				blockquote > div { padding: 0 0 5px 2px; } \
+				.repliers_right blockquote:before { content: "引用:"; display: block; margin-bottom: 2px; padding-left: 3px; line-height: 1.3; background-color: %(sMainHeaderBgColor)s; } \
+				.repliers_right td > blockquote { border-right-width: 1px; } \
+				.repliers_right blockquote { margin: 0 0 5px 0; border: 1px solid %(sMainBorderColor)s; border-right-width: 0; } \
+				.repliers_right blockquote > div { padding: 0 0 5px 2px; } \
 				.an-hiddenquote { position: relative; } \
 				.an-hiddenquote:after { content: "＋"; position: absolute; top: 1px; right: 3px; font-weight: bold; } \
 				.an-hiddenquote > div > blockquote { display: none; } \
 				', AN.util.getOptions()));
-				
-				jButton = $($.sprintf('<span class="an-quotetogglebutton"></span>', AN.util.getOptions()));
-				
-				$d.mouseover(function(event)
+
+				jButton = $('<span class="an-quotetogglebutton"></span>').hoverize('blockquote', { filter: ':has(blockquote)', autoPosition: false })
+				.bind('entertarget', function()
 				{
-					if(event.target === jButton[0]) return;
-					
-					jCurTarget = $(event.target).closest('blockquote', placeHolder);
-					if(jCurTarget.children().children('blockquote').length) {
-						var offset = jCurTarget.offset();
-						jButton.text(jCurTarget.hasClass('an-hiddenquote') ? '＋' : '－').css({ top: offset.top, left: offset.left + jCurTarget.width() }).show();
-					}
-					else {
-						jButton.hide();
-					}
+					var jTarget = jButton.data('hoverize').jTarget,
+					offset = jTarget.offset();
+
+					jButton.text(jTarget.hasClass('an-hiddenquote') ? '＋' : '－').css({ top: offset.top, left: offset.left + jTarget.width() });
 				});
 			break;
 		}
-		
-		jButton.appendTo('#an').click(function(event)
+
+		jButton.click(function()
 		{
-			jCurTarget.toggleClass('an-hiddenquote');
-			jButton.hide();
+			jButton.data('hoverize').jTarget.toggleClass('an-hiddenquote');
 		});
 	},
 	infinite: function(jDoc)
 	{
-		var placeHolder = this.placeHolder;
 		var level = AN.util.getOptions('quoteMaskLevel') - (this.styleNo === 0 ? 1 : 2);
 		if(level < 0) return;
-		
+
 		jDoc.replies().jContents
 		.find(this.styleNo === 0 ? 'blockquote' : 'blockquote:has(blockquote)')
-		.filter(function(){ return $(this).parentsUntil(placeHolder, 'blockquote').length === level; })
+		.filter(function(){ return $(this).parentsUntil('td', 'blockquote').length === level; })
 		.addClass('an-hiddenquote');
 	}
 },
@@ -160,13 +132,13 @@ AN.mod['Component Redesigner'] = { ver: 'N/A', author: '向日', fn: {
 		hideMode === 3 ? nRight : Math.ceil(($.winWidth() - nWidth) / 2),
 		nWidth - 149
 		));
-		
+
 		function toggleQR(toShow, callback)
 		{
 			var isVisible = jToggle.is(':visible');
 			if(toShow === undefined) toShow = !isVisible;
 			else if(isVisible === toShow) return;
-			
+
 			function toggle()
 			{
 				jPreview.empty();
@@ -176,7 +148,7 @@ AN.mod['Component Redesigner'] = { ver: 'N/A', author: '向日', fn: {
 					jTextarea.scrollTop(99999);
 				}
 			}
-			
+
 			if(hideMode === 3) {
 				if(toShow) {
 					jQR.animate({ right: Math.ceil(($.winWidth() - nWidth) / 2) }, 'slow', toggle);
@@ -190,7 +162,7 @@ AN.mod['Component Redesigner'] = { ver: 'N/A', author: '向日', fn: {
 				toggle();
 			}
 		};
-		
+
 		hideMode === 1
 		? jQR.bind('mouseenter mouseleave', function(event){ toggleQR(event.type === 'mouseenter'); })
 		: jQRHeader.click(function(){ toggleQR(); });
@@ -205,7 +177,7 @@ AN.mod['Component Redesigner'] = { ver: 'N/A', author: '向日', fn: {
 			toggleQR(true);
 			jTextarea.val(unescape(result) + '\n');
 		};
-		
+
 		window.doPreview = (function(_doPreview)
 		{
 			return function()

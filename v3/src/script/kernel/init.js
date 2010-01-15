@@ -202,6 +202,26 @@ $.fn.extend(
 	{
 		return this.is(target) || !!this.has(target).length;
 	},
+	
+	top: function()
+	{
+		return this.offset().top;
+	},
+	
+	right: function()
+	{
+		return this.offset().left + this.innerWidth();
+	},
+	
+	bottom: function()
+	{
+		return this.offset().top + this.innerHeight();
+	},
+	
+	left: function()
+	{
+		return this.offset().left;
+	},
 
 	//--------[AN Related]--------//
 
@@ -425,20 +445,15 @@ $.extend(AN,
 		{
 			if(sValue === undefined) // GET
 			{
-				var nStart = document.cookie.indexOf(sName + '=');
-				if(nStart == -1) return null;
-
-				nStart += sName.length + 1;
-
-				var nEnd = document.cookie.indexOf(';', nStart);
-				if(nEnd == -1) nEnd = document.cookie.length;
-
-				return document.cookie.substring(nStart,nEnd);
+				var match = document.cookie.match(
+						new RegExp("(?:^|;\\s*)" + sName + "=([^;]*?)", "g")
+        );
+        return match && match[1];
 			}
 			else
 			{
 				var dExpire = new Date;
-				dExpire.setFullYear(sValue ? dExpire.getFullYear() + 1 : dExpire.setFullYear(1999)); // SET : DEL
+				dExpire.setFullYear(sValue ? 2999 : 1999); // SET : DEL
 				document.cookie = $.sprintf('%s=%s; domain=%s; expires=%s; path=/', sName, sValue || '', location.hostname, dExpire.toUTCString());
 
 				return true;
@@ -756,7 +771,7 @@ $.extend(AN,
 			setTimeout(function()
 			{
 				AN.box.aBenchmark.push({ type: 'start', name: '延期執行項目' });
-
+				
 				for(var i=1; i<=5; i++)
 				{
 					$d.trigger('defer' + i);
@@ -766,7 +781,6 @@ $.extend(AN,
 					}
 				}
 				jDoc.aDefer = null;
-				//jDoc.splice(0, jDoc.length);
 
 				AN.box.aBenchmark.push({ type: 'end', name: '延期執行項目' });
 
@@ -797,7 +811,7 @@ $.event.special.click = {
 	{
 		return function(event)
 		{
-			if(event.type === 'click' && event.button !== 0) return;
+			if(event.type === 'click' && event.button !== undefined && event.button !== 0) return;
 			handler.apply(this, arguments);
 		};
 	}

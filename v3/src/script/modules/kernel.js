@@ -148,7 +148,7 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 		var nInterval = AN.util.getOptions('nCheckUpdateInterval');
 		if(isNaN(nInterval) || nInterval < 1) nInterval = 1;
 		var nLastChecked = AN.util.data('nLastChecked') || 0;
-		if($.time() - AN.util.data('nLastChecked') < 3600000 * nInterval) return;
+		if($.time() - nLastChecked < 3600000 * nInterval) return;
 
 		AN.util.getData('main', function(oMain)
 		{
@@ -167,11 +167,11 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 				{
 					if(aCurrent[i] < aLastest[i] && confirm('發現新版本!\n按確定進行更新'))
 					{
-						var sPrefix = 'http://helianthus-annuus.googlecode.com/svn/dist/v3/' + sType;
+						var sPrefix = 'http://helianthus-annuus.googlecode.com/svn/dist/v3/' + sType + '/';
 						
-						if(navigator.userAgent.indexOf('MAXTHON 2.0') != -1) window.open(sPrefix + 'annuus.m2f', '_self');
-						//else if($.browser.mozilla && typeof unsafeWindow != 'undefined') window.open(sPrefix + 'annuus.user.js', '_self');
-						//else if(navigator.userAgent.indexOf('Chrome') == -1) window.open(sPrefix + 'annuus.crx', '_self');
+						if(navigator.userAgent.indexOf('MAXTHON 2.0') !== -1) window.open(sPrefix + 'annuus.m2f', '_self');
+						else if ($.browser.mozilla) window.open(sPrefix + 'annuus.xpi', '_self');
+						else if(navigator.userAgent.indexOf('Chrome/4') !== -1) window.open(sPrefix + 'annuus.crx', '_self');
 						
 						window.open('http://code.google.com/p/helianthus-annuus/wiki/Changelog', '_blank');
 					}
@@ -197,14 +197,20 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 '722b69f8-b80d-4b0e-b608-87946e00cfdc':
 {
 	desc: '強制鎖定闊度',
-	page: { 65534: true },
+	page: { 65534: 'comp' },
 	type: 3,
-	infinite: function()
+	once: function()
 	{
-		AN.util.stackStyle(' \
-		body { word-wrap: break-word; } \
-		.ListPMText table, .repliers table { overflow-x: hidden; table-layout: fixed; } \
-		');
+		var css = 'body { word-wrap: break-word; }';
+		
+		if($(document).pageName() === 'view') {
+			css += '\
+			.repliers, .repliers_right { table-layout: fixed; } \
+			.repliers_right > tbody > tr:first-child > td { overflow-x: hidden; } \
+			';
+		}
+		
+		AN.util.stackStyle(css);
 	}
 },
 

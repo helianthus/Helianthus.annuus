@@ -22,20 +22,20 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 		{
 			window.changePage = $.blank;
 		});
-		
+
 		window.ToggleUserDetail = $.blank;
-		
+
 		AN.util.stackStyle('.hkg_bottombar_link > img { border: 0; }');
 		$d.bind('mousedown.userlinkbox', function(event)
 		{
 			var jTarget = $(event.target);
 			if(!jTarget.is('a[href^="javascript: ToggleUserDetail"]')) return;
-			
+
 			event.preventDefault();
-			
+
 			var jContainer = jTarget.nextAll('div:first');
 			var jUserDetails = jContainer.children('.repliers_left_user_details');
-			
+
 			if(!jUserDetails.length) {
 				jContainer.append($.sprintf('\
 				<div class="repliers_left_user_details"> \
@@ -47,34 +47,34 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 				));
 			}
 			else {
-				jUserDetails.toggle();	
+				jUserDetails.toggle();
 			}
 		});
-		
+
 		var pages = {};
 		var curPageNo = jDoc.pageNo();
 		var lastPageNo = $('select[name="page"]:first').children().length;
 		var displayMode = $.inArray(AN.util.getOptions('viewAjaxDisplayMode'), this.options.viewAjaxDisplayMode.choices);
-		
+
 		function updateElements(jScope)
-		{			
+		{
 			$('table[width="99%"] > tbody > tr > td > strong').text(jScope.find('table[width="99%"] > tbody > tr > td > strong:first').text());
 		}
-		
+
 		function handleNewPage(jScope, newPageNo)
-		{			
+		{
 			var jDiv = $('.repliers:first', jScope).up('div');
 			jDiv
 			.prepend(jDiv.prev())
 			.children('div:eq(1)').nextAll()[jScope ? 'remove' : 'insertAfter'](jScope ? undefined : jDiv);
-			
+
 			if(displayMode != 2) {
 				var jSelect = jDiv.find('select[name="page"]');
 				jSelect.data('an-pageno', jSelect.val());
 			}
-			
+
 			updateElements(jDiv);
-			
+
 			if(jScope) {
 				for(var pageNo = 1; pageNo <= pages.last; pageNo++) {
 					if(pages[pageNo] && newPageNo < pageNo) {
@@ -83,26 +83,26 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 					}
 				}
 				if(pageNo > pages.last) jDiv.insertAfter(pages[pages.last]);
-				
+
 				AN.modFn.execMods(jDiv);
 			}
-			
+
 			if(!pages.last || newPageNo && newPageNo > pages.last) pages.last = newPageNo || curPageNo;
-			
+
 			pages[newPageNo || curPageNo] = jDiv;
-			
+
 			return jDiv;
 		}
-		
+
 		function changePage(targetPageNo, isAuto)
 		{
 			if(isWorking) return;
-			
+
 			if(targetPageNo < 1) return document.body.scrollIntoView();
 			if(targetPageNo > lastPageNo) return document.body.scrollIntoView(false);
-			
+
 			var previouslyCached = !!pages[targetPageNo];
-			
+
 			function handlePageChange(jDiv) {
 				if(displayMode === 0) pages[curPageNo].hide();
 				location.hash = 'page=' + targetPageNo;
@@ -111,11 +111,11 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 				AN.shared('log', '轉頁完成');
 				$d.trigger({ type: 'workend', isPageChangeEnd: true, previouslyCached: previouslyCached });
 			}
-			
+
 			$d.trigger('workstart');
-			
+
 			AN.shared('log', $.sprintf('正在轉至第%s頁...', targetPageNo));
-			
+
 			if(previouslyCached) {
 				handlePageChange(pages[targetPageNo].show());
 			}
@@ -126,40 +126,40 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 				});
 			}
 		}
-		
+
 		function getReplies(isAuto)
 		{
 			if(isWorking) return;
-			
+
 			if(pages.last == 41) {
 				AN.shared('log', '1001!');
 				return;
 			}
-			
+
 			if(displayMode === 0 && curPageNo != lastPageNo) {
 				if(!isAuto) changePage(curPageNo + 1, isAuto);
 				return;
 			}
-			
+
 			if(displayMode !== 0 && pages.last != lastPageNo) {
 				changePage(pages.last + 1, isAuto);
 				return;
 			}
-			
+
 			$d.trigger('workstart');
-			
+
 			AN.shared('log', '正在讀取最新回覆...');
-			
+
 			$.getDoc(AN.util.getURL({ page: pages.last }), function(jNewDoc)
 			{
 				updateElements(jNewDoc);
-			
+
 				var jNewReplies = jNewDoc.find('.repliers').closest('div > table');
 				var jNewSelect = jNewDoc.find('select[name="page"]:first');
-				
+
 				var oldReplyNum = pages[pages.last].find('.repliers').length;
 				var newLastPageNo = jNewSelect.children().length;
-				
+
 				var difference = jNewReplies.length - oldReplyNum;
 				var hasNextPage = newLastPageNo > lastPageNo;
 
@@ -168,7 +168,7 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 				}
 				else {
 					var jNewElements = $();
-					
+
 					if(difference > 0) {
 						jNewElements = jNewElements.add(jNewReplies.slice(oldReplyNum).insertAfter(pages[pages.last].children('table:last')));
 						AN.shared('log', $.sprintf('加入%s個新回覆', difference));
@@ -176,7 +176,7 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 
 					if(hasNextPage) {
 						lastPageNo = newLastPageNo;
-				
+
 						if(displayMode != 2) {
 							$('select[name="page"]').each(function()
 							{
@@ -186,10 +186,10 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 									jThis.append($.sprintf('<option value="%(pageNo)s">%(pageNo)s</option>', { pageNo: ++max }));
 								}
 							});
-							
+
 							jNewElements = jNewElements.add(jNewSelect.up('div', 3).replaceAll(pages[pages.last].find('select[name="page"]').up('div', 3)));
 						}
-						
+
 						if(displayMode === 0) {
 							AN.shared('log', '發現下一頁, 連結建立');
 						}
@@ -197,21 +197,22 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 							changePage(pages.last + 1, isAuto);
 						}
 					}
-					
+
 					AN.modFn.execMods(jNewElements);
 				}
-				
+
 				$d.trigger('workend');
 			});
 		}
-		
+
 		$('#aspnetForm').submit(function(event)
 		{
-			if(isWorking) return AN.shared('log', '正在工作中, 請稍後再試');
-			
-			$d.trigger('workstart');
-			
 			event.preventDefault();
+
+			if(isWorking) return AN.shared('log', '正在工作中, 請稍後再試');
+
+			$d.trigger('workstart');
+
 			AN.shared('log', '正在發送回覆...');
 			$.post(location.pathname + location.search, $('#aspnetForm').serialize() + '&ctl00%24ContentPlaceHolder1%24btn_Submit.x=0&ctl00%24ContentPlaceHolder1%24btn_Submit.y=0', function(sHTML)
 			{
@@ -220,27 +221,27 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 				$('#ctl00_ContentPlaceHolder1_messagetext').val('');
 				$('#previewArea').empty();
 				AN.shared('log', '回覆發送完成');
-				
+
 				$d.trigger('workend');
-				
+
 				getReplies(true);
 			});
 		});
-		
+
 		var isWorking = false;
-		
+
 		$d.bind('workstart workend', function(event){ isWorking = (event.type == 'workstart'); });
-		
+
 		$d.bind('click', function(event)
 		{
 			var jTarget = $(event.target);
 			if(jTarget.parent('a').length) jTarget = jTarget.parent();
 			if(!(jTarget.is('a') && jTarget.parent('div').siblings('div').children('select[name="page"]').length)) return;
-			
+
 			event.preventDefault();
 			changePage(AN.util.getPageNo(jTarget.attr('href')));
 		});
-		
+
 		if(displayMode == 2) {
 			AN.util.stackStyle($.sprintf('%(pageDiv)s > div, %(pageDiv)s > br, %(pageDiv)s + br { display: none; }', { pageDiv: '#ctl00_ContentPlaceHolder1_view_form > div[style*="100%"]' }));
 		}
@@ -249,53 +250,53 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 			{
 				var jTarget = $(event.target);
 				if(!jTarget.is('select[name="page"]')) return;
-				
+
 				var target = jTarget.val();
 				jTarget.val(jTarget.data('an-pageno'));
 				changePage(target * 1);
 			});
 		}
-		
+
 		handleNewPage();
-		
+
 		(function()
-		{			
+		{
 			var jTimer = $('<span>N/A</span>').appendTo(AN.shared('addInfo', '距離更新: '));
 			var tCheck;
-			
+
 			function countdown(param)
 			{
 				if(param.time >= 0 || isWorking) {
 					if(param.time >= 0) jTimer.text(param.time-- + '秒');
 					return true;
 				}
-				
+
 				$.doTimeout('checkbottom', 500, checkBottom);
 			}
-			
+
 			function checkBottom()
 			{
 				if(pages[pages.last].offset().top + pages[pages.last].height() - $d.scrollTop() - $w.height() > 500) {
 					return true;
 				}
-				
+
 				getReplies(true);
 			}
-			
+
 			var interval = AN.util.getOptions('nCheckInterval');
 			if(!interval || interval < 30) interval = 30;
-			
+
 			$d.bind('workstart workend', function(event)
 			{
 				$.doTimeout('checkbottom');
 				jTimer.text('N/A');
-				
+
 				if(event.type == 'workend' && (displayMode !== 0 || curPageNo == lastPageNo)) {
-					$.doTimeout('checkbottom', 1000, countdown, { time: event.isPageChangeEnd && (event.previouslyCached || pages.last != lastPageNo) ? 3 : interval });
+					$.doTimeout('checkbottom', 1000, countdown, { time: event.isPageChangeEnd && (event.previouslyCached || pages.last != lastPageNo) ? 1 : interval });
 				}
 			});
 		})();
-		
+
 		(function()
 		{
 			var jCurPageLink = $('<a />').appendTo(AN.shared('addInfo', '本頁頁數: '));
@@ -304,11 +305,11 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 				if(event.isPageChangeEnd) jCurPageLink.attr('href', AN.util.getURL({ page: curPageNo })).text('第' + curPageNo + '頁');
 			});
 		})();
-			
+
 		$d.trigger({ type: 'workend', isPageChangeEnd: true });
-		
+
 		jDoc.defer(2, '加入讀取按扭', function(){ AN.shared('addButton', '更新帖子', function(){ getReplies(false); }); });
-		
+
 		if(AN.util.getOptions('addViewAjaxPageLinks')) {
 			//jDoc.defer(1, '加入轉頁連結', function()
 			//{

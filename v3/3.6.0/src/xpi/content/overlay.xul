@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-	<script type="application/x-javascript" src="overlay.js" />
-	<statusbar id="status-bar">
-		<statusbarpanel id="annuus-overlay" tooltiptext="Helianthus.annuus">
-			<image />
-		</statusbarpanel>
-	</statusbar>
-</overlay>

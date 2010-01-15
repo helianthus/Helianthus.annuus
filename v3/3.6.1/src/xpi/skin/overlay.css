@@ -1,3 +1,0 @@
-#annuus-overlay { cursor: pointer; }
-#annuus-overlay > image { list-style-image: url(status-off.png); }
-#annuus-overlay[status="on"] > image { list-style-image: url(status-on.png); }

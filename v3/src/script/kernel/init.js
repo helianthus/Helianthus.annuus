@@ -815,7 +815,7 @@ $.event.special.click = {
 
 $d.bind('click', { disableCheck: true }, function(event)
 {
-	if($(event.target).closest('a').filter(function(){ return /^(?:#|javascript:)/.test(this.getAttribute('href')); }).length) event.preventDefault();
+	if($(event.target).closest('a').filter(function(){ return /^(?:#|javascript:)$/.test(this.getAttribute('href')); }).length) event.preventDefault();
 });
 
 $.support.localStorage = !!(window.localStorage || window.globalStorage || false);

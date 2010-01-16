@@ -809,10 +809,7 @@ $.event.special.click = {
 	{
 		return function(event)
 		{
-			if(event.type === 'click' && !(event.data && event.data.disableCheck) && event.button > 0) {
-				event.stopImmediatePropagation();
-				return;
-			}
+			if(event.type === 'click' && !(event.data && event.data.disableCheck) && event.button > 0) return;
 			handler.apply(this, arguments);
 		};
 	}

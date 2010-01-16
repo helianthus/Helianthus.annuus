@@ -1331,11 +1331,13 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		// jQuery('#TABLE_ID').outer().replace(/>\s+</g, '><').replace(/&nbsp;\s+/g, '&nbsp;').replace(/'/g,'\\\'');
 		if(!$('#ctl00_ContentPlaceHolder1_messagetext').length) return;
 
+		var selector = '#ctl00_ContentPlaceHolder1_QuickReplyTable table table > tbody > tr:first-child + tr + tr + tr';
+		if($('#ctl00_ContentPlaceHolder1_Forum_Type_Row').length) selector += '+ tr + tr';
+		selector += '> td:first-child';
+
 		AN.util.stackStyle('\
-		#ctl00_ContentPlaceHolder1_QuickReplyTable table table > tbody > tr:first-child + tr + tr + tr > td:first-child \
-			{ cursor: pointer; } \
-		#ctl00_ContentPlaceHolder1_QuickReplyTable table table > tbody > tr:first-child + tr + tr + tr > td:first-child:before \
-			{ content: url('+$r['smiley-twist']+'); margin-right: 2px; vertical-align: middle; } \
+		'+selector+' { cursor: pointer; } \
+		'+selector+':before { content: url('+$r['smiley-twist']+'); margin-right: 2px; vertical-align: middle; } \
 		');
 
 		$d.bind('click.smileyadder', function(event)
@@ -1347,10 +1349,8 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			$d.unbind('click.smileyadder');
 
 			AN.util.addStyle('\
-			#ctl00_ContentPlaceHolder1_QuickReplyTable table table > tbody > tr:first-child + tr + tr + tr > td:first-child \
-				{ cursor: default; } \
-			#ctl00_ContentPlaceHolder1_QuickReplyTable table table > tbody > tr:first-child + tr + tr + tr > td:first-child:before \
-				{ content: ""; display: none; } \
+			'+selector+' { cursor: default; } \
+			'+selector+':before { content: ""; display: none; } \
 			');
 
 			jSmileyTr.children(':last').append(function()

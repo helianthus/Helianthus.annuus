@@ -20,10 +20,10 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 	{
 		jDoc.defer(1, '移除原有轉頁功能', function()
 		{
-			window.changePage = $.blank;
+			window.changePage = $.noop;
 		});
 
-		window.ToggleUserDetail = $.blank;
+		window.ToggleUserDetail = $.noop;
 
 		AN.util.stackStyle('.hkg_bottombar_link > img { border: 0; }');
 		$d.bind('mousedown.userlinkbox', function(event)

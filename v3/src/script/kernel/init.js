@@ -2,8 +2,6 @@
 
 $.extend(
 {
-	blank: function(){},
-
 	time: function(nStart)
 	{
 		return nStart ? $.time() - nStart : +new Date;
@@ -38,7 +36,7 @@ $.extend(
 
 	getDoc: function(sURL, success)
 	{
-		var s = 
+		var s =
 		{
 			url: sURL,
 			dataType: 'text',
@@ -54,7 +52,7 @@ $.extend(
 				setTimeout(function(){ $.getDoc(sURL, success); }, 5000);
 			}
 		};
-		
+
 		$.ajax(s);
 	},
 
@@ -197,27 +195,27 @@ $.fn.extend(
 			}
 		});
 	},
-	
+
 	own: function(target)
 	{
 		return this.is(target) || !!this.has(target).length;
 	},
-	
+
 	top: function()
 	{
 		return this.offset().top;
 	},
-	
+
 	right: function()
 	{
 		return this.offset().left + this.innerWidth();
 	},
-	
+
 	bottom: function()
 	{
 		return this.offset().top + this.innerHeight();
 	},
-	
+
 	left: function()
 	{
 		return this.offset().left;
@@ -771,7 +769,7 @@ $.extend(AN,
 			setTimeout(function()
 			{
 				AN.box.aBenchmark.push({ type: 'start', name: '延期執行項目' });
-				
+
 				for(var i=1; i<=5; i++)
 				{
 					$d.trigger('defer' + i);

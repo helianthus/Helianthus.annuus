@@ -205,7 +205,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	type: 4,
 	once: function()
 	{
-		window.DrawImage = $.blank;
+		window.DrawImage = $.noop;
 
 		AN.util.stackStyle('\
 		.repliers_right img[onload] { width: auto; height: auto; max-width: 100% } \
@@ -859,26 +859,30 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		.repliers_right, .repliers_right > tbody, .repliers_right > tbody > tr, .repliers_right > tbody > tr > td { display: block; } \
 		.repliers_right > tbody > tr:first-child { max-height: '+maxHeight+'px; overflow-y: hidden; } \
 		.an-maxheightremoved > .repliers_right > tbody > tr:first-child { max-height: none; } \
+		#an-heighttoggler { margin: -14px 0 0 3.5px; } \
+		#an-heighttoggler > img { padding: 7px 3.5px; cursor: pointer; } \
 		');
 
-		var jButton = $('<img />', { css: { 'margin': '-7px 0 0 7px' } })
+		var jButton = $('<div id="an-heighttoggler"><img src="'+$r['control-eject']+'" /><img src="'+$r['control-stop-270']+'" /><img src="'+$r['control-270']+'" /></div>')
 		.hoverize('.repliers_left + td', {
-			filter: function(){ return $(this).hasClass('an-maxheightremoved') || $(this).find('td:first').height() > maxHeight; },
-			autoPosition: false,
-			fixScroll: 'bottom'
+			filter: function(){ return $(this).hasClass('an-maxheightremoved') || $(this).find('td:first').innerHeight() > maxHeight; },
+			autoPosition: false
 		})
 		.bind({
 			entertarget: function()
 			{
 				var jTarget = jButton.data('hoverize').jTarget,
+				showFirst = jTarget.hasClass('an-maxheightremoved'),
 				offset = jTarget.offset();
-				jButton
-				.css({ top: offset.top + jTarget.height(), left: offset.left })
-				.attr('src', $r[jTarget.hasClass('an-maxheightremoved') ? 'layout-join-vertical' : 'layout-split-vertical']);
+
+				jButton.css({ top: offset.top + jTarget.height(), left: offset.left }).children(':first').toggle(showFirst).nextAll().toggle(!showFirst);
 			},
-			click: function()
+			click: function(event)
 			{
-				jButton.data('hoverize').jTarget.toggleClass('an-maxheightremoved');
+				var data = jButton.data('hoverize');
+				data.fixScroll = $(event.target).index() === 2 ? 'top' : 'bottom';
+				data.fixScroll_difference = data.jTarget[data.fixScroll]() - $d.scrollTop();
+				data.jTarget.toggleClass('an-maxheightremoved');
 			}
 		});
 	}
@@ -1149,7 +1153,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			},
 			buttonshow: function()
 			{
-				var isBammed = jButton.data('userButton').jTarget.hasClass('an-bammed');
+				var isBammed = $.inArray(jButton.data('userButton').jTarget.attr('userid'), bamList) !== -1;
 				jButton.attr('src', $r[isBammed ? 'tick-shield' : 'cross-shield']).siblings().toggle(!isBammed);
 			}
 		}),

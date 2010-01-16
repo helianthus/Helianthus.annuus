@@ -1,9 +1,9 @@
 ﻿<project name="Helianthus.annuus">
 	<property name="dist_prefix" value="../../dist/v3" />
-	
+
 	<!--** test **-->
 	<target name="test" depends="_build,_build_cont" />
-	
+
 	<!--** build **-->
 	<target name="build" depends="_build,_minify,_build_cont" />
 
@@ -13,11 +13,11 @@
 		<delete failonerror="false">
 			<fileset dir="${dist_prefix}/beta" includes="**/*" />
 		</delete>
-		
+
 		<copy todir="${dist_prefix}/beta">
 		 <fileset dir="${dist_prefix}/stable" includes="**/*" />
 		</copy>
-	
+
 		<!-- version.js -->
 		<copy file="src/version.js" tofile="../../other/an.v3.main.js" overwrite="true" encoding="UTF-8">
 			<filterset>
@@ -26,7 +26,7 @@
 			</filterset>
 		</copy>
 
-		<!-- an.crx.xml 
+		<!-- an.crx.xml
 		<copy file="src/crx.xml" tofile="../../other/annuus.crx.xml" overwrite="true" encoding="UTF-8">
 			<filterchain>
 				<expandproperties/>
@@ -39,6 +39,8 @@
 			<entry key="AN_VERSION_STABLE" value="${AN_VERSION}" />
 			<entry key="_AN_VERSION" type="int" operation="+" value="1" />
 		</propertyfile>
+
+		<echo>Version: ${AN_VERSION}</echo>
 	</target>
 
 	<!--** beta **-->
@@ -49,28 +51,30 @@
 				<filter token="AN_STABLE" value="${AN_VERSION_STABLE}" />
 			</filterset>
 		</copy>
+
+		<echo>Version: ${AN_VERSION}</echo>
 	</target>
 
 	<!--** internals **-->
-	
+
 	<target name="_build" depends="_beta">
 		<propertyfile file="build.ini">
 			<entry key="_AN_VERSION" default="0" />
 			<entry key="MAIN_VERSION" default="0" />
-			
+
 			<entry key="BUILD_NUMBER" default="0" type="int" pattern="0000" operation="+" />
 		</propertyfile>
-		
+
 		<property file="build.ini" />
-		
+
 		<tstamp>
 			<format property="BUILD_TIME" pattern="yyyy-MM-dd HH:mm:ss" />
 		</tstamp>
 		<property name="AN_VERSION" value="${MAIN_VERSION}.${_AN_VERSION}.${BUILD_NUMBER}" />
-		
+
 		<delete dir="test" />
 		<mkdir dir="test" />
-		
+
 		<!--
 		<replaceregexp match="}\s*$" replace="}," encoding="UTF-8">
 			<fileset dir="src/modules" includes="*.js" erroronmissingdir="false" />
@@ -86,12 +90,12 @@
 			<fileset file="src/BOM" />
 			<fileset file="src/script/header.js" />
 			<fileset file="src/script/intro.js" />
-			
+
 			<!-- opera -->
 			<filelist dir="src/script/opera">
 				<file name="opera9.js" />
 				<file name="rubbish.js" />
-			</filelist> 
+			</filelist>
 			<!-- lib -->
 			<fileset file="src/script/lib/jquery.js" />
 			<fileset file="src/script/lib/jquery.followup.js" />
@@ -103,28 +107,28 @@
 			<fileset file="src/script/outro.js" />
 		</concat>
 	</target>
-	
+
 	<target name="_minify">
 		<move file="test/annuus.js" tofile="test/annuus-raw.js" />
-	
+
 		<!-- minify -->
 		<tempfile property="temp" destdir="test" suffix=".js" deleteonexit="true" />
-		
+
 		<java jar="build/yuicompressor/yuicompressor.jar" fork="true" failonerror="true">
 			<arg line="test/annuus-raw.js -o ${temp} --charset UTF-8" />
 		</java>
-		
+
 		<concat destfile="test/annuus.js" encoding="UTF-8">
 			<filterchain>
 				<expandproperties/>
 			</filterchain>
-			
+
 			<fileset file="src/BOM" />
 			<fileset file="src/script/header.js" />
 			<fileset file="${temp}" />
 		</concat>
 	</target>
-	
+
 	<target name="_build_cont">
 		<!-- annuus.user.js -->
 		<copy file="test/annuus.js" tofile="test/user/annuus.user.js" overwrite="true" />
@@ -138,7 +142,7 @@
 				<expandproperties/>
 			</filterchain>
 		</copy>
-		
+
 		<!-- xpi -->
 		<copy todir="test" overwrite="true">
 			<fileset dir="src" includes="xpi/" />
@@ -174,13 +178,13 @@
 			<fileset dir="src" includes="crx/" />
 		</copy>
 		<copy file="test/annuus.js" tofile="test/crx/annuus.js" overwrite="true" />
-		
+
 		<!-- privoxy -->
 		<copy todir="test/privoxy" overwrite="true" encoding="UTF-8">
 			<filterchain>
 				<expandproperties/>
 			</filterchain>
-			
+
 			<fileset dir="src/privoxy" includes="**/*" />
 		</copy>
 	</target>
@@ -193,13 +197,13 @@
 			<fileset dir="test/opera" includes="annuus.opera.js" />
 			<fileset dir="test/chrome" includes="annuus.chrome.user.js" />
 		</copy>
-		
+
 		<!-- crx -->
 		<exec executable="cmd">
 			<!-- http://github.com/Constellation/crxmake -->
 			<arg value="/C crxmake --pack-extension=test/crx --pack-extension-key=build/key.pem --extension-out=${dist_dir}/annuus.crx" />
 		</exec>
-		
+
 		<!-- xpi -->
 		<mkdir dir="test/xpi_package" />
 		<mkdir dir="test/xpi_package/chrome" />
@@ -208,16 +212,16 @@
 			<fileset dir="test/xpi" includes="*/**" excludes="content/,locale/,skin/" />
 		</copy>
 		<replaceregexp file="test/xpi_package/chrome.manifest" match=" (?=(?:content|locale|skin)/)" replace=" jar:chrome/annuus.jar!/" flags="g" encoding="UTF-8" />
-		
+
 		<zip destfile="${dist_dir}/annuus.xpi" basedir="test/xpi_package" />
-		
+
 		<!-- m2f -->
 		<zip destfile="${dist_dir}/annuus.m2f" basedir="test/m2f" />
-		
+
 		<!-- privoxy -->
 		<zip destfile="${dist_dir}/annuus.privoxy.zip" basedir="test/privoxy" />
 	</target>
-	
+
 	<target name="_clean">
 		<delete failonerror="false">
 			<fileset dir="${dist_dir}" includes="*/**" />

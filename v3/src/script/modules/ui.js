@@ -179,7 +179,7 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 						{
 							event.stopPropagation();
 
-							var jObject = $(event.target),
+							var jObject = $(event.target).closest('#an-hoverobjects > *'),
 							data = jObject.data('hoverize');
 
 							if(!data) return;
@@ -249,9 +249,9 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 				}
 				else {
 					objectSets.push({ selector: selector, jObject: jObject });
-					this.data('hoverize', $.extend({ fixScroll: false, autoToggle: true, autoPosition: true, filter: null }, option)).appendTo(jHoverObjects);
+					this.data('hoverize', $.extend({ fixScroll: false, fixScroll_autoRecord: true, autoToggle: true, autoPosition: true, filter: null }, option)).appendTo(jHoverObjects);
 
-					if(this.data('hoverize').fixScroll && this.is(':not(div)')) this.click(recordOffset);
+					if(this.data('hoverize').fixScroll && this.data('hoverize').fixScroll_autoRecord) this.click(recordOffset);
 				}
 
 				return this;
@@ -274,7 +274,7 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 					#an-userbuttons > img { display: block; padding: 3.5px 7px; cursor: pointer; } \
 					');
 
-					jUserButtons = $('<div id="an-userbuttons"></div>').hoverize('.repliers_left', { fixScroll: 'top' }).bind({
+					jUserButtons = $('<div id="an-userbuttons"></div>').hoverize('.repliers_left', { fixScroll: 'top', fixScroll_autoRecord: false }).bind({
 						entertarget: function()
 						{
 							jUserButtons.children().data('userButton', { jTarget: jUserButtons.data('hoverize').jTarget.parent() }).trigger('buttonshow');
@@ -282,13 +282,6 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 						buttonshow: function(event)
 						{
 							event.stopPropagation();
-						},
-						click: function(event)
-						{
-							if(event.target !== this) {
-								event.stopPropagation();
-								jUserButtons.click();
-							}
 						}
 					});
 				}

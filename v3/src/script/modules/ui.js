@@ -1075,7 +1075,7 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 				{
 					name: 'jQuery doTimeout',
 					author: 'Ben Alman',
-					url: 'http://plugins.jquery.com/project/printf',
+					url: 'http://benalman.com/projects/jquery-dotimeout-plugin/',
 					license: 'Dual licensed under the MIT and GPL licenses',
 					licenseUrl: 'http://benalman.com/about/license/'
 				},

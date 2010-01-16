@@ -443,9 +443,7 @@ $.extend(AN,
 		{
 			if(sValue === undefined) // GET
 			{
-				var match = document.cookie.match(
-						new RegExp("(?:^|;\\s*)" + sName + "=([^;]*?)", "g")
-        );
+				var match = document.cookie.match(new RegExp("(?:^|;\\s*)" + sName + "=([^;]*)"));
         return match && match[1];
 			}
 			else

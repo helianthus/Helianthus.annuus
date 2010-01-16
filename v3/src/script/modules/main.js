@@ -1107,7 +1107,11 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	type: 6,
 	once: function()
 	{
-		AN.util.stackStyle('a[href].an-linkblocked { text-decoration: line-through; font-style: italic; }');
+		AN.util.stackStyle('\
+		a[href].an-linkblocked { text-decoration: line-through; font-style: italic; cursor: default; } \
+		a[href].an-linkblocked[target]:before { content: attr(rel); } \
+		a[href].an-linkblocked[target] > img { display: none; } \
+		');
 
 		var
 		blockList = this.blockList = AN.util.data('linkBlockList') || [],
@@ -1115,7 +1119,8 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 
 		jButton = $('<img />', { css: { 'margin': '-16px 0 0 -34px', 'padding': '16px' } })
 		.hoverize('.repliers_right > tbody > tr:first-child a', {
-			filter: function(){ return $(this).hasClass('an-linkblocked') || !rInternal.test(this.href); }
+			filter: function(){ return $(this).hasClass('an-linkblocked') || !rInternal.test(this.href); },
+			fixScroll: 'top'
 		})
 		.bind({
 			entertarget: function()
@@ -1127,16 +1132,16 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 				var
 				jTarget = jButton.data('hoverize').jTarget,
 				isBlocked = jTarget.hasClass('an-linkblocked'),
-				hrefAttr = isBlocked ? 'title' : 'href',
+				hrefAttr = isBlocked ? 'rel' : 'href',
 				realHref = jTarget.attr(hrefAttr),
 				jLinks = $(document).replies().jContents.find('a').filter(function(){ return this[hrefAttr] === realHref; }).toggleClass('an-linkblocked');
 
 				if(isBlocked) {
-					jLinks.attr({ href: realHref, title: '' });
+					jLinks.attr({ href: realHref });
 					blockList.splice($.inArray(realHref, blockList), 1);
 				}
 				else {
-					jLinks.attr({ href: 'javascript:', title: realHref });
+					jLinks.attr({ href: 'javascript:', rel: realHref });
 					blockList.push(realHref);
 				}
 
@@ -1148,7 +1153,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	{
 		jDoc.replies().jContents.find('a').filter(function(){ return $.inArray(this.href, fn.blockList) !== -1; }).toggleClass('an-linkblocked').each(function()
 		{
-			$(this).attr({ href: 'javascript:', title: this.href });
+			$(this).attr({ href: 'javascript:', rel: this.href });
 		});
 	}
 },

@@ -809,11 +809,19 @@ $.event.special.click = {
 	{
 		return function(event)
 		{
-			if(event.type === 'click' && event.button !== undefined && event.button !== 0) return;
+			if(event.type === 'click' && !(event.data && event.data.disableCheck) && event.button > 0) {
+				event.stopImmediatePropagation();
+				return;
+			}
 			handler.apply(this, arguments);
 		};
 	}
 };
+
+$d.bind('click', { disableCheck: true }, function(event)
+{
+	if($(event.target).closest('a').filter(function(){ return /^(?:#|javascript:)/.test(this.getAttribute('href')); }).length) event.preventDefault();
+});
 
 $.support.localStorage = !!(window.localStorage || window.globalStorage || false);
 

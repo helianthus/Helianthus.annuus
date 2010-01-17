@@ -208,6 +208,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		window.DrawImage = $.noop;
 
 		AN.util.stackStyle('\
+		.repliers_right a[target] { display: inline-block; max-width: 100% } \
 		.repliers_right img[onload] { width: auto; height: auto; max-width: 100% } \
 		.repliers_right > tbody > tr:first-child a[target]:focus { outline: 0; } \
 		');
@@ -1108,16 +1109,18 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	once: function()
 	{
 		AN.util.stackStyle('\
+		.repliers_right a[target] { display: inline-block; } \
 		a[href].an-linkblocked { text-decoration: line-through; font-style: italic; cursor: default; } \
-		a[href].an-linkblocked[target]:before { content: attr(rel); } \
-		a[href].an-linkblocked[target] > img { display: none; } \
+		a[target].an-linkblocked:before { content: attr(rel); } \
+		a[target].an-linkblocked > img { display: none; } \
+		#an-linkblocktoggler { margin: -16px 0 0 -34px; padding: 16px; padding-right: 2px; } \
 		');
 
 		var
 		blockList = this.blockList = AN.util.data('linkBlockList') || [],
 		rInternal = /^http:\/\/(?:[^.]+.)hkgolden\.com/,
 
-		jButton = $('<img />', { css: { 'margin': '-16px 0 0 -34px', 'padding': '16px' } })
+		jButton = $('<img />', { id: 'an-linkblocktoggler' })
 		.hoverize('.repliers_right > tbody > tr:first-child a', {
 			filter: function(){ return $(this).hasClass('an-linkblocked') || !rInternal.test(this.href); },
 			fixScroll: 'top'

@@ -174,8 +174,8 @@ AN.mod['Component Redesigner'] = { ver: 'N/A', author: '向日', fn: {
 
 		window.OnQuoteSucceeded = function(result)
 		{
-			toggleQR(true);
 			jTextarea.val(unescape(result) + '\n');
+			toggleQR(true);
 		};
 
 		window.doPreview = (function(_doPreview)

@@ -279,7 +279,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			if(!jTarget.is('a') || !(AN.util.getOptions('bTopicLinksOnly') ? /view\.aspx/i : /^(?!javascript|#)/).test(jTarget.attr('href'))) return;
 
 			event.preventDefault();
-			window.open(jTarget.attr('href'), '_blank');
+			window.open(jTarget.attr('href'));
 		});
 	}
 },
@@ -301,7 +301,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			if(event.isDefaultPrevented()) return;
 
 			event.preventDefault();
-			window.open(jTarget.attr('href'), '_blank');
+			window.open(jTarget.attr('href'));
 		});
 	}
 },
@@ -1357,7 +1357,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			if(!rUrl)
 			{
 				var parts = {
-					host: 'http://(?:[\\w-]+\\.)+[a-z]{2,3}(?![a-z])',
+					host: 'http://(?:[\\w-]+\\.)+[a-z]{2,4}(?![a-z])',
 					codes: '\\[/?(?:img|url|quote|\\*|left|center|right|b|i|u|s|size|red|green|blue|purple|violet|brown|black|pink|orange|gold|maroon|teal|navy|limegreen)'
 				};
 

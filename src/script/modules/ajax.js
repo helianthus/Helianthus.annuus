@@ -209,7 +209,14 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 		{
 			event.preventDefault();
 
-			if(isWorking) return AN.shared('log', '正在工作中, 請稍後再試');
+			if(isWorking) {
+				AN.shared('log', '正在工作中, 完成將自動重試');
+				$d.bind('workdend', function()
+				{
+					$('#aspnetForm').submit();
+				});
+				return;
+			}
 
 			$d.trigger('workstart');
 
@@ -284,7 +291,7 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 			}
 
 			var interval = AN.util.getOptions('nCheckInterval');
-			if(!interval || interval < 30) interval = 30;
+			if(!interval || interval < 10) interval = 10;
 
 			$d.bind('workstart workend', function(event)
 			{

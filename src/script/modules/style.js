@@ -135,26 +135,6 @@ AN.mod['Style Editor'] = { ver: 'N/A', author: '向日', fn: {
 		AN.util.getOptions()
 		));
 	}
-},
-
-'eb703eac-bb31-4dbe-b28c-0b6d2942b6f5':
-{
-	desc: '滙入自定CSS(進階用戶專用)',
-	page: { 65534: false },
-	type: 2,
-	options:
-	{
-		sCustomCSSHref: { desc: '自定CSS檔案位置 [部份瀏覽器不支持本地檔案]', defaultValue: '', type: 'text' },
-		sCustomCSSContent: { desc: '自定CSS內容', defaultValue: '/*sample*/ * { color: black !important; }', type: 'text' }
-	},
-	once: function()
-	{
-		var sHref = AN.util.getOptions('sCustomCSS');
-		if(sHref) $('head').append($.sprintf('<link type="text/css" rel="stylesheet" href="%s" />', sHref));
-
-		var sContent = AN.util.getOptions('sCustomCSSContent');
-		if(sContent) AN.util.stackStyle(sContent);
-	}
 }
 
 }};

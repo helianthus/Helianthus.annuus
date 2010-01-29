@@ -1,9 +1,10 @@
-if(/forum\d+\.hkgolden\.com/.test(location.href))
+if(!document.getElemenyById('annuus') && /forum\d+\.hkgolden\.com/.test(location.href))
 {
 	var
 	head = document.getElementsByTagName('head'),
 	script = document.createElement('script');
 
+	script.id = 'annuus';
 	script.charset = 'utf-8';
 	script.src = chrome.extension.getURL("annuus.js");
 

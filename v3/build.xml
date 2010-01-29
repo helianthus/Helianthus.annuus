@@ -1,4 +1,7 @@
 ﻿<project name="Helianthus.annuus">
+	<tempfile property="temp" destdir="test" suffix=".js" deleteonexit="true" />
+	<tempfile property="temp2" destdir="test" suffix=".js" deleteonexit="true" />
+
 	<property name="dist_prefix" value="../../dist/v3" />
 
 	<!--** test **-->
@@ -75,20 +78,12 @@
 		<delete dir="test" />
 		<mkdir dir="test" />
 
-		<!--
-		<replaceregexp match="}\s*$" replace="}," encoding="UTF-8">
-			<fileset dir="src/modules" includes="*.js" erroronmissingdir="false" />
-		</replaceregexp>
-		-->
-
 		<!-- annuus.js -->
-		<concat destfile="test/annuus.js" fixlastline="true" encoding="UTF-8">
+		<concat destfile="${temp}" fixlastline="true" encoding="UTF-8">
 			<filterchain>
 				<expandproperties/>
 			</filterchain>
 
-			<fileset file="src/BOM" />
-			<fileset file="src/script/header.js" />
 			<fileset file="src/script/intro.js" />
 
 			<!-- opera -->
@@ -103,19 +98,32 @@
 			<!-- modules -->
 			<fileset dir="src/script/modules" includes="*.js" />
 			<!-- kernel -->
+			<fileset dir="src/script/kernel" includes="*.js" excludes="init.js" />
 			<fileset file="src/script/kernel/init.js" />
+
 			<fileset file="src/script/outro.js" />
+		</concat>
+
+		<concat destfile="test/annuus.js" encoding="UTF-8">
+			<filterchain>
+				<expandproperties/>
+			</filterchain>
+
+			<fileset file="src/script/header.js" />
+			<fileset file="${temp}" />
 		</concat>
 	</target>
 
 	<target name="_minify">
+		<!-- annuus-raw.js -->
 		<move file="test/annuus.js" tofile="test/annuus-raw.js" />
 
-		<!-- minify -->
-		<tempfile property="temp" destdir="test" suffix=".js" deleteonexit="true" />
+		<!--<java jar="build/yuicompressor/yuicompressor.jar" fork="true" failonerror="true">
+			<arg line="test/annuus-raw.js -o ${temp} - -charset UTF-8" />
+		</java>-->
 
-		<java jar="build/yuicompressor/yuicompressor.jar" fork="true" failonerror="true">
-			<arg line="test/annuus-raw.js -o ${temp} --charset UTF-8" />
+		<java jar="build/closurecompiler/compiler.jar" fork="true" failonerror="true">
+			<arg line="--js test/annuus-raw.js --js_output_file ${temp} --charset UTF-8 --warning_level QUIET" />
 		</java>
 
 		<concat destfile="test/annuus.js" encoding="UTF-8">
@@ -123,7 +131,6 @@
 				<expandproperties/>
 			</filterchain>
 
-			<fileset file="src/BOM" />
 			<fileset file="src/script/header.js" />
 			<fileset file="${temp}" />
 		</concat>
@@ -131,17 +138,24 @@
 
 	<target name="_build_cont">
 		<!-- annuus.user.js -->
-		<copy file="test/annuus.js" tofile="test/user/annuus.user.js" overwrite="true" />
+		<exec executable="build/base64/base64.exe">
+			<arg line="-e ${temp} ${temp2}" />
+		</exec>
 
-		<!-- annuus.opera.js -->
-		<copy file="test/annuus.js" tofile="test/opera/annuus.opera.js" overwrite="true" />
+		<loadfile property="ENCODED_SCRIPT_CONTENT" srcfile="${temp2}">
+			<filterchain>
+				<striplinebreaks />
+			</filterchain>
+		</loadfile>
 
-		<!-- annuus.chrome.js -->
-		<copy file="src/chrome/chrome.js" tofile="test/chrome/annuus.chrome.user.js" overwrite="true" encoding="UTF-8">
+		<concat destfile="test/user/annuus.user.js" fixlastline="true" encoding="UTF-8">
 			<filterchain>
 				<expandproperties/>
 			</filterchain>
-		</copy>
+
+			<fileset file="src/script/header.js" />
+			<fileset file="src/user/annuus.user.js" />
+		</concat>
 
 		<!-- xpi -->
 		<copy todir="test" overwrite="true">
@@ -194,8 +208,6 @@
 		<copy todir="${dist_dir}">
 			<fileset dir="test" includes="annuus.js" />
 			<fileset dir="test/user" includes="annuus.user.js" />
-			<fileset dir="test/opera" includes="annuus.opera.js" />
-			<fileset dir="test/chrome" includes="annuus.chrome.user.js" />
 		</copy>
 
 		<!-- crx -->

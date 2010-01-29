@@ -13,17 +13,15 @@ forum*.hkgolden.com/(?:$|[a-z]+?\.(?:aspx|html))
 forum*.hkgolden.com/(?:$|[a-z]+?\.(?:aspx|html))
 { +filter{annuus.FixInnerForm} }
 forum*.hkgolden.com/(?:$|topic|search|tags)
-{ +filter{annuus.FixViewLayout} }
-forum*.hkgolden.com/view
 { +filter{annuus.FixProfileLayout} }
 forum*.hkgolden.com/Profilepage
 { +filter{annuus.FixBookmarkBar} }
 forum*.hkgolden.com/golden_apps
 
 # Rubbish Remover
-{ +filter{annuus.DynScripts} }
-forum*.hkgolden.com/(?:$|[a-z]+?\.(?:aspx|html))
 { +filter{annuus.EndScripts} }
+forum*.hkgolden.com/(?:$|[a-z]+?\.(?:aspx|html))
+{ +filter{annuus.DynScripts} }
 forum*.hkgolden.com/(?:$|[a-z]+?\.(?:aspx|html))
 { +filter{annuus.BookmarkBar} }
 ### forum*.hkgolden.com/(?:$|[a-z]+?\.(?:aspx|html))

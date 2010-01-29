@@ -1,1 +1,0 @@
-pref("extensions.annuus.switchedOn", true);

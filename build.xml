@@ -2,7 +2,7 @@
 	<tempfile property="temp" destdir="test" suffix=".js" deleteonexit="true" />
 	<tempfile property="temp2" destdir="test" suffix=".js" deleteonexit="true" />
 
-	<property name="dist_prefix" value="../../dist/v3" />
+	<property name="dist_prefix" value="../dist/v3" />
 
 	<!--** test **-->
 	<target name="test" depends="_build,_build_cont" />
@@ -22,7 +22,7 @@
 		</copy>
 
 		<!-- version.js -->
-		<copy file="src/version.js" tofile="../../other/an.v3.main.js" overwrite="true" encoding="UTF-8">
+		<copy file="src/version.js" tofile="../other/an.v3.main.js" overwrite="true" encoding="UTF-8">
 			<filterset>
 				<filter token="AN_BETA" value="${AN_VERSION}" />
 				<filter token="AN_STABLE" value="${AN_VERSION}" />
@@ -30,7 +30,7 @@
 		</copy>
 
 		<!-- an.crx.xml
-		<copy file="src/crx.xml" tofile="../../other/annuus.crx.xml" overwrite="true" encoding="UTF-8">
+		<copy file="src/crx.xml" tofile="../other/annuus.crx.xml" overwrite="true" encoding="UTF-8">
 			<filterchain>
 				<expandproperties/>
 			</filterchain>
@@ -48,7 +48,7 @@
 
 	<!--** beta **-->
 	<target name="beta" depends="_beta, _clean, build, _dist">
-		<copy file="src/version.js" tofile="../../other/an.v3.main.js" overwrite="true" encoding="UTF-8">
+		<copy file="src/version.js" tofile="../other/an.v3.main.js" overwrite="true" encoding="UTF-8">
 			<filterset>
 				<filter token="AN_BETA" value="${AN_VERSION}" />
 				<filter token="AN_STABLE" value="${AN_VERSION_STABLE}" />

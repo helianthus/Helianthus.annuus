@@ -1,0 +1,7 @@
+content		annuus content/
+resource	annuus content/annuus.js
+
+overlay		chrome://browser/content/browser.xul chrome://annuus/content/overlay.xul
+
+skin			annuus classic/1.0 skin/
+style			chrome://annuus/content/overlay.xul chrome://annuus/skin/overlay.css

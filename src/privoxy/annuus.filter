@@ -1,0 +1,29 @@
+# Scripts
+FILTER: annuus.js
+s`</head>`<script charset="utf-8" src="${AN_URL}"></script>\n</head>`is
+
+# IE8 Re-enabler
+FILTER: annuus.ForceIE8
+s`<head>`<head>\n<meta http-equiv="X-UA-Compatible" content="IE=Edge" />`is
+FILTER: annuus.FixInnerForm
+s`(<(?:td|div)[^>]+?>\s*<)form`$1div`isg
+s`(?<=</)form(?=\>\s*</(?:td|div))`div`isg
+FILTER: annuus.FixProfileLayout
+s`<tr><td[^>]+><span id="PMInLineAd.+?</tr>``isg
+FILTER: annuus.FixBookmarkBar
+s`document\.all \? 'className' :``isg
+
+# Others
+FILTER: annuus.ForceMarkup
+s`^([^<]+)$`<html><head></head><body>$1</body></html>`is
+FILTER: annuus.ForceStrictMode
+s`^(?=\s*<html>)`<!DOCTYPE html>`is
+
+# Rubbish Remover
+FILTER: annuus.EndScripts
+s`<div id="Side_GoogleAd".+?</body>`</body>`is
+FILTER: annuus.DynScripts
+s`document.write``isg
+FILTER: annuus.BookmarkBar
+s`.+?/golden_apps/.+``ig
+s`<!-- BottomBar Functions -->.+?<!-- End of BottomBar Functions -->``is

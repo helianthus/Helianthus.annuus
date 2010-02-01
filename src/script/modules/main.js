@@ -703,11 +703,11 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			var jThis = $(this);
 			var sOri = sText = jThis.html();
 
-			sText = sText.replace(rSmiley, '<img style="border-width:0px;vertical-align:middle" src="/faces/$1.gif" alt="$&" />');
+			sText = sText.replace(rSmiley, '<img style="border-width:0px" src="/faces/$1.gif" alt="$&" />');
 
 			$.each(aConvertMap, function()
 			{
-				sText = sText.replace(this.regex, '<img style="border-width:0px;vertical-align:middle" src="/faces/' + this.result + '.gif" alt="$&" />');
+				sText = sText.replace(this.regex, '<img style="border-width:0px" src="/faces/' + this.result + '.gif" alt="$&" />');
 			});
 
 			if(sText != sOri) jThis.html(sText);
@@ -1072,7 +1072,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	type: 6,
 	once: function()
 	{
-		AN.util.stackStyle('.an-linkified { padding-right: 2px; vertical-align: top; }');
+		AN.util.stackStyle('.an-linkified { padding-right: 2px; }');
 	},
 	infinite: function(jDoc)
 	{
@@ -1172,7 +1172,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	once: function()
 	{
 		AN.util.stackStyle('\
-		.an-imagified { padding-left: 2px; vertical-align: middle; } \
+		.an-imagified { padding-left: 2px; } \
 		.an-imagified + a { display: block; } \
 		.an-imagified + a > img { border: 0; } \
 		');
@@ -1306,7 +1306,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		})();
 
 		AN.util.stackStyle('\
-		.an-videoified { padding-left: 2px; vertical-align: top; } \
+		.an-videoified { padding-left: 2px; } \
 		.an-videoified + object { display: block; outline: 0; } \
 		');
 

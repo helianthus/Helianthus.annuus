@@ -211,7 +211,7 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 
 			if(isWorking) {
 				AN.shared('log', '正在工作中, 完成將自動重試');
-				$d.bind('workdend', function()
+				$d.one('workend', function()
 				{
 					$('#aspnetForm').submit();
 				});

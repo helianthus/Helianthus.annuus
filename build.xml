@@ -95,8 +95,8 @@
 			<fileset file="src/script/lib/jquery.js" />
 			<fileset file="src/script/lib/jquery.followup.js" />
 			<fileset dir="src/script/lib" includes="*.js" excludes="jquery.js,jquery.followup.js" />
-			<!-- modules -->
-			<fileset dir="src/script/modules" includes="*.js" />
+			<!-- plugins -->
+			<fileset dir="src/script/plugins" includes="*.js" />
 			<!-- kernel -->
 			<fileset dir="src/script/kernel" includes="*.js" excludes="init.js" />
 			<fileset file="src/script/kernel/init.js" />
@@ -191,13 +191,16 @@
 		<copy file="test/annuus.js" todir="test/m2f/Helianthus.annuus/Scripts" />
 
 		<!-- crx -->
-		<copy todir="test" overwrite="true" encoding="UTF-8">
+		<copy todir="test" overwrite="true">
+			<fileset dir="src" includes="crx/" />
+		</copy>
+
+		<copy file="src/crx/manifest.json" todir="test/crx" overwrite="true" encoding="UTF-8">
 			<filterchain>
 				<expandproperties/>
 			</filterchain>
-
-			<fileset dir="src" includes="crx/" />
 		</copy>
+
 		<copy file="test/annuus.js" tofile="test/crx/annuus.js" overwrite="true" />
 
 		<!-- privoxy -->

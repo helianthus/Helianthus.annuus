@@ -2,7 +2,19 @@
 	"name": "Helianthus.annuus",
 	"version": "${AN_VERSION}",
 	"description": ":o)",
+	"icons": {
+		"48": "icons/icon-48.png",
+		"128": "icons/icon-128.png"
+	},
 	"___update_url": "http://helianthus-annuus.googlecode.com/svn/other/annuus.crx.xml",
+
+	"permissions": ["tabs"],
+
+	"background_page": "background.html",
+	"page_action": {
+		"default_icon": "icons/status-on.png",
+		"default_title": "Helianthus.annuus"
+	},
 	"content_scripts": [
 		{
 			"matches": ["http://*.hkgolden.com/*"],

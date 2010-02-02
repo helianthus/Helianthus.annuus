@@ -1,0 +1,38 @@
+<html>
+<head>
+<script>
+(function()
+{
+	var status = (localStorage.status === 'off' ? false : true);
+
+	function setIcon(tab)
+	{
+		chrome.pageAction.setIcon({ tabId: tab.id, path: status ? 'icons/status-on.png' : 'icons/status-off.png' });
+	}
+
+	chrome.pageAction.onClicked.addListener(function(tab)
+	{
+		status = !status;
+		localStorage.status = status ? 'on' : 'off';
+
+		chrome.windows.getAll({ populate: true }, function(windows)
+		{
+			for(var i=0; i<windows.length; ++i) {
+				var tabs = windows[i].tabs;
+				for(var j=0; j<tabs.length; ++j) {
+					setIcon(tabs[j]);
+				}
+			}
+		});
+	});
+
+	chrome.extension.onRequest.addListener(function(reqeuest, sender, sendResponse)
+	{
+		setIcon(sender.tab);
+		chrome.pageAction.show(sender.tab.id);
+		sendResponse(status);
+	});
+})();
+</script>
+</head>
+</html>

@@ -223,7 +223,11 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 			AN.shared('log', '正在發送回覆...');
 			$.post(location.pathname + location.search, $('#aspnetForm').serialize() + '&ctl00%24ContentPlaceHolder1%24btn_Submit.x=0&ctl00%24ContentPlaceHolder1%24btn_Submit.y=0', function(sHTML)
 			{
-				if($.doc(sHTML).pageName() != 'view') return AN.shared('log', '回覆發送失敗!');
+				if($.doc(sHTML).pageName() !== 'view') {
+					AN.shared('log', '回覆發送失敗!');
+					$d.trigger('workend');
+					return;
+				}
 
 				$('#ctl00_ContentPlaceHolder1_messagetext').val('');
 				$('#previewArea').empty();

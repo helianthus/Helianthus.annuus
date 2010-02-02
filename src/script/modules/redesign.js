@@ -122,7 +122,8 @@ AN.mod['Component Redesigner'] = { ver: 'N/A', author: '向日', fn: {
 		nRight = 50 - nWidth;
 
 		AN.util.stackStyle($.sprintf('\
-		#newmessage { %s; z-index: 3; position: fixed; width: %spx; bottom: 0px; right: %spx; } \
+		#hkg_bottombar { z-index: 3; } \
+		#newmessage { %s; z-index: 2; position: fixed; width: %spx; bottom: 0px; right: %spx; } \
 		#an-qr-header { cursor: pointer; text-align: center; } \
 		#previewArea { display: block; overflow: auto; width: %spx; } \
 		#previewArea img[onload] { max-width: 300px; } \
@@ -141,6 +142,7 @@ AN.mod['Component Redesigner'] = { ver: 'N/A', author: '向日', fn: {
 
 			function toggle()
 			{
+				jQR.css('z-index', toShow ? 4 : 2);
 				jPreview.empty();
 				jToggle.toggle(toShow);
 				if(toShow) {

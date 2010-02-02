@@ -114,6 +114,7 @@
 		</concat>
 	</target>
 
+	<taskdef name="jscomp" classname="com.google.javascript.jscomp.ant.CompileTask" classpath="build/closurecompiler/compiler.jar" />
 	<target name="_minify">
 		<!-- annuus-raw.js -->
 		<move file="test/annuus.js" tofile="test/annuus-raw.js" />
@@ -122,9 +123,15 @@
 			<arg line="test/annuus-raw.js -o ${temp} - -charset UTF-8" />
 		</java>-->
 
-		<java jar="build/closurecompiler/compiler.jar" fork="true" failonerror="true">
-			<arg line="--js test/annuus-raw.js --js_output_file ${temp} --charset UTF-8 --warning_level QUIET" />
-		</java>
+		<!--<java jar="build/closurecompiler/compiler.jar" fork="true" failonerror="true">
+			<arg line="- -js test/annuus-raw.js - -js_output_file ${temp} - -charset UTF-8 - -warning_level QUIET" />
+		</java>-->
+
+		<jscomp compilationLevel="simple" warning="quiet" debug="false" output="${temp}">
+			<sources dir="test">
+				<file name="annuus-raw.js"/>
+			</sources>
+		</jscomp>
 
 		<concat destfile="test/annuus.js" encoding="UTF-8">
 			<filterchain>

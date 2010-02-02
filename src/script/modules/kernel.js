@@ -16,7 +16,7 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 		});
 
 		var AN_VER = '3.5b';
-		
+
 		if(AN.util.data('AN-version') != AN_VER)
 		{
 			if(AN.util.data('AN-version'))
@@ -26,12 +26,12 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 				alert('由於內核改動, 所有設定已被重設.\n不便之處, 敬請原諒.');
 				return location.reload();
 			}
-			
+
 			AN.util.data('AN-version', AN_VER);
 		}
 
 		if($d.pageName() == 'view') $('select[name=page]').val(AN.util.getPageNo(location.search)); // for FF3 where select box does not reset
-		
+
 		$('script').empty();
 	}
 },
@@ -155,9 +155,9 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
  			AN.util.data('nLastChecked', $.time());
 
 			var sType = AN.util.getOptions('bAlsoCheckBeta') ? 'beta' : 'stable';
-			
+
 			if(oMain.ver[sType]['annuus'] === undefined) return;
-			
+
 			var aLastest = oMain.ver[sType]['annuus'].split('.');
 			var aCurrent = AN.version.split('.');
 
@@ -168,14 +168,14 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 					if(aCurrent[i] < aLastest[i] && confirm('發現新版本!\n按確定進行更新'))
 					{
 						var sPrefix = 'http://helianthus-annuus.googlecode.com/svn/dist/v3/' + sType + '/';
-						
+
 						if(navigator.userAgent.indexOf('MAXTHON 2.0') !== -1) window.open(sPrefix + 'annuus.m2f', '_self');
 						else if ($.browser.mozilla) window.open(sPrefix + 'annuus.xpi', '_self');
 						else if(navigator.userAgent.indexOf('Chrome/4') !== -1) window.open(sPrefix + 'annuus.crx', '_self');
-						
+
 						window.open('http://code.google.com/p/helianthus-annuus/wiki/Changelog', '_blank');
 					}
-					
+
 					break;
 				}
 			}
@@ -202,15 +202,21 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 	once: function()
 	{
 		var css = 'body { word-wrap: break-word; }';
-		
+
 		if($(document).pageName() === 'view') {
 			css += '\
 			.repliers, .repliers_right { table-layout: fixed; } \
 			.repliers_right > tbody > tr:first-child > td { overflow-x: hidden; } \
 			';
 		}
-		
+
 		AN.util.stackStyle(css);
+	},
+	infinite: function(jDoc)
+	{
+		if(jDoc.pageNo() === 1) {
+			jDoc.replies().eq(0).find('td[colspan="100%"]').attr('colspan', 2);
+		}
 	}
 },
 

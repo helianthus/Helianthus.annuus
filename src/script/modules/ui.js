@@ -1080,11 +1080,11 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 					licenseUrl: 'http://benalman.com/about/license/'
 				},
 				{
-					name: 'Daily Items Icons',
-					author: 'Igarashi Susumu',
-					url: 'http://www.iconarchive.com/category/vintage/daily-items-icons-by-mozco.html',
-					license: 'eMailware',
-					licenseUrl: 'http://www.iconarchive.com/icons/mozco/daily-items/ReadMe.html'
+					name: 'Red Flower Icon [<a href="http://www.fasticon.com">Icons by: FastIcon.com</a>]',
+					author: 'Fast Icon',
+					url: 'http://www.iconarchive.com/show/nature-icons-by-fasticon/Red-Flower-icon.html',
+					license: 'Fast Icon Commercial License',
+					licenseUrl: 'http://www.fasticon.com/commercial_license.html'
 				},
 				{
 					name: 'Fugue Icons',

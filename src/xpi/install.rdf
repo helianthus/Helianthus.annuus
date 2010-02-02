@@ -4,6 +4,7 @@
   <Description about="urn:mozilla:install-manifest">
     <em:id>project.helianthus@gmail.com</em:id>
     <em:type>2</em:type>
+    <em:iconURL>chrome://annuus/skin/classic/icon.png</em:iconURL>
 
     <em:name>Helianthus.annuus</em:name>
     <em:version>${AN_VERSION}</em:version>

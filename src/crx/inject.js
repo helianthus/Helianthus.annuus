@@ -1,4 +1,4 @@
-if(/forum\d+\.hkgolden\.com/.test(location.href))
+if(/^http:\/\/forum\d+\.hkgolden\.com/i.test(location.href))
 {
 	chrome.extension.sendRequest('isHKG', function(status)
 	{

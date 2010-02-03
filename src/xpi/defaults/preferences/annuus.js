@@ -1,1 +1,1 @@
-pref("extensions.annuus.switchedOn", true);
+pref("extensions.annuus.status", true);

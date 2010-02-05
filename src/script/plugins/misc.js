@@ -1,9 +1,32 @@
 $.extend(an.plugins, {
 
+'11f1c5ca-9455-4f8e-baa7-054b42d9a2c4':
+{
+	desc: '自動轉向正確頁面',
+	page: { 65534: on },
+	type: 4,
+	queue: [{
+		priority: 1,
+		fn: function()
+		{
+			if(location.pathname !== '/login.aspx' && document.referrer.indexOf('/login.aspx') > 0) {
+				location.replace('/topics.aspx?type=BW');
+			}
+			else {
+				var ajaxPageNo = $.state('page');
+
+				if(ajaxPageNo && ajaxPageNo != $.pageNo()) {
+					location.replace($.uri({ querySet: { page: ajaxPageNo === 1 ? null : ajaxPageNo }, fragmentSet: { page: null } }));
+				}
+			}
+		}
+	}]
+},
+
 'c99f77af-c434-4518-9d76-2170aaa21bde':
 {
 	desc: '初始化',
-	page: { 65535: 'comp' },
+	page: { 65535: comp },
 	type: 1,
 	queue: [{
 		fn: function()
@@ -18,29 +41,6 @@ $.extend(an.plugins, {
 			{
 				this.removeAttribute('src');
 			});
-		}
-	}]
-},
-
-'11f1c5ca-9455-4f8e-baa7-054b42d9a2c4':
-{
-	desc: '自動轉向正確頁面',
-	page: { 65534: on },
-	type: 4,
-	queue: [{
-		priority: 1,
-		fn: function()
-		{
-			if(location.pathname !== '/login.aspx' && document.referrer.indexOf('/login.aspx') > 0) {
-				location.replace('/topics.aspx?type=BW');
-			}
-			else {
-				var ajaxPageNo = $.bbq.getState('page');
-
-				if(ajaxPageNo && ajaxPageNo != $.pageNo()) {
-					location.replace($.uri({ querySet: { page: ajaxPageNo === 1 ? null : ajaxPageNo }, fragmentSet: { page: null } }));
-				}
-			}
 		}
 	}]
 },
@@ -105,7 +105,7 @@ $.extend(an.plugins, {
 '78af3c29-9bf2-47ee-80bf-a3575b711c73':
 {
 	desc: '自動檢查更新',
-	page: { 4: on },
+	page: { 4: disabled },
 	type: 1,
 	options: {
 		alsoCheckBeta: { desc: '同時檢查Beta版本', defaultValue: false, type: 'checkbox' },
@@ -165,6 +165,47 @@ $.extend(an.plugins, {
 		fn: function()
 		{
 			window.Profile_ShowGoogleAds = $('.main_table1').an;
+		}
+	}]
+},
+
+'3f693a9e-e79d-4d14-b639-a57bee36079a':
+{
+	desc: '自動顯示伺服器狀態檢查視窗',
+	page: { 1: on },
+	type: 6,
+	queue: [{
+		fn: function(job)
+		{
+			$.run('serverTable');
+		}
+	}]
+},
+
+'4cdce143-74a5-4bdb-abca-0351638816fa':
+{
+	desc: '發表新帖子的主旨過長時進行提示',
+	page: { 256: on },
+	type: 6,
+	queue: [{
+		fn: function(job)
+		{
+			if(location.search.indexOf('mt=N') != -1)
+			{
+				$('#aspnetForm').submit(function()
+				{
+					var sTitle = $('#ctl00_ContentPlaceHolder1_messagesubject').val();
+					var n = 0;
+					for(var i=0; i<sTitle.length; i++)
+					{
+						n += sTitle.charCodeAt(i) > 255 ? 2 : 1;
+					}
+					if(n > 50 && !confirm('主旨過長!(位元組 > 50)\n將導致帖子發表失敗或主旨被裁剪!\n\n確定要進行發表?'))
+					{
+						return false;
+					}
+				});
+			}
 		}
 	}]
 }

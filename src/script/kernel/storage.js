@@ -44,9 +44,9 @@
 		{
 			defaultData.privateData[pluginId] = {};
 
-			$.each(plugin.page, function(pageCode, isDefaultOn)
+			$.each(plugin.page, function(pageCode, status)
 			{
-				defaultData.privateData[pluginId][pageCode] = { status: isDefaultOn ? 1 : 0 };
+				defaultData.privateData[pluginId][pageCode] = { status: status };
 			});
 
 			$.each(['options', 'db'], function(i, type)
@@ -93,7 +93,7 @@
 				if(!defaultData) constructDefaultData();
 
 				for(var profileId in data.profiles) {
-					data.profiles[profileId] = $.extend(true, {}, defaultData, data.profiles[profileId]);
+					data.profiles[profileId] = $.copy({}, defaultData, data.profiles[profileId]);
 				}
 			}
 

@@ -23,15 +23,10 @@
 		}
 	}
 
-	$d.bind('p3end.ss p6end.ss', function(event)
+	$d.one('p3end', function(event)
 	{
 		writeCSS(cache.join(''));
-		cache = [];
-
-		if(event.type === 'p6end') {
-			$d.unbind('.ss');
-			cache = null;
-		}
+		cache = null;
 	});
 
 	$.ss = function(css, remove)

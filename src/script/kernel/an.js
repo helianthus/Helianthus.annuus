@@ -64,7 +64,7 @@
 			if(!pluginPageCode) return;
 
 			var status = settings[pluginId][pluginPageCode].status;
-			if(status === 0) return;
+			if(status < on) return;
 
 			plugin.id = pluginId;
 
@@ -75,22 +75,32 @@
 				}
 			});
 		});
-	};
-
-	$.prioritize = function(priority, type, fn)
+	},
+	curPriority,
+	runUntil = function(until)
 	{
-		if(!fn) {
-			fn = type;
-			type = priority;
-			priority = an.curPriority;
+		for(; curPriority <= until; ++curPriority) {
+			var group = jobGroups[curPriority];
+			for(var i=0; i<group.length; ++i) {
+				var job = group[i];
+				if(job.fnSet.type !== always) group.splice(i--, 1);
+
+				an.curJob = job;
+
+				try {
+					job.fnSet.fn.call(job, job);
+				}
+				catch(e) {
+					$.debug($.format('發生錯誤: {0}', job.plugin.desc), e, job, $j);
+				}
+			}
 		}
-		jobGroups[priority].push(new Job($.extend({}, an.curJob, { fnSet: { type: type, fn: fn } })));
 	};
 
-	$(window).load(function()
+	$(window).one('load', function()
 	{
 		an.isWindowLoaded = true;
-		$d.trigger('winload');
+		$.timeout(function(){ $d.trigger('winload'); });
 	});
 
 	$.fn.an = function()
@@ -99,54 +109,35 @@
 
 		if(!jobGroups) constructJobGroups();
 
-		an.curPriority = 1;
-
-		function runUntil(until)
-		{
-			for(; an.curPriority <= until; an.curPriority++) {
-				$.each(jobGroups[an.curPriority], function(i, job)
-				{
-					an.curJob = job;
-
-					try {
-						job.fnSet.fn.call(job, job);
-					}
-					catch(e) {
-						$.debug($.format('發生錯誤: {0}', job.plugin.desc), job, $j);
-					}
-				});
-			}
-		}
+		curPriority = 1;
 
 		runUntil(3);
-
 		$d.trigger('p3end');
 
 		$(function()
 		{
 			runUntil(6);
-
 			$d.trigger('p6end');
 		});
 
 		$d.one('winload', function()
 		{
 			runUntil(9);
-
 			$d.trigger('p9end');
-
-			an.isFirstRan = true;
-
-			for(var i=1; i<=9; ++i) {
-				jobGroups[i] = $.grep(jobGroups[i], function(job)
-				{
-					return job.fnSet.type > 1;
-				});
-			}
 		});
 
 		if(an.isWindowLoaded) $d.trigger('winload');
 
 		return $j;
+	};
+
+	$.prioritize = function(priority, type, fn)
+	{
+		if(!fn) {
+			fn = type;
+			type = priority;
+			priority = curPriority;
+		}
+		jobGroups[priority].push(new Job($.extend({}, an.curJob, { fnSet: { type: type, fn: fn } })));
 	};
 })(jQuery);

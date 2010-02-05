@@ -10,7 +10,7 @@
 	{
 		if(!jHoverObjects) {
 			$.ss('\
-			#an-hoverobjects > * { display: none; position: absolute; } \
+			#an-hoverobjects > * { display: none; position: absolute; z-index: 1; } \
 			#an-hoverobjects > img, #an-hoverobjects > span { cursor: pointer; } \
 			');
 
@@ -95,37 +95,5 @@
 		}
 
 		return this;
-	};
-})(jQuery);
-
-(function($)
-{
-	var jUserButtons, recordOffset = function()
-	{
-		var data = jUserButtons.data('hoverize');
-		data.fixScroll_difference = data.jTarget.top() - $d.scrollTop();
-	};
-
-	$.userButton = function(src)
-	{
-		if(!jUserButtons) {
-			$.ss('\
-			#an-userbuttons > img:first-child { padding-top: 7px; } \
-			#an-userbuttons > img { display: block; padding: 3.5px 7px; cursor: pointer; } \
-			');
-
-			jUserButtons = $('<div id="an-userbuttons"></div>').hoverize('.repliers_left', { fixScroll: 'top', fixScroll_autoRecord: false }).bind({
-				entertarget: function()
-				{
-					jUserButtons.children().data('userButton', { jTarget: jUserButtons.data('hoverize').jTarget.parent() }).trigger('buttonshow');
-				},
-				buttonshow: function(event)
-				{
-					event.stopPropagation();
-				}
-			});
-		}
-
-		return $('<img />', { src: src, click: recordOffset }).appendTo(jUserButtons);
 	};
 })(jQuery);

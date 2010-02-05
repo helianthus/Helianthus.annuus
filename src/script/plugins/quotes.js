@@ -10,12 +10,14 @@ $.extend(an.plugins, {
 		quoteMaskLevel: { desc: '引用屏蔽層級', type: 'text', defaultValue: 2 }
 	},
 	queue: [{
+		priority: 1,
 		fn: function(job)
 		{
 			$.ss('.repliers_right blockquote + br { display: none; }');
 
 			var
-			styleNo = this.styleNo = $.inArray(job.options('quoteStyle'), job.plugin.options.quoteStyle.choices),
+			styleNo = $.inArray(job.options('quoteStyle'), job.plugin.options.quoteStyle.choices),
+			level = job.options('quoteMaskLevel') - (styleNo === 0 ? 1 : 2),
 			jButton;
 
 			switch(styleNo) {
@@ -87,19 +89,14 @@ $.extend(an.plugins, {
 			{
 				jButton.data('hoverize').jTarget.toggleClass('an-hiddenquote');
 			});
-		}
-	},
-	{
-		type: 2,
-		fn: function(job)
-		{
-			var level = job.options('quoteMaskLevel') - (this.styleNo === 0 ? 1 : 2);
-			if(level < 0) return;
 
-			$j.replies().jContents
-			.find(this.styleNo === 0 ? 'blockquote' : 'blockquote:has(blockquote)')
-			.filter(function(){ return $(this).parentsUntil('td', 'blockquote').length === level; })
-			.addClass('an-hiddenquote');
+			if(level >= 0) $.prioritize(4, always, function()
+			{
+				$j.replies().jContents
+				.find(styleNo === 0 ? 'blockquote' : 'blockquote:has(blockquote)')
+				.filter(function(){ return $(this).parentsUntil('td', 'blockquote').length === level; })
+				.addClass('an-hiddenquote');
+			});
 		}
 	}]
 }

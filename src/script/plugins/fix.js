@@ -43,7 +43,7 @@ $.extend(an.plugins, {
 	page: { 4: on },
 	type: 4,
 	queue: [{
-		type: 2,
+		type: always,
 		fn: function()
 		{
 			if($.uriSet().querySet.type === 'MB') {

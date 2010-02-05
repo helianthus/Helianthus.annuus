@@ -3,7 +3,7 @@ $.extend(an.plugins, {
 '1db9ccc8-ad28-48b6-8744-22f892ca0a44':
 {
 	desc: '加入基本元件',
-	page: { 65535: 'comp' },
+	page: { 65535: comp },
 	type: 1,
 	queue: [{
 		priority: 1,
@@ -69,7 +69,7 @@ $.extend(an.plugins, {
 '72907d8e-4735-4f66-b3c9-20e26197663d':
 {
 	desc: '加入共用元件',
-	page: { 65535: 'comp' },
+	page: { 65535: comp },
 	type: 1,
 	queue: [{
 		priority: 1,
@@ -129,7 +129,7 @@ $.extend(an.plugins, {
 '95e203b9-8d9a-46ad-be53-f4297bad7285':
 {
 	desc: '加入選項元件',
-	page: { 65534: 'comp' },
+	page: { 65534: comp },
 	type: 1,
 	queue: [{
 		priority: 1,
@@ -848,13 +848,10 @@ $.extend(an.plugins, {
 				return $('<div id="an-info" class="an-mod"><ul id="an-info-content" class="an-menu an-small"></ul><div class="an-small" id="an-info-footer">Info</div></div>').appendTo('#an-ui');
 			};
 
-			(function()
+			$.prioritize(7, once, function()
 			{
-				function check(){ return $('#hkg_bottombar').length && $.ss('#an-info { bottom: 30px !important; }') && true; }
-
-				// jQuery onload event sometimes does not fire on chrome?
-				!check() && window.addEventListener ? window.addEventListener('load', check, false) : window.attachEvent('onload', check);
-			})();
+				if($('#hkg_bottombar:visible').length) $.ss('#an-info { bottom: 30px; }');
+			});
 
 			if(job.options('bAddInfoButton'))
 			{
@@ -876,7 +873,7 @@ $.extend(an.plugins, {
 '56ecac51-0257-4d34-897d-6331247b017d':
 {
 	desc: '加入關於元件',
-	page: { 65534: 'comp' },
+	page: { 65534: comp },
 	type: 1,
 	queue: [{
 		priority: 1,

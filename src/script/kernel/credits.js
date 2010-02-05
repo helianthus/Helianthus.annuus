@@ -33,7 +33,7 @@ an.credits = [
 {
 	name: 'Apache Ant',
 	url: 'http://ant.apache.org/',
-	author: 'see link',
+	author: '[See link]',
 	authorUrl: 'http://ant.apache.org/contributors.html',
 	license: 'Apache License 2.0',
 	licenseUrl: 'http://ant.apache.org/license.html'

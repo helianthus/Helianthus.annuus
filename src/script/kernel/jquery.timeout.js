@@ -7,13 +7,18 @@
 		return function()
 		{
 			cache[id].destory = true;
-			fn.apply(null, args);
+			fn.apply(null, args || []);
 			if(cache[id] && cache[id].destory) delete cache[id];
 		};
 	}
 
 	$.timeout = function(id, delay, callback)
 	{
+		if(typeof id !== 'string') {
+			delay ? setTimeout(delay, id) : setTimeout(id, 0);
+			return;
+		}
+
 		if(cache[id]) {
 			clearTimeout(cache[id].timer);
 		}

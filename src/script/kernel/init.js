@@ -16,13 +16,12 @@ $.live('a', 'click', { disableCheck: true }, function(event)
 	if(/^(?:#|javascript:)$/.test(this.href)) event.preventDefault();
 });
 
-/*
-$.ajaxSetup(
+$.timeout('checkdom', function()
 {
-	cache: false,
-	contentType: 'application/x-www-form-urlencoded; charset=UTF-8'
+	document.getElementById('Side_GoogleAd') ? $.ready() : $.timeout('checkdom', 50);
 });
-*/
+
+$.ajaxSetup({ cache: false });
 
 $('<div />', { id: 'an' }).prependTo(document.documentElement);
 

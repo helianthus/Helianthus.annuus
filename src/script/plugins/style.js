@@ -4,7 +4,7 @@ $.extend(an.plugins, {
 {
 	desc: '設定內核樣式',
 	priority: 1,
-	page: { 65535: 'comp' },
+	page: { 65535: comp },
 	type: 2,
 	options: {
 		sUIFontColor: { desc: 'UI主顏色', defaultValue: '#808080', type: 'text', access: 'public' },
@@ -52,7 +52,7 @@ $.extend(an.plugins, {
 '6464e397-dfea-477f-9706-025ec439e810':
 {
 	desc: '設定UI樣式',
-	page: { 65535: 'comp' },
+	page: { 65535: comp },
 	type: 2,
 	options:
 	{

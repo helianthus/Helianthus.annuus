@@ -14,7 +14,7 @@ $.extend(an.plugins, {
 	queue: [{
 		fn: function(job)
 		{
-			$.prioritize(5, 1, function()
+			$.prioritize(5, once, function()
 			{
 				window.changePage = $.noop;
 			});
@@ -35,11 +35,11 @@ $.extend(an.plugins, {
 				if(!jUserDetails.length) {
 					jContainer.append($.format('\
 					<div class="repliers_left_user_details"> \
-						<a class="hkg_bottombar_link" href="/ProfilePage.aspx?userid=%(userid)s"><img src="/images/bb_bookmarks/profile.gif" /></a> \
-						<a class="hkg_bottombar_link" href="/blog/blog.aspx?userid=%(userid)s"><img src="/images/bb_bookmarks/blog.gif" /></a> \
+						<a class="hkg_bottombar_link" href="/ProfilePage.aspx?userid={0}"><img src="/images/bb_bookmarks/profile.gif" /></a> \
+						<a class="hkg_bottombar_link" href="/blog/blog.aspx?userid={0}"><img src="/images/bb_bookmarks/blog.gif" /></a> \
 					</div> \
 					',
-					{ userid: jTarget.up('tr').attr('userid') }
+					jTarget.up('tr').attr('userid')
 					));
 				}
 				else {
@@ -101,7 +101,7 @@ $.extend(an.plugins, {
 
 				function handlePageChange(jDiv) {
 					if(displayMode === 0) pages[curPageNo].hide();
-					location.hash = 'page=' + targetPageNo;
+					$.state('page', targetPageNo);
 					if(!isAuto) jDiv[0].scrollIntoView();//targetPageNo > curPageNo);
 					curPageNo = targetPageNo;
 					$.run('log', '轉頁完成');
@@ -190,7 +190,10 @@ $.extend(an.plugins, {
 								$.run('log', '發現下一頁, 連結建立');
 							}
 							else {
-								changePage(pages.last + 1, isAuto);
+								$d.one('workend', function()
+								{
+									changePage(lastPageNo, isAuto);
+								});
 							}
 						}
 

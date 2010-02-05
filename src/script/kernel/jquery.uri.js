@@ -23,11 +23,13 @@
 
 	function parse(url)
 	{
-		var uriSet = {}, i = keys.length, arr = regex.exec(url);
+		// unescape is for search page, on9 admin!!
+		// will have unexpected result with encoded URI!!
+		var uriSet = {}, i = keys.length, arr = regex.exec(unescape(url));
 
 		while(i--) uriSet[keys[i]] = arr[i] || '';
 
-		return clean($.extend(uriSet, { querySet: $.deparam(unescape(uriSet.query)), fragmentSet: $.deparam(uriSet.fragment) }));
+		return clean($.extend(uriSet, { querySet: $.deparam(uriSet.query), fragmentSet: $.deparam(uriSet.fragment) }));
 	}
 
 	$.uri = function(url, param)
@@ -39,7 +41,7 @@
 
 		if(!param) return url;
 
-		var ret = '', uriSet = clean($.extend(true, parse(url), param)), paramed;
+		var ret = '', uriSet = clean($.copy(parse(url), param)), paramed;
 
 		if(param.host) {
 			ret += param.host;
@@ -92,12 +94,13 @@
 			}
 		}
 
-		return ret;
+		return decodeURI(ret);
 	};
 
 	$.uriSet = function(url, param)
 	{
-		return parse($.uri(url, param));
+		if(!url) url = location.href;
+		return parse(param ? $.uri(url, param) : url);
 	};
 
 	$.fn.uriSet = function()
@@ -119,10 +122,23 @@
 	{
 		if(typeof url !== 'string') {
 			param = url;
-			url = location.hash;
+			url = location.hash
 		}
 
 		return param ? '#' + $.uriSet(url, { fragmentSet: param }).fragment : url;
+	};
+
+	$.state = function(name, val)
+	{
+		if(val === undefined) {
+			return name ? $.uriSet().fragmentSet[name] : $.uriSet().fragmentSet;
+		}
+
+		var hash, param = { poweredby: null };
+		if(name) param[name] = val;
+		hash = $.hash(param);
+
+		if(location.hash || hash !== '#') location.hash = hash === '#' ? '#poweredBy=annuus' : hash;
 	};
 })(jQuery);
 

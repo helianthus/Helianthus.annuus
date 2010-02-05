@@ -60,6 +60,21 @@ $.extend({
 		}
 	},
 
+	// deep extend with array replacing
+	copy: function(target)
+	{
+		var name, src, copy;
+		$.each($.slice(arguments, 1), function(i, options)
+		{
+			for(name in options) {
+				src = target[name];
+				copy = options[name];
+				target[name] = copy && typeof copy === 'object' ? $.copy($.isPlainObject(src) ? src : $.isArray(copy) ? [] : {}, copy) : copy;
+			}
+		});
+		return target;
+	},
+
 	correct: function(target)
 	{
 		if($.isNumber(target)) {
@@ -99,7 +114,7 @@ $.extend({
 			console.debug(val);
 		}
 		catch(err) {
-			alert(val);
+			alert(arguments.length === 1 ? val : val[0]);
 		}
 	},
 

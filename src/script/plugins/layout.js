@@ -3,7 +3,7 @@ $.extend(an.plugins, {
 '722b69f8-b80d-4b0e-b608-87946e00cfdc':
 {
 	desc: '強制鎖定闊度',
-	page: { 65534: 'comp' },
+	page: { 65534: comp },
 	type: 3,
 	queue: [{
 		priority: 1,
@@ -25,7 +25,7 @@ $.extend(an.plugins, {
 	},
 	{
 		page: 32,
-		type: 2,
+		type: always,
 		fn: function()
 		{
 			if($.pageNo() === 1) {

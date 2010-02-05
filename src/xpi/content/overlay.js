@@ -21,9 +21,9 @@ window.addEventListener('load', function()
 	}, false);
 
 	gBrowser.addProgressListener({
-		onLocationChange: function(browser, progress, request, uri)
+		onLocationChange: function(progress, request, uri)
 		{
-			if(uri) overlay.hidden = !rHKG.test(uri.prePath);
+			overlay.hidden = !(uri && rHKG.test(uri.prePath));
 		},
 		onStateChange: noop,
 		onProgressChange: noop,

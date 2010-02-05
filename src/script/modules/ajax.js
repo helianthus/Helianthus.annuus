@@ -194,7 +194,10 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 							AN.shared('log', '發現下一頁, 連結建立');
 						}
 						else {
-							changePage(pages.last + 1, isAuto);
+							$d.one('workend', function()
+							{
+								changePage(pages.last + 1, isAuto);
+							});
 						}
 					}
 

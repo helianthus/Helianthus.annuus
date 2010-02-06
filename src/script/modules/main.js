@@ -38,10 +38,10 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			32: $.sprintf('\
 			#ctl00_ContentPlaceHolder1_view_form > script:first-child + div { width: 100% !important; } \
 			#ctl00_ContentPlaceHolder1_view_form > script:first-child + div + div { display: none; } \
-			div[style*="58px"], /* top & bottom ads */\
+			#ctl00_ContentPlaceHolder1_view_form div > div[style*="%s"] { border-bottom: 0 !important; } \
+			#ctl00_ContentPlaceHolder1_view_form div > div[style*="58px"], /* top & bottom ads */\
 			#ctl00_ContentPlaceHolder1_view_form > div > table[width="100%"] > tbody > tr + tr /* inline ads */\
 				{ display: none; } \
-			div[style*="%s"] { border-bottom: 0 !important; } \
 			',
 			$.browser.msie ? 'PADDING-BOTTOM: 18px' : 'padding: 18px'
 			)

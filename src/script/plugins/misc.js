@@ -3,7 +3,7 @@ $.extend(an.plugins, {
 '11f1c5ca-9455-4f8e-baa7-054b42d9a2c4':
 {
 	desc: '自動轉向正確頁面',
-	page: { 65534: on },
+	pages: { on: [normal] },
 	type: 4,
 	queue: [{
 		priority: 1,
@@ -26,7 +26,7 @@ $.extend(an.plugins, {
 'c99f77af-c434-4518-9d76-2170aaa21bde':
 {
 	desc: '初始化',
-	page: { 65535: comp },
+	pages: { comp: [all] },
 	type: 1,
 	queue: [{
 		fn: function()
@@ -48,7 +48,7 @@ $.extend(an.plugins, {
 'a599dafa-b550-4b28-921a-019c72f481e5':
 {
 	desc: '除錯模式',
-	page: { 65535: off },
+	pages: { off: [all] },
 	type: 1,
 	queue: [{
 		fn: function()
@@ -105,7 +105,7 @@ $.extend(an.plugins, {
 '78af3c29-9bf2-47ee-80bf-a3575b711c73':
 {
 	desc: '自動檢查更新',
-	page: { 4: disabled },
+	pages: { disabled: [topics] },
 	type: 1,
 	options: {
 		alsoCheckBeta: { desc: '同時檢查Beta版本', defaultValue: false, type: 'checkbox' },
@@ -159,7 +159,7 @@ $.extend(an.plugins, {
 'c217bf55-6d44-42d1-8fc2-2cd1662d604a':
 {
 	desc: '轉頁後再次運行功能',
-	page: { 64: on },
+	pages: { on: [profilepage] },
 	type: 1,
 	queue: [{
 		fn: function()
@@ -172,7 +172,7 @@ $.extend(an.plugins, {
 '3f693a9e-e79d-4d14-b639-a57bee36079a':
 {
 	desc: '自動顯示伺服器狀態檢查視窗',
-	page: { 1: on },
+	pages: { on: [error] },
 	type: 6,
 	queue: [{
 		fn: function(job)
@@ -185,7 +185,7 @@ $.extend(an.plugins, {
 '4cdce143-74a5-4bdb-abca-0351638816fa':
 {
 	desc: '發表新帖子的主旨過長時進行提示',
-	page: { 256: on },
+	pages: { on: [post] },
 	type: 6,
 	queue: [{
 		fn: function(job)

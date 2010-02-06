@@ -3,7 +3,7 @@ $.extend(an.plugins, {
 'bc2521cd-cf65-4cc5-ac9d-4fedef3c3a97':
 {
 	desc: 'Ajax式列表更新',
-	page: { 4: on },
+	pages: { on: [topics] },
 	type: 7,
 	options:
 	{

@@ -3,7 +3,7 @@ $.extend(an.plugins, {
 '8be1ac06-030a-42d4-a8f4-f2b7f4881300':
 {
 	desc: '改變引用風格',
-	page: { 32: on },
+	pages: { on: [view] },
 	type: 8,
 	options: {
 		quoteStyle: { desc: '引用風格', type: 'select', choices: ['預設', '復古', '現代'], defaultValue: '預設' },
@@ -91,7 +91,7 @@ $.extend(an.plugins, {
 			});
 
 			if(level >= 0) $.prioritize(4, always, function()
-			{
+			{
 				$j.replies().jContents
 				.find(styleNo === 0 ? 'blockquote' : 'blockquote:has(blockquote)')
 				.filter(function(){ return $(this).parentsUntil('td', 'blockquote').length === level; })

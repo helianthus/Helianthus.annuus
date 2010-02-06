@@ -3,7 +3,7 @@ $.extend(an.plugins, {
 'b6b232c8-1f26-449e-bb0d-2b7826bf95ef':
 {
 	desc: '去除論壇原有的圖片縮小功能',
-	page: { 32: on, 192: on },
+	pages: { on: [view, profilepage | sendpm] },
 	type: 4,
 	queue: [{
 		fn: function(job)
@@ -22,7 +22,7 @@ $.extend(an.plugins, {
 'd7adafa8-cc14-45f9-b3e9-bc36eab05d4f':
 {
 	desc: '縮小引用中的圖片',
-	page: { 32: off },
+	pages: { off: [view] },
 	type: 4,
 	options: { nQuoteImgMaxHeight: { desc: '圖片最大高度(px)', defaultValue: 100, type: 'text' } },
 	queue: [{
@@ -36,7 +36,7 @@ $.extend(an.plugins, {
 '52ebe3d3-bf98-44d2-a101-180ec69ce290':
 {
 	desc: '移除帖子連結高亮部份',
-	page: { 64: off },
+	pages: { off: [profilepage] },
 	type: 4,
 	queue: [{
 		fn: function(job)
@@ -56,7 +56,7 @@ $.extend(an.plugins, {
 '87a6307e-f5c2-405c-8614-af60c85b101e':
 {
 	desc: '搜尋開新頁',
-	page: { 4: off, 24: off },
+	pages: { off: [topics, search | tags] },
 	type: 4,
 	queue: [{
 		fn: function(job)
@@ -78,7 +78,7 @@ $.extend(an.plugins, {
 'a93f1149-d11b-4b72-98dd-c461fd9ee754':
 {
 	desc: '連結開新頁',
-	page: { 4: off, 24: off, 64: off },
+	pages: { off: [topics, search | tags, profilepage] },
 	type: 4,
 	options: { bTopicLinksOnly: { desc: '只限帖子連結', defaultValue: false, type: 'checkbox' } },
 	queue: [{
@@ -98,7 +98,7 @@ $.extend(an.plugins, {
 '2ab2f404-0d35-466f-98a5-c88fdbdaa031':
 {
 	desc: '外鏈連結開新頁',
-	page: { 32: on },
+	pages: { on: [view] },
 	type: 4,
 	queue: [{
 		fn: function(job)
@@ -117,7 +117,7 @@ $.extend(an.plugins, {
 'b73d2968-8301-4c5e-8700-a89541d274fc':
 {
 	desc: '回復傳統用戶連結',
-	page: { 32: off },
+	pages: { off: [view] },
 	type: 4,
 	queue: [{
 		fn: function(job)
@@ -135,7 +135,7 @@ $.extend(an.plugins, {
 '6e978310-e87b-4043-9def-076a13377c19':
 {
 	desc: '更換favicon(小丑icon) [部份瀏覽器無效]',
-	page: { 65534: off },
+	pages: { off: [normal] },
 	type: 4,
 	queue: [{
 		fn: function(job)
@@ -148,7 +148,7 @@ $.extend(an.plugins, {
 'e54d5c5f-47ae-4839-b4e8-6fc3733edfef':
 {
 	desc: '改進公司模式',
-	page: { 65534: on },
+	pages: { on: [normal] },
 	type: 4,
 	options:
 	{

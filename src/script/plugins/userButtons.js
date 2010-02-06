@@ -35,7 +35,7 @@ $.extend(an.plugins, {
 'db770fdc-9bf5-46b9-b3fa-78807f242c3c':
 {
 	desc: '用戶封鎖功能',
-	page: { 32: on },
+	pages: { on: [view] },
 	type: 6,
 	queue: [{
 		fn: function(job)
@@ -119,7 +119,7 @@ $.extend(an.plugins, {
 '7906be8e-1809-40c1-8e27-96df3aa229d8':
 {
 	desc: '用戶高亮功能',
-	page: { 32: on },
+	pages: { on: [view] },
 	type: 6,
 	queue: [{
 		fn: function(job)
@@ -169,7 +169,7 @@ $.extend(an.plugins, {
 'e82aa0ba-aa34-4277-99ea-41219dcdacf2':
 {
 	desc: '用戶單獨顯示功能',
-	page: { 32: on },
+	pages: { on: [view] },
 	type: 6,
 	queue: [{
 		fn: function(job)

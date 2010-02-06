@@ -4,7 +4,7 @@ $.extend(an.plugins, {
 {
 	desc: '設定內核樣式',
 	priority: 1,
-	page: { 65535: comp },
+	pages: { comp: [all] },
 	type: 2,
 	options: {
 		sUIFontColor: { desc: 'UI主顏色', defaultValue: '#808080', type: 'text', access: 'public' },
@@ -52,7 +52,7 @@ $.extend(an.plugins, {
 '6464e397-dfea-477f-9706-025ec439e810':
 {
 	desc: '設定UI樣式',
-	page: { 65535: comp },
+	pages: { comp: [all] },
 	type: 2,
 	options:
 	{
@@ -95,7 +95,7 @@ $.extend(an.plugins, {
 '89615a78-21b7-46bd-aeb1-12e7f031e896':
 {
 	desc: '強制更改全局字體',
-	page: { 65534: off },
+	pages: { off: [normal] },
 	type: 2,
 	options: { sMainFontFamily: { desc: '字體名稱', defaultValue: 'SimSun', type: 'text' } },
 	queue: [{
@@ -110,7 +110,7 @@ $.extend(an.plugins, {
 'cad6d058-f999-460d-ac29-4074f33f46fb':
 {
 	desc: '設定連結樣式',
-	page: { 65534: off },
+	pages: { off: [normal] },
 	type: 2,
 	options:
 	{
@@ -141,7 +141,7 @@ $.extend(an.plugins, {
 '7574582b-2fea-4079-8dfb-7ac4e5587ecb':
 {
 	desc: '改變論壇樣式',
-	page: { 65534: off },
+	pages: { off: [normal] },
 	type: 2,
 	options:
 	{

@@ -2,9 +2,7 @@
 {
 	function Job(data)
 	{
-		for(var prop in data) {
-			this[prop] = data[prop];
-		}
+		$.extend(this, data);
 	}
 
 	$.each(['options', 'db'], function(i, type)
@@ -60,19 +58,22 @@
 
 		$.each(an.plugins, function(pluginId, plugin)
 		{
-			var pluginPageCode = $.bitmasks(pageCode, plugin.page);
-			if(!pluginPageCode) return;
-
-			var status = settings[pluginId][pluginPageCode].status;
-			if(status < on) return;
-
-			plugin.id = pluginId;
-
-			$.each(plugin.queue, function(i, fnSet)
+			$.each(plugin.pages, function(status, pluginPageCode)
 			{
-				if(!fnSet.page || fnSet.page & pageCode) {
-					jobGroups[fnSet.priority || 4].push(new Job({ plugin: plugin, fnSet: fnSet, pageCode: pluginPageCode }));
+				if(!(pluginPageCode & pageCode)) return;
+
+				if(status !== 'disabled' && settings[pluginId][pluginPageCode].status >= 1) {
+					plugin.id = pluginId;
+
+					$.each(plugin.queue, function(i, fnSet)
+					{
+						if(!fnSet.page || fnSet.page & pageCode) {
+							jobGroups[fnSet.priority || 4].push(new Job({ plugin: plugin, fnSet: fnSet, pageCode: pluginPageCode }));
+						}
+					});
 				}
+
+				return false;
 			});
 		});
 	},

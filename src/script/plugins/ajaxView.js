@@ -3,7 +3,7 @@ $.extend(an.plugins, {
 'b17a0463-e46c-4420-a8f5-f169fac20aec':
 {
 	desc: 'Ajax化頁面讀取',
-	page: { 32: on },
+	pages: { on: [view] },
 	type: 7,
 	options:
 	{

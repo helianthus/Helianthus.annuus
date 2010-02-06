@@ -3,7 +3,7 @@ $.extend(an.plugins, {
 '86d24fc8-476a-4de3-95e1-5e0eb02b3353':
 {
 	desc: '轉換表情碼為圖片',
-	page: { 92: on },
+	pages: { on: [topics | search | tags | profilepage] },
 	type: 6,
 	queue: [{
 		fn: function(job)
@@ -49,7 +49,7 @@ $.extend(an.plugins, {
 'b69c5067-2726-43f8-b3de-dfb907355b71':
 {
 	desc: '標題過濾功能',
-	page: { 4: on },
+	pages: { on: [topics] },
 	type: 6,
 	options:
 	{

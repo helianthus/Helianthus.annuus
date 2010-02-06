@@ -3,7 +3,7 @@ $.extend(an.plugins, {
 '7b36188f-c566-46eb-b48d-5680a4331c1f':
 {
 	desc: '轉換論壇連結的伺服器位置',
-	page: { 32: on },
+	pages: { on: [view] },
 	type: 6,
 	queue: [{
 		fn: function(job)
@@ -23,7 +23,7 @@ $.extend(an.plugins, {
 'e33bf00c-9fc5-46ab-866a-03c4c7ca5056':
 {
 	desc: '轉換文字連結成連結',
-	page: { 32: on },
+	pages: { on: [view] },
 	type: 6,
 	queue: [{
 		fn: function(job)
@@ -69,7 +69,7 @@ $.extend(an.plugins, {
 '422fe323-e61e-47d9-a348-d40011f5da28':
 {
 	desc: '連結封鎖功能',
-	page: { 32: off },
+	pages: { off: [view] },
 	type: 6,
 	queue: [{
 		fn: function(job)
@@ -132,7 +132,7 @@ $.extend(an.plugins, {
 'd761d6f7-8ef7-4d5b-84e9-db16a274f616':
 {
 	desc: '轉換圖片連結成圖片',
-	page: { 32: on },
+	pages: { on: [view] },
 	type: 6,
 	options: {
 		imageConvertMode: { desc: '轉換模式', type: 'select', choices: ['自動轉換', '自動轉換(引用中的連結除外)', '手動轉換'], defaultValue: '手動轉換' }
@@ -175,7 +175,7 @@ $.extend(an.plugins, {
 '8e1783cd-25d5-4b95-934c-48a650c5c042':
 {
 	desc: '圖片屏蔽功能',
-	page: { 32: off },
+	pages: { off: [view] },
 	type: 6,
 	options: {
 		imageMaskMode: { desc: '屏蔽模式', type: 'select', choices: ['自動屏蔽', '自動屏蔽(只限引用中的圖片)', '手動屏蔽'], defaultValue: '自動屏蔽(只限引用中的圖片)' }
@@ -218,7 +218,7 @@ $.extend(an.plugins, {
 '039d820f-d3c7-4539-8647-dde974ceec0b':
 {
 	desc: '轉換視頻網站連結成影片',
-	page: { 32: on },
+	pages: { on: [view] },
 	type: 6,
 	options: {
 		videoConvertMode: { desc: '轉換模式', type: 'select', choices: ['自動轉換', '自動轉換(引用中的連結除外)', '手動轉換'], defaultValue: '自動轉換(引用中的連結除外)' }

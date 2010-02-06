@@ -3,7 +3,7 @@ $.extend(an.plugins, {
 '1db9ccc8-ad28-48b6-8744-22f892ca0a44':
 {
 	desc: '加入基本元件',
-	page: { 65535: comp },
+	pages: { comp: [all] },
 	type: 1,
 	queue: [{
 		priority: 1,
@@ -69,7 +69,7 @@ $.extend(an.plugins, {
 '72907d8e-4735-4f66-b3c9-20e26197663d':
 {
 	desc: '加入共用元件',
-	page: { 65535: comp },
+	pages: { comp: [all] },
 	type: 1,
 	queue: [{
 		priority: 1,
@@ -129,7 +129,7 @@ $.extend(an.plugins, {
 '95e203b9-8d9a-46ad-be53-f4297bad7285':
 {
 	desc: '加入選項元件',
-	page: { 65534: comp },
+	pages: { comp: [65535] },
 	type: 1,
 	queue: [{
 		priority: 1,
@@ -325,12 +325,12 @@ $.extend(an.plugins, {
 							if(jTarget.hasClass('an-settings-switch'))
 							{
 								aInfo = jTarget.attr('id').replace(/an-settings-switch-/, '').split(sSep);
-								oInfo = { page: aInfo[0] * 1, id: aInfo[1] };
+								oInfo = { pages: aInfo[0] * 1, id: aInfo[1] };
 							}
 							else
 							{
 								aInfo = jTarget.attr('id').replace(/an-settings-option-/, '').split(sSep);
-								oInfo = { page: aInfo[0] * 1, name: aInfo[1], type: jTarget[0].nodeName == 'SELECT' ? 'select' : jTarget.attr('type') };
+								oInfo = { pages: aInfo[0] * 1, name: aInfo[1], type: jTarget[0].nodeName == 'SELECT' ? 'select' : jTarget.attr('type') };
 							}
 							jTarget.data('info', oInfo);
 						}
@@ -566,7 +566,7 @@ $.extend(an.plugins, {
 '71c9bd88-dc3b-4a97-b04c-20052dcfcdcb':
 {
 	desc: '加入評測元件',
-	page: { 65534: on },
+	pages: { on: [normal] },
 	type: 1,
 	queue: [{
 		priority: 1,
@@ -640,7 +640,7 @@ $.extend(an.plugins, {
 '0868eb64-9631-42dd-8b5c-02f11a8c9a48':
 {
 	desc: '加入記錄元件 [右下]',
-	page: { 65534: on },
+	pages: { on: [normal] },
 	type: 1,
 	options:
 	{
@@ -713,7 +713,7 @@ $.extend(an.plugins, {
 'e9051bb8-2613-4f10-82ec-69290831c6a5':
 {
 	desc: '加入按扭元件 [左上]',
-	page: { 65534: on },
+	pages: { on: [normal] },
 	type: 1,
 	options:
 	{
@@ -759,7 +759,7 @@ $.extend(an.plugins, {
 '437dc7da-fdfa-429a-aec5-329c80222327':
 {
 	desc: '加入連結元件 [左中]',
-	page: { 65534: on },
+	pages: { on: [normal] },
 	type: 1,
 	options:
 	{
@@ -819,7 +819,7 @@ $.extend(an.plugins, {
 '1c6e8869-8148-4e58-b440-31e1bee4aef1':
 {
 	desc: '加入資訊元件 [左下]',
-	page: { 65534: on },
+	pages: { on: [normal] },
 	type: 1,
 	options:
 	{
@@ -873,7 +873,7 @@ $.extend(an.plugins, {
 '56ecac51-0257-4d34-897d-6331247b017d':
 {
 	desc: '加入關於元件',
-	page: { 65534: comp },
+	pages: { comp: [65535] },
 	type: 1,
 	queue: [{
 		priority: 1,
@@ -935,7 +935,7 @@ $.extend(an.plugins, {
 '629944a0-a4f2-493c-8c8d-e1261a9264f9':
 {
 	desc: '鼠標遠離UI元件時半透明',
-	page: { 65534: off },
+	pages: { off: [normal] },
 	type: 1,
 	options: { nUIOpacity: { desc: '透明度 (10 = 移除半透明)', type: 'select', defaultValue: 3, choices: [10,9,8,7,6,5,4,3,2,1,0] } },
 	queue: [{

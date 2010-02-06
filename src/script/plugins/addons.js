@@ -3,7 +3,7 @@ $.extend(an.plugins, {
 '231825ad-aada-4f5f-8adc-5c2762c1b0e5':
 {
 	desc: '顯示資料: 樓主名稱',
-	page: { 32: on },
+	pages: { on: [view] },
 	type: 5,
 	queue: [{
 		fn: function(job)
@@ -19,7 +19,7 @@ $.extend(an.plugins, {
 '9e181e79-153b-44d5-a482-5ccc6496a172':
 {
 	desc: '顯示資料: 累計在線時間',
-	page: { 65534: off },
+	pages: { off: [normal] },
 	type: 5,
 	queue: [{
 		priority: 2,
@@ -59,7 +59,7 @@ $.extend(an.plugins, {
 'f47e77c8-6f1a-43b2-8493-f43de222b3b4':
 {
 	desc: '加入伺服器狀態顯示按扭',
-	page: { 65534: on },
+	pages: { on: [normal] },
 	type: 5,
 	queue: [{
 		priority: 2,
@@ -73,7 +73,7 @@ $.extend(an.plugins, {
 '7de28ca9-9c44-4949-ad4a-31f38a984715':
 {
 	desc: '加入一鍵留名按扭',
-	page: { 32: off },
+	pages: { off: [view] },
 	type: 5,
 	options: { sLeaveNameMsg: { desc: '回覆內容', defaultValue: '留名', type: 'text' } },
 	queue: [{
@@ -93,7 +93,7 @@ $.extend(an.plugins, {
 '69260bc4-4f43-4dda-ba0f-87ba804a866c':
 {
 	desc: '加入同步登入所有server的按扭',
-	page: { 65534: off },
+	pages: { off: [normal] },
 	type: 5,
 	queue: [{
 		priority: 2,
@@ -176,7 +176,7 @@ $.extend(an.plugins, {
 '13c276a5-f84e-4f53-9ada-45545ccc6b2e':
 {
 	desc: '加入同步登出所有server的按扭',
-	page: { 65534: off },
+	pages: { off: [normal] },
 	type: 5,
 	queue: [{
 		priority: 2,
@@ -231,7 +231,7 @@ $.extend(an.plugins, {
 'aad1f3ac-e70c-4878-a1ef-678539ca7ee4':
 {
 	desc: '加入前往吹水台的快速連結',
-	page: { 65534: on },
+	pages: { on: [normal] },
 	type: 5,
 	queue: [{
 		priority: 2,
@@ -245,7 +245,7 @@ $.extend(an.plugins, {
 'd0d76204-4033-4bd6-a9a8-3afbb807495f':
 {
 	desc: '加入前往最頂/底的按扭',
-	page: { 32: on },
+	pages: { on: [view] },
 	type: 5,
 	queue: [{
 		priority: 5,
@@ -260,7 +260,7 @@ $.extend(an.plugins, {
 'b78810a2-9022-43fb-9a9b-f776100dc1df':
 {
 	desc: '加入樓層編號',
-	page: { 32: on },
+	pages: { on: [view] },
 	type: 5,
 	queue: [{
 		type: always,

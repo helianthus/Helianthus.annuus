@@ -35,6 +35,8 @@
 	},
 	constructDefaultData = function()
 	{
+		var statusMap = { disabled: -1, off: 0, on: 1, comp: 2 };
+
 		defaultData = {
 			publicData: {},
 			privateData: {}
@@ -44,9 +46,9 @@
 		{
 			defaultData.privateData[pluginId] = {};
 
-			$.each(plugin.page, function(pageCode, status)
+			$.each(plugin.pages, function(status, pageCode)
 			{
-				defaultData.privateData[pluginId][pageCode] = { status: status };
+				defaultData.privateData[pluginId][pageCode] = { status: statusMap[status] };
 			});
 
 			$.each(['options', 'db'], function(i, type)

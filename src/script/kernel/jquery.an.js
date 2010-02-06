@@ -79,7 +79,7 @@ $.extend({
 	pageName: function(url)
 	{
 		var uriSet = $.uriSet(url);
-		return (uriSet.filename && uriSet.filename.replace(/\..+/, '') || uriSet.directory && uriSet.directory.slice(1, -1)).toLowerCase();
+		return (uriSet.filename && uriSet.filename.replace(/\.[^.]+$/, '') || uriSet.directory && uriSet.directory.slice(1, -1)).toLowerCase();
 	},
 
 	pageNo: function(url)

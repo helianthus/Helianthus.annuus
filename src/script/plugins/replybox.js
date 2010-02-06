@@ -3,7 +3,7 @@ $.extend(an.plugins, {
 'cb1917f9-4053-40b1-870d-e0e2c6a90b39':
 {
 	desc: '改變快速回覆的風格',
-	page: { 32: on },
+	pages: { on: [view] },
 	type: 8,
 	options:
 	{
@@ -99,7 +99,7 @@ $.extend(an.plugins, {
 'a7484cf2-9cbd-47aa-ac28-472f55a1b8f4':
 {
 	desc: '需要時自動加入代碼插入按扭',
-	page: { 288: on },
+	pages: { on: [view | post | sendpm] },
 	type: 6,
 	queue: [{
 		fn: function(job)
@@ -138,7 +138,7 @@ $.extend(an.plugins, {
 '1fb17624-7c6f-43aa-af11-9331f1f948cb':
 {
 	desc: '強化表情圖示列',
-	page: { 288: on },
+	pages: { on: [view | post | sendpm] },
 	type: 6,
 	options: { sSmileySelectMethod: { desc: '圖示選擇方式', defaultValue: '列表', type: 'select', choices: ['列表', '連結'] } },
 	queue: [{
@@ -230,7 +230,7 @@ $.extend(an.plugins, {
 'e336d377-bec0-4d88-b6f8-52e122f4d1c9':
 {
 	desc: '加入自訂文字插入控件',
-	page: { 288: on },
+	pages: { on: [view | post | sendpm] },
 	type: 5,
 	queue: [{
 		fn: function(job)

@@ -3,7 +3,7 @@ $.extend(an.plugins, {
 '63d2407a-d8db-44cb-8666-64e5b76378a2':
 {
 	desc: '隱藏廣告',
-	page: { 65535: on },
+	pages: { on: [all] },
 	type: 3,
 	options: { 'bRetroHideAds': { desc: '相容性模式', defaultValue: false, type: 'checkbox' } },
 	queue: [{

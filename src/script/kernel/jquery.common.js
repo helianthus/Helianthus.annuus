@@ -129,6 +129,35 @@ $.extend({
 		return obj;
 	},
 
+	digEach: function(target)
+	{
+		var
+		args = [null].concat($.slice(arguments, 1, -1)),
+		len = args.length,
+		callback = arguments[len];
+
+		(function dig(target, argIndex, ids)
+		{
+			if(argIndex === len) {
+				return callback.apply(target, ids.concat(target));
+			}
+
+			var digId = args[argIndex++];
+
+			if(digId === null) {
+				var ret;
+				$.each(target, function(id, prop)
+				{
+					return (ret = dig(prop, argIndex, ids.concat(id)));
+				});
+				return ret;
+			}
+			else {
+				return dig(target[digId], argIndex, ids);
+			}
+		})(target, 0, []);
+	},
+
 	isNumber: function(target)
 	{
 		return !isNaN(target * 1) && !isNaN(parseInt(target));
@@ -162,9 +191,9 @@ $.extend({
 		return $[name] && $[name].apply($, $.slice(arguments, 1));
 	},
 
-	slice: function(target, pos)
+	slice: function(target, start, end)
 	{
-		return Array.prototype.slice.call(target, pos);
+		return Array.prototype.slice.apply(target, Array.prototype.slice.call(arguments, 1));
 	},
 
 	time: function(nStart)

@@ -3,7 +3,7 @@ $.extend(an.plugins, {
 'fc07ccda-4e76-4703-8388-81dac9427d7c':
 {
 	desc: '強制顯示空白用戶名連結',
-	page: { 32: on },
+	pages: { on: [view] },
 	type: 6,
 	queue: [{
 		fn: function(job)
@@ -23,7 +23,7 @@ $.extend(an.plugins, {
 '63333a86-1916-45c1-96e0-f34a5add67c1':
 {
 	desc: '限制回覆高度',
-	page: { 32: off },
+	pages: { off: [view] },
 	type: 6,
 	options: {
 		replyMaxHeight: { desc: '最大高度(px)', type: 'text', defaultValue: 2000 }

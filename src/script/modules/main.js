@@ -1214,7 +1214,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	{
 		var maskMode = $.inArray(AN.util.getOptions('imageMaskMode'), this.options.imageMaskMode.choices);
 		var selector = {
-			0: '.repliers_right img[onload],',
+			0: '.repliers_right img[src][onload],',
 			1: '.repliers_right blockquote img[onload],',
 			2: ''
 		}[maskMode];
@@ -1240,12 +1240,6 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 				jTarget.addClass('an-unmaskedImage').removeClass('an-maskedImage').mouseover();
 			}
 		});
-	},
-	infinite: function(jDoc)
-	{
-		return;
-		var maskMode = $.inArray(AN.util.getOptions('imageMaskMode'), this.options.imageMaskMode.choices);
-		if(maskMode !== 2) jDoc.replies().jContents.find(maskMode === 0 ? 'img[onload]' : 'blockquote img[onload]').addClass('an-maskedImage');
 	}
 },
 

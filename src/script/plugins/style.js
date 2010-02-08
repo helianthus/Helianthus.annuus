@@ -19,7 +19,7 @@ $.extend(an.plugins, {
 	},
 	queue: [{
 		priority: 1,
-		fn: function()
+		js: function()
 		{
 			$.rules('\
 			#an, #an legend { color: {0.sMainFontColor}; } \
@@ -61,7 +61,7 @@ $.extend(an.plugins, {
 	},
 	queue: [{
 		priority: 1,
-		fn: function()
+		js: function()
 		{
 			$.rules('\
 			.an-box { display: none; position: fixed; left: 50%; top: 50%; z-index: 10; border-width: 1px; } \
@@ -100,7 +100,7 @@ $.extend(an.plugins, {
 	options: { sMainFontFamily: { desc: '字體名稱', defaultValue: 'SimSun', type: 'text' } },
 	queue: [{
 		priority: 1,
-		fn: function()
+		js: function()
 		{
 			$.rules('body * { font-family: {0} !important; }', this.options('sMainFontFamily'));
 		}
@@ -121,7 +121,7 @@ $.extend(an.plugins, {
 	},
 	queue: [{
 		priority: 1,
-		fn: function()
+		js: function()
 		{
 			var sTextCSS = this.options('bRemoveLinkUnderline')
 				? 'text-decoration: none; } a[href^="/blog/blog.aspx"] > span { text-decoration: none !important; } .repliers_right a { text-decoration: underline; }'
@@ -166,7 +166,7 @@ $.extend(an.plugins, {
 	},
 	queue: [{
 		priority: 1,
-		fn: function()
+		js: function()
 		{
 			$.rules('\
 			/* Global stuff */\

@@ -7,7 +7,7 @@ $.extend(an.plugins, {
 	type: 1,
 	queue: [{
 		priority: 1,
-		fn: function()
+		js: function()
 		{
 			$('#an').append(' \
 			<div id="an-ui"> \
@@ -74,7 +74,7 @@ $.extend(an.plugins, {
 	type: 1,
 	queue: [{
 		priority: 1,
-		fn: function()
+		js: function()
 		{
 			(function()
 			{
@@ -134,7 +134,7 @@ $.extend(an.plugins, {
 	type: 1,
 	queue: [{
 		priority: 1,
-		fn: function()
+		js: function()
 		{
 			var tabClick, getInfo, saveOptions, fillOptions, fillBoolean, importSettings, exportSettings, bFillAll, jFieldsets, jTabLinks, jSwitches, jOptions;
 
@@ -571,7 +571,7 @@ $.extend(an.plugins, {
 	type: 1,
 	queue: [{
 		priority: 1,
-		fn: function()
+		js: function()
 		{
 			return;
 			$.addMain('評測', function()
@@ -652,7 +652,7 @@ $.extend(an.plugins, {
 	},
 	queue: [{
 		priority: 1,
-		fn: function(job)
+		js: function(job)
 		{
 			var getMod = function()
 			{
@@ -723,7 +723,7 @@ $.extend(an.plugins, {
 	 },
 	queue: [{
 		priority: 1,
-		fn: function(job)
+		js: function(job)
 		{
 			var getMod = function()
 			{
@@ -769,7 +769,7 @@ $.extend(an.plugins, {
 	 },
 	queue: [{
 		priority: 1,
-		fn: function(job)
+		js: function(job)
 		{
 			var getMod = function()
 			{
@@ -829,7 +829,7 @@ $.extend(an.plugins, {
 	},
 	queue: [{
 		priority: 1,
-		fn: function(job)
+		js: function(job)
 		{
 			var getMod = function()
 			{
@@ -878,7 +878,7 @@ $.extend(an.plugins, {
 	type: 1,
 	queue: [{
 		priority: 1,
-		fn: function(job)
+		js: function(job)
 		{
 			$.addMain('關於', function()
 			{
@@ -941,7 +941,7 @@ $.extend(an.plugins, {
 	options: { nUIOpacity: { desc: '透明度 (10 = 移除半透明)', type: 'select', defaultValue: 3, choices: [10,9,8,7,6,5,4,3,2,1,0] } },
 	queue: [{
 		priority: 1,
-		fn: function()
+		js: function()
 		{
 			$.rules('\
 			.an-mod { {0}; } \

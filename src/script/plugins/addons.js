@@ -6,7 +6,7 @@ $.extend(an.plugins, {
 	pages: { on: [view] },
 	type: 5,
 	queue: [{
-		fn: function(job)
+		js: function(job)
 		{
 			$.openerInfo(function(info)
 			{
@@ -23,7 +23,7 @@ $.extend(an.plugins, {
 	type: 5,
 	queue: [{
 		priority: 2,
-		fn: function(job)
+		js: function(job)
 		{
 			var nLastOnTime = job.db('nLastOnTime');
 			var nCumulatedTime = job.db('nCumulatedTime') || 0;
@@ -63,7 +63,7 @@ $.extend(an.plugins, {
 	type: 5,
 	queue: [{
 		priority: 2,
-		fn: function(job)
+		js: function(job)
 		{
 			$.run('addButton', '伺服器狀態', $.serverTable);
 		}
@@ -77,7 +77,7 @@ $.extend(an.plugins, {
 	type: 5,
 	options: { sLeaveNameMsg: { desc: '回覆內容', defaultValue: '留名', type: 'text' } },
 	queue: [{
-		fn: function(job)
+		js: function(job)
 		{
 			if(!$.isLoggedIn()) return;
 
@@ -97,7 +97,7 @@ $.extend(an.plugins, {
 	type: 5,
 	queue: [{
 		priority: 2,
-		fn: function(job)
+		js: function(job)
 		{
 			$.run('addButton', '登入所有server', function()
 			{
@@ -180,7 +180,7 @@ $.extend(an.plugins, {
 	type: 5,
 	queue: [{
 		priority: 2,
-		fn: function(job)
+		js: function(job)
 		{
 			$.run('addButton', '登出所有server', function()
 			{
@@ -235,7 +235,7 @@ $.extend(an.plugins, {
 	type: 5,
 	queue: [{
 		priority: 2,
-		fn: function(job)
+		js: function(job)
 		{
 			$.run('addLink', '吹水台', '/topics.aspx?type=BW', 1);
 		}
@@ -249,7 +249,7 @@ $.extend(an.plugins, {
 	type: 5,
 	queue: [{
 		priority: 5,
-		fn: function(job)
+		js: function(job)
 		{
 			$.run('addLink', '最頂', function(){ document.body.scrollIntoView(); }, 0);
 			$.run('addLink', '最底', function(){ document.body.scrollIntoView(false); }, 2);
@@ -264,7 +264,7 @@ $.extend(an.plugins, {
 	type: 5,
 	queue: [{
 		type: always,
-		fn: function(job)
+		js: function(job)
 		{
 			var nCurPageNo = $j.ajaxPageNo();
 			var nFloor = ((nCurPageNo == 1) ? 0 : 25 * (nCurPageNo - 1) + 1) + $j.pageRoot().find('.an-content-floor').length;

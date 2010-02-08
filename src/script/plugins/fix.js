@@ -7,7 +7,7 @@ $.extend(an.plugins, {
 	requires: [$.browser.opera],
 	type: 4,
 	queue: [{
-		fn: function()
+		js: function()
 		{
 			$('#aspnetForm').submit(function(event)
 			{
@@ -25,7 +25,7 @@ $.extend(an.plugins, {
 	requires: [$.browser.opera],
 	type: 4,
 	queue: [{
-		fn: function()
+		js: function()
 		{
 			$j.topics().each(function()
 			{
@@ -47,7 +47,7 @@ $.extend(an.plugins, {
 	type: 4,
 	queue: [{
 		type: always,
-		fn: function()
+		js: function()
 		{
 			if($.uriSet().querySet.type === 'MB') {
 				$d.topicTable().find('td[colspan=5]').attr('colspan', 6);
@@ -62,7 +62,7 @@ $.extend(an.plugins, {
 	pages: { on: [view | post | sendpm] },
 	type: 4,
 	queue: [{
-		fn: function()
+		js: function()
 		{
 			$('#ctl00_ContentPlaceHolder1_messagetext').siblings('select[onchange]').change(function()
 			{

@@ -89,7 +89,7 @@
 				an.curJob = job;
 
 				try {
-					job.fnSet.fn.call(job, job);
+					job.fnSet.js.call(job, job);
 				}
 				catch(e) {
 					$.debug($.format('發生錯誤: {0}', job.plugin.desc), e, job, $j);

@@ -11,7 +11,7 @@ $.extend(an.plugins, {
 	},
 	queue: [{
 		priority: 1,
-		fn: function(job)
+		js: function(job)
 		{
 			$.rules('.repliers_right blockquote + br { display: none; }');
 

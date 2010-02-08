@@ -13,7 +13,7 @@ $.extend(an.plugins, {
 		nRefreshInterval_T: { desc: '自動更新間隔(秒)', defaultValue: 30, type: 'text' }
 	},
 	queue: [{
-		fn: function(job)
+		js: function(job)
 		{
 			var refreshTopics = function(nPage)
 			{

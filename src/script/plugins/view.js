@@ -6,14 +6,14 @@ $.extend(an.plugins, {
 	pages: { on: [view] },
 	type: 6,
 	queue: [{
-		fn: function(job)
+		js: function(job)
 		{
 			$.rules('.an-nameforcedshown:before { content: "<空白名稱>"; font-style: italic; }');
 		}
 	},
 	{
 		type: always,
-		fn: function(job)
+		js: function(job)
 		{
 			$j.replies().jNameLinks.filter(function(){ return $(this).width() === 0; }).addClass('an-nameforcedshown');
 		}
@@ -29,7 +29,7 @@ $.extend(an.plugins, {
 		replyMaxHeight: { desc: '最大高度(px)', type: 'text', defaultValue: 2000 }
 	},
 	queue: [{
-		fn: function(job)
+		js: function(job)
 		{
 			var maxHeight = job.options('replyMaxHeight');
 

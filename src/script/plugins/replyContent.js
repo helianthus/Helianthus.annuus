@@ -7,7 +7,7 @@ $.extend(an.plugins, {
 	type: 6,
 	queue: [{
 		priority: 1,
-		fn: function(job)
+		js: function(job)
 		{
 			var rForum = /forum\d*.hkgolden\.com/i;
 			$d.delegate('a', 'mouseover', function()
@@ -29,7 +29,7 @@ $.extend(an.plugins, {
 	queue: [{
 		type: always,
 		css: '.an-linkified { padding: 0 2px; }',
-		fn: function(job)
+		js: function(job)
 		{
 			var
 			rLink = /(?:https?|ftp):\/\/(?:[\w-]+\.)+[a-z]{2,3}(?![a-z])(?:\/[\w.\/?:;~!@#$%^&*()+=-]*)?/i,
@@ -68,7 +68,7 @@ $.extend(an.plugins, {
 	pages: { off: [view] },
 	type: 6,
 	queue: [{
-		fn: function(job)
+		js: function(job)
 		{
 			$.rules('\
 			.repliers_right a[target] { display: inline-block; } \
@@ -134,7 +134,7 @@ $.extend(an.plugins, {
 		imageConvertMode: { desc: '轉換模式', type: 'select', choices: ['自動轉換', '自動轉換(引用中的連結除外)', '手動轉換'], defaultValue: '手動轉換' }
 	},
 	queue: [{
-		fn: function(job)
+		js: function(job)
 		{
 			$.rules('\
 			.an-imagified { padding: 0 2px; } \
@@ -177,7 +177,7 @@ $.extend(an.plugins, {
 		imageMaskMode: { desc: '屏蔽模式', type: 'select', choices: ['自動屏蔽', '自動屏蔽(只限引用中的圖片)', '手動屏蔽'], defaultValue: '自動屏蔽(只限引用中的圖片)' }
 	},
 	queue: [{
-		fn: function(job)
+		js: function(job)
 		{
 			var maskMode = $.inArray(job.options('imageMaskMode'), job.plugin.options.imageMaskMode.choices);
 			var selector = {
@@ -220,13 +220,13 @@ $.extend(an.plugins, {
 		videoConvertMode: { desc: '轉換模式', type: 'select', choices: ['自動轉換', '自動轉換(引用中的連結除外)', '手動轉換'], defaultValue: '自動轉換(引用中的連結除外)' }
 	},
 	queue: [{
-		fn: function(job)
+		js: function(job)
 		{
 			var nWidth, nHeight, sUrl;
 			var aSites =
 			[{
 				regex: 'youtube\\.com/watch\\?v=',
-				fn: function(job)
+				js: function(job)
 				{
 					if(nWidth > 640) nWidth = 640;
 					nHeight = nWidth / 16 * 9 + 25;
@@ -235,7 +235,7 @@ $.extend(an.plugins, {
 			},
 			{
 				regex: 'vimeo\\.com/\\d',
-				fn: function(job)
+				js: function(job)
 				{
 					if(nWidth > 504) nWidth = 504;
 					nHeight = nWidth / 1.5;
@@ -244,7 +244,7 @@ $.extend(an.plugins, {
 			},
 			{
 				regex: 'youku\\.com/v_show/',
-				fn: function(job)
+				js: function(job)
 				{
 					if(nWidth > 480) nWidth = 480;
 					nHeight = nWidth / 4 * 3 + 40;
@@ -253,7 +253,7 @@ $.extend(an.plugins, {
 			},
 			{
 				regex: 'tudou\\.com/programs/',
-				fn: function(job)
+				js: function(job)
 				{
 					if(nWidth > 420) nWidth = 420;
 					nHeight = nWidth / 4 * 3 + 48;

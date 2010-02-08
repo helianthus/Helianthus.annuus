@@ -7,7 +7,7 @@ $.extend(an.plugins, {
 	type: 4,
 	queue: [{
 		priority: 1,
-		fn: function()
+		js: function()
 		{
 			$.rules('\
 			.repliers_right a[target] { display: inline-block; max-width: 100% } \
@@ -17,7 +17,7 @@ $.extend(an.plugins, {
 		}
 	},
 	{
-		fn: function(job)
+		js: function(job)
 		{
 			window.DrawImage = $.noop;
 		}
@@ -32,7 +32,7 @@ $.extend(an.plugins, {
 	options: { nQuoteImgMaxHeight: { desc: '圖片最大高度(px)', defaultValue: 100, type: 'text' } },
 	queue: [{
 		priority: 1,
-		fn: function(job)
+		js: function(job)
 		{
 			$.rules('.repliers_right blockquote img[onload] { width: auto; height: auto; max-height: {0}px; }', job.options('nQuoteImgMaxHeight'));
 		}
@@ -46,7 +46,7 @@ $.extend(an.plugins, {
 	type: 4,
 	queue: [{
 		priority: 1,
-		fn: function(job)
+		js: function(job)
 		{
 			var regex = /&highlight_id=\d+/;
 			$d.delegate('a', 'mouseover', function()
@@ -65,7 +65,7 @@ $.extend(an.plugins, {
 	pages: { off: [topics, search | tags] },
 	type: 4,
 	queue: [{
-		fn: function(job)
+		js: function(job)
 		{
 			window.Search = function()
 			{
@@ -89,7 +89,7 @@ $.extend(an.plugins, {
 	options: { bTopicLinksOnly: { desc: '只限帖子連結', defaultValue: false, type: 'checkbox' } },
 	queue: [{
 		priority: 2,
-		fn: function(job)
+		js: function(job)
 		{
 			$d.delegate('a', 'click', function(event)
 			{
@@ -109,7 +109,7 @@ $.extend(an.plugins, {
 	type: 4,
 	queue: [{
 		priority: 2,
-		fn: function(job)
+		js: function(job)
 		{
 			$d.delegate('a', 'click', function(event)
 			{
@@ -129,7 +129,7 @@ $.extend(an.plugins, {
 	type: 4,
 	queue: [{
 		priority: 1,
-		fn: function(job)
+		js: function(job)
 		{
 			$d.delegate('a', 'mouseover', function()
 			{
@@ -148,7 +148,7 @@ $.extend(an.plugins, {
 	type: 4,
 	queue: [{
 		priority: 1,
-		fn: function(job)
+		js: function(job)
 		{
 			$('<link>', { rel: 'shortcut icon', href: 'http://helianthus-annuus.googlecode.com/svn/other/hkg.ico' }).appendTo('head');
 		}
@@ -167,7 +167,7 @@ $.extend(an.plugins, {
 	},
 	queue: [{
 		priority: 1,
-		fn: function(job)
+		js: function(job)
 		{
 			if($.cookie('companymode') == 'Y') {
 				$('<link>', { rel: 'shortcut icon', href: job.options('sCModeFavicon') }).appendTo('head');

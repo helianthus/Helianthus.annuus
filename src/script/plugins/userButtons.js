@@ -38,7 +38,7 @@ $.extend(an.plugins, {
 	pages: { on: [view] },
 	type: 6,
 	queue: [{
-		fn: function(job)
+		js: function(job)
 		{
 			$.rules('\
 			.an-bammed-msg { color: #999; font-size: 10px; text-align: center; } \
@@ -122,7 +122,7 @@ $.extend(an.plugins, {
 	pages: { on: [view] },
 	type: 6,
 	queue: [{
-		fn: function(job)
+		js: function(job)
 		{
 			var highlightList = $.state('highlight_id') || window.highlight_id && [window.highlight_id + ''] || [],
 
@@ -172,7 +172,7 @@ $.extend(an.plugins, {
 	pages: { on: [view] },
 	type: 6,
 	queue: [{
-		fn: function(job)
+		js: function(job)
 		{
 			var
 			targetId,

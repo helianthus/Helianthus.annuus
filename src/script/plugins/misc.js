@@ -7,7 +7,7 @@ $.extend(an.plugins, {
 	type: 4,
 	queue: [{
 		priority: 1,
-		fn: function()
+		js: function()
 		{
 			if(location.pathname !== '/login.aspx' && document.referrer.indexOf('/login.aspx') > 0) {
 				location.replace('/topics.aspx?type=BW');
@@ -29,7 +29,7 @@ $.extend(an.plugins, {
 	pages: { comp: [all] },
 	type: 1,
 	queue: [{
-		fn: function()
+		js: function()
 		{
 			if($.pageName() === 'view') $('select[name=page]').val($.pageNo()); // for FF3 where select box does not reset
 
@@ -47,7 +47,7 @@ $.extend(an.plugins, {
 	pages: { off: [all] },
 	type: 1,
 	queue: [{
-		fn: function()
+		js: function()
 		{
 			an.debugMode = true;
 
@@ -111,7 +111,7 @@ $.extend(an.plugins, {
 		lastChecked: { defaultValue: 0 }
 	},
 	queue: [{
-		fn: function(job)
+		js: function(job)
 		{
 			var
 			interval = job.options('updateInterval'),
@@ -158,7 +158,7 @@ $.extend(an.plugins, {
 	pages: { on: [profilepage] },
 	type: 1,
 	queue: [{
-		fn: function()
+		js: function()
 		{
 			window.Profile_ShowGoogleAds = $('.main_table1').an;
 		}
@@ -171,7 +171,7 @@ $.extend(an.plugins, {
 	pages: { on: [error] },
 	type: 6,
 	queue: [{
-		fn: function(job)
+		js: function(job)
 		{
 			$.run('serverTable');
 		}
@@ -184,7 +184,7 @@ $.extend(an.plugins, {
 	pages: { on: [post] },
 	type: 6,
 	queue: [{
-		fn: function(job)
+		js: function(job)
 		{
 			if(location.search.indexOf('mt=N') != -1)
 			{

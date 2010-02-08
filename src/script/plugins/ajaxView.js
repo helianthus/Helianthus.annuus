@@ -12,7 +12,7 @@ $.extend(an.plugins, {
 		addViewAjaxPageLinks: { desc: '加入轉頁連結至連結元件', defaultValue: true, type: 'checkbox' }
 	},
 	queue: [{
-		fn: function(job)
+		js: function(job)
 		{
 			$.prioritize(5, once, function()
 			{

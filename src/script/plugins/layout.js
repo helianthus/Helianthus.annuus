@@ -7,7 +7,7 @@ $.extend(an.plugins, {
 	type: 3,
 	queue: [{
 		priority: 1,
-		fn: function()
+		js: function()
 		{
 			$.rules('body { word-wrap: break-word; }');
 		}
@@ -15,7 +15,7 @@ $.extend(an.plugins, {
 	{
 		pages: view,
 		type: 1,
-		fn: function()
+		js: function()
 		{
 			$.rules('\
 			.repliers, .repliers_right { table-layout: fixed; } \
@@ -26,7 +26,7 @@ $.extend(an.plugins, {
 	{
 		pages: view,
 		type: always,
-		fn: function()
+		js: function()
 		{
 			if($.pageNo() === 1) {
 				$j.replies().eq(0).find('td[colspan="100%"]').attr('colspan', 2);
@@ -42,7 +42,7 @@ $.extend(an.plugins, {
 	type: 3,
 	queue: [{
 		priority: 1,
-		fn: function()
+		js: function()
 		{
 			$.rules('.Topic_FunctionPanel > .ClearLeft { clear: both; } /*-> IE bug fix? ->*/ .Topic_FunctionPanel { overflow: hidden; }');
 		}
@@ -56,7 +56,7 @@ $.extend(an.plugins, {
 	type: 3,
 	queue: [{
 		priority: 1,
-		fn: function()
+		js: function()
 		{
 			$.rules('.TopMenuBox { visibility: hidden; }');
 		}
@@ -70,7 +70,7 @@ $.extend(an.plugins, {
 	type: 3,
 	queue: [{
 		priority: 1,
-		fn: function()
+		js: function()
 		{
 			$.rules('.TopBannerBox { display: none; }');
 		}
@@ -84,7 +84,7 @@ $.extend(an.plugins, {
 	type: 3,
 	queue: [{
 		priority: 1,
-		fn: function()
+		js: function()
 		{
 			$.rules('.TopMenuPanel + .PageWidthContainer { display: none; }');
 		}
@@ -98,7 +98,7 @@ $.extend(an.plugins, {
 	type: 3,
 	queue: [{
 		priority: 1,
-		fn: function()
+		js: function()
 		{
 			$.rules('\
 			.PageMiddleFunctions { height: 5px; } \
@@ -115,7 +115,7 @@ $.extend(an.plugins, {
 	type: 3,
 	queue: [{
 		priority: 1,
-		fn: function()
+		js: function()
 		{
 			$.rules('\
 			.addthis_toolbox { padding-top: 3px; } \
@@ -132,7 +132,7 @@ $.extend(an.plugins, {
 	type: 3,
 	queue: [{
 		priority: 1,
-		fn: function()
+		js: function()
 		{
 			$.rules('.FooterPanel { display: none; }');
 		}
@@ -146,7 +146,7 @@ $.extend(an.plugins, {
 	type: 3,
 	queue: [{
 		priority: 1,
-		fn: function()
+		js: function()
 		{
 			$.rules('.FooterPanel ~ br { display: none; }');
 		}
@@ -160,7 +160,7 @@ $.extend(an.plugins, {
 	type: 3,
 	queue: [{
 		priority: 1,
-		fn: function()
+		js: function()
 		{
 			$.rules('#hkg_bottombar { display: none; }');
 		}
@@ -174,7 +174,7 @@ $.extend(an.plugins, {
 	type: 3,
 	queue: [{
 		priority: 1,
-		fn: function()
+		js: function()
 		{
 			$.rules('#hkg_bottombar { width: auto; }');
 		}
@@ -189,7 +189,7 @@ $.extend(an.plugins, {
 	options: { nPageWidth: { desc: '頁面闊度 [可設定為auto, 80%, 1000px等]', defaultValue: 'auto', type: 'text' } },
 	queue: [{
 		priority: 1,
-		fn: function()
+		js: function()
 		{
 			$.rules('\
 			.PageWidthContainer { width: {0}; } \
@@ -209,7 +209,7 @@ $.extend(an.plugins, {
 	type: 3,
 	queue: [{
 		priority: 1,
-		fn: function()
+		js: function()
 		{
 			$.rules('\
 			#ctl00_ContentPlaceHolder1_view_form > script:first-child + table + table tr:first-child, \
@@ -228,7 +228,7 @@ $.extend(an.plugins, {
 	type: 3,
 	queue: [{
 		priority: 1,
-		fn: function()
+		js: function()
 		{
 			$.rules('\
 			#ctl00_ContentPlaceHolder1_MiddleAdSpace1 > div { padding: 0 !important; } \
@@ -255,7 +255,7 @@ $.extend(an.plugins, {
 	type: 3,
 	queue: [{
 		priority: 1,
-		fn: function()
+		js: function()
 		{
 			if($d.pageName() == 'topics')
 				$.rules('#forum_list, #forum_list + br { display: none; }');
@@ -272,7 +272,7 @@ $.extend(an.plugins, {
 	type: 3,
 	queue: [{
 		priority: 1,
-		fn: function()
+		js: function()
 		{
 			$.rules('#ctl00_ContentPlaceHolder1_lb_HitSearchs { display: none; }');
 		}
@@ -286,7 +286,7 @@ $.extend(an.plugins, {
 	type: 3,
 	queue: [{
 		priority: 1,
-		fn: function()
+		js: function()
 		{
 			$.rules('#ctl00_ContentPlaceHolder1_MiddleAdSpace1 { display: none; }');
 		}
@@ -300,7 +300,7 @@ $.extend(an.plugins, {
 	type: 3,
 	queue: [{
 		priority: 1,
-		fn: function()
+		js: function()
 		{
 			$.rules('#ctl00_ContentPlaceHolder1_HotPeoples, #ctl00_ContentPlaceHolder1_HotPeoples + br { display: none; }');
 		}
@@ -314,7 +314,7 @@ $.extend(an.plugins, {
 	type: 3,
 	queue: [{
 		priority: 1,
-		fn: function()
+		js: function()
 		{
 			$.rules('div[style] > div[style^="{0}: center"] { margin: 0 100px; }', $.browser.msie ? 'TEXT-ALIGN' : 'text-align');
 		}
@@ -334,7 +334,7 @@ $.extend(an.plugins, {
 	},
 	queue: [{
 		priority: 1,
-		fn: function()
+		js: function()
 		{
 			var css = [];
 			$.each({
@@ -364,7 +364,7 @@ $.extend(an.plugins, {
 	type: 3,
 	queue: [{
 		priority: 1,
-		fn: function()
+		js: function()
 		{
 			$.rules('img[src^="labels/"] { display: none; }');
 		}
@@ -378,7 +378,7 @@ $.extend(an.plugins, {
 	type: 3,
 	queue: [{
 		priority: 1,
-		fn: function()
+		js: function()
 		{
 			$.rules('.repliers_right blockquote { display: none; }');
 		}
@@ -392,7 +392,7 @@ $.extend(an.plugins, {
 	type: 3,
 	queue: [{
 		priority: 1,
-		fn: function()
+		js: function()
 		{
 			$.rules('#DivMarkThread { display: none; }');
 		}
@@ -407,7 +407,7 @@ $.extend(an.plugins, {
 	options: { bCDROMMode: { desc: '同時隱藏快速引用連結及登入提示 [CD-ROM專用]', defaultValue: false, type: 'checkbox' } },
 	queue: [{
 		priority: 1,
-		fn: function()
+		js: function()
 		{
 			var sSelector = 'a[href^="post.aspx?mt=Y&rid="]';
 
@@ -435,7 +435,7 @@ $.extend(an.plugins, {
 		bRemPreviewRow: { desc: '隱藏預覽列', defaultValue: false, type: 'checkbox' }
 	},
 	queue: [{
-		fn: function()
+		js: function()
 		{
 			if(!$.isLoggedIn()) return;
 
@@ -456,7 +456,7 @@ $.extend(an.plugins, {
 	type: 3,
 	queue: [{
 		priority: 1,
-		fn: function()
+		js: function()
 		{
 			$.rules('#ctl00_ContentPlaceHolder1_UpdatePanelPM + br, #ctl00_ContentPlaceHolder1_HotPeoples { display: none; }');
 		}
@@ -470,7 +470,7 @@ $.extend(an.plugins, {
 	type: 3,
 	queue: [{
 		priority: 1,
-		fn: function()
+		js: function()
 		{
 			$.rules('#ctl00_ContentPlaceHolder1_HotPeoples + br, #ctl00_ContentPlaceHolder1_BookmarkTable { display: none; }');
 		}
@@ -484,7 +484,7 @@ $.extend(an.plugins, {
 	type: 3,
 	queue: [{
 		priority: 1,
-		fn: function()
+		js: function()
 		{
 			$.rules('#ctl00_ContentPlaceHolder1_siteUpdateProgress + table { display: none; }');
 		}
@@ -498,7 +498,7 @@ $.extend(an.plugins, {
 	type: 3,
 	queue: [{
 		priority: 1,
-		fn: function()
+		js: function()
 		{
 			$.rules('table[width="800"] { width: 100%; }');
 		}

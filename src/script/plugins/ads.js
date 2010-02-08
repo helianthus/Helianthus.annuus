@@ -8,7 +8,7 @@ $.extend(an.plugins, {
 	options: { 'bRetroHideAds': { desc: '相容性模式', defaultValue: false, type: 'checkbox' } },
 	queue: [{
 		priority: 1,
-		fn: function()
+		js: function()
 		{
 			$.each({
 				65535: '\
@@ -92,7 +92,7 @@ $.extend(an.plugins, {
 		}
 	},
 	{
-		fn: function()
+		js: function()
 		{
 			if($.browser.msie || this.options('bRetroHideAds')) {
 				$('td[height="52"]').parent().hide();

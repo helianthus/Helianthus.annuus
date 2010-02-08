@@ -6,7 +6,7 @@ $.extend(an.plugins, {
 	pages: { on: [topics | search | tags | profilepage] },
 	type: 6,
 	queue: [{
-		fn: function(job)
+		js: function(job)
 		{
 			var codes = [];
 			job.plugin.smileys = {};
@@ -31,7 +31,7 @@ $.extend(an.plugins, {
 	},
 	{
 		type: always,
-		fn: function(job)
+		js: function(job)
 		{
 			$j.topics().each(function()
 			{
@@ -60,7 +60,7 @@ $.extend(an.plugins, {
 		filters: { defaultValue: [], access: 'protected' }
 	},
 	queue: [{
-		fn: function(job)
+		js: function(job)
 		{
 			var aFilter = job.db('filters'),
 			jHiddenImg,

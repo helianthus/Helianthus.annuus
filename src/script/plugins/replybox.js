@@ -11,7 +11,7 @@ $.extend(an.plugins, {
 		nQROpacity: { desc: '透明度 (10 = 移除半透明)', type: 'select', defaultValue: 10, choices: [10,9,8,7,6,5,4,3,2,1,0] }
 	},
 	queue: [{
-		fn: function(job)
+		js: function(job)
 		{
 			if(!$.isLoggedIn()) return;
 
@@ -102,7 +102,7 @@ $.extend(an.plugins, {
 	pages: { on: [view | post | sendpm] },
 	type: 6,
 	queue: [{
-		fn: function(job)
+		js: function(job)
 		{
 			var rUrl, jUrlBtn, rImg, jImgBtn, text, match;
 			var jTextarea = $('#ctl00_ContentPlaceHolder1_messagetext').bind('keyup mouseup change', function()
@@ -142,7 +142,7 @@ $.extend(an.plugins, {
 	type: 6,
 	options: { sSmileySelectMethod: { desc: '圖示選擇方式', defaultValue: '列表', type: 'select', choices: ['列表', '連結'] } },
 	queue: [{
-		fn: function(job)
+		js: function(job)
 		{
 			// jQuery('#TABLE_ID').outerhtml().replace(/>\s+</g, '><').replace(/&nbsp;\s+/g, '&nbsp;').replace(/'/g,'\\\'');
 			if(!$('#ctl00_ContentPlaceHolder1_messagetext').length) return;
@@ -233,7 +233,7 @@ $.extend(an.plugins, {
 	pages: { on: [view | post | sendpm] },
 	type: 5,
 	queue: [{
-		fn: function(job)
+		js: function(job)
 		{
 			if(!$('#ctl00_ContentPlaceHolder1_messagetext').length) return;
 

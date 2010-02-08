@@ -44,7 +44,7 @@ $.extend(an.plugins, {
 {
 	desc: '修正站務台的顯示錯誤',
 	pages: { on: [topics] },
-	type: 4,
+	type: modify,
 	queue: [{
 		type: always,
 		js: function()
@@ -60,7 +60,7 @@ $.extend(an.plugins, {
 {
 	desc: '修正字型大小/顏色插入控件',
 	pages: { on: [view | post | sendpm] },
-	type: 4,
+	type: modify,
 	queue: [{
 		js: function()
 		{

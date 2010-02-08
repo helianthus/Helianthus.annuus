@@ -4,7 +4,7 @@ $.extend(an.plugins, {
 {
 	desc: '強制顯示空白用戶名連結',
 	pages: { on: [view] },
-	type: 6,
+	type: others,
 	queue: [{
 		js: function(job)
 		{
@@ -24,7 +24,7 @@ $.extend(an.plugins, {
 {
 	desc: '限制回覆高度',
 	pages: { off: [view] },
-	type: 6,
+	type: others,
 	options: {
 		replyMaxHeight: { desc: '最大高度(px)', type: 'text', defaultValue: 2000 }
 	},

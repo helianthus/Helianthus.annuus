@@ -4,7 +4,7 @@ $.extend(an.plugins, {
 {
 	desc: '隱藏廣告',
 	pages: { on: [all] },
-	type: 3,
+	type: layout,
 	options: { 'bRetroHideAds': { desc: '相容性模式', defaultValue: false, type: 'checkbox' } },
 	queue: [{
 		priority: 1,

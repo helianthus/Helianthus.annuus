@@ -4,7 +4,7 @@ $.extend(an.plugins, {
 {
 	desc: '轉換表情碼為圖片',
 	pages: { on: [topics | search | tags | profilepage] },
-	type: 6,
+	type: others,
 	queue: [{
 		js: function(job)
 		{
@@ -50,7 +50,7 @@ $.extend(an.plugins, {
 {
 	desc: '標題過濾功能',
 	pages: { on: [topics] },
-	type: 6,
+	type: others,
 	options:
 	{
 		bFilterListButton: { desc: '加入標題過濾列表按扭', defaultValue: true, type: 'checkbox' },

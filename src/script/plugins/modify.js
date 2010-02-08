@@ -4,7 +4,7 @@ $.extend(an.plugins, {
 {
 	desc: '去除論壇原有的圖片縮小功能',
 	pages: { on: [view, profilepage | sendpm] },
-	type: 4,
+	type: modify,
 	queue: [{
 		priority: 1,
 		js: function()
@@ -28,7 +28,7 @@ $.extend(an.plugins, {
 {
 	desc: '縮小引用中的圖片',
 	pages: { off: [view] },
-	type: 4,
+	type: modify,
 	options: { nQuoteImgMaxHeight: { desc: '圖片最大高度(px)', defaultValue: 100, type: 'text' } },
 	queue: [{
 		priority: 1,
@@ -43,7 +43,7 @@ $.extend(an.plugins, {
 {
 	desc: '移除帖子連結高亮部份',
 	pages: { off: [profilepage] },
-	type: 4,
+	type: modify,
 	queue: [{
 		priority: 1,
 		js: function(job)
@@ -63,7 +63,7 @@ $.extend(an.plugins, {
 {
 	desc: '搜尋開新頁',
 	pages: { off: [topics, search | tags] },
-	type: 4,
+	type: modify,
 	queue: [{
 		js: function(job)
 		{
@@ -85,7 +85,7 @@ $.extend(an.plugins, {
 {
 	desc: '連結開新頁',
 	pages: { off: [topics, search | tags, profilepage] },
-	type: 4,
+	type: modify,
 	options: { bTopicLinksOnly: { desc: '只限帖子連結', defaultValue: false, type: 'checkbox' } },
 	queue: [{
 		priority: 2,
@@ -106,7 +106,7 @@ $.extend(an.plugins, {
 {
 	desc: '外鏈連結開新頁',
 	pages: { on: [view] },
-	type: 4,
+	type: modify,
 	queue: [{
 		priority: 2,
 		js: function(job)
@@ -126,7 +126,7 @@ $.extend(an.plugins, {
 {
 	desc: '回復傳統用戶連結',
 	pages: { off: [view] },
-	type: 4,
+	type: modify,
 	queue: [{
 		priority: 1,
 		js: function(job)
@@ -145,7 +145,7 @@ $.extend(an.plugins, {
 {
 	desc: '更換favicon(小丑icon) [部份瀏覽器無效]',
 	pages: { off: [normal] },
-	type: 4,
+	type: modify,
 	queue: [{
 		priority: 1,
 		js: function(job)
@@ -159,7 +159,7 @@ $.extend(an.plugins, {
 {
 	desc: '改進公司模式',
 	pages: { on: [normal] },
-	type: 4,
+	type: modify,
 	options:
 	{
 		sCModeFavicon: { desc: 'favicon連結位置 [部份瀏覽器無效]', defaultValue: 'http://www.google.com/favicon.ico', type: 'text' },

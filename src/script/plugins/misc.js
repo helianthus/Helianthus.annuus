@@ -4,7 +4,7 @@ $.extend(an.plugins, {
 {
 	desc: '自動轉向正確頁面',
 	pages: { on: [normal] },
-	type: 4,
+	type: modify,
 	queue: [{
 		priority: 1,
 		js: function()
@@ -27,7 +27,7 @@ $.extend(an.plugins, {
 {
 	desc: '初始化',
 	pages: { comp: [all] },
-	type: 1,
+	type: kernel,
 	queue: [{
 		js: function()
 		{
@@ -45,7 +45,7 @@ $.extend(an.plugins, {
 {
 	desc: '除錯模式',
 	pages: { off: [all] },
-	type: 1,
+	type: kernel,
 	queue: [{
 		js: function()
 		{
@@ -102,7 +102,7 @@ $.extend(an.plugins, {
 {
 	desc: '自動檢查更新',
 	pages: { disabled: [topics] },
-	type: 1,
+	type: kernel,
 	options: {
 		alsoCheckBeta: { desc: '同時檢查Beta版本', defaultValue: false, type: 'checkbox' },
 		updateInterval: { desc: '檢查更新間隔(小時)', defaultValue: 1, type: 'text' }
@@ -156,7 +156,7 @@ $.extend(an.plugins, {
 {
 	desc: '轉頁後再次運行功能',
 	pages: { on: [profilepage] },
-	type: 1,
+	type: kernel,
 	queue: [{
 		js: function()
 		{
@@ -169,7 +169,7 @@ $.extend(an.plugins, {
 {
 	desc: '自動顯示伺服器狀態檢查視窗',
 	pages: { on: [error] },
-	type: 6,
+	type: others,
 	queue: [{
 		js: function(job)
 		{
@@ -182,7 +182,7 @@ $.extend(an.plugins, {
 {
 	desc: '發表新帖子的主旨過長時進行提示',
 	pages: { on: [post] },
-	type: 6,
+	type: others,
 	queue: [{
 		js: function(job)
 		{

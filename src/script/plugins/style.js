@@ -5,7 +5,7 @@ $.extend(an.plugins, {
 	desc: '設定內核樣式',
 	priority: 1,
 	pages: { comp: [all] },
-	type: 2,
+	type: style,
 	options: {
 		sUIFontColor: { desc: 'UI主顏色', defaultValue: '#808080', type: 'text', access: 'public' },
 		sUIHoverColor: { desc: 'UI連結懸浮顏色', defaultValue: '#9ACD32', type: 'text', access: 'public' },
@@ -53,7 +53,7 @@ $.extend(an.plugins, {
 {
 	desc: '設定UI樣式',
 	pages: { comp: [all] },
-	type: 2,
+	type: style,
 	options:
 	{
 		sMenuFontSize: { desc: 'UI主要字體大小(px)', defaultValue: '16', type: 'text' },
@@ -96,7 +96,7 @@ $.extend(an.plugins, {
 {
 	desc: '強制更改全局字體',
 	pages: { off: [normal] },
-	type: 2,
+	type: style,
 	options: { sMainFontFamily: { desc: '字體名稱', defaultValue: 'SimSun', type: 'text' } },
 	queue: [{
 		priority: 1,
@@ -111,7 +111,7 @@ $.extend(an.plugins, {
 {
 	desc: '設定連結樣式',
 	pages: { off: [normal] },
-	type: 2,
+	type: style,
 	options:
 	{
 		sMainLinkFontColor: { desc: '普通連結顏色', defaultValue: '#1066d2', type: 'text' },
@@ -142,7 +142,7 @@ $.extend(an.plugins, {
 {
 	desc: '改變論壇樣式',
 	pages: { off: [normal] },
-	type: 2,
+	type: style,
 	options:
 	{
 		sLogoBgImage: { desc: '高登Logo圖片', defaultValue: '/images/index_images/logo.jpg', type: 'text' },

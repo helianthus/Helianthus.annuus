@@ -4,7 +4,7 @@ $.extend(an.plugins, {
 {
 	desc: '強制鎖定闊度',
 	pages: { comp: [normal] },
-	type: 3,
+	type: layout,
 	queue: [{
 		css: 'body { word-wrap: break-word; }'
 	},
@@ -28,7 +28,7 @@ $.extend(an.plugins, {
 {
 	desc: '修正改變搜尋列時可能造成的顯示錯誤',
 	pages: { on: [topics] },
-	type: 3,
+	type: layout,
 	queue: [{
 		css: '.Topic_FunctionPanel > .ClearLeft { clear: both; } /*-> IE bug fix? ->*/ .Topic_FunctionPanel { overflow: hidden; }'
 	}]
@@ -38,7 +38,7 @@ $.extend(an.plugins, {
 {
 	desc: '隱藏頂部按扭',
 	pages: { off: [normal] },
-	type: 3,
+	type: layout,
 	queue: [{
 		css: '.TopMenuBox { visibility: hidden; }'
 	}]
@@ -48,7 +48,7 @@ $.extend(an.plugins, {
 {
 	desc: '隱藏Logo列',
 	pages: { off: [normal] },
-	type: 3,
+	type: layout,
 	queue: [{
 		css: '.TopBannerBox { display: none; }'
 	}]
@@ -58,7 +58,7 @@ $.extend(an.plugins, {
 {
 	desc: '隱藏按扭列',
 	pages: { off: [normal] },
-	type: 3,
+	type: layout,
 	queue: [{
 		css: '.TopMenuPanel + .PageWidthContainer { display: none; }'
 	}]
@@ -68,7 +68,7 @@ $.extend(an.plugins, {
 {
 	desc: '隱藏繁簡轉換/addThis列',
 	pages: { off: [normal] },
-	type: 3,
+	type: layout,
 	queue: [{
 		css: '\
 			.PageMiddleFunctions { height: 5px; } \
@@ -81,7 +81,7 @@ $.extend(an.plugins, {
 {
 	desc: '優化addThis組件',
 	pages: { off: [normal] },
-	type: 3,
+	type: layout,
 	queue: [{
 		css: '\
 			.addthis_toolbox { padding-top: 3px; } \
@@ -94,7 +94,7 @@ $.extend(an.plugins, {
 {
 	desc: '隱藏最底頁腳',
 	pages: { off: [normal] },
-	type: 3,
+	type: layout,
 	queue: [{
 		css: '.FooterPanel { display: none; }'
 	}]
@@ -104,7 +104,7 @@ $.extend(an.plugins, {
 {
 	desc: '隱藏頁底空白',
 	pages: { off: [normal] },
-	type: 3,
+	type: layout,
 	queue: [{
 		css: '.FooterPanel ~ br { display: none; }'
 	}]
@@ -114,7 +114,7 @@ $.extend(an.plugins, {
 {
 	desc: '隱藏Bookmark Bar',
 	pages: { off: [normal] },
-	type: 3,
+	type: layout,
 	queue: [{
 		css: '#hkg_bottombar { display: none; }'
 	}]
@@ -124,7 +124,7 @@ $.extend(an.plugins, {
 {
 	desc: '縮短Bookmark Bar',
 	pages: { on: [normal] },
-	type: 3,
+	type: layout,
 	queue: [{
 		css: '#hkg_bottombar { width: auto; }'
 	}]
@@ -134,7 +134,7 @@ $.extend(an.plugins, {
 {
 	desc: '拉闊頁面',
 	pages: { off: [normal] },
-	type: 3,
+	type: layout,
 	options: { nPageWidth: { desc: '頁面闊度 [可設定為auto, 80%, 1000px等]', defaultValue: 'auto', type: 'text' } },
 	queue: [{
 		priority: 1,
@@ -155,7 +155,7 @@ $.extend(an.plugins, {
 {
 	desc: '隱藏高登公告',
 	pages: { off: [topics | search | tags | view] },
-	type: 3,
+	type: layout,
 	queue: [{
 		css: '\
 			#ctl00_ContentPlaceHolder1_view_form > script:first-child + table + table tr:first-child, \
@@ -170,7 +170,7 @@ $.extend(an.plugins, {
 {
 	desc: '隱藏搜尋列上下空白',
 	pages: { off: [topics | search | tags] },
-	type: 3,
+	type: layout,
 	queue: [{
 		css: '#ctl00_ContentPlaceHolder1_MiddleAdSpace1 > div { padding: 0 !important; }'
 	}, {
@@ -192,7 +192,7 @@ $.extend(an.plugins, {
 {
 	desc: '隱藏討論區選單',
 	pages: { off: [topics | search | tags] },
-	type: 3,
+	type: layout,
 	queue: [{
 		page: topics,
 		css: '#forum_list, #forum_list + br { display: none; }'
@@ -206,7 +206,7 @@ $.extend(an.plugins, {
 {
 	desc: '隱藏熱門關鍵字',
 	pages: { off: [main | topics | search | tags] },
-	type: 3,
+	type: layout,
 	queue: [{
 		css: '#ctl00_ContentPlaceHolder1_lb_HitSearchs { display: none; }'
 	}]
@@ -216,7 +216,7 @@ $.extend(an.plugins, {
 {
 	desc: '隱藏投票站連結(如有)',
 	pages: { off: [topics | search | tags | view] },
-	type: 3,
+	type: layout,
 	queue: [{
 		css: '#ctl00_ContentPlaceHolder1_MiddleAdSpace1 { display: none; }'
 	}]
@@ -226,7 +226,7 @@ $.extend(an.plugins, {
 {
 	desc: '隱藏紅人榜',
 	pages: { off: [topics] },
-	type: 3,
+	type: layout,
 	queue: [{
 		css: '#ctl00_ContentPlaceHolder1_HotPeoples, #ctl00_ContentPlaceHolder1_HotPeoples + br { display: none; }'
 	}]
@@ -236,7 +236,7 @@ $.extend(an.plugins, {
 {
 	desc: '修正跳頁控件位置',
 	pages: { on: [view] },
-	type: 3,
+	type: layout,
 	queue: [{
 		css: $.format('div[style] > div[style^="{0}: center"] { margin: 0 100px; }', $.browser.msie ? 'TEXT-ALIGN' : 'text-align')
 	}]
@@ -246,7 +246,7 @@ $.extend(an.plugins, {
 {
 	desc: '隱藏名稱欄物件',
 	pages: { off: [view] },
-	type: 3,
+	type: layout,
 	options: {
 		bHideNameSpace: { desc: '隱藏多餘空白', defaultValue: true, type: 'checkbox' },
 		bHideAvatar: { desc: '隱藏高級會員頭像', defaultValue: false, type: 'checkbox' },
@@ -282,7 +282,7 @@ $.extend(an.plugins, {
 {
 	desc: '隱藏會員級別圖片',
 	pages: { off: [view] },
-	type: 3,
+	type: layout,
 	queue: [{
 		css: 'img[src^="labels/"] { display: none; }'
 	}]
@@ -292,7 +292,7 @@ $.extend(an.plugins, {
 {
 	desc: '隱藏引用',
 	pages: { off: [view] },
-	type: 3,
+	type: layout,
 	queue: [{
 		css: '.repliers_right blockquote { display: none; }'
 	}]
@@ -302,7 +302,7 @@ $.extend(an.plugins, {
 {
 	desc: '隱藏評分格',
 	pages: { off: [view] },
-	type: 3,
+	type: layout,
 	queue: [{
 		css: '#DivMarkThread { display: none; }'
 	}]
@@ -312,7 +312,7 @@ $.extend(an.plugins, {
 {
 	desc: '隱藏引用原文連結',
 	pages: { off: [view] },
-	type: 3,
+	type: layout,
 	options: { bCDROMMode: { desc: '同時隱藏快速引用連結及登入提示 [CD-ROM專用]', defaultValue: false, type: 'checkbox' } },
 	queue: [{
 		priority: 1,
@@ -329,7 +329,7 @@ $.extend(an.plugins, {
 {
 	desc: '隱藏快速回覆組件',
 	pages: { off: [view] },
-	type: 3,
+	type: layout,
 	options:
 	{
 		bRemNameRow: { desc: '隱藏名字列', defaultValue: false, type: 'checkbox' },
@@ -357,7 +357,7 @@ $.extend(an.plugins, {
 {
 	desc: '隱藏紅人榜記錄',
 	pages: { off: [profilepage] },
-	type: 3,
+	type: layout,
 	queue: [{
 		css: '#ctl00_ContentPlaceHolder1_UpdatePanelPM + br, #ctl00_ContentPlaceHolder1_HotPeoples { display: none; }'
 	}]
@@ -367,7 +367,7 @@ $.extend(an.plugins, {
 {
 	desc: '隱藏書籤',
 	pages: { off: [profilepage] },
-	type: 3,
+	type: layout,
 	queue: [{
 		priority: 1,
 		css: '#ctl00_ContentPlaceHolder1_HotPeoples + br, #ctl00_ContentPlaceHolder1_BookmarkTable { display: none; }'
@@ -378,7 +378,7 @@ $.extend(an.plugins, {
 {
 	desc: '隱藏起底列表',
 	pages: { off: [topics | profilepage] },
-	type: 3,
+	type: layout,
 	queue: [{
 		css: '#ctl00_ContentPlaceHolder1_siteUpdateProgress + table { display: none; }'
 	}]
@@ -388,7 +388,7 @@ $.extend(an.plugins, {
 {
 	desc: '修正表格闊度',
 	pages: { on: [giftpage] },
-	type: 3,
+	type: layout,
 	queue: [{
 		css: 'table[width="800"] { width: 100%; }'
 	}]

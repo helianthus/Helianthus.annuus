@@ -4,7 +4,7 @@ $.extend(an.plugins, {
 {
 	desc: '顯示資料: 樓主名稱',
 	pages: { on: [view] },
-	type: 5,
+	type: addon,
 	queue: [{
 		js: function(job)
 		{
@@ -20,7 +20,7 @@ $.extend(an.plugins, {
 {
 	desc: '顯示資料: 累計在線時間',
 	pages: { off: [normal] },
-	type: 5,
+	type: addon,
 	queue: [{
 		priority: 2,
 		js: function(job)
@@ -60,7 +60,7 @@ $.extend(an.plugins, {
 {
 	desc: '加入伺服器狀態顯示按扭',
 	pages: { on: [normal] },
-	type: 5,
+	type: addon,
 	queue: [{
 		priority: 2,
 		js: function(job)
@@ -74,7 +74,7 @@ $.extend(an.plugins, {
 {
 	desc: '加入一鍵留名按扭',
 	pages: { off: [view] },
-	type: 5,
+	type: addon,
 	options: { sLeaveNameMsg: { desc: '回覆內容', defaultValue: '留名', type: 'text' } },
 	queue: [{
 		js: function(job)
@@ -94,7 +94,7 @@ $.extend(an.plugins, {
 {
 	desc: '加入同步登入所有server的按扭',
 	pages: { off: [normal] },
-	type: 5,
+	type: addon,
 	queue: [{
 		priority: 2,
 		js: function(job)
@@ -177,7 +177,7 @@ $.extend(an.plugins, {
 {
 	desc: '加入同步登出所有server的按扭',
 	pages: { off: [normal] },
-	type: 5,
+	type: addon,
 	queue: [{
 		priority: 2,
 		js: function(job)
@@ -232,7 +232,7 @@ $.extend(an.plugins, {
 {
 	desc: '加入前往吹水台的快速連結',
 	pages: { on: [normal] },
-	type: 5,
+	type: addon,
 	queue: [{
 		priority: 2,
 		js: function(job)
@@ -246,7 +246,7 @@ $.extend(an.plugins, {
 {
 	desc: '加入前往最頂/底的按扭',
 	pages: { on: [view] },
-	type: 5,
+	type: addon,
 	queue: [{
 		priority: 5,
 		js: function(job)
@@ -261,7 +261,7 @@ $.extend(an.plugins, {
 {
 	desc: '加入樓層編號',
 	pages: { on: [view] },
-	type: 5,
+	type: addon,
 	queue: [{
 		type: always,
 		js: function(job)

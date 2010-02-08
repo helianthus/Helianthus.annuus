@@ -4,7 +4,7 @@ $.extend(an.plugins, {
 {
 	desc: 'Ajax式列表更新',
 	pages: { on: [topics] },
-	type: 7,
+	type: ajax,
 	options:
 	{
 		nNumOfTopicPage: { desc: '列表顯示數量', defaultValue: 1, type: 'text' },

@@ -36,7 +36,7 @@ $.extend(an.plugins, {
 {
 	desc: '用戶封鎖功能',
 	pages: { on: [view] },
-	type: 6,
+	type: others,
 	queue: [{
 		js: function(job)
 		{
@@ -120,7 +120,7 @@ $.extend(an.plugins, {
 {
 	desc: '用戶高亮功能',
 	pages: { on: [view] },
-	type: 6,
+	type: others,
 	queue: [{
 		js: function(job)
 		{
@@ -170,7 +170,7 @@ $.extend(an.plugins, {
 {
 	desc: '用戶單獨顯示功能',
 	pages: { on: [view] },
-	type: 6,
+	type: others,
 	queue: [{
 		js: function(job)
 		{

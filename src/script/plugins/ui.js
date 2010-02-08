@@ -4,7 +4,7 @@ $.extend(an.plugins, {
 {
 	desc: '加入基本元件',
 	pages: { comp: [all] },
-	type: 1,
+	type: kernel,
 	queue: [{
 		priority: 1,
 		js: function()
@@ -71,7 +71,7 @@ $.extend(an.plugins, {
 {
 	desc: '加入共用元件',
 	pages: { comp: [all] },
-	type: 1,
+	type: kernel,
 	queue: [{
 		priority: 1,
 		js: function()
@@ -131,7 +131,7 @@ $.extend(an.plugins, {
 {
 	desc: '加入選項元件',
 	pages: { comp: [65535] },
-	type: 1,
+	type: kernel,
 	queue: [{
 		priority: 1,
 		js: function()
@@ -568,7 +568,7 @@ $.extend(an.plugins, {
 {
 	desc: '加入評測元件',
 	pages: { on: [normal] },
-	type: 1,
+	type: kernel,
 	queue: [{
 		priority: 1,
 		js: function()
@@ -642,7 +642,7 @@ $.extend(an.plugins, {
 {
 	desc: '加入記錄元件 [右下]',
 	pages: { on: [normal] },
-	type: 1,
+	type: kernel,
 	options:
 	{
 		bAddLogButton: { desc: '加入記錄元件開關按扭', defaultValue: false, type: 'checkbox' },
@@ -715,7 +715,7 @@ $.extend(an.plugins, {
 {
 	desc: '加入按扭元件 [左上]',
 	pages: { on: [normal] },
-	type: 1,
+	type: kernel,
 	options:
 	{
 		bAddButtonsButton: { desc: '加入按扭元件開關按扭', defaultValue: false, type: 'checkbox' },
@@ -761,7 +761,7 @@ $.extend(an.plugins, {
 {
 	desc: '加入連結元件 [左中]',
 	pages: { on: [normal] },
-	type: 1,
+	type: kernel,
 	options:
 	{
 		bAddLinksButton: { desc: '加入連結元件開關按扭', defaultValue: false, type: 'checkbox' },
@@ -821,7 +821,7 @@ $.extend(an.plugins, {
 {
 	desc: '加入資訊元件 [左下]',
 	pages: { on: [normal] },
-	type: 1,
+	type: kernel,
 	options:
 	{
 		bAddInfoButton: { desc: '加入資訊元件開關按扭', defaultValue: false, type: 'checkbox' },
@@ -875,7 +875,7 @@ $.extend(an.plugins, {
 {
 	desc: '加入關於元件',
 	pages: { comp: [65535] },
-	type: 1,
+	type: kernel,
 	queue: [{
 		priority: 1,
 		js: function(job)
@@ -937,7 +937,7 @@ $.extend(an.plugins, {
 {
 	desc: '鼠標遠離UI元件時半透明',
 	pages: { off: [normal] },
-	type: 1,
+	type: kernel,
 	options: { nUIOpacity: { desc: '透明度 (10 = 移除半透明)', type: 'select', defaultValue: 3, choices: [10,9,8,7,6,5,4,3,2,1,0] } },
 	queue: [{
 		priority: 1,

@@ -4,7 +4,7 @@ $.extend(an.plugins, {
 {
 	desc: 'Ajax化頁面讀取',
 	pages: { on: [view] },
-	type: 7,
+	type: ajax,
 	options:
 	{
 		viewAjaxDisplayMode: { desc: '顯示模式', type: 'select', choices: ['單頁模式', '延展模式', '延展模式(隱藏轉頁格)'], defaultValue: '延展模式' },

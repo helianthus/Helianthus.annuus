@@ -4,7 +4,7 @@ $.extend(an.plugins, {
 {
 	desc: '改變快速回覆的風格',
 	pages: { on: [view] },
-	type: 8,
+	type: remake,
 	options:
 	{
 		sQRHideMethod: { desc: '隱藏方式', type: 'select', choices: ['完全隱藏', '隱藏於中下方, 懸浮切換顯示', '隱藏於中下方, 點擊切換顯示', '隱藏於右下角'], defaultValue: '隱藏於中下方, 點擊切換顯示' },
@@ -100,7 +100,7 @@ $.extend(an.plugins, {
 {
 	desc: '需要時自動加入代碼插入按扭',
 	pages: { on: [view | post | sendpm] },
-	type: 6,
+	type: others,
 	queue: [{
 		js: function(job)
 		{
@@ -139,7 +139,7 @@ $.extend(an.plugins, {
 {
 	desc: '強化表情圖示列',
 	pages: { on: [view | post | sendpm] },
-	type: 6,
+	type: others,
 	options: { sSmileySelectMethod: { desc: '圖示選擇方式', defaultValue: '列表', type: 'select', choices: ['列表', '連結'] } },
 	queue: [{
 		js: function(job)
@@ -231,7 +231,7 @@ $.extend(an.plugins, {
 {
 	desc: '加入自訂文字插入控件',
 	pages: { on: [view | post | sendpm] },
-	type: 5,
+	type: addon,
 	queue: [{
 		js: function(job)
 		{

@@ -4,7 +4,7 @@ $.extend(an.plugins, {
 {
 	desc: '轉換論壇連結的伺服器位置',
 	pages: { on: [view] },
-	type: 6,
+	type: others,
 	queue: [{
 		priority: 1,
 		js: function(job)
@@ -25,7 +25,7 @@ $.extend(an.plugins, {
 {
 	desc: '轉換文字連結成連結',
 	pages: { on: [view] },
-	type: 6,
+	type: others,
 	queue: [{
 		type: always,
 		css: '.an-linkified { padding: 0 2px; }',
@@ -66,7 +66,7 @@ $.extend(an.plugins, {
 {
 	desc: '連結封鎖功能',
 	pages: { off: [view] },
-	type: 6,
+	type: others,
 	queue: [{
 		js: function(job)
 		{
@@ -129,7 +129,7 @@ $.extend(an.plugins, {
 {
 	desc: '轉換圖片連結成圖片',
 	pages: { on: [view] },
-	type: 6,
+	type: others,
 	options: {
 		imageConvertMode: { desc: '轉換模式', type: 'select', choices: ['自動轉換', '自動轉換(引用中的連結除外)', '手動轉換'], defaultValue: '手動轉換' }
 	},
@@ -172,7 +172,7 @@ $.extend(an.plugins, {
 {
 	desc: '圖片屏蔽功能',
 	pages: { off: [view] },
-	type: 6,
+	type: others,
 	options: {
 		imageMaskMode: { desc: '屏蔽模式', type: 'select', choices: ['自動屏蔽', '自動屏蔽(只限引用中的圖片)', '手動屏蔽'], defaultValue: '自動屏蔽(只限引用中的圖片)' }
 	},
@@ -215,7 +215,7 @@ $.extend(an.plugins, {
 {
 	desc: '轉換視頻網站連結成影片',
 	pages: { on: [view] },
-	type: 6,
+	type: others,
 	options: {
 		videoConvertMode: { desc: '轉換模式', type: 'select', choices: ['自動轉換', '自動轉換(引用中的連結除外)', '手動轉換'], defaultValue: '自動轉換(引用中的連結除外)' }
 	},

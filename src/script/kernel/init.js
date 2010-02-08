@@ -5,16 +5,22 @@ $.event.special.click = {
 	{
 		return function(event)
 		{
-			if(event.type === 'click' && !(event.data && event.data.disableCheck) && event.button > 0) return;
+			if(!(event.data && event.data.disableCheck) && event.button > 0) return;
 			handler.apply(this, arguments);
 		};
 	}
 };
 
-$.live('a', 'click', { disableCheck: true }, function(event)
+$d.bind('click', { disableCheck: true }, function(event)
 {
-	if(/^(?:#|javascript:)$/.test(this.href)) event.preventDefault();
+	var jTarget = $(event.target).closest('a');
+	if(jTarget.length && /^(?:#|javascript:)$/.test(jTarget.attr('href'))) event.preventDefault();
 });
+
+$.rules('\
+a > img { border: 0; } \
+.TransparentGrayBackground, .TransparentGrayBackground + * { z-index: 10; } \
+');
 
 $.timeout('checkdom', function()
 {

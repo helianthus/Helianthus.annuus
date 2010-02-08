@@ -21,7 +21,7 @@ $.extend(an.plugins, {
 		priority: 1,
 		fn: function()
 		{
-			$.ss('\
+			$.rules('\
 			#an, #an legend { color: {0.sMainFontColor}; } \
 			\
 			.an-forum, .an-forum textarea { background-color: {0.sSecBgColor}; } \
@@ -63,7 +63,7 @@ $.extend(an.plugins, {
 		priority: 1,
 		fn: function()
 		{
-			$.ss('\
+			$.rules('\
 			.an-box { display: none; position: fixed; left: 50%; top: 50%; z-index: 10; border-width: 1px; } \
 			.an-box-header { line-height: 1.8em; margin: 0; padding: 0 0 0 0.2em; } \
 			.an-box-content { overflow: auto; position: relative; } \
@@ -102,7 +102,7 @@ $.extend(an.plugins, {
 		priority: 1,
 		fn: function()
 		{
-			$.ss('body * { font-family: {0} !important; }', this.options('sMainFontFamily'));
+			$.rules('body * { font-family: {0} !important; }', this.options('sMainFontFamily'));
 		}
 	}]
 },
@@ -127,7 +127,7 @@ $.extend(an.plugins, {
 				? 'text-decoration: none; } a[href^="/blog/blog.aspx"] > span { text-decoration: none !important; } .repliers_right a { text-decoration: underline; }'
 				: '}';
 
-			$.ss('\
+			$.rules('\
 			body > form a, #ctl00_ContentPlaceHolder1_MiddleAdSpace1 a { color: {0.sMainLinkFontColor}; ' + sTextCSS + ' \
 			body > form a[href*="view.aspx"]:visited, .repliers_right a:visited { color: {0.sMainVisitedColor}; } \
 			body > form a[href]:hover { color: {0.sMainHoverColor}; } \
@@ -168,7 +168,7 @@ $.extend(an.plugins, {
 		priority: 1,
 		fn: function()
 		{
-			$.ss('\
+			$.rules('\
 			/* Global stuff */\
 			body { background-color: {0.sMainBgColor}; } \
 			body, p, td, .addthis_toolbox > a, .addthis_toolbox > span { color: {0.sMainFontColor}; } \

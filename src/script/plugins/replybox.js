@@ -25,7 +25,7 @@ $.extend(an.plugins, {
 			nWidth = 938, //jQR.width() + 1,
 			nRight = 50 - nWidth;
 
-			$.ss('\
+			$.rules('\
 			#hkg_bottombar { z-index: 3; } \
 			#newmessage { {0}; background-color: transparent; z-index: 2; position: fixed; width: {1}px; bottom: 0px; right: {2}px; } \
 			#an-qr-header { cursor: pointer; text-align: center; } \
@@ -151,7 +151,7 @@ $.extend(an.plugins, {
 			if($('#ctl00_ContentPlaceHolder1_Forum_Type_Row').length) selector += '+ tr + tr';
 			selector += '> td:first-child';
 
-			$.ss('\
+			$.rules('\
 			'+selector+' { cursor: pointer; } \
 			'+selector+':before { content: url('+an.resources['smiley-twist']+'); margin-right: 2px; vertical-align: middle; } \
 			');
@@ -164,7 +164,7 @@ $.extend(an.plugins, {
 
 				$d.unbind('click.smileyadder');
 
-				$.ss('\
+				$.rules('\
 				'+selector+' { cursor: default; } \
 				'+selector+':before { content: ""; display: none; } \
 				');
@@ -186,7 +186,7 @@ $.extend(an.plugins, {
 								$.each(cell, function(i, smileySet)
 								{
 									html += $.format(
-										'<a href="javascript:InsertText(\'{0.code}\',false)"><img src="{0.path}{0.filename}.gif" alt="{0.code}" /></a>&nbsp;',
+										'<a href="javascript:InsertText(\'{0.code}\',false)"><img src="{0.path}{0.filename}.gif" alt="{0.code}" /></a>&nbsp;&nbsp;',
 										{ path: typeSet.path, code: smileySet[0], filename: smileySet[1] }
 									);
 								});
@@ -202,7 +202,7 @@ $.extend(an.plugins, {
 
 				var isSelectMode = job.options('sSmileySelectMethod') === '列表';
 
-				if(!isSelectMode) $.ss('#an-smileyselector { list-style: none; margin: 0; padding: 0; font-size: 80%; }');
+				if(!isSelectMode) $.rules('#an-smileyselector { list-style: none; margin: 0; padding: 0; font-size: 80%; }');
 
 				$((function()
 				{
@@ -261,7 +261,7 @@ $.extend(an.plugins, {
 			{
 				if(this.value == 'customize') {
 					if(!jSnippets) {
-						$.ss('\
+						$.rules('\
 						#an-snippets { padding: 5px; } \
 						#an-snippets > ul { float: left; } \
 						#an-snippets > ul > li { padding: 2px 0; } \

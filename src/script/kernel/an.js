@@ -58,7 +58,7 @@
 
 		$.each(an.plugins, function(pluginId, plugin)
 		{
-			$.each(plugin.pages, function(status, pluginPageCode)
+			$.digEach(plugin.pages, null, function(status, i, pluginPageCode)
 			{
 				if(!(pluginPageCode & pageCode)) return;
 

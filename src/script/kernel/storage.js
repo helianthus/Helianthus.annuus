@@ -46,7 +46,7 @@
 		{
 			defaultData.privateData[pluginId] = {};
 
-			$.each(plugin.pages, function(status, pageCode)
+			$.digEach(plugin.pages, null, function(status, i, pageCode)
 			{
 				defaultData.privateData[pluginId][pageCode] = { status: statusMap[status] };
 			});

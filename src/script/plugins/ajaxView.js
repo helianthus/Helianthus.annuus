@@ -21,7 +21,7 @@ $.extend(an.plugins, {
 
 			window.ToggleUserDetail = $.noop;
 
-			$.ss('.hkg_bottombar_link > img { border: 0; }');
+			$.rules('.hkg_bottombar_link > img { border: 0; }');
 			$d.bind('mousedown.userlinkbox', function(event)
 			{
 				var jTarget = $(event.target);
@@ -252,7 +252,7 @@ $.extend(an.plugins, {
 			});
 
 			if(displayMode == 2) {
-				$.ss('{0} > div, {0} > br, {0} + br { display: none; }', '#ctl00_ContentPlaceHolder1_view_form > div[style*="100%"]' );
+				$.rules('{0} > div, {0} > br, {0} + br { display: none; }', '#ctl00_ContentPlaceHolder1_view_form > div[style*="100%"]' );
 			}
 			else {
 				$d.bind('change', function(event)

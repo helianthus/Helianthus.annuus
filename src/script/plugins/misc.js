@@ -31,11 +31,7 @@ $.extend(an.plugins, {
 	queue: [{
 		fn: function()
 		{
-			if($d.pageName() === 'view') $('select[name=page]').val($.pageNo()); // for FF3 where select box does not reset
-
-			$.ss('a > img { border: 0; }');
-
-			$.ss('.TransparentGrayBackground, .TransparentGrayBackground + * { z-index: 10; }');
+			if($.pageName() === 'view') $('select[name=page]').val($.pageNo()); // for FF3 where select box does not reset
 
 			$('script').empty().each(function()
 			{
@@ -67,7 +63,7 @@ $.extend(an.plugins, {
 			{
 				if(!$('#an-savedsettings').length) {
 					$.run('box', 'an-savedsettings', '儲存資料', null, 'max');
-					$.ss('#an-savedsettings { padding: 0 2em; } #an-savedsettings code { display: block; white-space: pre; margin: 1em 0; font-family: Consolas; }');
+					$.rules('#an-savedsettings { padding: 0 2em; } #an-savedsettings code { display: block; white-space: pre; margin: 1em 0; font-family: Consolas; }');
 					$('#an-savedsettings').append('<code></code>');
 				}
 				$('#an-savedsettings code').text($.storage().replace(/{[^{]*},?/g, function(sMatch){ return sMatch.replace(/,/g, ',\n'); }));
@@ -78,7 +74,7 @@ $.extend(an.plugins, {
 			{
 				if(!$('#an-functionlist').length) {
 					$.run('box', 'an-functionlist', '功能列表', 600, 400);
-					$.ss('#an-functionlist textarea { margin: 10px; width: 570px; height: 370px; font-family: Consolas; }');
+					$.rules('#an-functionlist textarea { margin: 10px; width: 570px; height: 370px; font-family: Consolas; }');
 					$('#an-functionlist').append('<textarea readonly="readonly"></textarea>');
 
 					var sList = '';

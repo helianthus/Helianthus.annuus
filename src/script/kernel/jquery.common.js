@@ -173,11 +173,6 @@ $.extend({
 		return target === null || target === undefined || target === NaN;
 	},
 
-	live: function(selector, context, type, data, fn)
-	{
-		return $.fn.live.apply({ selector: selector, context: typeof type === 'string' ? $(context)[0] : document }, $.slice(arguments, typeof type === 'string' ? 2 : 1));
-	},
-
 	make: function(obj)
 	{
 		for(var i=1; i<arguments.length; ++i) {

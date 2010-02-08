@@ -14,7 +14,8 @@ $.extend(an.plugins, {
 				<div id="an-backlayer"></div> \
 				<ul id="an-mainmenu" class="an-mod an-menu"></ul> \
 			</div> \
-			').click(function(event){ event.stopPropagation(); });
+			')
+			//.click(function(event){ event.stopPropagation(); });
 
 			$.gray = function(bClickToQuit, uExtra)
 			{
@@ -81,7 +82,7 @@ $.extend(an.plugins, {
 				{
 					if(!$('#an-server').length)
 					{
-						$.ss('\
+						$.rules('\
 						#an-server div { padding: 0.5em; } \
 						#an-server caption { padding-top: 0.5em; text-align: center; caption-side: bottom; } \
 						#an-server caption a { display: inline-block; border-width: 1px; padding: 0.2em; } \
@@ -143,7 +144,7 @@ $.extend(an.plugins, {
 				{
 					$.box('an-settings', '選項', 900, 'max').append('<div id="an-settings-tabs"><ul id="an-settings-tabs-main"></ul><ul id="an-settings-tabs-extend"></ul></div><div id="an-settings-main"><div id="an-settings-main-panelswrapper"><div id="an-settings-main-panels"></div></div><div id="an-settings-main-controls"><ul id="an-settings-main-control-1"></ul><ul id="an-settings-main-control-2"></ul></div></div>');
 
-					$.ss(' \
+					$.rules(' \
 					#an-settings-tabs { float: left; height: 100%; border-right-width: 1px; } \
 					#an-settings-tabs a { display: block; line-height: 2em; text-align: center; border-bottom-width: 1px; padding: 0 0.5em; } \
 					#an-settings-tabs-extend li:first-child { margin-top: 2em; border-top-width: 1px; } \
@@ -250,7 +251,7 @@ $.extend(an.plugins, {
 					jTabLinks = $('#an-settings-tabs a');
 
 					// tab click
-					$.live('a', '#an-settings-tabs', 'click', function()
+					$('#an-settings-tabs').delegate('a', 'click', function()
 					{
 						jTabLinks.css('text-decoration', '');
 						$(this).css('text-decoration', 'underline');
@@ -577,7 +578,7 @@ $.extend(an.plugins, {
 			{
 				if(!$('#an-benchmark').length)
 				{
-					$.ss(' \
+					$.rules(' \
 					#an-benchmark div { padding: 0.5em; } \
 					');
 
@@ -658,7 +659,7 @@ $.extend(an.plugins, {
 				var jMod = $('#an-log');
 				if(jMod.length) return jMod;
 
-				$.ss('\
+				$.rules('\
 				#an-log { display: none; height: 30%; width: {0}; bottom: 0; right: 0; } \
 				#an-log-header { font-weight: bold; border-bottom-width: 1px; padding-bottom: 0.2em; } \
 				#an-log-content li { display: none; border-bottom: 1px dotted; padding: 0.3em 0; } \
@@ -729,7 +730,7 @@ $.extend(an.plugins, {
 				var jMod = $('#an-buttons');
 				if(jMod.length) return jMod;
 
-				$.ss('\
+				$.rules('\
 				#an-buttons { {0} left: 5px; top: 30px; border-left: 5px solid; padding-left: 0.3em; } \
 				#an-buttons a { padding: 0.15em 0; } \
 				',
@@ -775,7 +776,7 @@ $.extend(an.plugins, {
 				var jMod = $('#an-links');
 				if(jMod.length) return jMod;
 
-				$.ss('\
+				$.rules('\
 				#an-links { {0} top: 50%; left: 0; text-align: right; } \
 				#an-links a { padding: 0.3em 0.1em 0.2em 1.5em; } \
 				#an-links-top li { border-bottom-width: 1px; } \
@@ -835,7 +836,7 @@ $.extend(an.plugins, {
 				var jMod = $('#an-info');
 				if(jMod.length) return jMod;
 
-				$.ss('\
+				$.rules('\
 				#an-info { {0}; left: 10px; bottom: 10px; border-width: 0 0 1px 1px; } \
 				#an-info-content { padding: 1em 1em 0 0.5em !important; } \
 				#an-info-footer { text-align: right; font-weight: bold; } \
@@ -850,7 +851,7 @@ $.extend(an.plugins, {
 
 			$.prioritize(7, once, function()
 			{
-				if($('#hkg_bottombar:visible').length) $.ss('#an-info { bottom: 30px; }');
+				if($('#hkg_bottombar:visible').length) $.rules('#an-info { bottom: 30px; }');
 			});
 
 			if(job.options('bAddInfoButton'))
@@ -883,7 +884,7 @@ $.extend(an.plugins, {
 			{
 				if(!$('#an-about').length)
 				{
-					$.ss('\
+					$.rules('\
 					#an-about > div { margin: 0.5em; } \
 					#an-about h1 { margin: 0.5em; font-size: 2em; text-align: center; } \
 					#an-about hr { border-width: 1px; margin: 1em 0.5em; } \
@@ -942,7 +943,7 @@ $.extend(an.plugins, {
 		priority: 1,
 		fn: function()
 		{
-			$.ss('\
+			$.rules('\
 			.an-mod { {0}; } \
 			.an-mod:hover { {1} } \
 			',

@@ -117,7 +117,7 @@ $.extend(an.plugins, {
 
 			if(job.options('bFilterListButton')) $.run('addButton', '標題過濾列表', function() {
 				if(!$('#an-filterlist').length) {
-					$.ss('\
+					$.rules('\
 					#an-filterlist > ul { margin: 5px; } \
 					#an-filterlist > ul > li { padding: 2px 0; } \
 					#an-filterlist > ul > li > span:first-child { margin-right: 5px; border: 1px solid black; padding: 0 5px; background-color: {0.sMainHeaderBgColor}; color: {0.sMainHeaderFontColor}; cursor: pointer; } \

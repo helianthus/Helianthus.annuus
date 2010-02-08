@@ -6,15 +6,20 @@ $.extend(an.plugins, {
 	pages: { on: [view, profilepage | sendpm] },
 	type: 4,
 	queue: [{
-		fn: function(job)
+		priority: 1,
+		fn: function()
 		{
-			window.DrawImage = $.noop;
-
-			$.ss('\
+			$.rules('\
 			.repliers_right a[target] { display: inline-block; max-width: 100% } \
 			.repliers_right img[onload] { width: auto; height: auto; max-width: 100% } \
 			.repliers_right > tbody > tr:first-child a[target]:focus { outline: 0; } \
 			');
+		}
+	},
+	{
+		fn: function(job)
+		{
+			window.DrawImage = $.noop;
 		}
 	}]
 },
@@ -26,9 +31,10 @@ $.extend(an.plugins, {
 	type: 4,
 	options: { nQuoteImgMaxHeight: { desc: '圖片最大高度(px)', defaultValue: 100, type: 'text' } },
 	queue: [{
+		priority: 1,
 		fn: function(job)
 		{
-			$.ss('.repliers_right blockquote img[onload] { width: auto; height: auto; max-height: {0}px; }', job.options('nQuoteImgMaxHeight'));
+			$.rules('.repliers_right blockquote img[onload] { width: auto; height: auto; max-height: {0}px; }', job.options('nQuoteImgMaxHeight'));
 		}
 	}]
 },
@@ -39,15 +45,15 @@ $.extend(an.plugins, {
 	pages: { off: [profilepage] },
 	type: 4,
 	queue: [{
+		priority: 1,
 		fn: function(job)
 		{
 			var regex = /&highlight_id=\d+/;
-			$d.mouseover(function(event)
+			$d.delegate('a', 'mouseover', function()
 			{
-				var jTarget = $(event.target);
-				if(!(jTarget.is('a') && regex.test(jTarget.attr('href')))) return;
-
-				jTarget.attr('href', jTarget.attr('href').replace(regex, ''));
+				if(regex.test(this.href)) {
+					this.href = this.href.replace(regex, '');
+				}
 			});
 		}
 	}]
@@ -65,7 +71,7 @@ $.extend(an.plugins, {
 			{
 				var
 				type = $('#st').val(),
-				query = escape($('#searchstring').val());
+				query = $('#searchstring').val();
 
 				window.open(type == 'tag' ? 'tags.aspx?tagword='.concat(query) : $.format('search.aspx?st={0}&searchstring={1}', type, query), '_blank');
 
@@ -82,9 +88,10 @@ $.extend(an.plugins, {
 	type: 4,
 	options: { bTopicLinksOnly: { desc: '只限帖子連結', defaultValue: false, type: 'checkbox' } },
 	queue: [{
+		priority: 2,
 		fn: function(job)
 		{
-			$.live('a', 'click', function(event)
+			$d.delegate('a', 'click', function(event)
 			{
 				if(!event.isDefaultPrevented() && $(this).attrFilter('href',  job.options('bTopicLinksOnly') && /view\.aspx/, /^#|^javascript|topics\.aspx/).length) {
 					event.preventDefault();
@@ -101,9 +108,10 @@ $.extend(an.plugins, {
 	pages: { on: [view] },
 	type: 4,
 	queue: [{
+		priority: 2,
 		fn: function(job)
 		{
-			$.live('a', 'click', function(event)
+			$d.delegate('a', 'click', function(event)
 			{
 				if(!event.isDefaultPrevented() && $(this).is('.repliers_right > tbody > tr:first-child a')) {
 					event.preventDefault();
@@ -120,9 +128,10 @@ $.extend(an.plugins, {
 	pages: { off: [view] },
 	type: 4,
 	queue: [{
+		priority: 1,
 		fn: function(job)
 		{
-			$.live('a', 'mouseover', function()
+			$d.delegate('a', 'mouseover', function()
 			{
 				if(this.href.indexOf('ToggleUserDetail') !== -1) {
 					this.href = '/ProfilePage.aspx?userid=' + $(this).up('tr').attr('userid');
@@ -138,6 +147,7 @@ $.extend(an.plugins, {
 	pages: { off: [normal] },
 	type: 4,
 	queue: [{
+		priority: 1,
 		fn: function(job)
 		{
 			$('<link>', { rel: 'shortcut icon', href: 'http://helianthus-annuus.googlecode.com/svn/other/hkg.ico' }).appendTo('head');
@@ -156,6 +166,7 @@ $.extend(an.plugins, {
 		sCModeTitle: { desc: '標題名稱', defaultValue: 'Google', type: 'text' }
 	},
 	queue: [{
+		priority: 1,
 		fn: function(job)
 		{
 			if($.cookie('companymode') == 'Y') {

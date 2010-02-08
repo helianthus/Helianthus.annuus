@@ -6,15 +6,16 @@ $.extend(an.plugins, {
 	pages: { on: [view] },
 	type: 6,
 	queue: [{
+		priority: 1,
 		fn: function(job)
 		{
 			var rForum = /forum\d*.hkgolden\.com/i;
-			$d.mousedown(function(event)
+			$d.delegate('a', 'mouseover', function()
 			{
-				var jTarget = $(event.target);
-				if(!( jTarget.is('.repliers_right > tbody > tr:first-child a') && rForum.test(jTarget.attr('href')) )) return;
-
-				jTarget.attr('href', jTarget.attr('href').replace(rForum, location.hostname));
+				var jTarget = $(this);
+				if(jTarget.is('.repliers_right > tbody > tr:first-child a') && rForum.test(jTarget.attr('href'))) {
+					jTarget.attr('href', jTarget.attr('href').replace(rForum, location.hostname));
+				}
 			});
 		}
 	}]
@@ -26,13 +27,8 @@ $.extend(an.plugins, {
 	pages: { on: [view] },
 	type: 6,
 	queue: [{
-		fn: function(job)
-		{
-			$.ss('.an-linkified { padding: 0 2px; }');
-		}
-	},
-	{
 		type: always,
+		css: '.an-linkified { padding: 0 2px; }',
 		fn: function(job)
 		{
 			var
@@ -74,7 +70,7 @@ $.extend(an.plugins, {
 	queue: [{
 		fn: function(job)
 		{
-			$.ss('\
+			$.rules('\
 			.repliers_right a[target] { display: inline-block; } \
 			a[href].an-linkblocked { text-decoration: line-through; font-style: italic; cursor: default; } \
 			a[target].an-linkblocked:before { content: attr(rel); } \
@@ -140,7 +136,7 @@ $.extend(an.plugins, {
 	queue: [{
 		fn: function(job)
 		{
-			$.ss('\
+			$.rules('\
 			.an-imagified { padding: 0 2px; } \
 			.an-imagified + a[href] { display: block; } \
 			');
@@ -190,10 +186,10 @@ $.extend(an.plugins, {
 				2: ''
 			}[maskMode];
 
-			$.ss(selector + 'img[onload].an-maskedImage { padding: 52px 48px 0 0; width: 0; height: 0; background: url('+an.resources['gnome-mime-image-bmp']+') no-repeat; }');
+			$.rules(selector + 'img[onload].an-maskedImage { padding: 52px 48px 0 0; width: 0; height: 0; background: url('+an.resources['gnome-mime-image-bmp']+') no-repeat; }');
 
 			if(maskMode !== 2) {
-				$.ss('img[src][onload].an-unmaskedImage { padding: 0; width: auto; height: auto; background: none; }');
+				$.rules('img[src][onload].an-unmaskedImage { padding: 0; width: auto; height: auto; background: none; }');
 			}
 
 			var jButton = $('<img />', { src: an.resources['picture--minus'], css: { 'margin-top': '-2px' } })
@@ -271,7 +267,7 @@ $.extend(an.plugins, {
 				return new RegExp(aReg.join('|'), 'i');
 			})();
 
-			$.ss('\
+			$.rules('\
 			.an-videoified { padding: 0 2px; } \
 			.an-videoified + object { display: block; outline: 0; } \
 			');

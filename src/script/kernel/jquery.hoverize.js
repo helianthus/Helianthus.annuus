@@ -9,7 +9,7 @@
 	$.fn.hoverize = function(selector, option)
 	{
 		if(!jHoverObjects) {
-			$.ss('\
+			$.rules('\
 			#an-hoverobjects > * { display: none; position: absolute; z-index: 1; } \
 			#an-hoverobjects > img, #an-hoverobjects > span { cursor: pointer; } \
 			');

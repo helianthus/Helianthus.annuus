@@ -13,7 +13,7 @@ $.extend(an.plugins, {
 		priority: 1,
 		fn: function(job)
 		{
-			$.ss('.repliers_right blockquote + br { display: none; }');
+			$.rules('.repliers_right blockquote + br { display: none; }');
 
 			var
 			styleNo = $.inArray(job.options('quoteStyle'), job.plugin.options.quoteStyle.choices),
@@ -22,7 +22,7 @@ $.extend(an.plugins, {
 
 			switch(styleNo) {
 				case 0:
-					$.ss('\
+					$.rules('\
 					.repliers_right blockquote { margin: 0 0 8px 1px; padding: 0 0 7px 40px; } \
 					blockquote.an-hiddenquote { padding-left: 0; } \
 					.an-hiddenquote:before { content: url('+ an.resources['balloon--plus'] +'); } \
@@ -42,7 +42,7 @@ $.extend(an.plugins, {
 					});
 				break;
 				case 1:
-					$.ss('\
+					$.rules('\
 					.an-quotetogglebutton { margin: -18px 0 0 -4px; } \
 					.an-quotetogglebutton, blockquote:before { color: #999; } \
 					.repliers_right blockquote:before { content: ""; position: absolute; width: 20px; height: 20px; top 0; left: -4px; margin-top: -18px; } \
@@ -60,7 +60,7 @@ $.extend(an.plugins, {
 					});
 				break;
 				case 2:
-					$.ss('\
+					$.rules('\
 					.an-quotetogglebutton { margin: 2px 0 0 -15px; font-weight: bold; } \
 					.an-quotetogglebutton, blockquote:before, .an-hiddenquote:after { font-size: 12px; color: {0.sMainHeaderFontColor}; } \
 					.repliers_right blockquote:before { content: "引用:"; display: block; margin-bottom: 2px; padding-left: 3px; line-height: 1.3; background-color: {0.sMainHeaderBgColor}; } \

@@ -9,7 +9,7 @@
 	$.userButton = function(src)
 	{
 		if(!jUserButtons) {
-			$.ss('\
+			$.rules('\
 			#an-userbuttons > img:first-child { padding-top: 7px; } \
 			#an-userbuttons > img { display: block; padding: 3.5px 7px; cursor: pointer; } \
 			');
@@ -40,7 +40,7 @@ $.extend(an.plugins, {
 	queue: [{
 		fn: function(job)
 		{
-			$.ss('\
+			$.rules('\
 			.an-bammed-msg { color: #999; font-size: 10px; text-align: center; } \
 			.an-bammed-msg > span { cursor: pointer; } \
 			.an-bammed > td { opacity: 0.5; } \
@@ -143,7 +143,7 @@ $.extend(an.plugins, {
 				}
 			});
 
-			$.ss('\
+			$.rules('\
 			tr[userid] > td { background-color: {0.sSecBgColor} !important; } \
 			tr.an-highlighted > td { background-color: {0.sHighlightBgColor} !important; } \
 			',

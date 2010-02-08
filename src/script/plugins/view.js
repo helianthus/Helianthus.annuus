@@ -8,7 +8,7 @@ $.extend(an.plugins, {
 	queue: [{
 		fn: function(job)
 		{
-			$.ss('.an-nameforcedshown:before { content: "<空白名稱>"; font-style: italic; }');
+			$.rules('.an-nameforcedshown:before { content: "<空白名稱>"; font-style: italic; }');
 		}
 	},
 	{
@@ -33,7 +33,7 @@ $.extend(an.plugins, {
 		{
 			var maxHeight = job.options('replyMaxHeight');
 
-			$.ss('\
+			$.rules('\
 			.repliers_right, .repliers_right > tbody, .repliers_right > tbody > tr, .repliers_right > tbody > tr > td { display: block; } \
 			.repliers_right > tbody > tr:first-child { max-height: '+maxHeight+'px; overflow-y: hidden; } \
 			.an-maxheightremoved > .repliers_right > tbody > tr:first-child { max-height: none; } \

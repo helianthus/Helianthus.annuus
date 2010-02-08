@@ -29,7 +29,7 @@
 		cache = null;
 	});
 
-	$.ss = function(css, remove)
+	$.rules = function(css, remove)
 	{
 		if(remove === null) {
 			var newCSS = '';

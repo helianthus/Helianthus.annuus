@@ -88,14 +88,14 @@ $.extend(an.plugins, {
 	type: modify,
 	options: { bTopicLinksOnly: { desc: '只限帖子連結', defaultValue: false, type: 'checkbox' } },
 	queue: [{
-		priority: 2,
+		priority: 6,
 		js: function(job)
 		{
 			$d.delegate('a', 'click', function(event)
 			{
 				if(!event.isDefaultPrevented() && $(this).attrFilter('href',  job.options('bTopicLinksOnly') && /view\.aspx/, /^#|^javascript|topics\.aspx/).length) {
 					event.preventDefault();
-					window.open(this.href, '_blank');
+					window.open(event.target.href, '_blank');
 				}
 			});
 		}
@@ -108,14 +108,14 @@ $.extend(an.plugins, {
 	pages: { on: [view] },
 	type: modify,
 	queue: [{
-		priority: 2,
+		priority: 6,
 		js: function(job)
 		{
 			$d.delegate('a', 'click', function(event)
 			{
-				if(!event.isDefaultPrevented() && $(this).is('.repliers_right > tbody > tr:first-child a')) {
+				if(jTarget.length && !event.isDefaultPrevented() && $(this).isReplyContent()) {
 					event.preventDefault();
-					window.open(this.href, '_blank');
+					window.open(event.target.href, '_blank');
 				}
 			});
 		}

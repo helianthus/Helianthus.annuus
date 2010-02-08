@@ -226,7 +226,7 @@ $.extend(an.plugins, {
 			var aSites =
 			[{
 				regex: 'youtube\\.com/watch\\?v=',
-				js: function(job)
+				fn: function(job)
 				{
 					if(nWidth > 640) nWidth = 640;
 					nHeight = nWidth / 16 * 9 + 25;
@@ -235,7 +235,7 @@ $.extend(an.plugins, {
 			},
 			{
 				regex: 'vimeo\\.com/\\d',
-				js: function(job)
+				fn: function(job)
 				{
 					if(nWidth > 504) nWidth = 504;
 					nHeight = nWidth / 1.5;
@@ -244,7 +244,7 @@ $.extend(an.plugins, {
 			},
 			{
 				regex: 'youku\\.com/v_show/',
-				js: function(job)
+				fn: function(job)
 				{
 					if(nWidth > 480) nWidth = 480;
 					nHeight = nWidth / 4 * 3 + 40;
@@ -253,7 +253,7 @@ $.extend(an.plugins, {
 			},
 			{
 				regex: 'tudou\\.com/programs/',
-				js: function(job)
+				fn: function(job)
 				{
 					if(nWidth > 420) nWidth = 420;
 					nHeight = nWidth / 4 * 3 + 48;

@@ -1,17 +1,6 @@
 document.domain = 'hkgolden.com';
 
-$.event.special.click = {
-	add: function(handler)
-	{
-		return function(event)
-		{
-			if(!(event.data && event.data.disableCheck) && event.button > 0) return;
-			handler.apply(this, arguments);
-		};
-	}
-};
-
-$d.bind('click', { disableCheck: true }, function(event)
+$d.bind('click', function(event)
 {
 	var jTarget = $(event.target).closest('a');
 	if(jTarget.length && /^(?:#|javascript:)$/.test(jTarget.attr('href'))) event.preventDefault();

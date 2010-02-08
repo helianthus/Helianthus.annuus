@@ -217,8 +217,7 @@ $.fn.extend({
 		if($.isPlainObject(name)) {
 			$.each(name, function(name, filter)
 			{
-				var args = [name].concat(filter);
-				jThis = jThis.filter.apply(jThis, args);
+				jThis = jThis.attrFilter.apply(jThis, [name].concat(filter));
 			});
 
 			return jThis;

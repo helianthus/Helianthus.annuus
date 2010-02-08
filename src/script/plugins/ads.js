@@ -68,17 +68,17 @@ $.extend(an.plugins, {
 				.main_table1 tr[style], .main_table1 tr:first-child, #ctl00_ContentPlaceHolder1_ProfileForm > table > tbody > tr > td > table:first-child .main_table1 tr { display: table-row; } \
 				'
 			},
-			function(nPageCode){ $.pageCode() & nPageCode && $.rules(this); });
+			function(nPageCode){ $d.pageCode() & nPageCode && $.rules(this); });
 
-			if($.pageCode() & 28 && !this.options('bRetroHideAds')) {
+			if($d.pageCode() & 28 && !this.options('bRetroHideAds')) {
 				var
 				isMB = $.uriSet().querySet.type === 'MB',
-				trSelector = ($.pageName() === 'topics' ? '#HotTopics > div > table' : '#ctl00_ContentPlaceHolder1_topics_form > div + table + table > tbody > tr > td > table').concat(' > tbody > tr');
+				trSelector = ($d.pageName() === 'topics' ? '#HotTopics > div > table' : '#ctl00_ContentPlaceHolder1_topics_form > div + table + table > tbody > tr > td > table').concat(' > tbody > tr');
 
 				$.rules('{0}:nth-child(11n+{1}) {2} { display: none; }',
 					trSelector,
 					isMB ? 3 : 2,
-					$.pageName() === 'topics' ? '' : $.format(', {0}:last-child', trSelector)
+					$d.pageName() === 'topics' ? '' : $.format(', {0}:last-child', trSelector)
 				);
 
 				/* IE :o)

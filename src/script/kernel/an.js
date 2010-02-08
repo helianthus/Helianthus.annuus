@@ -52,7 +52,7 @@
 		}
 
 		var
-		pageCode = $.pageCode(),
+		pageCode = $d.pageCode(),
 		storage = $.storage(true),
 		settings = storage.profiles[storage.curProfile].privateData;
 
@@ -82,6 +82,7 @@
 	runUntil = function(until)
 	{
 		for(; curPriority <= until; ++curPriority) {
+			$d.trigger($.format('priority{0}Start', curPriority));
 			var group = jobGroups[curPriority];
 			for(var i=0; i<group.length; ++i) {
 				var job = group[i];
@@ -96,6 +97,7 @@
 					$.debug($.format('發生錯誤: {0}', job.plugin.desc), e, job, $j);
 				}
 			}
+			$d.trigger($.format('priority{0}End', curPriority));
 		}
 	};
 
@@ -114,18 +116,15 @@
 		curPriority = 1;
 
 		runUntil(3);
-		$d.trigger('p3end');
 
 		$(function()
 		{
 			runUntil(6);
-			$d.trigger('p6end');
 		});
 
 		$d.one('winload', function()
 		{
 			runUntil(9);
-			$d.trigger('p9end');
 		});
 
 		if(an.isWindowLoaded) $d.trigger('winload');

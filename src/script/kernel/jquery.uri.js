@@ -103,9 +103,21 @@
 		return parse(param ? $.uri(url, param) : url);
 	};
 
+	var attrMap = {
+		'#document': 'URL',
+		a: 'href',
+		base: 'href',
+		form: 'action',
+		iframe: 'src',
+		img: 'src',
+		input: 'src',
+		link: 'href',
+		script: 'src'
+	};
+
 	$.fn.uriSet = function()
 	{
-		return this[0] && $.uriSet(this[0].nodeType === 1 ? this.attr($.elemUrlAttr()[this[0].nodeName.toLowerCase()]) : this[0].URL);
+		return this[0] && $.uriSet(this.attr(attrMap[this[0].nodeName.toLowerCase()]));
 	};
 
 	$.search = function(url, param)

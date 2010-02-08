@@ -48,7 +48,7 @@ $.extend(an.plugins, {
 			});
 
 			var pages = {};
-			var curPageNo = $.pageNo();
+			var curPageNo = $d.pageNo();
 			var lastPageNo = $('select[name="page"]:first').children().length;
 			var displayMode = $.inArray(job.options('viewAjaxDisplayMode'), job.plugin.options.viewAjaxDisplayMode.choices);
 

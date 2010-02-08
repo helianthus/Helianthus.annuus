@@ -17,7 +17,7 @@ $.extend(an.plugins, {
 		',
 		js: function()
 		{
-			if($.pageNo() === 1) {
+			if($d.pageNo() === 1) {
 				$j.replies().eq(0).find('td[colspan="100%"]').attr('colspan', 2);
 			}
 		}

@@ -15,7 +15,7 @@ $.extend(an.plugins, {
 			else {
 				var ajaxPageNo = $.state('page');
 
-				if(ajaxPageNo && ajaxPageNo != $.pageNo()) {
+				if(ajaxPageNo && ajaxPageNo != $d.pageNo()) {
 					location.replace($.uri({ querySet: { page: ajaxPageNo === 1 ? null : ajaxPageNo }, fragmentSet: { page: null } }));
 				}
 			}
@@ -31,7 +31,7 @@ $.extend(an.plugins, {
 	queue: [{
 		js: function()
 		{
-			if($.pageName() === 'view') $('select[name=page]').val($.pageNo()); // for FF3 where select box does not reset
+			if($d.pageName() === 'view') $('select[name=page]').val($d.pageNo()); // for FF3 where select box does not reset
 
 			$('script').empty().each(function()
 			{
@@ -160,7 +160,10 @@ $.extend(an.plugins, {
 	queue: [{
 		js: function()
 		{
-			window.Profile_ShowGoogleAds = $('.main_table1').an;
+			window.Profile_ShowGoogleAds = function()
+			{
+				$d.topicTable().an();
+			};
 		}
 	}]
 },

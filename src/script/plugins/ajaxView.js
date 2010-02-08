@@ -14,7 +14,7 @@ $.extend(an.plugins, {
 	queue: [{
 		js: function(job)
 		{
-			$.prioritize(5, once, function()
+			job.prioritize(5, once, function()
 			{
 				window.changePage = $.noop;
 			});

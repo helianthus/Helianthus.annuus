@@ -41,16 +41,12 @@
 		};
 	});
 
-	var
-	jobGroups,
-	constructJobGroups = function()
+	var jobGroups = {};
+	for(var i=1; i<=9; ++i) {
+		jobGroups[i] = [];
+	}
+	$d.one('init', function()
 	{
-		jobGroups = {};
-
-		for(var i=1; i<=9; ++i) {
-			jobGroups[i] = [];
-		}
-
 		var
 		pageCode = $d.pageCode(),
 		storage = $.storage(true),
@@ -77,8 +73,19 @@
 				return false;
 			});
 		});
-	},
-	curPriority,
+	});
+
+	Job.prototype.prioritize = function(priority, type, fn)
+	{
+		if(!fn) {
+			fn = type;
+			type = priority;
+			priority = curPriority;
+		}
+		jobGroups[priority].push(new Job($.extend({}, this, { fnSet: { type: type, js: fn } })));
+	};
+
+	var curPriority,
 	runUntil = function(until)
 	{
 		for(; curPriority <= until; ++curPriority) {
@@ -101,44 +108,48 @@
 		}
 	};
 
+	$.timeout('checkdom', function()
+	{
+		if(document.getElementById('Side_GoogleAd')) {
+			an.isDOMReady = true;
+			$d.trigger('anLevel2');
+		}
+		else {
+			$.timeout('checkdom', 50);
+		}
+	});
+
 	$(window).one('load', function()
 	{
-		an.isWindowLoaded = true;
-		$.timeout(function(){ $d.trigger('winload'); });
+		$.timeout(function()
+		{
+			an.isWindowLoaded = true;
+			$d.trigger('anLevel3');
+		});
 	});
 
 	$.fn.an = function()
 	{
 		$j = this;
 
-		if(!jobGroups) constructJobGroups();
-
 		curPriority = 1;
 
 		runUntil(3);
 
-		$(function()
+		$d.one('anLevel2', function()
 		{
 			runUntil(6);
+
+			$d.one('anLevel3', function()
+			{
+				runUntil(9);
+			});
+
+			if(an.isWindowLoaded) $d.trigger('anLevel3');
 		});
 
-		$d.one('winload', function()
-		{
-			runUntil(9);
-		});
-
-		if(an.isWindowLoaded) $d.trigger('winload');
+		if(an.isDOMReady) $d.trigger('anLevel2');
 
 		return $j;
-	};
-
-	$.prioritize = function(priority, type, fn)
-	{
-		if(!fn) {
-			fn = type;
-			type = priority;
-			priority = curPriority;
-		}
-		jobGroups[priority].push(new Job($.extend({}, an.curJob, { fnSet: { type: type, js: fn } })));
 	};
 })(jQuery);

@@ -29,15 +29,12 @@
 		else {
 			var args = callback === undefined ? null : $.slice(arguments, $.isFunction(callback) ? 3 : 2);
 
-			if(delay === undefined) {
-				delay = cache[id].delay;
-			}
-			else if($.isFunction(delay)) {
+			if($.isFunction(delay)) {
 				callback = delay;
 				delay = 0;
 			}
-
-			if(!$.isFunction(callback)) {
+			else if(!$.isFunction(callback)) {
+				if(delay === undefined)  delay = cache[id].delay;
 				callback = cache[id].callback;
 			}
 

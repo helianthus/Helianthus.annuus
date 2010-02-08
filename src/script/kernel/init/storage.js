@@ -1,8 +1,41 @@
 (function($)
 {
 	var
-	storage, defaultData,
-	constructStorage = function()
+	storage,
+	defaultData = {
+		publicData: {},
+		privateData: {}
+	};
+
+	$.each(an.plugins, function(pluginId, plugin)
+	{
+		defaultData.privateData[pluginId] = {};
+
+		$.digEach(plugin.pages, null, function(status, i, pageCode)
+		{
+			defaultData.privateData[pluginId][pageCode] = { status: { disabled: -1, off: 0, on: 1, comp: 2 }[status] };
+		});
+
+		$.each(['options', 'db'], function(i, type)
+		{
+			if(plugin[type]) {
+				$.each(plugin[type], function(dataId, dataSet)
+				{
+					if(!dataSet.access || dataSet.access === 'private') {
+						$.each(defaultData.privateData[pluginId], function(pageCode, pageSet)
+						{
+							$.make(pageSet, type)[dataId] = dataSet.defaultValue;
+						});
+					}
+					else {
+					 $.make(dataSet.access === 'protected' ? defaultData.privateData[pluginId] : defaultData.publicData, type)[dataId] = dataSet.defaultValue;
+					}
+				});
+			}
+		});
+	});
+
+	$d.one('init', function()
 	{
 		storage = {
 			'Flash': {
@@ -32,49 +65,10 @@
 
 		// *** REMOVE ME *** //
 		storage.remove();
-	},
-	constructDefaultData = function()
-	{
-		var statusMap = { disabled: -1, off: 0, on: 1, comp: 2 };
-
-		defaultData = {
-			publicData: {},
-			privateData: {}
-		};
-
-		$.each(an.plugins, function(pluginId, plugin)
-		{
-			defaultData.privateData[pluginId] = {};
-
-			$.digEach(plugin.pages, null, function(status, i, pageCode)
-			{
-				defaultData.privateData[pluginId][pageCode] = { status: statusMap[status] };
-			});
-
-			$.each(['options', 'db'], function(i, type)
-			{
-				if(plugin[type]) {
-					$.each(plugin[type], function(dataId, dataSet)
-					{
-						if(!dataSet.access || dataSet.access === 'private') {
-							$.each(defaultData.privateData[pluginId], function(pageCode, pageSet)
-							{
-								$.make(pageSet, type)[dataId] = dataSet.defaultValue;
-							});
-						}
-						else {
-						 $.make(dataSet.access === 'protected' ? defaultData.privateData[pluginId] : defaultData.publicData, type)[dataId] = dataSet.defaultValue;
-						}
-					});
-				}
-			});
-		});
-	};
+	});
 
 	$.storage = function(val)
 	{
-		if(!storage) constructStorage();
-
 		if(val === null) {
 			return storage.remove();
 		}
@@ -92,8 +86,6 @@
 			};
 
 			if(typeof val === 'boolean') {
-				if(!defaultData) constructDefaultData();
-
 				for(var profileId in data.profiles) {
 					data.profiles[profileId] = $.copy({}, defaultData, data.profiles[profileId]);
 				}

@@ -50,7 +50,7 @@
 
 			if(!$.isWord(replacement)) {
 				$.debug(an.curJob.plugin.desc, target, args);
-				$.error('jQuery.format: replacement is not a word');
+				$.error('jQuery.format: replacement is not a string');
 			}
 
 			return replacement;

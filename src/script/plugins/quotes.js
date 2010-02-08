@@ -90,7 +90,7 @@ $.extend(an.plugins, {
 				jButton.data('hoverize').jTarget.toggleClass('an-hiddenquote');
 			});
 
-			if(level >= 0) $.prioritize(4, always, function()
+			if(level >= 0) job.prioritize(4, always, function()
 			{
 				$j.replies().jContents
 				.find(styleNo === 0 ? 'blockquote' : 'blockquote:has(blockquote)')

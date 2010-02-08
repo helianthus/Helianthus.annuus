@@ -114,7 +114,7 @@ $.extend(an.plugins, {
 				}
 			});
 
-			$.prioritize(always, function()
+			job.prioritize(always, function()
 			{
 				$j.replies().jContents.find('a').filter(function(){ return $.inArray(this.href, blockList) !== -1; }).toggleClass('an-linkblocked').each(function()
 				{
@@ -160,7 +160,7 @@ $.extend(an.plugins, {
 			});
 
 			var convertMode = $.inArray(job.options('imageConvertMode'), job.plugin.options.imageConvertMode.choices);
-			if(convertMode !== 2) $.prioritize(always, function()
+			if(convertMode !== 2) job.prioritize(always, function()
 			{
 				$j.replies().jContents.find(convertMode === 0 ? 'a' : 'a:not(blockquote a)').trigger('imageconvert');
 			});
@@ -300,7 +300,7 @@ $.extend(an.plugins, {
 			});
 
 			var convertMode =  $.inArray(job.options('videoConvertMode'), job.plugin.options.videoConvertMode.choices);
-			if(convertMode !== 2) $.prioritize(always, function()
+			if(convertMode !== 2) job.prioritize(always, function()
 			{
 				$j.replies().jContents.find(convertMode === 0 ? 'a' : 'a:not(blockquote a)').trigger('videoconvert');
 			});

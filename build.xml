@@ -96,11 +96,14 @@
 			<fileset file="src/script/lib/jquery.followup.js" />
 			<fileset dir="src/script/lib" includes="*.js" excludes="jquery.js,jquery.followup.js" />
 			<!-- kernel -->
-			<fileset dir="src/script/kernel" includes="*.js" excludes="init.js" />
+			<fileset dir="src/script/kernel" includes="*.js" />
 			<!-- plugins -->
 			<fileset dir="src/script/plugins" includes="*.js" />
 			<!-- init -->
-			<fileset file="src/script/kernel/init.js" />
+			<fileset file="src/script/kernel/init/misc.js" />
+			<fileset file="src/script/kernel/init/storage.js" />
+			<fileset file="src/script/kernel/init/an.js" />
+			<fileset file="src/script/kernel/init/init.js" />
 
 			<fileset file="src/script/outro.js" />
 		</concat>

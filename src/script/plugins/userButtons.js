@@ -108,7 +108,7 @@ $.extend(an.plugins, {
 				});
 			};
 
-			$.prioritize(always, function()
+			job.prioritize(always, function()
 			{
 				if(bamList.length) filterTopics($j);
 			});
@@ -158,7 +158,7 @@ $.extend(an.plugins, {
 				});
 			};
 
-			$.prioritize(always, function()
+			job.prioritize(always, function()
 			{
 				if(highlightList.length) toggleReplies($j);
 			});
@@ -196,7 +196,7 @@ $.extend(an.plugins, {
 				});
 			};
 
-			$.prioritize(always, function()
+			job.prioritize(always, function()
 			{
 				if(targetId) toggleReplies($j);
 			});

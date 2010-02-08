@@ -158,7 +158,7 @@ $.extend(an.plugins, {
 				$.gray(true, 'an-filterlist');
 			});
 
-			$.prioritize(always, function()
+			job.prioritize(always, function()
 			{
 				filterTopics($j);
 			});

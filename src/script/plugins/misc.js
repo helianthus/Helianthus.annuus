@@ -25,18 +25,14 @@ $.extend(an.plugins, {
 
 'c99f77af-c434-4518-9d76-2170aaa21bde':
 {
-	desc: '初始化',
-	pages: { comp: [all] },
-	type: kernel,
+	desc: 'test',
+	pages: { disabled: [view] },
+	type: modify,
 	queue: [{
 		js: function()
 		{
-			if($d.pageName() === 'view') $('select[name=page]').val($d.pageNo()); // for FF3 where select box does not reset
-
-			$('script').empty().each(function()
-			{
-				this.removeAttribute('src');
-			});
+			// for FF3 where select box does not reset
+			$('select[name=page]').val($d.pageNo());
 		}
 	}]
 },

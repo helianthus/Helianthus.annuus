@@ -849,7 +849,7 @@ $.extend(an.plugins, {
 				return $('<div id="an-info" class="an-mod"><ul id="an-info-content" class="an-menu an-small"></ul><div class="an-small" id="an-info-footer">Info</div></div>').appendTo('#an-ui');
 			};
 
-			$.prioritize(7, once, function()
+			job.prioritize(7, once, function()
 			{
 				if($('#hkg_bottombar:visible').length) $.rules('#an-info { bottom: 30px; }');
 			});

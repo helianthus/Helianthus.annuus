@@ -68,7 +68,8 @@
 					$.each(plugin.queue, function(i, fnSet)
 					{
 						if(!fnSet.page || fnSet.page & pageCode) {
-							jobGroups[fnSet.priority || 4].push(new Job({ plugin: plugin, fnSet: fnSet, pageCode: pluginPageCode }));
+							if(fnSet.css) $.rules(fnSet.css);
+							if(fnSet.js) jobGroups[fnSet.priority || 4].push(new Job({ plugin: plugin, fnSet: fnSet, pageCode: pluginPageCode }));
 						}
 					});
 				}
@@ -139,6 +140,6 @@
 			type = priority;
 			priority = curPriority;
 		}
-		jobGroups[priority].push(new Job($.extend({}, an.curJob, { fnSet: { type: type, fn: fn } })));
+		jobGroups[priority].push(new Job($.extend({}, an.curJob, { fnSet: { type: type, js: fn } })));
 	};
 })(jQuery);

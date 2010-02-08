@@ -71,7 +71,7 @@ $.extend(an.plugins, {
 					.an-hiddenquote:after { content: "＋"; position: absolute; top: 1px; right: 3px; font-weight: bold; } \
 					.an-hiddenquote > div > blockquote { display: none; } \
 					',
-					$.options()
+					job.options()
 					);
 
 					jButton = $('<span class="an-quotetogglebutton"></span>').hoverize('blockquote', { filter: ':has(blockquote)', autoPosition: false })

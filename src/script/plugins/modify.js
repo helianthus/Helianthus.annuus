@@ -71,7 +71,7 @@ $.extend(an.plugins, {
 			{
 				var
 				type = $('#st').val(),
-				query = $('#searchstring').val();
+				query = escape($('#searchstring').val());
 
 				window.open(type == 'tag' ? 'tags.aspx?tagword='.concat(query) : $.format('search.aspx?st={0}&searchstring={1}', type, query), '_blank');
 

@@ -95,7 +95,7 @@ $.extend(an.plugins, {
 			{
 				if(!event.isDefaultPrevented() && $(this).attrFilter('href',  job.options('bTopicLinksOnly') && /view\.aspx/, /^#|^javascript|topics\.aspx/).length) {
 					event.preventDefault();
-					window.open(event.target.href, '_blank');
+					window.open(this.href, '_blank');
 				}
 			});
 		}
@@ -113,9 +113,9 @@ $.extend(an.plugins, {
 		{
 			$d.delegate('a', 'click', function(event)
 			{
-				if(jTarget.length && !event.isDefaultPrevented() && $(this).isReplyContent()) {
+				if(!event.isDefaultPrevented() && $(this).isReplyContent()) {
 					event.preventDefault();
-					window.open(event.target.href, '_blank');
+					window.open(this.href, '_blank');
 				}
 			});
 		}

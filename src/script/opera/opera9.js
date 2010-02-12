@@ -1,4 +1,4 @@
-if(window.opera && window.opera.version && window.opera.version() < 10 && arguments.length == 0)
+if(window.opera && window.opera.version && window.opera.version() < 10 && arguments.length === 0)
 {
 	return (function(callee)
 	{

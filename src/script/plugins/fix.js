@@ -54,22 +54,6 @@ $.extend(an.plugins, {
 			}
 		}
 	}]
-},
-
-'7f9780a6-395d-4b24-a0a8-dc58c4539408':
-{
-	desc: '修正字型大小/顏色插入控件',
-	pages: { on: [view | post | sendpm] },
-	type: modify,
-	queue: [{
-		js: function()
-		{
-			$('#ctl00_ContentPlaceHolder1_messagetext').siblings('select[onchange]').change(function()
-			{
-				this.selectedIndex = 0;
-			});
-		}
-	}]
-},
+}
 
 });

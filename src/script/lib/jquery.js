@@ -1773,7 +1773,7 @@ jQuery.event = {
 			}
 
 			// remove generic event handler if no more handlers exist
-			if ( jQuery.isEmptyObject( events[ type ] ) ) {
+			if ( eventType.length === 0 || pos != null && eventType.length === 1 ) {
 				if ( !special.teardown || special.teardown.call( elem, namespaces ) === false ) {
 					removeEvent( elem, type, elemData.handle );
 				}
@@ -2204,64 +2204,65 @@ jQuery.each({
 // submit delegation
 if ( !jQuery.support.submitBubbles ) {
 
-jQuery.event.special.submit = {
-	setup: function( data, namespaces ) {
-		if ( this.nodeName.toLowerCase() !== "form" ) {
-			jQuery.event.add(this, "click.specialSubmit", function( e ) {
-				var elem = e.target, type = elem.type;
+	jQuery.event.special.submit = {
+		setup: function( data, namespaces ) {
+			if ( this.nodeName.toLowerCase() !== "form" ) {
+				jQuery.event.add(this, "click.specialSubmit", function( e ) {
+					var elem = e.target, type = elem.type;
 
-				if ( (type === "submit" || type === "image") && jQuery( elem ).closest("form").length ) {
-					return trigger( "submit", this, arguments );
-				}
-			});
+					if ( (type === "submit" || type === "image") && jQuery( elem ).closest("form").length ) {
+						return trigger( "submit", this, arguments );
+					}
+				});
 	 
-			jQuery.event.add(this, "keypress.specialSubmit", function( e ) {
-				var elem = e.target, type = elem.type;
+				jQuery.event.add(this, "keypress.specialSubmit", function( e ) {
+					var elem = e.target, type = elem.type;
 
-				if ( (type === "text" || type === "password") && jQuery( elem ).closest("form").length && e.keyCode === 13 ) {
-					return trigger( "submit", this, arguments );
-				}
-			});
+					if ( (type === "text" || type === "password") && jQuery( elem ).closest("form").length && e.keyCode === 13 ) {
+						return trigger( "submit", this, arguments );
+					}
+				});
 
-		} else {
-			return false;
+			} else {
+				return false;
+			}
+		},
+
+		teardown: function( namespaces ) {
+			jQuery.event.remove( this, ".specialSubmit" );
 		}
-	},
-
-	teardown: function( namespaces ) {
-		jQuery.event.remove( this, "click.specialSubmit" );
-		jQuery.event.remove( this, "keypress.specialSubmit" );
-	}
-};
+	};
 
 }
 
 // change delegation, happens here so we have bind.
 if ( !jQuery.support.changeBubbles ) {
 
-var formElems = /textarea|input|select/i;
+	var formElems = /textarea|input|select/i,
 
-function getVal( elem ) {
-	var type = elem.type, val = elem.value;
+	changeFilters,
 
-	if ( type === "radio" || type === "checkbox" ) {
-		val = elem.checked;
+	getVal = function( elem ) {
+		var type = elem.type, val = elem.value;
 
-	} else if ( type === "select-multiple" ) {
-		val = elem.selectedIndex > -1 ?
-			jQuery.map( elem.options, function( elem ) {
-				return elem.selected;
-			}).join("-") :
-			"";
+		if ( type === "radio" || type === "checkbox" ) {
+			val = elem.checked;
 
-	} else if ( elem.nodeName.toLowerCase() === "select" ) {
-		val = elem.selectedIndex;
-	}
+		} else if ( type === "select-multiple" ) {
+			val = elem.selectedIndex > -1 ?
+				jQuery.map( elem.options, function( elem ) {
+					return elem.selected;
+				}).join("-") :
+				"";
 
-	return val;
-}
+		} else if ( elem.nodeName.toLowerCase() === "select" ) {
+			val = elem.selectedIndex;
+		}
 
-function testChange( e ) {
+		return val;
+	},
+
+	testChange = function testChange( e ) {
 		var elem = e.target, data, val;
 
 		if ( !formElems.test( elem.nodeName ) || elem.readOnly ) {
@@ -2284,60 +2285,57 @@ function testChange( e ) {
 			e.type = "change";
 			return jQuery.event.trigger( e, arguments[1], elem );
 		}
-}
+	};
 
-jQuery.event.special.change = {
-	filters: {
-		focusout: testChange, 
+	jQuery.event.special.change = {
+		filters: {
+			focusout: testChange, 
 
-		click: function( e ) {
-			var elem = e.target, type = elem.type;
+			click: function( e ) {
+				var elem = e.target, type = elem.type;
 
-			if ( type === "radio" || type === "checkbox" || elem.nodeName.toLowerCase() === "select" ) {
-				return testChange.call( this, e );
+				if ( type === "radio" || type === "checkbox" || elem.nodeName.toLowerCase() === "select" ) {
+					return testChange.call( this, e );
+				}
+			},
+
+			// Change has to be called before submit
+			// Keydown will be called before keypress, which is used in submit-event delegation
+			keydown: function( e ) {
+				var elem = e.target, type = elem.type;
+
+				if ( (e.keyCode === 13 && elem.nodeName.toLowerCase() !== "textarea") ||
+					(e.keyCode === 32 && (type === "checkbox" || type === "radio")) ||
+					type === "select-multiple" ) {
+					return testChange.call( this, e );
+				}
+			},
+
+			// Beforeactivate happens also before the previous element is blurred
+			// with this event you can't trigger a change event, but you can store
+			// information/focus[in] is not needed anymore
+			beforeactivate: function( e ) {
+				var elem = e.target;
+				jQuery.data( elem, "_change_data", getVal(elem) );
 			}
 		},
 
-		// Change has to be called before submit
-		// Keydown will be called before keypress, which is used in submit-event delegation
-		keydown: function( e ) {
-			var elem = e.target, type = elem.type;
-
-			if ( (e.keyCode === 13 && elem.nodeName.toLowerCase() !== "textarea") ||
-				(e.keyCode === 32 && (type === "checkbox" || type === "radio")) ||
-				type === "select-multiple" ) {
-				return testChange.call( this, e );
+		setup: function( data, namespaces ) {
+			for ( var type in changeFilters ) {
+				jQuery.event.add( this, type + ".specialChange", changeFilters[type] );
 			}
+
+			return formElems.test( this.nodeName );
 		},
 
-		// Beforeactivate happens also before the previous element is blurred
-		// with this event you can't trigger a change event, but you can store
-		// information/focus[in] is not needed anymore
-		beforeactivate: function( e ) {
-			var elem = e.target;
-			jQuery.data( elem, "_change_data", getVal(elem) );
+		teardown: function( namespaces ) {
+			jQuery.event.remove( this, ".specialChange" );
+
+			return formElems.test( this.nodeName );
 		}
-	},
+	};
 
-	setup: function( data, namespaces ) {
-		for ( var type in changeFilters ) {
-			jQuery.event.add( this, type + ".specialChange", changeFilters[type] );
-		}
-
-		return formElems.test( this.nodeName );
-	},
-
-	teardown: function( namespaces ) {
-		for ( var type in changeFilters ) {
-			jQuery.event.remove( this, type + ".specialChange", changeFilters[type] );
-		}
-
-		return formElems.test( this.nodeName );
-	}
-};
-
-var changeFilters = jQuery.event.special.change.filters;
-
+	changeFilters = jQuery.event.special.change.filters;
 }
 
 function trigger( type, elem, args ) {
@@ -2471,9 +2469,16 @@ jQuery.fn.extend({
 	}
 });
 
+var liveMap = {
+	focus: "focusin",
+	blur: "focusout",
+	mouseenter: "mouseover",
+	mouseleave: "mouseout"
+};
+
 jQuery.each(["live", "die"], function( i, name ) {
 	jQuery.fn[ name ] = function( types, data, fn, origSelector /* Internal Use Only */ ) {
-		var type, i = 0, match, namespaces,
+		var type, i = 0, match, namespaces, preType,
 			selector = origSelector || this.selector,
 			context = origSelector ? this : jQuery( this.context );
 
@@ -2493,18 +2498,19 @@ jQuery.each(["live", "die"], function( i, name ) {
 				type = type.replace( rnamespaces, "" );
 			}
 
-			type = type === "focus" ? "focusin" : // focus --> focusin
-					type === "blur" ? "focusout" : // blur --> focusout
-					type === "hover" ? types.push("mouseleave" + namespaces) && "mouseenter" : // hover support
-					type;
+			if ( type === "hover" ) {
+				types.push( "mouseenter" + namespaces, "mouseleave" + namespaces );
+				continue;
+			}
 
-			type += namespaces;
+			preType = type;
+			type = (liveMap[ type ] || type) + namespaces;
 
 			if ( name === "live" ) {
 				// bind live handler
 				context.each(function(){
 					jQuery.event.add( this, liveConvert( type, selector ),
-						{ data: data, selector: selector, handler: fn, origType: type, origHandler: fn } );
+						{ data: data, selector: selector, handler: fn, origType: type, origHandler: fn, preType: preType } );
 				});
 
 			} else {
@@ -2553,7 +2559,7 @@ function liveHandler( event ) {
 				related = null;
 
 				// Those two events require additional checking
-				if ( handleObj.origType === "mouseenter" || handleObj.origType === "mouseleave" ) {
+				if ( handleObj.preType === "mouseenter" || handleObj.preType === "mouseleave" ) {
 					related = jQuery( event.relatedTarget ).closest( handleObj.selector )[0];
 				}
 
@@ -3325,8 +3331,10 @@ var makeArray = function(array, results) {
 
 // Perform a simple check to determine if the browser is capable of
 // converting a NodeList to an array using builtin methods.
+// Also verifies that the returned array holds DOM nodes
+// (which is not the case in the Blackberry browser)
 try {
-	Array.prototype.slice.call( document.documentElement.childNodes, 0 );
+	Array.prototype.slice.call( document.documentElement.childNodes, 0 )[0].nodeType;
 
 // Provide a fallback method if it does not work
 } catch(e){
@@ -4750,15 +4758,15 @@ var jsc = now(),
 	rquery = /\?/,
 	rts = /(\?|&)_=.*?(&|$)/,
 	rurl = /^(\w+:)?\/\/([^\/?#]+)/,
-	r20 = /%20/g;
+	r20 = /%20/g,
+
+	// Keep a copy of the old load method
+	_load = jQuery.fn.load;
 
 jQuery.fn.extend({
-	// Keep a copy of the old load
-	_load: jQuery.fn.load,
-
 	load: function( url, params, callback ) {
 		if ( typeof url !== "string" ) {
-			return this._load( url );
+			return _load.call( this, url );
 
 		// Don't do a request if no elements are being requested
 		} else if ( !this.length ) {

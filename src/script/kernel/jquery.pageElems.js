@@ -16,12 +16,12 @@ $.fn.extend({
 	topicTable: function()
 	{
 		var jScope = $d.own(this) ? $d : this;
-		return jScope.__topicTable || (jScope.__topicTable = this.find({
+		return jScope.__topicTable || (jScope.__topicTable = jScope.find({
 			topics: '#HotTopics > div > table',
 			search: '#ctl00_ContentPlaceHolder1_topics_form > table + table > tbody > tr > td > table',
 			tags: '#ctl00_ContentPlaceHolder1_topics_form > table + table > tbody > tr > td > table',
 			profilepage: '#ctl00_ContentPlaceHolder1_UpdatePanelHistory .main_table1 > table > tbody > tr > td > table'
-		}[$d.pageName()]));
+		}[jScope.pageName()]));
 	}
 });
 

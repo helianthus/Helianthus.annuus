@@ -260,9 +260,8 @@ $.extend(an.plugins, {
 					var jTarget = $(event.target);
 					if(!jTarget.is('select[name="page"]')) return;
 
-					var target = jTarget.val();
-					jTarget.val(jTarget.data('an-pageno'));
-					changePage(target * 1);
+					changePage(jTarget.val() * 1);
+					jTarget.blur().val(jTarget.data('an-pageno'));
 				});
 			}
 

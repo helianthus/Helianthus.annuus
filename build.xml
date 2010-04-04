@@ -1,4 +1,4 @@
-﻿<project name="Helianthus.annuus">
+﻿<project name="Helianthus.annuus" default="test">
 	<tempfile property="temp" destdir="test" suffix=".js" deleteonexit="true" />
 	<tempfile property="temp2" destdir="test" suffix=".js" deleteonexit="true" />
 
@@ -10,13 +10,21 @@
 	<!--** build **-->
 	<target name="build" depends="_build,_minify,_build_cont" />
 
+	<!--** beta **-->
+	<target name="beta" depends="_beta, _clean, build, _dist">
+		<copy file="src/version.js" tofile="${dist_prefix}/an.version.js" overwrite="true" encoding="UTF-8">
+			<filterset>
+				<filter token="AN_BETA" value="${AN_VERSION}" />
+				<filter token="AN_STABLE" value="${AN_VERSION_STABLE}" />
+			</filterset>
+		</copy>
+
+		<echo>Version: ${AN_VERSION}</echo>
+	</target>
+
 	<!--** stable **-->
 	<target name="stable" depends="_stable, _clean, build, _dist">
 		<!-- duplicate as beta -->
-		<delete failonerror="false">
-			<fileset dir="${dist_prefix}/beta" includes="**/*" />
-		</delete>
-
 		<copy todir="${dist_prefix}/beta">
 		 <fileset dir="${dist_prefix}/stable" includes="**/*" />
 		</copy>
@@ -42,18 +50,6 @@
 			<entry key="AN_VERSION_STABLE" value="${AN_VERSION}" />
 			<entry key="_AN_VERSION" type="int" operation="+" value="1" />
 		</propertyfile>
-
-		<echo>Version: ${AN_VERSION}</echo>
-	</target>
-
-	<!--** beta **-->
-	<target name="beta" depends="_beta, _clean, build, _dist">
-		<copy file="src/version.js" tofile="${dist_prefix}/an.version.js" overwrite="true" encoding="UTF-8">
-			<filterset>
-				<filter token="AN_BETA" value="${AN_VERSION}" />
-				<filter token="AN_STABLE" value="${AN_VERSION_STABLE}" />
-			</filterset>
-		</copy>
 
 		<echo>Version: ${AN_VERSION}</echo>
 	</target>
@@ -122,14 +118,6 @@
 	<target name="_minify">
 		<!-- annuus-raw.js -->
 		<move file="test/annuus.js" tofile="test/annuus-raw.js" />
-
-		<!--<java jar="build/yuicompressor/yuicompressor.jar" fork="true" failonerror="true">
-			<arg line="test/annuus-raw.js -o ${temp} - -charset UTF-8" />
-		</java>-->
-
-		<!--<java jar="build/closurecompiler/compiler.jar" fork="true" failonerror="true">
-			<arg line="- -js test/annuus-raw.js - -js_output_file ${temp} - -charset UTF-8 - -warning_level QUIET" />
-		</java>-->
 
 		<jscomp compilationLevel="simple" warning="quiet" debug="false" output="${temp}">
 			<sources dir="test">

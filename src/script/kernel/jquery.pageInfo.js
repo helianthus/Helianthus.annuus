@@ -4,8 +4,11 @@
 	{
 		if(!url) return null;
 
-		var uriSet = $.uriSet(url);
-		return uriSet.filename ? uriSet.filename.replace(/\.[^.]+$/, '').toLowerCase() : 'default';
+		var
+		uriSet = $.uriSet(url),
+		name = /\w+/.exec(uriSet.filename || uriSet.directory);
+
+		return name ? name[0].toLowerCase() : 'default';
 	}
 
 	$.fn.pageName = function()
@@ -20,8 +23,7 @@
 
 			return (this.__pageName =
 				root.find('#ctl00_ContentPlaceHolder1_SystemMessageBoard').length && 'message'
-				|| getPageName(root.find('#aspnetForm').attr('action'))
-				|| root.find('body > b:first-child') && 'terms'
+				|| getPageName(root.find('#aspnetForm').attr('action') || location.href)
 				|| 'error'
 			);
 		}

@@ -1,8 +1,8 @@
-(function()
+(function(undefined)
 {
 
 //if(window.jQuery) throw 'jQuery already exists! Probably caused by duplicate script injection.';
-if(window.jQuery) alert('jQuery already exists! Probably caused by duplicate script injection.');
+if(window.jQuery) return alert('jQuery already exists! Probably caused by duplicate script injection.');
 
 if(/\.(?:gif|jpe?g|png|asmx)\b/i.test(location.href)) return;
 

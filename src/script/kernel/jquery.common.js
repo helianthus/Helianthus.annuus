@@ -106,6 +106,8 @@ $.extend({
 
 	debug: function()
 	{
+		('console' in window ? console.debug : alert)(arguments.length === 1 ? arguments[0] : arguments);
+		return;
 		// doesn't work in chrome
 		//(window.console ? console.debug : alert)(arguments.length === 1 ? arguments[0] : arguments);
 		var val = arguments.length === 1 ? arguments[0] : arguments;

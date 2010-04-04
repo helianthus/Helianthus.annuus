@@ -8,7 +8,7 @@ $.extend(an.plugins, {
 	options: { 'bRetroHideAds': { desc: '相容性模式', defaultValue: false, type: 'checkbox' } },
 	queue: [{
 		priority: 1,
-		js: function()
+		js: function(job)
 		{
 			$.each({
 				65535: '\
@@ -70,7 +70,7 @@ $.extend(an.plugins, {
 			},
 			function(nPageCode){ $d.pageCode() & nPageCode && $.rules(this); });
 
-			if($d.pageCode() & 28 && !this.options('bRetroHideAds')) {
+			if($d.pageCode() & 28 && !job.options('bRetroHideAds')) {
 				var
 				isMB = $.uriSet().querySet.type === 'MB',
 				trSelector = ($d.pageName() === 'topics' ? '#HotTopics > div > table' : '#ctl00_ContentPlaceHolder1_topics_form > div + table + table > tbody > tr > td > table').concat(' > tbody > tr');
@@ -92,9 +92,9 @@ $.extend(an.plugins, {
 		}
 	},
 	{
-		js: function()
+		js: function(job)
 		{
-			if($.browser.msie || this.options('bRetroHideAds')) {
+			if($.browser.msie || job.options('bRetroHideAds')) {
 				$('td[height="52"]').parent().hide();
 			}
 		}

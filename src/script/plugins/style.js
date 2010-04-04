@@ -19,7 +19,7 @@ $.extend(an.plugins, {
 	},
 	queue: [{
 		priority: 1,
-		js: function()
+		js: function(job)
 		{
 			$.rules('\
 			#an, #an legend { color: {0.sMainFontColor}; } \
@@ -43,7 +43,7 @@ $.extend(an.plugins, {
 			a.an-content-line, a.an-content-box { text-decoration: none !important; } \
 			a.an-content-line:hover, a.an-content-box:hover { color: {0.sUIHoverColor}; } \
 			',
-			this.options()
+			job.options()
 			);
 		}
 	}]
@@ -61,7 +61,7 @@ $.extend(an.plugins, {
 	},
 	queue: [{
 		priority: 1,
-		js: function()
+		js: function(job)
 		{
 			$.rules('\
 			.an-box { display: none; position: fixed; left: 50%; top: 50%; z-index: 10; border-width: 1px; } \
@@ -86,7 +86,7 @@ $.extend(an.plugins, {
 			#an-mainmenu { top: 15%; right: 0; } \
 			#an-mainmenu a { padding: 0.3em 0.35em 0 0; border-bottom-width: 1px; } \
 			',
-			this.options()
+			job.options()
 			);
 		}
 	}]
@@ -100,9 +100,9 @@ $.extend(an.plugins, {
 	options: { sMainFontFamily: { desc: '字體名稱', defaultValue: 'SimSun', type: 'text' } },
 	queue: [{
 		priority: 1,
-		js: function()
+		js: function(job)
 		{
-			$.rules('body * { font-family: {0} !important; }', this.options('sMainFontFamily'));
+			$.rules('body * { font-family: {0} !important; }', job.options('sMainFontFamily'));
 		}
 	}]
 },
@@ -110,20 +110,20 @@ $.extend(an.plugins, {
 'cad6d058-f999-460d-ac29-4074f33f46fb':
 {
 	desc: '設定連結樣式',
-	pages: { off: [normal] },
+	pages: { on: [normal] },
 	type: style,
 	options:
 	{
 		sMainLinkFontColor: { desc: '普通連結顏色', defaultValue: '#1066d2', type: 'text' },
 		sMainVisitedColor: { desc: '已訪問連結顏色', defaultValue: '#800080', type: 'text' },
 		sMainHoverColor: { desc: '連結懸浮顏色', defaultValue: '', type: 'text' },
-		bRemoveLinkUnderline: { desc: '移除連結底線', defaultValue: false, type: 'checkbox' }
+		bRemoveLinkUnderline: { desc: '移除連結底線', defaultValue: true, type: 'checkbox' }
 	},
 	queue: [{
 		priority: 1,
-		js: function()
+		js: function(job)
 		{
-			var sTextCSS = this.options('bRemoveLinkUnderline')
+			var sTextCSS = job.options('bRemoveLinkUnderline')
 				? 'text-decoration: none; } a[href^="/blog/blog.aspx"] > span { text-decoration: none !important; } .repliers_right a { text-decoration: underline; }'
 				: '}';
 
@@ -132,7 +132,7 @@ $.extend(an.plugins, {
 			body > form a[href*="view.aspx"]:visited, .repliers_right a:visited { color: {0.sMainVisitedColor}; } \
 			body > form a[href]:hover { color: {0.sMainHoverColor}; } \
 			',
-			this.options()
+			job.options()
 			);
 		}
 	}]
@@ -166,7 +166,7 @@ $.extend(an.plugins, {
 	},
 	queue: [{
 		priority: 1,
-		js: function()
+		js: function(job)
 		{
 			$.rules('\
 			/* Global stuff */\
@@ -232,7 +232,7 @@ $.extend(an.plugins, {
 			.hkg_bb_bookmarkItem a div { background-color: transparent; color: inherit; } \
 			.hkg_bbItem_MiniFunc, .hkg_bbItem_MiniFunc_Hover, .hkg_bbItem, .hkg_bbItem_Hover, .hkg_bbItem_Selected { border: 0; } \
 			',
-			this.options()
+			job.options()
 			);
 		}
 	}]

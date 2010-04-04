@@ -121,7 +121,7 @@
 
 	$(window).one('load', function()
 	{
-		$.timeout(function()
+		$.timeout(10, function()
 		{
 			an.isWindowLoaded = true;
 			$d.trigger('anLevel3');

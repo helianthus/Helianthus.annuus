@@ -1,9 +1,7 @@
-<html>
-<head>
 <script>
 (function()
 {
-	var status = localStorage.status === 'off' ? false : true;
+	var status = localStorage.status !== 'off';
 
 	function setIcon(tab)
 	{
@@ -34,5 +32,3 @@
 	});
 })();
 </script>
-</head>
-</html>

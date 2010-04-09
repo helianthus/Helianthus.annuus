@@ -37,17 +37,13 @@ window.addEventListener('load', function()
 				var doc = browser.contentDocument;
 				var head = doc.getElementsByTagName('head');
 				var script = doc.createElement('script');
+				
 				script.charset = 'utf-8';
 				script.src = 'resource://annuus/annuus.js';
 
-				(function injectScript()
+				(function inject()
 				{
-					if (head.length) {
-						head[0].appendChild(script);
-					}
-					else {
-						setTimeout(injectScript, 50);
-					}
+					head[0] ? head[0].appendChild(script) : setTimeout(inject, 50);
 				})();
 			}
 		},

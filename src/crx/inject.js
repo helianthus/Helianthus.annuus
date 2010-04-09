@@ -4,16 +4,15 @@ if(/^http:\/\/forum\d+\.hkgolden\.com/i.test(location.href))
 	{
 		if(!status) return;
 
-		var
-		head = document.getElementsByTagName('head'),
-		script = document.createElement('script');
+		var head = document.getElementsByTagName('head');
+		var script = document.createElement('script');
 
 		script.charset = 'utf-8';
 		script.src = chrome.extension.getURL("annuus.js");
 
-		(function append()
+		(function inject()
 		{
-			head[0] ? head[0].appendChild(script) : setTimeout(append, 50);
+			head[0] ? head[0].appendChild(script) : setTimeout(inject, 50);
 		})();
 	});
 }

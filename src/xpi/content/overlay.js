@@ -1,11 +1,10 @@
 window.addEventListener('load', function()
 {
-	var
-	pref = Components.classes['@mozilla.org/preferences-service;1'].getService(Components.interfaces.nsIPrefBranch).getBranch('extensions.annuus.'),
-	status = pref.getBoolPref('status'),
-	overlay = document.getElementById('annuus-overlay'),
-	rHKG = /^http:\/\/forum\d+\.hkgolden\.com/i,
-	noop = function(){};
+	var pref = Components.classes['@mozilla.org/preferences-service;1'].getService(Components.interfaces.nsIPrefBranch).getBranch('extensions.annuus.');
+	var status = pref.getBoolPref('status');
+	var overlay = document.getElementById('annuus-overlay');
+	var rHKG = /^http:\/\/forum\d+\.hkgolden\.com/i;
+	var noop = function(){};
 
 	function setStatus()
 	{
@@ -34,13 +33,22 @@ window.addEventListener('load', function()
 	gBrowser.addTabsProgressListener({
 		onLocationChange: function(browser, progress, request, uri)
 		{
-			if(progress.isLoadingDocument && status && rHKG.test(uri.prePath)) {
-				var
-				doc = browser.contentDocument,
-				script = doc.createElement('script');
+			if (progress.isLoadingDocument && status && rHKG.test(uri.prePath)) {
+				var doc = browser.contentDocument;
+				var head = doc.getElementsByTagName('head');
+				var script = doc.createElement('script');
 				script.charset = 'utf-8';
 				script.src = 'resource://annuus/annuus.js';
-				doc.getElementsByTagName('head')[0].appendChild(script);
+
+				(function injectScript()
+				{
+					if (head.length) {
+						head[0].appendChild(script);
+					}
+					else {
+						setTimeout(injectScript, 50);
+					}
+				})();
 			}
 		},
 		onStateChange: noop,

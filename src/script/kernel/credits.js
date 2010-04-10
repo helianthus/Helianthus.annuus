@@ -55,7 +55,7 @@ an.credits = [
 },
 {
 	name: 'crxmake',
-	url: 'http://code.google.com/closure/compiler/',
+	url: 'http://github.com/Constellation/crxmake',
 	author: 'Constellation',
 	authorUrl: 'http://d.hatena.ne.jp/Constellation/',
 	license: 'MIT License',
@@ -71,9 +71,9 @@ an.credits = [
 },
 {
 	name: 'Fugue Icons',
-	url: 'http://www.pinvoke.com/',
+	url: 'http://p.yusukekamiyamane.com/',
 	author: 'Yusuke Kamiyamane',
-	authorUrl: 'http://www.pinvoke.com/',
+	authorUrl: 'http://p.yusukekamiyamane.com/',
 	license: 'Creative Commons Attribution 3.0 license',
 	licenseUrl: 'http://creativecommons.org/licenses/by/3.0/'
 },

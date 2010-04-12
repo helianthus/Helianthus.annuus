@@ -108,17 +108,13 @@ $.extend({
 
 	debug: function()
 	{
-		('console' in window ? console.debug : alert)(arguments.length === 1 ? arguments[0] : arguments);
-		return;
-		// doesn't work in chrome
-		//(window.console ? console.debug : alert)(arguments.length === 1 ? arguments[0] : arguments);
-		var val = arguments.length === 1 ? arguments[0] : arguments;
+		if(typeof arguments[0] === 'string') arguments[0] = 'annuus: ' + arguments[0];
 
-		try {
-			console.debug(val);
+		if(window.console) {
+			console.debug(arguments.length === 1 ? arguments[0] : arguments);
 		}
-		catch(err) {
-			alert(arguments.length === 1 ? val : val[0]);
+		else {
+			alert(arguments[0]);
 		}
 	},
 

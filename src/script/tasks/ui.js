@@ -1,4 +1,4 @@
-$.extend(an.plugins, {
+$.extend(an.tasks, {
 
 '1db9ccc8-ad28-48b6-8744-22f892ca0a44':
 {
@@ -178,7 +178,7 @@ $.extend(an.plugins, {
 					{
 						structure[typeId] = {};
 					});
-					$.each(an.plugins, function(pluginId, plugin)
+					$.each(an.tasks, function(pluginId, plugin)
 					{
 						$.each(plugin.page, function(pageCode)
 						{
@@ -285,7 +285,7 @@ $.extend(an.plugins, {
 								pluginId = info[1],
 								pageCode = info[2];
 
-								if(an.plugins[pluginId].page[pageCode] !== input.checked) {
+								if(an.tasks[pluginId].page[pageCode] !== input.checked) {
 									$.make(data, 'privateData', pluginId, pageCode).status = input.checked ? 1 : 0;
 								}
 							});
@@ -297,7 +297,7 @@ $.extend(an.plugins, {
 								pluginId = info[1],
 								pageCode = info[2],
 								optionId = info[3],
-								option = an.plugins[pluginId].options[optionId],
+								option = an.tasks[pluginId].options[optionId],
 								jInput = $(input),
 								val = jInput.is(':checkbox') ? input.checked : jInput.val();
 
@@ -395,7 +395,7 @@ $.extend(an.plugins, {
 						{
 							var jThis = $(this);
 							var oInfo = getInfo(jThis);
-							var uValue = an.plugins[oInfo.oDB.oOptions[oInfo.name][oInfo.page];
+							var uValue = an.tasks[oInfo.oDB.oOptions[oInfo.name][oInfo.page];
 							if(oInfo.type == 'checkbox')
 							{
 								jThis.attr('checked', uValue);

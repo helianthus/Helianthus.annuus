@@ -1,4 +1,4 @@
-if(/^http:\/\/forum\d+\.hkgolden\.com/i.test(location.href))
+if(/^http:\/\/forum\d+\.hkgolden\.com\/(?:$|[a-z]+?\.(?:aspx|html))/i.test(location.href))
 {
 	chrome.extension.sendRequest('isHKG', function(status)
 	{
@@ -7,7 +7,6 @@ if(/^http:\/\/forum\d+\.hkgolden\.com/i.test(location.href))
 		var head = document.getElementsByTagName('head');
 		var script = document.createElement('script');
 
-		script.charset = 'utf-8';
 		script.src = chrome.extension.getURL("annuus.js");
 
 		(function inject()

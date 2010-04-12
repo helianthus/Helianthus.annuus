@@ -30,7 +30,7 @@
 	};
 })(jQuery);
 
-$.extend(an.plugins, {
+$.extend(an.tasks, {
 
 'db770fdc-9bf5-46b9-b3fa-78807f242c3c':
 {

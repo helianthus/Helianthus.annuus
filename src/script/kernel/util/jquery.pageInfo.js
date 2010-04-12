@@ -43,7 +43,7 @@
 		return 0;
 	};
 
-	$d.one('priority4Start', function()
+	$(an).one('p4start', function()
 	{
 		$d.__pageName = $d.__pageCode = null;
 	});

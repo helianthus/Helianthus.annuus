@@ -1,155 +1,85 @@
-(function($)
+(function()
 {
-	function Job(data)
-	{
-		$.extend(this, data);
+
+function runUntil(until)
+{
+	do {
+		var group = an.__jobGroups[an.__curPriority];
+
+		$(an).trigger($.format('p{0}start', an.__curPriority));
+
+		for(var i=0; i<group.length; ++i) {
+			var job = group[i];
+			if(job.fnSet.freq === once) group.splice(i--, 1);
+
+			an.__curJob = job;
+
+			$(an).trigger('jobstart', [job]);
+
+			try {
+				job.fnSet.js(job);
+			}
+			catch(e) {
+				$.debug($.format('發生錯誤: {0}', job.task.desc), e, job, $j);
+			}
+
+			$(an).trigger('jobend', [job]);
+		}
+
+		$(an).trigger($.format('p{0}end', an.__curPriority));
 	}
+	while(++an.__curPriority <= until);
+}
 
-	$.each(['options', 'db'], function(i, type)
+$.fn.an = function()
+{
+	$j = this;
+	an.__curPriority = 1;
+
+	$(an).trigger('anlevel1');
+
+	runUntil(3);
+
+	$(an).one('anlevel2', function()
 	{
-		Job.prototype[type] = function(name, val)
+		runUntil(6);
+
+		$(an).one('anlevel3', function()
 		{
-			var
-			storage = $.storage(val === undefined ? true : undefined),
-			profile = storage.profiles[storage.curProfile],
-			paths = {
-				'public': [profile, 'publicData', type],
-				'protected': [profile, 'privateData', this.plugin.id, type],
-				'private': [profile, 'privateData', this.plugin.id, this.pageCode, type]
-			},
-			data;
+			runUntil(9);
 
-			if(val === undefined) {
-				data = {};
-				$.each(paths, function(modifier, path)
-				{
-					$.extend(data, $.dig.apply(null, path));
-				});
-				return name === undefined ? data : data[name];
-			}
-
-			data = $.make.apply(null, paths[(data = $.dig(this.plugin, type, name)) ? data.access || 'private' : 'public']);
-
-			if(val === null) {
-				delete data[name];
-			}
-			else {
-				data[name] = val;
-			}
-
-			$.storage(storage);
-		};
-	});
-
-	var jobGroups = {};
-	for(var i=1; i<=9; ++i) {
-		jobGroups[i] = [];
-	}
-	$d.one('init', function()
-	{
-		var
-		pageCode = $d.pageCode(),
-		storage = $.storage(true),
-		settings = storage.profiles[storage.curProfile].privateData;
-
-		$.each(an.plugins, function(pluginId, plugin)
-		{
-			$.digEach(plugin.pages, null, function(status, i, pluginPageCode)
-			{
-				if(!(pluginPageCode & pageCode)) return;
-
-				if(status !== 'disabled' && settings[pluginId][pluginPageCode].status >= 1) {
-					plugin.id = pluginId;
-
-					$.each(plugin.queue, function(i, fnSet)
-					{
-						if(!fnSet.page || fnSet.page & pageCode) {
-							if(fnSet.css) $.rules(fnSet.css);
-							if(fnSet.js) jobGroups[fnSet.priority || 4].push(new Job({ plugin: plugin, fnSet: fnSet, pageCode: pluginPageCode }));
-						}
-					});
-				}
-
-				return false;
-			});
+			$.debug('an() completed successfully.');
 		});
+
+		if(an.get('WINDOW_IS_LOADED')) $(an).trigger('anlevel3');
 	});
 
-	Job.prototype.prioritize = function(priority, type, fn)
+	if(an.get('DOM_IS_READY')) $(an).trigger('anlevel2');
+
+	return $j;
+};
+
+$(an).one('storageready', function()
+{
+	$.timeout('checkDOM', function()
 	{
-		if(!fn) {
-			fn = type;
-			type = priority;
-			priority = curPriority;
-		}
-		jobGroups[priority].push(new Job($.extend({}, this, { fnSet: { type: type, js: fn } })));
-	};
-
-	var curPriority,
-	runUntil = function(until)
-	{
-		for(; curPriority <= until; ++curPriority) {
-			$d.trigger($.format('priority{0}Start', curPriority));
-			var group = jobGroups[curPriority];
-			for(var i=0; i<group.length; ++i) {
-				var job = group[i];
-				if(job.fnSet.type !== always) group.splice(i--, 1);
-
-				an.curJob = job;
-
-				try {
-					job.fnSet.js.call(job, job);
-				}
-				catch(e) {
-					$.debug($.format('發生錯誤: {0}', job.plugin.desc), e, job, $j);
-				}
-			}
-			$d.trigger($.format('priority{0}End', curPriority));
-		}
-	};
-
-	$.timeout('checkdom', function()
-	{
-		if(document.getElementById('Side_GoogleAd')) {
-			an.isDOMReady = true;
-			$d.trigger('anLevel2');
+		if($.isReady || $('#Side_GoogleAd').length) {
+			an.get('DOM_IS_READY', true);
+			$(an).trigger('anlevel2');
 		}
 		else {
-			$.timeout('checkdom', 50);
+			$.timeout('checkDOM', 50);
 		}
 	});
+});
 
-	$(window).one('load', function()
+$(window).one('load', function()
+{
+	setTimeout(function()
 	{
-		$.timeout(10, function()
-		{
-			an.isWindowLoaded = true;
-			$d.trigger('anLevel3');
-		});
-	});
+		an.get('WINDOW_IS_LOADED', true);
+		$(an).trigger('anlevel3');
+	}, 10);
+});
 
-	$.fn.an = function()
-	{
-		$j = this;
-
-		curPriority = 1;
-
-		runUntil(3);
-
-		$d.one('anLevel2', function()
-		{
-			runUntil(6);
-
-			$d.one('anLevel3', function()
-			{
-				runUntil(9);
-			});
-
-			if(an.isWindowLoaded) $d.trigger('anLevel3');
-		});
-
-		if(an.isDOMReady) $d.trigger('anLevel2');
-
-		return $j;
-	};
-})(jQuery);
+})();

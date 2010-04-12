@@ -25,7 +25,7 @@ $.fn.extend({
 	}
 });
 
-$d.bind('priority1Start', function()
+$(an).bind('p1start', function()
 {
 	$d.__replies = $d.__topics = $d.__topicTable = null;
 });

@@ -1,3 +1,8 @@
+$(an).one('kernelready', function()
+{
+
+$('<div />', { id: 'an' }).prependTo(document.documentElement);
+
 document.domain = 'hkgolden.com';
 
 $.ajaxSetup({ cache: false });
@@ -21,4 +26,6 @@ a > img { border: 0; } \
 .TransparentGrayBackground, .TransparentGrayBackground + * { z-index: 10; } \
 ');
 
-an.storageMode = window.localStorage && $.cookie('an-storagemode') === 'DOM' ? 'DOM' : 'Flash';
+an.get('STORAGE_MODE', window.localStorage && $.cookie('an_storagemode') === 'DOM' ? 'DOM' : 'Flash');
+
+});

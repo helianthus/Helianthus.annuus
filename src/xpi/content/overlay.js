@@ -3,7 +3,7 @@ window.addEventListener('load', function()
 	var pref = Components.classes['@mozilla.org/preferences-service;1'].getService(Components.interfaces.nsIPrefBranch).getBranch('extensions.annuus.');
 	var status = pref.getBoolPref('status');
 	var overlay = document.getElementById('annuus-overlay');
-	var rHKG = /^http:\/\/forum\d+\.hkgolden\.com/i;
+	var rHKG = /^http:\/\/forum\d+\.hkgolden\.com\/(?:$|[a-z]+?\.(?:aspx|html))/i;
 	var noop = function(){};
 
 	function setStatus()
@@ -22,7 +22,7 @@ window.addEventListener('load', function()
 	gBrowser.addProgressListener({
 		onLocationChange: function(progress, request, uri)
 		{
-			overlay.hidden = !(uri && rHKG.test(uri.prePath));
+			overlay.hidden = !(uri && rHKG.test(uri.spec));
 		},
 		onStateChange: noop,
 		onProgressChange: noop,
@@ -33,12 +33,12 @@ window.addEventListener('load', function()
 	gBrowser.addTabsProgressListener({
 		onLocationChange: function(browser, progress, request, uri)
 		{
-			if (progress.isLoadingDocument && status && rHKG.test(uri.prePath)) {
+			if(progress.isLoadingDocument && status && rHKG.test(uri.spec))
+			{
 				var doc = browser.contentDocument;
 				var head = doc.getElementsByTagName('head');
 				var script = doc.createElement('script');
-				
-				script.charset = 'utf-8';
+
 				script.src = 'resource://annuus/annuus.js';
 
 				(function inject()

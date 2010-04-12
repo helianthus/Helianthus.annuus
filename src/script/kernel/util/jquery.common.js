@@ -69,7 +69,9 @@ $.extend({
 			for(name in options) {
 				src = target[name];
 				copy = options[name];
-				target[name] = copy && typeof copy === 'object' ? $.copy($.isPlainObject(src) ? src : $.isArray(copy) ? [] : {}, copy) : copy;
+				if(typeof copy !== 'undefined') {
+					target[name] = copy && typeof copy === 'object' ? $.copy($.isPlainObject(src) ? src : $.isArray(copy) ? [] : {}, copy) : copy;
+				}
 			}
 		});
 		return target;

@@ -1,4 +1,4 @@
-$.extend(an.plugins, {
+$.extend(an.tasks, {
 
 '8be1ac06-030a-42d4-a8f4-f2b7f4881300':
 {

@@ -2,10 +2,8 @@
 	<property name="dist_parent_dir" value="dist" />
 	<property name="build_dir" value="build" />
 	<property name="tools_dir" value="tools" />
-	<property name="key_path" value="../key.pem" />
-
-	<tempfile property="temp" destdir="${build_dir}" suffix=".js" deleteonexit="true" />
-	<tempfile property="temp2" destdir="${build_dir}" suffix=".js" deleteonexit="true" />
+	<property name="key_file" value="key.pem" />
+	<property name="dist_url" value="http://helianthus-annuus.googlecode.com/svn/dist" />
 
 	<!--** test **-->
 	<target name="test" depends="_build,_build_cont" />
@@ -14,8 +12,8 @@
 	<target name="build" depends="_build,_minify,_build_cont" />
 
 	<!--** beta **-->
-	<target name="beta" depends="_beta, _clean, build, _dist">
-		<copy file="src/version.js" tofile="${dist_parent_dir}/an.version.js" overwrite="true" encoding="UTF-8">
+	<target name="beta" depends="_beta, build, _dist">
+		<copy file="src/version.js" tofile="${dist_parent_dir}/an.version.js" overwrite="true">
 			<filterset>
 				<filter token="AN_BETA" value="${AN_VERSION}" />
 				<filter token="AN_STABLE" value="${AN_VERSION_STABLE}" />
@@ -26,27 +24,19 @@
 	</target>
 
 	<!--** stable **-->
-	<target name="stable" depends="_stable, _clean, build, _dist">
+	<target name="stable" depends="_stable, build, _dist">
 		<!-- duplicate as beta -->
 		<copy todir="${dist_parent_dir}/beta">
 		 <fileset dir="${dist_parent_dir}/stable" includes="**/*" />
 		</copy>
 
 		<!-- version.js -->
-		<copy file="src/version.js" tofile="${dist_parent_dir}/an.version.js" overwrite="true" encoding="UTF-8">
+		<copy file="src/version.js" tofile="${dist_parent_dir}/an.version.js" overwrite="true">
 			<filterset>
 				<filter token="AN_BETA" value="${AN_VERSION}" />
 				<filter token="AN_STABLE" value="${AN_VERSION}" />
 			</filterset>
 		</copy>
-
-		<!-- an.crx.xml
-		<copy file="src/crx.xml" tofile="../other/annuus.crx.xml" overwrite="true" encoding="UTF-8">
-			<filterchain>
-				<expandproperties/>
-			</filterchain>
-		</copy>
-		-->
 
 		<!-- build.ini -->
 		<propertyfile file="build.ini">
@@ -58,6 +48,10 @@
 	</target>
 
 	<!--** internals **-->
+
+	<tempfile property="header_file" destdir="${build_dir}" suffix=".js" deleteonexit="true" />
+	<tempfile property="content_file" destdir="${build_dir}" suffix=".js" deleteonexit="true" />
+	<tempfile property="temp_file" destdir="${build_dir}" suffix=".js" deleteonexit="true" />
 
 	<target name="_build" depends="_beta">
 		<propertyfile file="build.ini">
@@ -76,44 +70,45 @@
 		<delete dir="${build_dir}" />
 		<mkdir dir="${build_dir}" />
 
-		<!-- annuus.js -->
-		<concat destfile="${temp}" fixlastline="true" encoding="UTF-8">
+		<!-- header_file -->
+		<concat destfile="${header_file}">
 			<filterchain>
-				<expandproperties/>
+				<expandproperties />
 			</filterchain>
 
-			<fileset file="src/script/intro.js" />
+			<fileset file="src/header.js" />
+		</concat>
 
-			<!-- opera -->
-			<filelist dir="src/script/opera">
-				<file name="opera9.js" />
-				<file name="rubbish.js" />
+		<!-- CONTENT -->
+		<concat destfile="${content_file}" fixlastline="true" encoding="UTF-8">
+			<filelist dir="src/script">
+				<file name="opera/opera9.js" />
+				<file name="opera/rubbish.js" />
+				<file name="kernel/lib/jquery.js" />
 			</filelist>
-			<!-- lib -->
-			<fileset file="src/script/lib/jquery.js" />
-			<fileset file="src/script/lib/jquery.followup.js" />
-			<fileset dir="src/script/lib" includes="*.js" excludes="jquery.js,jquery.followup.js" />
-			<!-- kernel -->
-			<fileset dir="src/script/kernel" includes="*.js" />
-			<!-- plugins -->
-			<fileset dir="src/script/plugins" includes="*.js" />
-			<!-- init -->
-			<fileset file="src/script/kernel/init/misc.js" />
-			<fileset file="src/script/kernel/init/storage.js" />
-			<fileset file="src/script/kernel/init/an.js" />
-			<fileset file="src/script/kernel/init/init.js" />
-
-			<fileset file="src/script/outro.js" />
+			<fileset dir="src/script">
+				<include name="kernel/**/*.js" />
+				<!--<include name="tasks/**/*.js" />-->
+				<exclude name="kernel/lib/jquery.js" />
+			</fileset>
 		</concat>
 
-		<concat destfile="${build_dir}/annuus.js" encoding="UTF-8">
+		<loadfile property="CONTENT" srcfile="${content_file}" encoding="UTF-8">
 			<filterchain>
-				<expandproperties/>
+				<escapeunicode />
 			</filterchain>
+		</loadfile>
 
-			<fileset file="src/script/header.js" />
-			<fileset file="${temp}" />
-		</concat>
+		<!-- annuus.js -->
+		<copy file="src/script/annuus.js" todir="${build_dir}">
+			<filterchain>
+				<expandproperties />
+				<concatfilter prepend="${header_file}" />
+			</filterchain>
+			<filterset begintoken="/*@" endtoken="@*/">
+				<filter token="CONTENT" value="${CONTENT}" />
+			</filterset>
+		</copy>
 	</target>
 
 	<taskdef name="jscomp" classname="com.google.javascript.jscomp.ant.CompileTask" classpath="${tools_dir}/closurecompiler/compiler.jar" />
@@ -121,93 +116,89 @@
 		<!-- annuus-raw.js -->
 		<move file="${build_dir}/annuus.js" tofile="${build_dir}/annuus-raw.js" />
 
-		<jscomp compilationLevel="simple" warning="quiet" debug="false" output="${temp}">
+		<!-- annuus.js (minified) -->
+		<jscomp compilationLevel="simple" warning="quiet" debug="false" output="${temp_file}">
 			<sources dir="${build_dir}">
 				<file name="annuus-raw.js"/>
 			</sources>
 		</jscomp>
 
-		<concat destfile="${build_dir}/annuus.js" encoding="UTF-8">
+		<copy file="${temp_file}" tofile="${build_dir}/annuus.js">
 			<filterchain>
-				<expandproperties/>
+				<concatfilter prepend="${header_file}" />
 			</filterchain>
-
-			<fileset file="src/script/header.js" />
-			<fileset file="${temp}" />
-		</concat>
+		</copy>
 	</target>
 
 	<target name="_build_cont">
 		<!-- annuus.user.js -->
 		<exec executable="${tools_dir}/base64/base64.exe">
-			<arg line="-e ${temp} ${temp2}" />
+			<arg line="-e ${content_file} ${temp_file}" />
 		</exec>
 
-		<loadfile property="ENCODED_SCRIPT_CONTENT" srcfile="${temp2}">
+		<loadfile property="ENCODED_CONTENT" srcfile="${temp_file}">
 			<filterchain>
 				<striplinebreaks />
 			</filterchain>
 		</loadfile>
 
-		<concat destfile="${build_dir}/user/annuus.user.js" fixlastline="true" encoding="UTF-8">
+		<copy file="src/user/annuus.user.js" todir="${build_dir}/user">
 			<filterchain>
-				<expandproperties/>
+				<expandproperties />
+				<concatfilter prepend="${header_file}" />
 			</filterchain>
-
-			<fileset file="src/script/header.js" />
-			<fileset file="src/user/annuus.user.js" />
-		</concat>
+		</copy>
 
 		<!-- xpi -->
-		<copy todir="${build_dir}" overwrite="true">
-			<fileset dir="src" includes="xpi/" />
+		<copy todir="${build_dir}/xpi">
+			<fileset dir="src/xpi" />
 		</copy>
-
-		<copy file="src/xpi/install.rdf" todir="${build_dir}/xpi" overwrite="true" encoding="UTF-8">
-			<filterchain>
-				<expandproperties/>
-			</filterchain>
-		</copy>
-
 		<copy file="${build_dir}/annuus.js" todir="${build_dir}/xpi/content/" />
 
-		<!-- m2f -->
-		<copy todir="${build_dir}" overwrite="true">
-			<fileset dir="src" includes="m2f/" />
-		</copy>
-
-		<copy file="src/m2f/Helianthus.annuus.xml" todir="${build_dir}/m2f" overwrite="true" encoding="UTF-8">
+		<copy file="src/xpi/install.rdf" todir="${build_dir}/xpi" overwrite="true">
 			<filterchain>
-				<expandproperties/>
+				<expandproperties />
 			</filterchain>
 		</copy>
 
-		<copy file="${build_dir}/annuus.js" todir="${build_dir}/m2f/Helianthus.annuus/Scripts" />
+		<!-- m2f -->
+		<copy todir="${build_dir}/m2f" overwrite="true">
+			<fileset dir="src/m2f" />
+		</copy>
+		<copy file="${build_dir}/annuus.js" todir="${build_dir}/m2f/Helianthus.annuus/scripts" />
+
+		<copy file="src/m2f/Helianthus.annuus.xml" todir="${build_dir}/m2f" overwrite="true">
+			<filterchain>
+				<expandproperties />
+			</filterchain>
+		</copy>
 
 		<!-- crx -->
-		<copy todir="${build_dir}" overwrite="true">
-			<fileset dir="src" includes="crx/" />
+		<copy todir="${build_dir}/crx">
+			<fileset dir="src/crx" />
+			<fileset file="${build_dir}/annuus.js" />
 		</copy>
 
-		<copy file="src/crx/manifest.json" todir="${build_dir}/crx" overwrite="true" encoding="UTF-8">
+		<copy file="src/crx/manifest.json" todir="${build_dir}/crx" overwrite="true">
 			<filterchain>
-				<expandproperties/>
+				<expandproperties />
 			</filterchain>
 		</copy>
-
-		<copy file="${build_dir}/annuus.js" tofile="${build_dir}/crx/annuus.js" overwrite="true" />
 
 		<!-- privoxy -->
-		<copy todir="${build_dir}/privoxy" overwrite="true" encoding="UTF-8">
+		<copy todir="${build_dir}/privoxy">
 			<filterchain>
-				<expandproperties/>
+				<expandproperties />
 			</filterchain>
 
-			<fileset dir="src/privoxy" includes="**/*" />
+			<fileset dir="src/privoxy" />
 		</copy>
 	</target>
 
 	<target name="_dist">
+		<delete dir="${dist_dir}" />
+		<mkdir dir="${dist_dir}" />
+
 		<!-- scripts -->
 		<copy todir="${dist_dir}">
 			<fileset dir="${build_dir}" includes="annuus.js" />
@@ -217,17 +208,17 @@
 		<!-- crx -->
 		<exec executable="cmd">
 			<!-- http://github.com/Constellation/crxmake -->
-			<arg value="/C crxmake --pack-extension=${build_dir}/crx --pack-extension-key=${key_path} --extension-out=${dist_dir}/annuus.crx" />
+			<arg value="/C crxmake --pack-extension=${build_dir}/crx --pack-extension-key=${key_file} --extension-out=${dist_dir}/annuus.crx" />
 		</exec>
 
 		<!-- xpi -->
-		<mkdir dir="${build_dir}/xpi_package" />
 		<mkdir dir="${build_dir}/xpi_package/chrome" />
-		<zip destfile="${build_dir}/xpi_package/chrome/annuus.jar" basedir="${build_dir}/xpi" includes="content/*,locale/*,skin/*" />
+
+		<zip destfile="${build_dir}/xpi_package/chrome/annuus.jar" basedir="${build_dir}/xpi" includes="content/,locale/,skin/" />
 		<copy todir="${build_dir}/xpi_package">
-			<fileset dir="${build_dir}/xpi" includes="*/**" excludes="content/,locale/,skin/" />
+			<fileset dir="${build_dir}/xpi" includes="*/" excludes="content/,locale/,skin/" />
 		</copy>
-		<replaceregexp file="${build_dir}/xpi_package/chrome.manifest" match=" (?=(?:content|locale|skin)/)" replace=" jar:chrome/annuus.jar!/" flags="g" encoding="UTF-8" />
+		<replaceregexp file="${build_dir}/xpi_package/chrome.manifest" match=" (?=(?:content|locale|skin)/)" replace=" jar:chrome/annuus.jar!/" flags="g" />
 
 		<zip destfile="${dist_dir}/annuus.xpi" basedir="${build_dir}/xpi_package" />
 
@@ -238,19 +229,13 @@
 		<zip destfile="${dist_dir}/annuus.privoxy.zip" basedir="${build_dir}/privoxy" />
 	</target>
 
-	<target name="_clean">
-		<delete failonerror="false">
-			<fileset dir="${dist_dir}" includes="*/**" />
-		</delete>
-	</target>
-
 	<target name="_stable">
 		<property name="dist_dir" value="${dist_parent_dir}/stable" />
-		<property name="AN_URL" value="http://helianthus-annuus.googlecode.com/svn/dist/v3/stable/annuus.js" />
+		<property name="AN_URL" value="${dist_url}/stable/annuus.js" />
 	</target>
 
 	<target name="_beta">
 		<property name="dist_dir" value="${dist_parent_dir}/beta" />
-		<property name="AN_URL" value="http://helianthus-annuus.googlecode.com/svn/dist/v3/beta/annuus.js" />
+		<property name="AN_URL" value="${dist_url}/beta/annuus.js" />
 	</target>
 </project>

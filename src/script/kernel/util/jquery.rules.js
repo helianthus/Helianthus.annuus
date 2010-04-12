@@ -23,7 +23,7 @@
 		}
 	}
 
-	$d.one('priority3End', function(event)
+	$(an).one('p3end', function(event)
 	{
 		writeCSS(cache.join(''));
 		cache = null;

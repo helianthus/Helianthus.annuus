@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010  向日
+ * Copyright (C) 2010  project.helianthus
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,8 +17,8 @@
 
 // ==UserScript==
 // @name Helianthus.annuus
-// @namespace http://code.google.com/p/helianthus-annuus/
-// @description by 向日
+// @namespace http://github.com/helianthus/Helianthus.annuus
+// @description by project.helianthus
 // @version ${AN_VERSION}
 // @build-time ${BUILD_TIME}
 // @include http://forum*.hkgolden.com/*

@@ -20,8 +20,5 @@
 			<filter enable="1" name="Counters" author="project.helianthus" type="text" comment="" action="3" priority="5" match=".+?$KEYWORDS(counters).+" match_count="0" replace="" match_url="^http://forum\d+\.hkgolden\.com/(?:$|blog/|[a-z]+?\.(?:aspx|html))" exclude_url="" bound="\s*(?:&lt;script.+?&lt;/script&gt;|&lt;noscript.+?&lt;/noscript&gt;)\s*" max_bound_size="0" exclude="" keywords=""><keywords name="counters"><item>google-analytics</item><item>_getTracker</item><item>imrworldwide</item></keywords></filter>
 			<filter name="BookmarkBar" author="project.helianthus" type="text" comment="" action="3" priority="5" match=".+?(?:/golden_apps/|bbBar\.).+" match_count="0" replace="" match_url="^http://forum\d+\.hkgolden\.com/(?:$|[a-z]+?\.(?:aspx|html))" exclude_url="" bound="&lt;script.+?&lt;/script&gt;|onclick=&quot;[^&quot;]+&quot;" max_bound_size="0" exclude="" keywords="" enable="0"/>
 		</group>
-		<group name="File Cacher" enable="1">
-			<filter enable="1" name="Images" author="project.helianthus" type="text" comment="" action="3" priority="5" match="(?&lt;=['&quot;])(?:\.?/)?(?=faces|images|labels)" match_count="0" replace="file:///$MAXPATH()/Filter/Helianthus.annuus/FileCacher/" match_url="^http://forum\d+\.hkgolden\.com/(?:$|blog/|[a-z]+?\.(?:aspx|html))" exclude_url="" bound="&lt;(?:img|image|input)[^&gt;]+?src=&quot;(?:\.?/)?(?:faces|images|labels)|MM_swapImage[^)]+?'/images/" max_bound_size="0" exclude="" keywords=""/>
-		</group>
 	</filterlist>
 </m2filter>

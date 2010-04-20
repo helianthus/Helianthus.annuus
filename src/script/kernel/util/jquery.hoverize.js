@@ -3,7 +3,7 @@
 	var jHoverObjects, objectSets = [], recordOffset = function()
 	{
 		var data = $(this).data('hoverize');
-		data.fixScroll_difference = data.jTarget[data.fixScroll]() - $d.scrollTop();
+		data.fixScroll_difference = data.jTarget[data.fixScroll]() - $(document).scrollTop();
 	};
 
 	$.fn.hoverize = function(selector, option)
@@ -26,7 +26,7 @@
 
 					var jTarget = data.jTarget;
 
-					if(data.fixScroll) $d.scrollTop(jTarget[data.fixScroll]() - data.fixScroll_difference);
+					if(data.fixScroll) $(document).scrollTop(jTarget[data.fixScroll]() - data.fixScroll_difference);
 
 					if(!data.autoToggle) return;
 
@@ -41,7 +41,7 @@
 				}
 			});
 
-			$d.mouseover(function(event)
+			$(document).mouseover(function(event)
 			{
 				var jEnterTree = $(event.target).parentsUntil('#aspnetForm').andSelf();
 

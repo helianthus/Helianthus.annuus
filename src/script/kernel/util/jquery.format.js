@@ -49,8 +49,12 @@
 			if(format) replacement = formatters[format[0]](replacement, format.substr(1));
 
 			if(!$.isWord(replacement)) {
-				$.debug(an.__curJob.task.desc, target, args);
-				$.error('jQuery.format: replacement is not a string');
+				try {
+					$.err('jQuery.format: replacement is not a string');
+				}
+				finally {
+					$.debug(target);
+				}
 			}
 
 			return replacement;

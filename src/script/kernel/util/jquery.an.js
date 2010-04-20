@@ -10,6 +10,12 @@ $.extend({
 		return $('<div>' + html.replace(/^[\s\S]+?<form/, '<form').replace(/<\/form>\s*<!--[\s\S]+/, '</form>') + '</div>').eq(0);
 	},
 
+	err: function(msg)
+	{
+		msg = '[annuus] ' + msg;
+		throw new Error($.format.apply(null, arguments));
+	},
+
 	getDoc: function(url, success, setup)
 	{
 		$.ajax((setup = {
@@ -55,12 +61,34 @@ $.extend({
 				delete info.callbacks;
 			}
 
-			if($d.pageNo() === 1) {
-				getInfo($d);
+			if(this.pageNo() === 1) {
+				getInfo(this);
 			}
 			else {
 				$.getDoc('?message=' + window.messageid, getInfo);
 			}
+		}
+	},
+
+	notify: function(type, msg)
+	{
+		if(!/debug|error|info|log|warn/.test(type)) {
+			$.notify('warn', 'unknown notification type {0} encountered, falls back to "log".', type);
+			type = 'log';
+		}
+
+		if(type === 'debug' && an.get('DEBUG_MODE') === false) {
+			return;
+		}
+
+		msg = '[annuus] ' + msg;
+		msg = $.format.apply(null, $.slice(arguments, 1));
+
+		if(window.console && window.console[type]) {
+			console[type](msg);
+		}
+		else {
+			//alert($.format('{0}:\n\n{1}', type.toUpperCase(), msg));
 		}
 	}
 });

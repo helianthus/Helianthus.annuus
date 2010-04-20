@@ -23,10 +23,13 @@
 		}
 	}
 
-	$(an).one('p3end', function(event)
+	$(an).bind('groupend', function(event, groupNo)
 	{
-		writeCSS(cache.join(''));
-		cache = null;
+		if(groupNo === 3) {
+			writeCSS(cache.join(''));
+			$(an).unbind(event);
+			cache = null;
+		}
 	});
 
 	$.rules = function(css, remove)

@@ -108,13 +108,11 @@ $.extend({
 
 	debug: function()
 	{
-		if(typeof arguments[0] === 'string') arguments[0] = 'annuus: ' + arguments[0];
-
 		if(window.console) {
 			console.debug(arguments.length === 1 ? arguments[0] : arguments);
 		}
 		else {
-			alert(arguments[0]);
+			alert($.slice(arguments).join(' '));
 		}
 	},
 
@@ -122,7 +120,7 @@ $.extend({
 	{
 		for(var i=1; i<arguments.length; ++i) {
 			if($.isGarbage(obj)) {
-				return undefined;
+				return;
 			}
 			obj = obj[arguments[i]];
 		}
@@ -173,12 +171,30 @@ $.extend({
 		return target === null || target === undefined || target === NaN;
 	},
 
+	len: function(target)
+	{
+		var len = 0;
+		for(var name in target) {
+			++len;
+		}
+		return len;
+	},
+
 	make: function(obj)
 	{
 		for(var i=1; i<arguments.length; ++i) {
 			obj = obj[arguments[i]] || (obj[arguments[i]] = {});
 		}
 		return obj;
+	},
+
+	range: function(start, end)
+	{
+		var ret = [];
+		for(var i=start; i<=end; ++i) {
+			ret.push(i);
+		}
+		return ret;
 	},
 
 	run: function(name)
@@ -191,9 +207,9 @@ $.extend({
 		return Array.prototype.slice.apply(target, Array.prototype.slice.call(arguments, 1));
 	},
 
-	time: function(nStart)
+	time: function(start)
 	{
-		return nStart ? $.time() - nStart : +new Date;
+		return start ? new Date - start : +new Date;
 	},
 
 	//--- Deprecated --//
@@ -308,7 +324,7 @@ $.fn.extend({
 
 	root: function()
 	{
-		return this.__root || (this.__root = $d.own(this) ? $d : this.up());
+		return this.__root || (this.__root = $(document).own(this) ? $(document) : this.up());
 	},
 
 	own: function(target)

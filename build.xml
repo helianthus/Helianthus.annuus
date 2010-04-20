@@ -88,7 +88,7 @@
 			</filelist>
 			<fileset dir="src/script">
 				<include name="kernel/**/*.js" />
-				<!--<include name="tasks/**/*.js" />-->
+				<include name="modules/**/*.js" />
 				<exclude name="kernel/lib/jquery.js" />
 			</fileset>
 		</concat>
@@ -162,9 +162,6 @@
 		</copy>
 
 		<!-- m2f -->
-		<copy todir="${build_dir}/m2f" overwrite="true">
-			<fileset dir="src/m2f" />
-		</copy>
 		<copy file="${build_dir}/annuus.js" todir="${build_dir}/m2f/Helianthus.annuus/scripts" />
 
 		<copy file="src/m2f/Helianthus.annuus.xml" todir="${build_dir}/m2f" overwrite="true">

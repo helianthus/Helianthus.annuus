@@ -1,62 +1,73 @@
 (function()
 {
 
-function runUntil(until)
+function execGroups(eventType)
 {
-	do {
-		var group = an.__jobGroups[an.__curPriority];
+	for(var groupNo = an.get('RUN_AT')[eventType], until = groupNo + $.len(an.get('PRIORITY')) - 1; groupNo <= until; ++groupNo) {
+		var group = an.__jobGroups[groupNo];
 
-		$(an).trigger($.format('p{0}start', an.__curPriority));
+		$(an).trigger('groupstart', [groupNo]);
 
 		for(var i=0; i<group.length; ++i) {
 			var job = group[i];
-			if(job.fnSet.freq === once) group.splice(i--, 1);
 
-			an.__curJob = job;
-
-			$(an).trigger('jobstart', [job]);
-
-			try {
-				job.fnSet.js(job);
-			}
-			catch(e) {
-				$.debug($.format('發生錯誤: {0}', job.task.desc), e, job, $j);
+			if((job.__task.frequency || 'once') === 'once') {
+				group.splice(i--, 1);
 			}
 
-			$(an).trigger('jobend', [job]);
+			$(an).trigger('jobstart', [job, groupNo]);
+
+			if(job.__task.css) {
+				$.rules(job.__task.css);
+			}
+
+			if(job.__task.js) {
+				$.notify('debug', 'executing {0}', job.__task.id);
+
+				try {
+					an.__api[job.__api].js(job);
+				}
+				catch(e) {
+					$.debug('Error occurred: ' + job.__module.title, 'error:', e, 'job:', job, 'context:', job.context());
+				}
+			}
+
+			$(an).trigger('jobend', [job, groupNo]);
 		}
 
-		$(an).trigger($.format('p{0}end', an.__curPriority));
+		$(an).trigger('groupend', [groupNo]);
 	}
-	while(++an.__curPriority <= until);
 }
 
 $.fn.an = function()
 {
-	$j = this;
-	an.__curPriority = 1;
+	an.__context = $(this[0]);
 
-	$(an).trigger('anlevel1');
+	$(an).trigger('document_start');
 
-	runUntil(3);
+	execGroups('document_start');
 
-	$(an).one('anlevel2', function()
+	$(an).one('document_end', function()
 	{
-		runUntil(6);
+		execGroups('document_end');
 
-		$(an).one('anlevel3', function()
+		$(an).one('window_loaded', function()
 		{
-			runUntil(9);
+			execGroups('window_loaded');
 
-			$.debug('an() completed successfully.');
+			$.notify('info', 'an() completed successfully.');
 		});
 
-		if(an.get('WINDOW_IS_LOADED')) $(an).trigger('anlevel3');
+		if(an.get('WINDOW_IS_LOADED')) {
+			$(an).trigger('window_loaded');
+		}
 	});
 
-	if(an.get('DOM_IS_READY')) $(an).trigger('anlevel2');
+	if(an.get('DOM_IS_READY')) {
+		$(an).trigger('document_end');
+	}
 
-	return $j;
+	return this;
 };
 
 $(an).one('storageready', function()
@@ -65,7 +76,7 @@ $(an).one('storageready', function()
 	{
 		if($.isReady || $('#Side_GoogleAd').length) {
 			an.get('DOM_IS_READY', true);
-			$(an).trigger('anlevel2');
+			$(an).trigger('document_end');
 		}
 		else {
 			$.timeout('checkDOM', 50);
@@ -78,7 +89,9 @@ $(window).one('load', function()
 	setTimeout(function()
 	{
 		an.get('WINDOW_IS_LOADED', true);
-		$(an).trigger('anlevel3');
+		if(an.get('DOM_IS_READY')) {
+			$(an).trigger('window_loaded');
+		}
 	}, 10);
 });
 

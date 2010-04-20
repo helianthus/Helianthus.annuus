@@ -10,22 +10,16 @@ $.fn.extend({
 
 	topics: function()
 	{
-		return this.topicTable().find('tr').has('td > a');
+		return this.__topics || (this.__topics = this.topicTable().find('tr').has('td > a'));
 	},
 
 	topicTable: function()
 	{
-		var jScope = $d.own(this) ? $d : this;
-		return jScope.__topicTable || (jScope.__topicTable = jScope.find({
+		return this.__topicTable || (this.__topicTable = this.find({
 			topics: '#HotTopics > div > table',
 			search: '#ctl00_ContentPlaceHolder1_topics_form > table + table > tbody > tr > td > table',
 			tags: '#ctl00_ContentPlaceHolder1_topics_form > table + table > tbody > tr > td > table',
 			profilepage: '#ctl00_ContentPlaceHolder1_UpdatePanelHistory .main_table1 > table > tbody > tr > td > table'
-		}[jScope.pageName()]));
+		}[this.pageName()]));
 	}
-});
-
-$(an).bind('p1start', function()
-{
-	$d.__replies = $d.__topics = $d.__topicTable = null;
 });

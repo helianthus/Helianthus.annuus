@@ -1,17 +1,20 @@
-$(an).one('kernelready', function()
+an.addModules = function(getModules)
 {
-
-$('<div />', { id: 'an' }).prependTo(document.documentElement);
+	$(an).one('kernelready', function(){ $.extend(an.get('MODULES', {}), getModules()); });
+};
 
 document.domain = 'hkgolden.com';
 
 $.ajaxSetup({ cache: false });
 
-$d.bind('click', function(event)
+$(document).delegate('a', 'click', function(event)
 {
-	var jTarget = $(event.target).closest('a');
-	if(jTarget.length && /^(?:#|javascript:)$/.test(jTarget.attr('href'))) event.preventDefault();
+	if(/^(?:#|javascript:)$/.test(this.href)) {
+		event.preventDefault();
+	}
 });
+
+$('<div />', { id: 'an' }).prependTo(document.documentElement);
 
 $(function()
 {
@@ -21,11 +24,10 @@ $(function()
 	});
 });
 
-$.rules('\
-a > img { border: 0; } \
-.TransparentGrayBackground, .TransparentGrayBackground + * { z-index: 10; } \
-');
-
-an.get('STORAGE_MODE', window.localStorage && $.cookie('an_storagemode') === 'DOM' ? 'DOM' : 'Flash');
-
+$(an).one('kernelready', function()
+{
+	$.rules('\
+	a > img { border: 0; } \
+	.TransparentGrayBackground, .TransparentGrayBackground + * { z-index: 10; } \
+	');
 });

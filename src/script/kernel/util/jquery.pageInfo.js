@@ -1,50 +1,34 @@
 (function($)
 {
-	function getPageName(url)
-	{
-		if(!url) return null;
-
-		var
-		uriSet = $.uriSet(url),
-		name = /\w+/.exec(uriSet.filename || uriSet.directory);
-
-		return name ? name[0].toLowerCase() : 'default';
-	}
-
 	$.fn.pageName = function()
 	{
 		if(this.__pageName) return this.__pageName;
 
-		if(!jQuery.isReady) {
-			return getPageName(location.href);
+		var root = this.root();
+
+		if(root.find('#ctl00_ContentPlaceHolder1_SystemMessageBoard').length) {
+			this.__pageName = 'message';
 		}
 		else {
-			var root = this.root();
-
-			return (this.__pageName =
-				root.find('#ctl00_ContentPlaceHolder1_SystemMessageBoard').length && 'message'
-				|| getPageName(root.find('#aspnetForm').attr('action') || location.href)
-				|| 'error'
-			);
+			var name = /\w+/.exec($.uriSet(root.find('#aspnetForm').attr('action') || location.href).filename);
+			this.__pageName = name ? name[0].toLowerCase() : 'index';
 		}
+
+		return this.__pageName;
 	};
 
 	$.fn.pageCode = function()
 	{
-		if(typeof this.__pageCode === 'number') return this.__pageCode;
+		if(this.__pageCode != null) return this.__pageCode;
 
 		var pageName = this.pageName();
 
-		for(var code in an.pages) {
-			if(an.pages[code].action === pageName) {
-				return pageCode = code * 1;
+		for(var code in an.get('PAGES')) {
+			if(an.get('PAGES')[code].action === pageName) {
+				return this.__pageCode = code * 1;
 			}
 		}
-		return 0;
-	};
 
-	$(an).one('p4start', function()
-	{
-		$d.__pageName = $d.__pageCode = null;
-	});
+		return this.__pageCode = 0;
+	};
 })(jQuery);

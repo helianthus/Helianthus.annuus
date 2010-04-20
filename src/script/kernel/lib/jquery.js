@@ -15,18 +15,16 @@
  */
 (function( window, undefined ) {
 
-var jQuery;
-
 (function() {
 
 // Define a local copy of jQuery
-	jQuery = function( selector, context ) {
+var jQuery = function( selector, context ) {
 		// The jQuery object is actually just the init constructor 'enhanced'
 		return new jQuery.fn.init( selector, context );
-	};
+	},
 
 	// Map over jQuery in case of overwrite
-	var _jQuery = window.jQuery,
+	_jQuery = window.jQuery,
 
 	// Map over the $ in case of overwrite
 	_$ = window.$,

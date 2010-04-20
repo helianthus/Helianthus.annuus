@@ -1,4 +1,5 @@
-an.credits = [
+an.get('CREDITS', [
+
 {
 	name: 'jQuery',
 	url: 'http://jquery.com',
@@ -83,4 +84,6 @@ an.credits = [
 	author: 'Julian Turner ',
 	license: 'Creative Commons (Attribution-Share Alike 2.0 Generic)',
 	licenseUrl: 'http://creativecommons.org/licenses/by-sa/2.0/'
-}];
+}
+
+]);

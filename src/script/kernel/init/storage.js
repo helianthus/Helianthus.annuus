@@ -91,7 +91,7 @@ an.__storage = $.extend(function(options)
 	options = $.extend({ curProfileOnly: true, savedOrDefault: 'both', noCache: false }, options);
 
 	if(options.noCache || !cache[options.savedOrDefault]) {
-		cache[options.savedOrDefault] = options.savedOrDefault !== 'default' && JSON.parse(storage.get() || null) || {
+		cache[options.savedOrDefault] = options.savedOrDefault !== 'default' && storage.get() && JSON.parse(storage.get()) || {
 			curProfile: '預設',
 			profiles: {
 				'預設': {}

@@ -84,7 +84,10 @@ $.extend({
 		msg = '[annuus] ' + msg;
 		msg = $.format.apply(null, $.slice(arguments, 1));
 
-		if(window.console && window.console[type]) {
+		if(window.console) {
+			if(!console[type]) {
+				type = 'log';
+			}
 			console[type](msg);
 		}
 		else {

@@ -141,14 +141,16 @@ $(an).one('storageready', function()
 
 		$.each(module.api || {}, function(i, api)
 		{
-			if(api.type === 'interface') {
-				an.__api[api.name] = api;
-			}
-			else if(api.type === 'generic') {
-				api.js();
-			}
-			else {
-				$.notify('warn', 'unknown api type {0} is encountered in module {1}.', api.type, module.title);
+			if((api.page || -1) & pageCode) {
+				if(api.type === 'interface') {
+					an.__api[api.name] = api;
+				}
+				else if(api.type === 'generic') {
+					api.js();
+				}
+				else {
+					$.notify('warn', 'unknown api type {0} is encountered in module {1}.', api.type, module.title);
+				}
 			}
 		});
 

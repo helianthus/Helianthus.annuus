@@ -54,10 +54,12 @@ an.addModules(function(){ return {
 			page: topics,
 			run_at: 'document_start',
 			css: '\
-				#aspnetForm[action^="topics.aspx"] .ContentPanel > table { width: 100%; } \
+				.ContentPanel > table { width: 100%; } \
 				.ContentPanel > table > tbody > tr > td:first-child { width: auto !important; } \
 				\
-				.ContentPanel > table > tbody > tr > td:first-child + td, \
+				.ContentPanel > table > tbody > tr > td:first-child + td \
+					{ display: none; } \
+				\
 				#aspnetForm:not([action*="type=MB"]) #HotTopics > div > table > tbody > tr:first-child ~ tr:not([username]), \
 				#aspnetForm[action*="type=MB"] #HotTopics > div > table > tbody > tr:first-child + tr ~ tr:not([username]) \
 					{ display: none; } \
@@ -100,9 +102,9 @@ an.addModules(function(){ return {
 			page: view,
 			run_at: 'document_start',
 			css: '\
-				#ctl00_ContentPlaceHolder1_view_form > div > div[style*="padding: 18px"] { border-bottom-width: 0 !important; } \
+				#ctl00_ContentPlaceHolder1_view_form div > div[style*="padding: 18px 5px 18px 5px"] { border-bottom-width: 0 !important; } \
 				\
-				#ctl00_ContentPlaceHolder1_view_form > div div[style*="58px"], /* top & bottom ads */ \
+				#ctl00_ContentPlaceHolder1_view_form div > div[style*="height: 58px"], /* top & bottom ads */ \
 				#ctl00_ContentPlaceHolder1_view_form > div > table[width="100%"] > tbody > tr + tr /* inline ads */ \
 					{ display: none; } \
 			'

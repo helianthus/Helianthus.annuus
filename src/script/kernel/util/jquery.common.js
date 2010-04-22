@@ -87,29 +87,10 @@ $.extend({
 		}
 	},
 
-	cssText: function(name, val)
-	{
-		var args = $.slice(arguments, 1);
-
-		return {
-			'opacity': function()
-			{
-				return $.support.opacity ? 'opacity: ' + val : $.format('-ms-filter: "alpha(opacity={0})"', val * 100);
-			},
-			'rgba': function()
-			{
-				return $.format($.browser.msie
-				? '-ms-filter: "gradient(startColorstr=#{0[0]:x}{0[1]:x}{0[2]:x}{0[3]!*100:x},endColorstr=#{0[0]:x}{0[1]:x}{0[2]:x}{0[3]!*100:x})"'
-				: 'rgba({0.toString()})'
-				, args);
-			}
-		}[name]();
-	},
-
 	debug: function()
 	{
 		if(window.console) {
-			console.debug(arguments.length === 1 ? arguments[0] : arguments);
+			console[console.debug ? 'debug' : 'log'](arguments.length === 1 ? arguments[0] : arguments);
 		}
 		else {
 			alert($.slice(arguments).join(' '));

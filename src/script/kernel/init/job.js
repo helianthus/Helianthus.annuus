@@ -65,20 +65,6 @@ Job.prototype.data = function(name, value)
 	}
 };
 
-/*
-Job.prototype.derive = function(newTask)
-{
-	if('page' in newTask) {
-		$.notify('warn', '"page" property of dervied job "{0}" has no effect.', newTask.title || newTask.id);
-	}
-
-	var job = new Job(this);
-	$.extend(job.__task, newTask);
-
-	addJob(job);
-};
-*/
-
 $(an).one('storageready', function()
 {
 	an.__jobGroups = {};

@@ -50,11 +50,6 @@ $.extend({
 		else {
 			//alert($.format('{0}:\n\n{1}', type.toUpperCase(), msg));
 		}
-	},
-
-	isLoggedIn: function()
-	{
-		return !!$.cookie('username');
 	}
 });
 

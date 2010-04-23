@@ -2,10 +2,21 @@ bolanderi.addModules(function(){ return {
 
 '0b721576-57a8-46b0-b0e5-6fec32e4aafa':
 {
-	title: 'View Page API',
-	pages: { comp: [view] },
+	title: 'Simple API',
+	pages: { comp: [all] },
 	api: [
 		{
+			type: 'generic',
+			js: function()
+			{
+				$.isLoggedIn = function()
+				{
+					return !!$.cookie('username');
+				};
+			}
+		},
+		{
+			page: view,
 			type: 'generic',
 			js: function() // need fix
 			{
@@ -43,6 +54,7 @@ bolanderi.addModules(function(){ return {
 			}
 		},
 		{
+			page: view,
 			type: 'generic',
 			js: function()
 			{

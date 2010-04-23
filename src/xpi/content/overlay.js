@@ -1,14 +1,14 @@
 window.addEventListener('load', function()
 {
-	var pref = Components.classes['@mozilla.org/preferences-service;1'].getService(Components.interfaces.nsIPrefBranch).getBranch('extensions.annuus.');
+	var pref = Components.classes['@mozilla.org/preferences-service;1'].getService(Components.interfaces.nsIPrefBranch).getBranch('extensions.@PROJECT_NAME_SHORT@.');
 	var status = pref.getBoolPref('status');
-	var overlay = document.getElementById('annuus-overlay');
-	var rHKG = /^http:\/\/forum\d+\.hkgolden\.com\/(?:$|[a-z]+?\.(?:aspx|html))/i;
+	var overlay = document.getElementById('@PROJECT_NAME_SHORT@-overlay');
+	var rTarget = /@PROJECT_TARGET_REGEX@/i;
 	var noop = function(){};
 
 	function setStatus()
 	{
-		overlay.src = status ? 'chrome://annuus/skin/status-on.png' : 'chrome://annuus/skin/status-off.png';
+		overlay.src = status ? 'chrome://@PROJECT_NAME_SHORT@/skin/status-on.png' : 'chrome://@PROJECT_NAME_SHORT@/skin/status-off.png';
 	}
 	setStatus();
 
@@ -22,7 +22,7 @@ window.addEventListener('load', function()
 	gBrowser.addProgressListener({
 		onLocationChange: function(progress, request, uri)
 		{
-			overlay.hidden = !(uri && rHKG.test(uri.spec));
+			overlay.hidden = !(uri && rTarget.test(uri.spec));
 		},
 		onStateChange: noop,
 		onProgressChange: noop,
@@ -33,13 +33,13 @@ window.addEventListener('load', function()
 	gBrowser.addTabsProgressListener({
 		onLocationChange: function(browser, progress, request, uri)
 		{
-			if(progress.isLoadingDocument && status && rHKG.test(uri.spec))
+			if(progress.isLoadingDocument && status && rTarget.test(uri.spec))
 			{
 				var doc = browser.contentDocument;
 				var head = doc.getElementsByTagName('head');
 				var script = doc.createElement('script');
 
-				script.src = 'resource://annuus/annuus.js';
+				script.src = 'resource://@PROJECT_NAME_SHORT@/@PROJECT_NAME_SHORT@.js';
 
 				(function inject()
 				{

@@ -1,6 +1,6 @@
-an.addModules = function(getModules)
+bolanderi.addModules = function(getModules)
 {
-	$(an).one('kernelready', function(){ $.extend(an.get('MODULES', {}), getModules()); });
+	$(bolanderi).one('kernelready', function(){ $.extend(bolanderi.get('MODULES', {}), getModules()); });
 };
 
 $(function()

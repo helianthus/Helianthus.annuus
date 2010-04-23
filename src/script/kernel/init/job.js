@@ -10,7 +10,7 @@ $.each(['options', 'database'], function(i, dataType)
 {
 	Job.prototype[dataType] = function(id, value)
 	{
-		var profile = an.__storage({ savedOrDefault: typeof value === 'undefined' ? 'both' : 'saved' });
+		var profile = bolanderi.__storage({ savedOrDefault: typeof value === 'undefined' ? 'both' : 'saved' });
 		var paths = {
 			'public': [profile, 'publicData', dataType],
 			'protected': [profile, 'privateData', this.__module.id, dataType],
@@ -43,13 +43,13 @@ $.each(['options', 'database'], function(i, dataType)
 			data[id] = value;
 		}
 
-		an.__storage.save();
+		bolanderi.__storage.save();
 	};
 });
 
 Job.prototype.context = function()
 {
-	return an.__context;
+	return bolanderi.__context;
 };
 
 Job.prototype.data = function(name, value)
@@ -65,15 +65,15 @@ Job.prototype.data = function(name, value)
 	}
 };
 
-$(an).one('storageready', function()
+$(bolanderi).one('storageready', function()
 {
-	an.__jobGroups = {};
-	$.each($.range(1, $.len(an.get('RUN_AT')) * $.len(an.get('PRIORITY'))), function(i, groupNo)
+	bolanderi.__jobGroups = {};
+	$.each($.range(1, $.len(bolanderi.get('RUN_AT')) * $.len(bolanderi.get('PRIORITY'))), function(i, groupNo)
 	{
-		an.__jobGroups[groupNo] = [];
+		bolanderi.__jobGroups[groupNo] = [];
 	});
 
-	an.__api = {
+	bolanderi.__api = {
 		auto: {
 			title: 'Auto',
 			js: function(job)
@@ -84,7 +84,7 @@ $(an).one('storageready', function()
 	};
 
 	var pageCode = $(document).pageCode();
-	var profile = an.__storage();
+	var profile = bolanderi.__storage();
 	var passStatus = function(module)
 	{
 		var passPageCode = null;
@@ -105,7 +105,7 @@ $(an).one('storageready', function()
 		$.digEach((target instanceof Job ? target.__module.requires : target.requires) || {}, null, function(type, i, requirement)
 		{
 			if(type === 'truthy' && !requirement
-			|| type === 'modules' && !passStatus(an.get('MODULES')[requirement])
+			|| type === 'modules' && !passStatus(bolanderi.get('MODULES')[requirement])
 			|| type === 'options' && (target instanceof Job ? target.options(requirement.id) : $.dig(profile.publicData, 'options', requirement.id)) !== requirement.value
 			) {
 				$.notify('log', 'requirement "{0}" of {1} failed.', type, target.title || target.__task.id);
@@ -116,7 +116,7 @@ $(an).one('storageready', function()
 		return pass;
 	};
 
-	$.each(an.get('MODULES'), function(moduleId, module)
+	$.each(bolanderi.get('MODULES'), function(moduleId, module)
 	{
 		$.notify('debug', 'processing module {0}', module.title);
 		var targetPageCode;
@@ -129,7 +129,7 @@ $(an).one('storageready', function()
 		{
 			if((api.page || -1) & pageCode) {
 				if(api.type === 'interface') {
-					an.__api[api.name] = api;
+					bolanderi.__api[api.name] = api;
 				}
 				else if(api.type === 'generic') {
 					api.js();
@@ -148,7 +148,7 @@ $(an).one('storageready', function()
 				var taskData = profile.privateData[moduleId].tasks[taskId];
 				var api = taskData.api || 'auto';
 
-				if(!(api in an.__api)) {
+				if(!(api in bolanderi.__api)) {
 					$.notify('log', 'api {0} is not registered, task "{1}" of module {2} dropped.', api, taskId, module.title);
 					return;
 				}
@@ -157,7 +157,7 @@ $(an).one('storageready', function()
 
 				if(passRequirements(job) && (task.css || task.js)) {
 					$.notify('debug', 'adding job {0}', taskId);
-					an.__jobGroups[an.get('RUN_AT')[task.run_at || 'document_end'] + an.get('PRIORITY')[task.priority || 'normal']].push(job);
+					bolanderi.__jobGroups[bolanderi.get('RUN_AT')[task.run_at || 'document_end'] + bolanderi.get('PRIORITY')[task.priority || 'normal']].push(job);
 				}
 			}
 		});

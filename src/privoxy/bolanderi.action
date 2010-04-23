@@ -5,7 +5,7 @@ forum*.hkgolden.com/(?:$|[a-z]+?\.(?:aspx|html))
 forum*.hkgolden.com/(?:$|[a-z]+?\.(?:aspx|html))
 
 # Scripts
-{ +filter{annuus.js} }
+{ +filter{@PROJECT_NAME_SHORT@.js} }
 forum*.hkgolden.com/(?:$|[a-z]+?\.(?:aspx|html))
 
 # IE8 Re-enabler

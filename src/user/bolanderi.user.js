@@ -1,4 +1,4 @@
-if(/^http:\/\/forum\d+\.hkgolden\.com\/(?:$|[a-z]+?\.(?:aspx|html))/i.test(location.href)) {
+if(/@PROJECT_TARGET_REGEX@/i.test(location.href)) {
 	(function(encodedScriptContent)
 	{
 		var head = document.getElementsByTagName('head');
@@ -11,5 +11,5 @@ if(/^http:\/\/forum\d+\.hkgolden\.com\/(?:$|[a-z]+?\.(?:aspx|html))/i.test(locat
 		{
 			head[0] ? head[0].appendChild(script) : setTimeout(inject, 50);
 		})();
-	})('${ENCODED_CONTENT}');
+	})('@ENCODED_CONTENT@');
 }

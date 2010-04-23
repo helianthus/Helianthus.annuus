@@ -11,7 +11,7 @@
 		}
 		else {
 			var name = /\w+/.exec($.uriSet(root.find('#aspnetForm').attr('action') || location.href).filename);
-			this.__pageName = name ? name[0].toLowerCase() : 'index';
+			this.__pageName = name ? name[0].toLowerCase() : 'default';
 		}
 
 		return this.__pageName;
@@ -23,8 +23,8 @@
 
 		var pageName = this.pageName();
 
-		for(var code in an.get('PAGES')) {
-			if(an.get('PAGES')[code].action === pageName) {
+		for(var code in bolanderi.get('PAGES')) {
+			if(bolanderi.get('PAGES')[code].action === pageName) {
 				return this.__pageCode = code * 1;
 			}
 		}

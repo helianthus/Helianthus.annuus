@@ -15,11 +15,11 @@ function writeCSS(css, isOverWrite)
 	}
 }
 
-$(an).bind('groupend', function(event, groupNo)
+$(bolanderi).bind('groupend', function(event, groupNo)
 {
 	if(groupNo === 3) {
 		writeCSS(cache.join(''));
-		$(an).unbind(event);
+		$(bolanderi).unbind(event);
 		cache = null;
 	}
 });

@@ -1,38 +1,38 @@
-$(an).one('modulesready', function()
+$(bolanderi).one('modulesready', function()
 {
 
 var storage = {
 	'Flash': {
 		get: function() {
-			return an.get('FLASH_API').get('an', 'an');
+			return bolanderi.get('FLASH_API').get('bolanderi', 'bolanderi');
 		},
 		set: function(val) {
-			an.get('FLASH_API').set('an', 'an', val.replace(/\\/g, '\\\\'));
+			bolanderi.get('FLASH_API').set('bolanderi', 'bolanderi', val.replace(/\\/g, '\\\\'));
 		},
 		clear: function() {
-			an.get('FLASH_API').remove('an', 'an');
+			bolanderi.get('FLASH_API').remove('bolanderi', 'bolanderi');
 		}
 	},
 
 	'DOM': {
 		get: function() {
-			return localStorage.an;
+			return localStorage.bolanderi;
 		},
 		set: function(val) {
-			localStorage['an'] = val;
+			localStorage['bolanderi'] = val;
 		},
 		clear: function() {
-			localStorage.removeItem('an');
+			localStorage.removeItem('bolanderi');
 		}
 	}
-}[an.get('STORAGE_MODE')];
+}[bolanderi.get('STORAGE_MODE')];
 
 var defaultData = {
 	publicData: {},
 	privateData: {}
 };
 
-$.each(an.get('MODULES'), function(moduleId, module)
+$.each(bolanderi.get('MODULES'), function(moduleId, module)
 {
 	if(moduleId in defaultData.privateData) {
 		$.err('module id "{0}" already exists.', moduleId);
@@ -86,7 +86,7 @@ $.each(an.get('MODULES'), function(moduleId, module)
 
 var cache = {};
 
-an.__storage = $.extend(function(options)
+bolanderi.__storage = $.extend(function(options)
 {
 	options = $.extend({ curProfileOnly: true, savedOrDefault: 'both', noCache: false }, options);
 

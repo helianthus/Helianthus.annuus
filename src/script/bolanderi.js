@@ -1,11 +1,13 @@
 (function(undefined)
 {
 
-if (window.jQuery) {
-	return alert('jQuery already exists! Probably caused by duplicate script injection.');
+if (window["@PROJECT_NAME@"]) {
+	return alert('@PROJECT_NAME@ has already loaded!');
 }
 
-var an = window.an = {
+window["@PROJECT_NAME@"] = true;
+
+var bolanderi = {
 	get: (function()
 	{
 		var data = {};
@@ -19,11 +21,11 @@ var an = window.an = {
 	})()
 };
 
-an.get('VERSION', '${AN_VERSION}');
-an.get('DEBUG_MODE', true);
+bolanderi.get('VERSION', '@PROJECT_VERSION@');
+bolanderi.get('DEBUG_MODE', false);
 
 /*@CONTENT@*/
 
-$(an).trigger('init');
+$(bolanderi).trigger('init');
 
 })();

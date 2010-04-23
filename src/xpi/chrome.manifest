@@ -1,5 +1,5 @@
-content   annuus content/
-skin      annuus classic/1.0 skin/
-resource  annuus content/annuus.js
+content   @PROJECT_NAME_SHORT@ content/
+skin      @PROJECT_NAME_SHORT@ classic/1.0 skin/
+resource  @PROJECT_NAME_SHORT@ content/@PROJECT_NAME_SHORT@.js
 
-overlay   chrome://browser/content/browser.xul chrome://annuus/content/overlay.xul
+overlay   chrome://browser/content/browser.xul chrome://@PROJECT_NAME_SHORT@/content/overlay.xul

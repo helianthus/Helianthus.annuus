@@ -1,4 +1,4 @@
-an.addModules(function(){ return {
+bolanderi.addModules(function(){ return {
 
 '0f7cdd14-1e7a-4481-81d4-24709102f887':
 {

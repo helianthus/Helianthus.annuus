@@ -243,7 +243,7 @@ $.fn.extend({
 
 	toFlash: function(url, attrSet, paramSet)
 	{
-		attrSet = $.extend({ width: 0, height: 0, id: this[0].id || 'an-flash-' + $.time() }, attrSet);
+		attrSet = $.extend({ width: 0, height: 0, id: this[0].id || 'jquery-flash-' + $.time() }, attrSet);
 		paramSet = $.extend({ allowscriptaccess: 'always' }, paramSet);
 
 		if($.browser.msie) {

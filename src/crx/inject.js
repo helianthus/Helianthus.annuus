@@ -1,13 +1,13 @@
-if(/^http:\/\/forum\d+\.hkgolden\.com\/(?:$|[a-z]+?\.(?:aspx|html))/i.test(location.href))
+if(/@PROJECT_TARGET_REGEX@/i.test(location.href))
 {
-	chrome.extension.sendRequest('isHKG', function(status)
+	chrome.extension.sendRequest(true, function(status)
 	{
 		if(!status) return;
 
 		var head = document.getElementsByTagName('head');
 		var script = document.createElement('script');
 
-		script.src = chrome.extension.getURL("annuus.js");
+		script.src = chrome.extension.getURL("@PROJECT_NAME_SHORT@.js");
 
 		(function inject()
 		{

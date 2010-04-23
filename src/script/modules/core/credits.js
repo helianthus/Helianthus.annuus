@@ -1,8 +1,8 @@
-an.addModules(function(){ return {
+bolanderi.addModules(function(){ return {
 
 '2de3e000-9db8-40cf-9fb8-598474ce4df8':
 {
-	title: 'Credit API',
+	title: 'Credits API',
 	pages: { comp: [all] },
 	api: [
 		{

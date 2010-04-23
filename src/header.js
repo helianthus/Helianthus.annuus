@@ -1,27 +1,31 @@
 /*
- * Copyright (C) 2010  project.helianthus
+ * Helianthus.bolanderi v0.0.1
+ * http://github.com/helianthus/Helianthus.bolanderi
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Copyright (c) 2010 project.helianthus
+ * Licensed under the GPL license.
+ * http://www.gnu.org/licenses/gpl.html
+ */
+
+/*
+ * @PROJECT_NAME@ v@PROJECT_VERSION@
+ * @PROJECT_URL@
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * Copyright (c) @PROJECT_BUILD_YEAR@ @PROJECT_AUTHOR@
+ * @PROJECT_LICENSE@
+ * @PROJECT_LICENSE_URL@
  */
 
 // ==UserScript==
-// @name Helianthus.annuus
-// @namespace http://github.com/helianthus/Helianthus.annuus
-// @description by project.helianthus
-// @version ${AN_VERSION}
-// @build-time ${BUILD_TIME}
-// @include http://forum*.hkgolden.com/*
-// @run-at document-start
+// @name            @PROJECT_NAME@
+// @author          @PROJECT_AUTHOR@
+// @namespace       @PROJECT_URL@
+// @description     @PROJECT_DESCRIPTION@
+// @version         @PROJECT_VERSION@
+// @build-time      @PROJECT_BUILD_TIME@
+// @match           @PROJECT_TARGET_MATCH@
+// @include         @PROJECT_TARGET_INCLUDE@
+// @run-at          document-start
+// @injectframes    1
 // ==/UserScript==
 

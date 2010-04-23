@@ -1,23 +1,22 @@
 {
-	"name": "Helianthus.annuus",
-	"version": "${AN_VERSION}",
-	"description": ":o)",
+	"name": "@PROJECT_NAME@",
+	"version": "@PROJECT_VERSION@",
+	"description": "@PROJECT_DESCRIPTION@",
 	"icons": {
 		"48": "icons/icon-48.png",
 		"128": "icons/icon-128.png"
 	},
-	"___update_url": "http://helianthus-annuus.googlecode.com/svn/other/annuus.crx.xml",
 
 	"permissions": ["tabs"],
 
 	"background_page": "background.html",
 	"page_action": {
 		"default_icon": "icons/status-on.png",
-		"default_title": "Helianthus.annuus"
+		"default_title": "@PROJECT_NAME@"
 	},
 	"content_scripts": [
 		{
-			"matches": ["http://*.hkgolden.com/*"],
+			"matches": ["@PROJECT_TARGET_MATCH@"],
 			"js": ["inject.js"],
 			"run_at": "document_start",
 			"all_frames": true

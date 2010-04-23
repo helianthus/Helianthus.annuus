@@ -16,7 +16,7 @@ blog = 2048,
 message = 4096,
 newblog = 8192;
 
-an.get('PAGES', {
+bolanderi.get('PAGES', {
 	'-1': { action: null, title: '所有頁' },
 	'-2': { action: null, title: '所有正常頁' },
 	1: { action: 'error', title: '所有錯誤頁' },
@@ -35,5 +35,5 @@ an.get('PAGES', {
 	4096: { action: 'newblog', title: '新增文章頁' }
 });
 
-an.get('RUN_AT', { document_start: 1, document_end: 4, window_loaded: 7 });
-an.get('PRIORITY', { high: 0, normal: 1, low: 2 });
+bolanderi.get('RUN_AT', { document_start: 1, document_end: 4, window_loaded: 7 });
+bolanderi.get('PRIORITY', { high: 0, normal: 1, low: 2 });

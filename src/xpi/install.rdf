@@ -4,13 +4,13 @@
   <Description about="urn:mozilla:install-manifest">
     <em:id>Helianthus.annuus@project.helianthus</em:id>
     <em:type>2</em:type>
-    <em:iconURL>chrome://annuus/skin/icon.png</em:iconURL>
+    <em:iconURL>chrome://@PROJECT_NAME_SHORT@/skin/icon.png</em:iconURL>
 
     <em:name>Helianthus.annuus</em:name>
-    <em:version>${AN_VERSION}</em:version>
-    <em:creator>Project.Helianthus</em:creator>
-    <em:description>:o)</em:description>
-    <em:homepageURL>http://code.google.com/p/helianthus-annuus/</em:homepageURL>
+    <em:version>@PROJECT_VERSION@</em:version>
+    <em:creator>@PROJECT_AUTHOR@</em:creator>
+    <em:description>@PROJECT_DESCRIPTION@</em:description>
+    <em:homepageURL>@PROJECT_URL@</em:homepageURL>
 
     <em:targetApplication>
       <Description>

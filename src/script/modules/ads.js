@@ -5,14 +5,14 @@ bolanderi.addModules(function(){ return {
 	title: '隱藏廣告',
 	pages: { on: [all] },
 	tasks: {
-		1: {
+		'07890003': {
 			run_at: 'document_start',
 			css: '\
 				#HKGTopAd \
 					{ display: none; } \
 			'
 		},
-		2: {
+		'62597db3': {
 			page: index | topics | search | tags | view,
 			run_at: 'document_start',
 			css: '\
@@ -23,34 +23,23 @@ bolanderi.addModules(function(){ return {
 					{ display: none; } \
 			'
 		},
-		3: {
+		'e295c5e0': {
 			page: topics | search | tags | view,
 			run_at: 'document_start',
 			css: '\
-				#ctl00_ContentPlaceHolder1_MiddleAdSpace1 > div > div[style*="right"] /* text ad */ \
+				#ctl00_ContentPlaceHolder1_MiddleAdSpace1 > div > div[style="float: right;"] /* text ad */ \
 					{ display: none; } \
 			'
 		},
-		4: {
-			page: search | tags | view,
+		'f760e485': {
+			page: topics | search | tags,
 			run_at: 'document_start',
 			css: '\
-				.ContentPanel > div[id^="ctl00_ContentPlaceHolder1"] > script:first-child + div { width: 100% !important; } \
-				\
-				.ContentPanel > div[id^="ctl00_ContentPlaceHolder1"] > script:first-child + div + div \
+				td[colspan][height="52"] \
 					{ display: none; } \
 			'
 		},
-		5: {
-			page: index,
-			run_at: 'document_start',
-			css: '\
-				#ctl00_ContentPlaceHolder1_MiddleAdSpace1, /* text ad */ \
-				.ContentPanel > div > div:first-child /* flash ad */ \
-					{ display: none; } \
-			'
-		},
-		6: {
+		'776549b6': {
 			page: topics,
 			run_at: 'document_start',
 			css: '\
@@ -65,31 +54,29 @@ bolanderi.addModules(function(){ return {
 					{ display: none; } \
 			'
 		},
-		6.1: {
+		'defe6bdf': {
 			page: topics,
 			requires: {
 				truthy: $.browser.msie && $.browser.version <= 8
 			},
 			run_at: 'document_end',
 			frequency: 'always',
-			css: '\
-				td[colspan][height="52"] \
-					{ display: none; } \
-			',
 			js: function(job)
 			{
 				job.context().find('td[colspan][height=52]').up('tr').hide();
 			}
 		},
-		7: {
-			page: search | tags,
+		'10053965': {
+			page: search | tags | view,
 			run_at: 'document_start',
 			css: '\
-				td[colspan][height="52"] \
+				.ContentPanel > div[id^="ctl00_ContentPlaceHolder1"] > script:first-child + div { width: 100% !important; } \
+				\
+				.ContentPanel > div[id^="ctl00_ContentPlaceHolder1"] > script:first-child + div + div \
 					{ display: none; } \
 			'
 		},
-		7.1: {
+		'18f3515f': {
 			page: search | tags,
 			run_at: 'document_end',
 			frequency: 'always',
@@ -98,7 +85,7 @@ bolanderi.addModules(function(){ return {
 				job.context().find('td[colspan][height=52]').up('tr').hide();
 			}
 		},
-		8: {
+		'9b8cfb9a': {
 			page: view,
 			run_at: 'document_start',
 			css: '\
@@ -109,7 +96,16 @@ bolanderi.addModules(function(){ return {
 					{ display: none; } \
 			'
 		},
-		9: {
+		'2c9dd57a': {
+			page: index,
+			run_at: 'document_start',
+			css: '\
+				#ctl00_ContentPlaceHolder1_MiddleAdSpace1, /* text ad */ \
+				.ContentPanel > div > div:first-child /* flash ad */ \
+					{ display: none; } \
+			'
+		},
+		'86d09787': {
 			page: profilepage,
 			run_at: 'document_start',
 			/*

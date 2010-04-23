@@ -133,12 +133,12 @@ var inconsistencies = (function()
 			return ret;
 		}],
 		// FF
-		selectorLowerCased: cssTEXT.indexOf('color') !== -1 && [/[;\"][^:\]]+/g, function($0)
+		selectorLowerCased: cssTEXT.indexOf('color') !== -1 && [/[;\"][^:\]]+:/g, function($0)
 		{
 			return $0.toLowerCase();
 		}],
 		// IE
-		selectorUpperCased: cssTEXT.indexOf('COLOR') !== -1 && [/[;\"][^:\]]+/g, function($0)
+		selectorUpperCased: cssTEXT.indexOf('COLOR') !== -1 && [/[;\"][^:\]]+:/g, function($0)
 		{
 			return $0.toUpperCase();
 		}],
@@ -148,7 +148,7 @@ var inconsistencies = (function()
 			return $0.toLowerCase();
 		}],
 		// IE
-		endSemiColonRemoved: csstext.slice(-1) !== ';' && [/;\"/, ']']
+		endSemiColonRemoved: csstext.slice(-1) !== ';' && [/;\"/, '"']
 	};
 })();
 

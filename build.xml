@@ -1,4 +1,4 @@
-﻿<project name="Helianthus.bolanderi" default="beta">
+<project name="Helianthus.bolanderi" default="beta">
 	<property name="PROJECT_NAME" value="Helianthus.annuus" />
 	<property name="PROJECT_NAME_SHORT" value="annuus" />
 	<property name="PROJECT_AUTHOR" value="project.helianthus" />
@@ -22,6 +22,19 @@
 	<property name="tools_dir" value="tools" />
 	<property name="key_file" value="key.pem" />
 	<property name="dist_url" value="http://helianthus-annuus.googlecode.com/svn/dist" />
+
+	<patternset id="text_files">
+		<include name="**/*.action" />
+		<include name="**/*.css" />
+		<include name="**/*.filter" />
+		<include name="**/*.html" />
+		<include name="**/*.js" />
+		<include name="**/*.json" />
+		<include name="**/*.manifest" />
+		<include name="**/*.rdf" />
+		<include name="**/*.xml" />
+		<include name="**/*.xul" />
+	</patternset>
 
 	<!--** test **-->
 	<target name="test" depends="_build,_build_cont" />
@@ -71,12 +84,16 @@
 	<tempfile property="temp_file" destdir="${build_dir}" suffix=".js" deleteonexit="true" />
 
 	<target name="_build" depends="_beta">
+		<!-- fix eol -->
+		<fixcrlf srcdir="src" eol="unix" encoding="utf-8">
+			<patternset refid="text_files" />
+		</fixcrlf>
+
 		<propertyfile file="build.ini">
 			<entry key="MAIN_VERSION" default="0.0" />
 			<entry key="RELEASE_VERSION" default="0" />
 			<entry key="BUILD_NUMBER" default="0" type="int" pattern="####" operation="+" />
 		</propertyfile>
-
 		<property file="build.ini" />
 
 		<property name="PROJECT_VERSION" value="${MAIN_VERSION}.${RELEASE_VERSION}.${BUILD_NUMBER}" />
@@ -85,7 +102,11 @@
 		<mkdir dir="${build_dir}" />
 
 		<!-- CONTENT -->
-		<concat destfile="${content_file}" fixlastline="true" encoding="UTF-8">
+		<concat destfile="${content_file}" encoding="utf-8">
+			<filterchain>
+				<escapeunicode />
+			</filterchain>
+
 			<filelist dir="src/script">
 				<file name="opera/opera9.js" />
 				<file name="opera/rubbish.js" />
@@ -99,11 +120,7 @@
 		</concat>
 
 		<!-- escaping has to be done here to avoid text being splitted -->
-		<loadfile property="CONTENT" srcfile="${content_file}" encoding="UTF-8">
-			<filterchain>
-				<escapeunicode />
-			</filterchain>
-		</loadfile>
+		<loadfile property="CONTENT" srcfile="${content_file}" />
 
 		<!-- js -->
 		<copy file="src/script/bolanderi.js" tofile="${build_dir}/${PROJECT_NAME_SHORT}.js">
@@ -187,15 +204,7 @@
 
 		<!-- replace tokens -->
 		<replace dir="${build_dir}">
-			<include name="**/*.action" />
-			<include name="**/*.css" />
-			<include name="**/*.filter" />
-			<include name="**/*.js" />
-			<include name="**/*.json" />
-			<include name="**/*.manifest" />
-			<include name="**/*.rdf" />
-			<include name="**/*.xml" />
-			<include name="**/*.xul" />
+			<patternset refid="text_files" />
 
 			<replacefilter token="@PROJECT_AUTHOR@" value="${PROJECT_AUTHOR}" />
 			<replacefilter token="@PROJECT_BUILD_TIME@" value="${PROJECT_BUILD_TIME}" />

@@ -158,9 +158,9 @@ var vendorPrefixes = {};
 {
 	var testStyle = document.createElement('div').style;
 
-	$.each(['border-radius', 'box-shadow'], function(i, property)
+	$.each(['border-radius', 'box-shadow', 'text-overflow'], function(i, property)
 	{
-		var camel = property.replace(/-\w/, function($0)
+		var camel = property.replace(/-\w/g, function($0)
 		{
 			return $0[1].toUpperCase();
 		})

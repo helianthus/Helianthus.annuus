@@ -1,5 +1,5 @@
 /*
- * Helianthus.bolanderi v0.0.1
+ * Helianthus.bolanderi v0.1.0
  * http://github.com/helianthus/Helianthus.bolanderi
  *
  * Copyright (c) 2010 project.helianthus

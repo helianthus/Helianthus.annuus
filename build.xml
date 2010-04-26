@@ -10,17 +10,16 @@
 	<property name="PROJECT_TARGET_REGEX" value="^http:\/\/forum\d+\.hkgolden\.com\/(?:$|(?:[^\/]+\/)*[a-z]+?\.(?:aspx|html))" />
 	<property name="PROJECT_LICENSE" value="Licensed under the GPL license." />
 	<property name="PROJECT_LICENSE_URL" value="http://www.gnu.org/licenses/gpl.html" />
-
 	<tstamp>
-		<format property="PROJECT_BUILD_TIME" pattern="yyyy-MM-dd HH:mm:ss" />
-	</tstamp><tstamp>
 		<format property="PROJECT_BUILD_YEAR" pattern="yyyy" />
+		<format property="PROJECT_BUILD_TIME" pattern="yyyy-MM-dd HH:mm:ss" />
 	</tstamp>
 
 	<property name="dist_parent_dir" value="dist" />
 	<property name="build_dir" value="build" />
 	<property name="tools_dir" value="tools" />
 	<property name="key_file" value="key.pem" />
+	<property name="test_url" value="http://127.0.0.1/annuus" />
 	<property name="dist_url" value="http://helianthus-annuus.googlecode.com/svn/dist" />
 
 	<patternset id="text_files">
@@ -83,7 +82,7 @@
 	<tempfile property="content_file" destdir="${build_dir}" suffix=".js" deleteonexit="true" />
 	<tempfile property="temp_file" destdir="${build_dir}" suffix=".js" deleteonexit="true" />
 
-	<target name="_build" depends="_beta">
+	<target name="_build">
 		<!-- fix eol -->
 		<fixcrlf srcdir="src" eol="unix" encoding="utf-8">
 			<patternset refid="text_files" />
@@ -97,6 +96,7 @@
 		<property file="build.ini" />
 
 		<property name="PROJECT_VERSION" value="${MAIN_VERSION}.${RELEASE_VERSION}.${BUILD_NUMBER}" />
+		<property name="PROJECT_FILE_URL" value="${test_url}/${PROJECT_NAME_SHORT}.js" />
 
 		<delete dir="${build_dir}" />
 		<mkdir dir="${build_dir}" />

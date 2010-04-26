@@ -39,7 +39,7 @@ function execGroups(eventType)
 	}
 }
 
-$.fn.bolanderi = function()
+$.fn.work = function()
 {
 	bolanderi.__context = $(this[0]);
 

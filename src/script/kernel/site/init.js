@@ -13,7 +13,7 @@ function init()
 	bolanderi.__storage.clear();
 
 	$(bolanderi).trigger('storageready');
-	$(document).bolanderi();
+	$(document).work();
 }
 
 $.timeout('checkStorage', function()

@@ -34,6 +34,3 @@ bolanderi.get('PAGES', {
 	4096: { action: 'message', title: '系統信息頁' },
 	4096: { action: 'newblog', title: '新增文章頁' }
 });
-
-bolanderi.get('RUN_AT', { document_start: 1, document_end: 4, window_loaded: 7 });
-bolanderi.get('PRIORITY', { high: 0, normal: 1, low: 2 });

@@ -92,9 +92,9 @@ bolanderi.__storage = $.extend(function(options)
 
 	if(options.noCache || !cache[options.savedOrDefault]) {
 		cache[options.savedOrDefault] = options.savedOrDefault !== 'default' && storage.get() && JSON.parse(storage.get()) || {
-			curProfile: '預設',
+			curProfile: 'default',
 			profiles: {
-				'預設': {}
+				'default': {}
 			}
 		};
 

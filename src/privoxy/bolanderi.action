@@ -1,16 +1,16 @@
 # Others // ForceMarkup got to be done first
 { +filter{annuus.ForceMarkup} }
-forum*.hkgolden.com/(?:$|[a-z]+?\.(?:aspx|html))
+@PROJECT_TARGET_PRIVOXY@
 { +filter{annuus.ForceStrictMode} }
-forum*.hkgolden.com/(?:$|[a-z]+?\.(?:aspx|html))
+@PROJECT_TARGET_PRIVOXY@
 
 # Scripts
 { +filter{@PROJECT_NAME_SHORT@.js} }
-forum*.hkgolden.com/(?:$|[a-z]+?\.(?:aspx|html))
+@PROJECT_TARGET_PRIVOXY@
 
 # IE8 Re-enabler
 { +filter{annuus.ForceIE8} }
-forum*.hkgolden.com/(?:$|[a-z]+?\.(?:aspx|html))
+@PROJECT_TARGET_PRIVOXY@
 { +filter{annuus.FixInnerForm} }
 forum*.hkgolden.com/(?:$|topic|search|tags)
 { +filter{annuus.FixProfileLayout} }
@@ -20,8 +20,8 @@ forum*.hkgolden.com/golden_apps
 
 # Rubbish Remover
 { +filter{annuus.EndScripts} }
-forum*.hkgolden.com/(?:$|[a-z]+?\.(?:aspx|html))
+@PROJECT_TARGET_PRIVOXY@
 { +filter{annuus.DynScripts} }
-forum*.hkgolden.com/(?:$|[a-z]+?\.(?:aspx|html))
+@PROJECT_TARGET_PRIVOXY@
 { +filter{annuus.BookmarkBar} }
-### forum*.hkgolden.com/(?:$|[a-z]+?\.(?:aspx|html))
+### @PROJECT_TARGET_PRIVOXY@

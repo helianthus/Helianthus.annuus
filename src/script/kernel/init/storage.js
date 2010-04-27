@@ -39,13 +39,13 @@ $.each(bolanderi.get('MODULES'), function(moduleId, module)
 	}
 
 	if(!module.title || !module.pages) {
-		$.err('module "{0}" is missing a "title" or "pages" property.', moduleId);
+		$.err('missing a "title" or "pages" property. [{0}]', moduleId);
 	}
 
 	module.id = moduleId;
 	defaultData.privateData[moduleId] = {};
 
-	$.digEach(module.pages, null, function(status, i, pageCode)
+	$.digEach(module.pages, null, null, function(status, i, pageCode)
 	{
 		defaultData.privateData[moduleId][pageCode] = { status: { disabled: -1, off: 0, on: 1, comp: 2 }[status] };
 	});
@@ -62,7 +62,7 @@ $.each(bolanderi.get('MODULES'), function(moduleId, module)
 			}
 			else {
 				if(dataSet.access === 'public' && $.dig(defaultData.publicData, dataType, dataId)) {
-					$.err('public {0} id "{0}" already exists.', dataType, dataId);
+					$.err('public {0} id "{0}" already exists. [{0}]', dataType, dataId, module.title);
 				}
 
 				$.make(dataSet.access === 'protected' ? defaultData.privateData[moduleId] : defaultData.publicData, dataType)[dataId] = dataSet.defaultValue;
@@ -73,13 +73,12 @@ $.each(bolanderi.get('MODULES'), function(moduleId, module)
 	$.each(module.tasks || {}, function(taskId, task)
 	{
 		task.id = taskId;
-		var taskData = $.make(defaultData.privateData[moduleId], 'tasks')[taskId] = {};
 
-		if(task.api) {
-			taskData.api = task.api[0];
-		}
-		if(task.default_hotkey) {
-			taskData.hotkey = task.default_hotkey;
+		if((task.type || 'job') === 'job') {
+			$.make(defaultData.privateData[moduleId], 'tasks')[taskId] = {
+				ui: task.ui,
+				hotkey: task.default_hotkey
+			};
 		}
 	});
 });

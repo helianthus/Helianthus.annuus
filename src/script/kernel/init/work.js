@@ -11,25 +11,18 @@ function execGroups(eventType)
 		for(var i=0; i<group.length; ++i) {
 			var job = group[i];
 
-			if((job.__task.frequency || 'once') === 'once') {
+			if((job.frequency || 'once') === 'once') {
 				group.splice(i--, 1);
 			}
 
 			$(bolanderi).trigger('jobstart', [job, groupNo]);
 
-			if(job.__task.css) {
-				$.rules(job.__task.css);
+			try {
+				job.css && $.rules(job.css, job);
+				job.js && $[job.__ui].call(job, job);
 			}
-
-			if(job.__task.js) {
-				$.notify('debug', 'executing {0}', job.__task.id);
-
-				try {
-					bolanderi.__api[job.__api].js(job);
-				}
-				catch(e) {
-					$.debug('Error occurred: ' + job.__module.title, 'error:', e, 'job:', job, 'context:', job.context());
-				}
+			catch(e) {
+				$.debug('Error occurred: ' + job.module.title, 'error:', e, 'job:', job, 'context:', job.context());
 			}
 
 			$(bolanderi).trigger('jobend', [job, groupNo]);

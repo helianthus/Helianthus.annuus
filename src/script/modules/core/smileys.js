@@ -1,12 +1,12 @@
-bolanderi.addModules(function(){ return {
+annuus.addModules(function(){ return {
 
 'c183b764-e03d-426b-a2be-64f3b706787b':
 {
 	title: 'Smiley API',
 	pages: { comp: [all] },
-	api: [
-		{
-			type: 'generic',
+	tasks: {
+		'3f6e1cd6': {
+			type: 'utility',
 			js: function()
 			{
 				var smileys = [
@@ -309,7 +309,7 @@ bolanderi.addModules(function(){ return {
 				};
 			}
 		}
-	]
+	}
 }
 
 }; });

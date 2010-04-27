@@ -1,12 +1,12 @@
-bolanderi.addModules(function(){ return {
+annuus.addModules(function(){ return {
 
 '000b79c2-cbe6-4ce3-ab43-9515ea428078':
 {
 	title: 'Resource API',
 	pages: { comp: [all] },
-	api: [
-		{
-			type: 'generic',
+	tasks: {
+		'e823fa56': {
+			type: 'utility',
 			js: function()
 			{
 				var resources = {
@@ -39,7 +39,7 @@ bolanderi.addModules(function(){ return {
 				};
 			}
 		}
-	]
+	}
 }
 
 }; });

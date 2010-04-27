@@ -1,12 +1,12 @@
-bolanderi.addModules(function(){ return {
+annuus.addModules(function(){ return {
 
 '2de3e000-9db8-40cf-9fb8-598474ce4df8':
 {
 	title: 'Credits API',
 	pages: { comp: [all] },
-	api: [
-		{
-			type: 'generic',
+	tasks: {
+		'99da408d': {
+			type: 'utility',
 			js: function()
 			{
 				var credits = [
@@ -103,7 +103,7 @@ bolanderi.addModules(function(){ return {
 				};
 			}
 		}
-	]
+	}
 }
 
 }; });

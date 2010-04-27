@@ -1,12 +1,12 @@
-bolanderi.addModules(function(){ return {
+annuus.addModules(function(){ return {
 
 '0b721576-57a8-46b0-b0e5-6fec32e4aafa':
 {
 	title: 'Simple API',
 	pages: { comp: [all] },
-	api: [
-		{
-			type: 'generic',
+	tasks: {
+		'4ea1dd56': {
+			type: 'utility',
 			js: function()
 			{
 				$.isLoggedIn = function()
@@ -15,9 +15,10 @@ bolanderi.addModules(function(){ return {
 				};
 			}
 		},
-		{
+
+		'54b6b897': {
 			page: view,
-			type: 'generic',
+			type: 'utility',
 			js: function() // need fix
 			{
 				var info = { readyState: 'uninitialized', callbacks: [] };
@@ -53,9 +54,10 @@ bolanderi.addModules(function(){ return {
 				};
 			}
 		},
-		{
+
+		'2181d0a6': {
 			page: view,
-			type: 'generic',
+			type: 'utility',
 			js: function()
 			{
 				$.fn.isReplyContent = function()
@@ -64,7 +66,7 @@ bolanderi.addModules(function(){ return {
 				};
 			}
 		}
-	]
+	}
 }
 
 }; });

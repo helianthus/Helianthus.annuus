@@ -1,12 +1,12 @@
-bolanderi.addModules(function(){ return {
+annuus.addModules(function(){ return {
 
 '0f7cdd14-1e7a-4481-81d4-24709102f887':
 {
 	title: 'Page Elements API',
 	pages: { comp: [all] },
-	api: [
-		{
-			type: 'generic',
+	tasks: {
+		'29952b6e': {
+			type: 'utility',
 			page: topics | search | tags | profilepage,
 			js: function()
 			{
@@ -28,8 +28,9 @@ bolanderi.addModules(function(){ return {
 				});
 			}
 		},
-		{
-			type: 'generic',
+
+		'2d8c04f8': {
+			type: 'utility',
 			page: view,
 			js: function()
 			{
@@ -43,7 +44,7 @@ bolanderi.addModules(function(){ return {
 				};
 			}
 		}
-	]
+	}
 }
 
 }; });

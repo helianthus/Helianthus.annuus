@@ -13,8 +13,8 @@ $.each(['options', 'database'], function(i, dataType)
 		var profile = bolanderi.__storage({ savedOrDefault: typeof value === 'undefined' ? 'both' : 'saved' });
 		var paths = {
 			'public': [profile, 'publicData', dataType],
-			'protected': [profile, 'privateData', this.__module.id, dataType],
-			'private': [profile, 'privateData', this.__module.id, this.__pageCode, dataType]
+			'protected': [profile, 'privateData', this.module.id, dataType],
+			'private': [profile, 'privateData', this.module.id, this.module.__pageCode, dataType]
 		};
 		var data;
 
@@ -27,7 +27,7 @@ $.each(['options', 'database'], function(i, dataType)
 			return typeof id === 'undefined' ? data : data[id];
 		}
 
-		var dataDef = $.dig(this.__module, dataType, id);
+		var dataDef = $.dig(this.module, dataType, id);
 
 		if(!dataDef && !(id in profile.publicData[dataType])) {
 			$.notify('warn', 'public {0} with id "{1}" does not exist.', dataType, id);
@@ -54,7 +54,7 @@ Job.prototype.context = function()
 
 Job.prototype.data = function(name, value)
 {
-	var data = this.__module.data = this.__module.data || {};
+	var data = this.module.data = this.module.data || {};
 
 	if(typeof value === 'undefined') {
 		data[name] = value;
@@ -65,50 +65,53 @@ Job.prototype.data = function(name, value)
 	}
 };
 
-$(bolanderi).one('storageready', function()
+$(bolanderi).one('kernelready', function()
 {
 	bolanderi.__jobGroups = {};
 	$.each($.range(1, $.len(bolanderi.get('RUN_AT')) * $.len(bolanderi.get('PRIORITY'))), function(i, groupNo)
 	{
 		bolanderi.__jobGroups[groupNo] = [];
 	});
+});
 
-	bolanderi.__api = {
-		auto: {
-			title: 'Auto',
-			js: function(job)
-			{
-				job.__task.js(job);
-			}
-		}
-	};
-
-	var pageCode = $(document).pageCode();
-	var profile = bolanderi.__storage();
-	var passStatus = function(module)
+function wrapUI(task)
+{
+	return function(options)
 	{
-		var passPageCode = null;
-		$.digEach(module && module.pages || {}, null, function(status, i, modulePageCode)
+		$.digEach(task, ['setup', 'add'], function(type, actions)
 		{
-			if(modulePageCode & pageCode) {
-				if(status !== 'disabled' && profile.privateData[module.id][modulePageCode].status >= 1) {
-					passPageCode = modulePageCode;
-				}
-				return false;
+			if(type === 'setup' && task.__created) {
+				return;
 			}
+
+			task.__created = true;
+			actions.css && $.rules(actions.css);
+			actions.js && actions.js(options);
 		});
-		return passPageCode;
 	};
-	var passRequirements = function(target)
+}
+
+$.auto = wrapUI({
+	add: {
+		js: function(options)
+		{
+			options.js(options);
+		}
+	}
+});
+
+$(bolanderi).one('storageready', function()
+{
+	var docPageCode = $(document).pageCode();
+	var profile = bolanderi.__storage();
+	var passBasicRequirements = function(target)
 	{
 		var pass = true;
-		$.digEach((target instanceof Job ? target.__module.requires : target.requires) || {}, null, function(type, i, requirement)
+		$.digEach(target.requires, ['truthy', 'options'], null, function(type, i, requirement)
 		{
 			if(type === 'truthy' && !requirement
-			|| type === 'modules' && !passStatus(bolanderi.get('MODULES')[requirement])
-			|| type === 'options' && (target instanceof Job ? target.options(requirement.id) : $.dig(profile.publicData, 'options', requirement.id)) !== requirement.value
+			|| type === 'options' && Job.prototype.options.call({ module: target.module || target }, requirement.id) !== requirement.value
 			) {
-				$.notify('log', 'requirement "{0}" of {1} failed.', type, target.title || target.__task.id);
 				pass = false;
 				return false;
 			}
@@ -116,51 +119,103 @@ $(bolanderi).one('storageready', function()
 		return pass;
 	};
 
+	var apiTasks = [];
+	var jobsTasks = [];
+
 	$.each(bolanderi.get('MODULES'), function(moduleId, module)
 	{
-		$.notify('debug', 'processing module {0}', module.title);
-		var targetPageCode;
+		$.digEach(module.pages, ['comp', 'on', 'off'], null, function(status, i, pageCode)
+		{
+			if(pageCode & docPageCode) {
+				module.__pageCode = pageCode;
 
-		if(!passRequirements(module) || !(targetPageCode = passStatus(module))) {
+				if(profile.privateData[module.id][pageCode].status >= 1 && passBasicRequirements(module)) {
+					$.each(module.tasks || {}, function(j, task)
+					{
+						task.module = module;
+
+						if((task.page || -1) & docPageCode && passBasicRequirements(task)) {
+							if(task.type in { ui:1, utility:1 }) {
+								apiTasks.push(task);
+							}
+							else if((task.type || 'job') === 'job') {
+								jobsTasks.push(task);
+							}
+							else {
+								$.notify('warn', 'unknown task type "{0}" encountered. [{1}, {2}]', api.type, module.title, task.id);
+							}
+						}
+					});
+				}
+
+				return false;
+			}
+		});
+	});
+
+	var passApiRequirements = function(task)
+	{
+		var requirements = [].concat($.dig(task.module.requires, 'api'), $.dig(task.requires, 'api'));
+		for(var i=0; i<requirements.length; ++i) {
+			if(requirements[i] && !$.dig.apply(null, [$].concat(requirements[i].split('.')))) {
+				return false;
+			}
+		}
+		return true;
+	};
+
+	var passedUI = ['auto'];
+
+	do {
+		var oldLength = apiTasks.length;
+
+		for(var i=0; i<apiTasks.length; ++i)
+		{
+			var task = apiTasks[i];
+
+			if(!passApiRequirements(task)) {
+				continue;
+			}
+
+			if(task.type === 'ui') {
+				passedUI.push(task.name);
+				$[task.name] = wrapUI(task);
+			}
+			else if(task.type === 'utility') {
+				if(task.css) {
+					$.notify('warn', '"css" property for task type "utility" has no effect. [{0}, {1}]', task.module.title, task.id);
+				}
+				task.js();
+			}
+
+			apiTasks.splice(i--, 1);
+		}
+	}
+	while(oldLength !== apiTasks.length);
+
+	$.each(jobsTasks, function(i, task)
+	{
+		if(!passApiRequirements(task)) {
 			return;
 		}
 
-		$.each(module.api || {}, function(i, api)
+		var taskData = profile.privateData[task.module.id].tasks[task.id];
+		var ui;
+
+		$.each(taskData.ui || ['auto'], function(i, name)
 		{
-			if((api.page || -1) & pageCode) {
-				if(api.type === 'interface') {
-					bolanderi.__api[api.name] = api;
-				}
-				else if(api.type === 'generic') {
-					api.js();
-				}
-				else {
-					$.notify('warn', 'unknown api type {0} is encountered in module {1}.', api.type, module.title);
-				}
+			if($.inArray(name, passedUI) !== -1) {
+				task.__ui = name;
+				return false;
 			}
 		});
 
-		$.each(module.tasks || {}, function(taskId, task)
-		{
-			$.notify('debug', 'processing task {0} of module {1}', taskId, module.title);
+		if(!task.__ui) {
+			$.notify('log', 'no registered ui found, task dropped. [{0}, {1}]', task.module.title, task.id);
+			return;
+		}
 
-			if((task.page || -1) & pageCode) {
-				var taskData = profile.privateData[moduleId].tasks[taskId];
-				var api = taskData.api || 'auto';
-
-				if(!(api in bolanderi.__api)) {
-					$.notify('log', 'api {0} is not registered, task "{1}" of module {2} dropped.', api, taskId, module.title);
-					return;
-				}
-
-				var job = new Job({ __pageCode: targetPageCode, __module: module, __task: task, __api: api, __hotkey: taskData.hotkey });
-
-				if(passRequirements(job) && (task.css || task.js)) {
-					$.notify('debug', 'adding job {0}', taskId);
-					bolanderi.__jobGroups[bolanderi.get('RUN_AT')[task.run_at || 'document_end'] + bolanderi.get('PRIORITY')[task.priority || 'normal']].push(job);
-				}
-			}
-		});
+		bolanderi.__jobGroups[bolanderi.get('RUN_AT')[task.run_at || 'document_end'] + bolanderi.get('PRIORITY')[task.priority || 'normal']].push(new Job(task));
 	});
 });
 

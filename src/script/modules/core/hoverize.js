@@ -1,12 +1,12 @@
-bolanderi.addModules(function(){ return {
+annuus.addModules(function(){ return {
 
 '0f7cdd14-1e7a-4481-81d4-24709102f887':
 {
 	title: 'Hoverize API',
 	pages: { comp: [all] },
-	api: [
-		{
-			type: 'generic',
+	tasks: {
+		'8c43f47a': {
+			type: 'utility',
 			page: view,
 			js: function()
 			{
@@ -108,7 +108,7 @@ bolanderi.addModules(function(){ return {
 				};
 			}
 		}
-	]
+	}
 }
 
 }; });

@@ -105,6 +105,10 @@
 		<concat destfile="${content_file}" encoding="utf-8">
 			<filterchain>
 				<escapeunicode />
+				<tokenfilter>
+					<filetokenizer />
+					<replaceregex pattern=" *\\\n\t+" replace="" flags="g" />
+				</tokenfilter>
 			</filterchain>
 
 			<filelist dir="src/script">

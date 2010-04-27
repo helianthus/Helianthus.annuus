@@ -1,13 +1,11 @@
 (function(undefined)
 {
 
-if (window["@PROJECT_NAME@"]) {
+if (window['@PROJECT_NAME_SHORT@']) {
 	return alert('@PROJECT_NAME@ has already loaded!');
 }
 
-window["@PROJECT_NAME@"] = true;
-
-var bolanderi = {
+var bolanderi = window['@PROJECT_NAME_SHORT@'] = {
 	get: (function()
 	{
 		var data = {};

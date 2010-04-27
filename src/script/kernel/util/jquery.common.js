@@ -111,30 +111,40 @@ $.extend({
 	digEach: function(target)
 	{
 		var
-		args = [null].concat($.slice(arguments, 1, -1)),
+		args = $.slice(arguments, 1, -1),
 		len = args.length,
-		callback = arguments[len];
+		callback = arguments[len + 1];
 
 		(function dig(target, argIndex, ids)
 		{
+			if(!target) {
+				return;
+			}
+
 			if(argIndex === len) {
 				return callback.apply(target, ids.concat(target));
 			}
 
-			var digId = args[argIndex++];
+			var digIds = args[argIndex++];
+			var ret;
 
-			if(digId === null) {
-				var ret;
+			if(digIds === null) {
 				$.each(target, function(id, prop)
 				{
 					return (ret = dig(prop, argIndex, ids.concat(id)));
 				});
-				return ret;
 			}
 			else {
-				return dig(target[digId], argIndex, ids);
+				$.each([].concat(digIds), function(i, id)
+				{
+					return (ret = dig(target[id], argIndex, ids.concat(id)));
+				});
 			}
+
+			return ret;
 		})(target, 0, []);
+
+		return target;
 	},
 
 	isNumber: function(target)

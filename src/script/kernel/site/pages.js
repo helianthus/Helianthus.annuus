@@ -46,7 +46,7 @@ $.fn.extend({
 			this.__pageName = 'message';
 		}
 		else {
-			var name = /\w+/.exec($.uriSet(root.find('#aspnetForm').attr('name') || location.href).filename);
+			var name = /\w+/.exec($.uriSet(root.find('#aspnetForm').attr('action') || location.href).filename);
 			this.__pageName = name ? name[0].toLowerCase() : 'default';
 		}
 

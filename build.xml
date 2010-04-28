@@ -96,6 +96,7 @@
 				<tokenfilter>
 					<filetokenizer />
 					<replaceregex pattern=" *\\\n\t+" replace="\\\\n" flags="g" />
+					<replaceregex pattern="(/\*@cc_on@.+?@end@[^)]+)" replace="eval('\1')" flags="gs" />
 				</tokenfilter>
 			</filterchain>
 

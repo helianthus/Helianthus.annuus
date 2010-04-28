@@ -9,4 +9,4 @@ $(document).delegate('a', 'click', function(event)
 	}
 });
 
-$('<div />', { id: 'an' }).prependTo(document.documentElement);
+$('<div />', { id: 'an' }).appendTo(document.documentElement);

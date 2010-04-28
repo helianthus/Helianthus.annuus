@@ -1,28 +1,22 @@
 <project name="Helianthus.bolanderi" default="beta">
-	<property name="PROJECT_NAME" value="Helianthus.annuus" />
-	<property name="PROJECT_NAME_SHORT" value="annuus" />
-	<property name="PROJECT_AUTHOR" value="project.helianthus" />
-	<property name="PROJECT_DESCRIPTION" value="Turn HKGolden Forum into a freaking awesome web app!" />
-	<property name="PROJECT_URL" value="http://github.com/helianthus/Helianthus.annuus" />
-	<property name="PROJECT_TARGET_MATCH" value="http://*.hkgolden.com/*" />
-	<property name="PROJECT_TARGET_INCLUDE" value="http://forum*.hkgolden.com/*" />
-	<property name="PROJECT_TARGET_PRIVOXY" value="forum*.hkgolden.com/(?:$|(?:[^\/]+\/)*[a-z]+?\.(?:aspx|html))" />
-	<property name="PROJECT_TARGET_REGEX" value="^http:\/\/forum\d+\.hkgolden\.com\/(?:$|(?:[^\/]+\/)*[a-z]+?\.(?:aspx|html))" />
-	<property name="PROJECT_LICENSE" value="Licensed under the GPL license." />
-	<property name="PROJECT_LICENSE_URL" value="http://www.gnu.org/licenses/gpl.html" />
+	<property file="build.properties" />
+
+	<propertyfile file="version.properties">
+		<entry key="version.main" default="0.0" />
+		<entry key="version.release" default="0" />
+		<entry key="version.build" default="0" type="int" pattern="####" operation="+" />
+		<entry key="version.stable" default="0.0.0.0" />
+	</propertyfile>
+	<property file="version.properties" />
+
+	<property name="PROJECT_VERSION" value="${version.main}.${version.release}.${version.build}" />
+
 	<tstamp>
 		<format property="PROJECT_BUILD_YEAR" pattern="yyyy" />
 		<format property="PROJECT_BUILD_TIME" pattern="yyyy-MM-dd HH:mm:ss" />
 	</tstamp>
 
-	<property name="dist_parent_dir" value="dist" />
-	<property name="build_dir" value="build" />
-	<property name="tools_dir" value="tools" />
-	<property name="key_file" value="key.pem" />
-	<property name="test_url" value="http://127.0.0.1/annuus" />
-	<property name="dist_url" value="http://helianthus-annuus.googlecode.com/svn/dist" />
-
-	<patternset id="text_files">
+	<patternset id="pattern.text">
 		<include name="**/*.action" />
 		<include name="**/*.css" />
 		<include name="**/*.filter" />
@@ -42,67 +36,40 @@
 	<target name="build" depends="_build,_minify,_build_cont" />
 
 	<!--** beta **-->
-	<target name="beta" depends="_beta, build, _dist">
-		<copy file="src/version.js" todir="${dist_parent_dir}">
-			<filterset>
-				<filter token="PROJECT_VERSION_BETA" value="${PROJECT_VERSION}" />
-				<filter token="PROJECT_VERSION_STABLE" value="${PROJECT_VERSION_STABLE}" />
-			</filterset>
-		</copy>
-
-		<echo>Version: ${PROJECT_VERSION}</echo>
-	</target>
+	<target name="beta" depends="_beta, build, _dist" />
 
 	<!--** stable **-->
 	<target name="stable" depends="_stable, build, _dist">
 		<!-- duplicate as beta -->
-		<copy todir="${dist_parent_dir}/beta">
-		 <fileset dir="${dist_parent_dir}/stable" includes="/" />
+		<copy todir="${dir.dist}/beta">
+		 <fileset dir="${dir.dist}/stable" includes="/" />
 		</copy>
 
-		<!-- version.js -->
-		<copy file="src/version.js" todir="${dist_parent_dir}">
-			<filterset>
-				<filter token="PROJECT_VERSION_BETA" value="${PROJECT_VERSION}" />
-				<filter token="PROJECT_VERSION_STABLE" value="${PROJECT_VERSION}" />
-			</filterset>
-		</copy>
-
-		<!-- build.ini -->
-		<propertyfile file="build.ini">
-			<entry key="PROJECT_VERSION_STABLE" value="${PROJECT_VERSION}" />
-			<entry key="RELEASE_VERSION" type="int" operation="+" value="1" />
+		<!-- version.properties -->
+		<propertyfile file="version.properties">
+			<entry key="version.release" type="int" operation="+" value="1" />
+			<entry key="version.stable" value="${PROJECT_VERSION}" />
 		</propertyfile>
-
-		<echo>Version: ${PROJECT_VERSION}</echo>
 	</target>
 
 	<!--** internals **-->
 
-	<tempfile property="content_file" destdir="${build_dir}" suffix=".js" deleteonexit="true" />
-	<tempfile property="temp_file" destdir="${build_dir}" suffix=".js" deleteonexit="true" />
+	<tempfile property="file.content" destdir="${dir.build}" suffix=".js" deleteonexit="true" />
+	<tempfile property="file.temp" destdir="${dir.build}" suffix=".js" deleteonexit="true" />
 
 	<target name="_build">
 		<!-- fix eol -->
 		<fixcrlf srcdir="src" eol="unix" encoding="utf-8">
-			<patternset refid="text_files" />
+			<patternset refid="pattern.text" />
 		</fixcrlf>
 
-		<propertyfile file="build.ini">
-			<entry key="MAIN_VERSION" default="0.0" />
-			<entry key="RELEASE_VERSION" default="0" />
-			<entry key="BUILD_NUMBER" default="0" type="int" pattern="####" operation="+" />
-		</propertyfile>
-		<property file="build.ini" />
+		<property name="PROJECT_FILE_URL" value="${url.test}/${PROJECT_NAME_SHORT}.js" />
 
-		<property name="PROJECT_VERSION" value="${MAIN_VERSION}.${RELEASE_VERSION}.${BUILD_NUMBER}" />
-		<property name="PROJECT_FILE_URL" value="${test_url}/${PROJECT_NAME_SHORT}.js" />
-
-		<delete dir="${build_dir}" />
-		<mkdir dir="${build_dir}" />
+		<delete dir="${dir.build}" />
+		<mkdir dir="${dir.build}" />
 
 		<!-- CONTENT -->
-		<concat destfile="${content_file}">
+		<concat destfile="${file.content}">
 			<filterchain>
 				<stripjavacomments />
 				<striplinebreaks />
@@ -111,22 +78,19 @@
 				</tokenfilter>
 			</filterchain>
 
-			<header filtering="false" trim="true">
-(function()
-{
-	var style = document.createElement('style');
-	style.appendChild(document.createTextNode('
-			</header>
-			<footer filtering="false" trim="true">
-	'));
-	document.getElementsByTagName('head')[0].appendChild(style);
-})();
+			<header filtering="false" trim="true" trimleading="true">
+			(function(style, css)
+			{
+				style.appendChild(document.createTextNode(css));
+				document.getElementsByTagName('head')[0].appendChild(style);
+			})(document.createElement('style'), '</header><footer filtering="false" trimleading="true">');
+
 			</footer>
 
 			<fileset dir="src/script/kernel" includes="**/*.css" />
 		</concat>
 
-		<concat destfile="${content_file}" append="true" encoding="utf-8">
+		<concat destfile="${file.content}" append="true" encoding="utf-8">
 			<filterchain>
 				<escapeunicode />
 				<tokenfilter>
@@ -147,11 +111,10 @@
 			</fileset>
 		</concat>
 
-		<!-- escaping has to be done here to avoid text being splitted -->
-		<loadfile property="CONTENT" srcfile="${content_file}" />
+		<loadfile property="CONTENT" srcfile="${file.content}" />
 
 		<!-- js -->
-		<copy file="src/script/bolanderi.js" tofile="${build_dir}/${PROJECT_NAME_SHORT}.js">
+		<copy file="src/script/bolanderi.js" tofile="${dir.build}/${PROJECT_NAME_SHORT}.js">
 			<filterchain>
 				<concatfilter prepend="src/header.js" />
 			</filterchain>
@@ -161,19 +124,19 @@
 		</copy>
 	</target>
 
-	<taskdef name="jscomp" classname="com.google.javascript.jscomp.ant.CompileTask" classpath="${tools_dir}/closurecompiler/compiler.jar" />
+	<taskdef name="jscomp" classname="com.google.javascript.jscomp.ant.CompileTask" classpath="${dir.tools}/closurecompiler/compiler.jar" />
 	<target name="_minify">
 		<!-- js(raw) -->
-		<move file="${build_dir}/${PROJECT_NAME_SHORT}.js" tofile="${build_dir}/${PROJECT_NAME_SHORT}-raw.js" />
+		<move file="${dir.build}/${PROJECT_NAME_SHORT}.js" tofile="${dir.build}/${PROJECT_NAME_SHORT}-raw.js" />
 
 		<!-- js(minified) -->
-		<jscomp compilationLevel="simple" warning="quiet" debug="false" output="${temp_file}">
-			<sources dir="${build_dir}">
+		<jscomp compilationLevel="simple" warning="quiet" debug="false" output="${file.temp}">
+			<sources dir="${dir.build}">
 				<file name="${PROJECT_NAME_SHORT}-raw.js" />
 			</sources>
 		</jscomp>
 
-		<copy file="${temp_file}" tofile="${build_dir}/${PROJECT_NAME_SHORT}.js">
+		<copy file="${file.temp}" tofile="${dir.build}/${PROJECT_NAME_SHORT}.js">
 			<filterchain>
 				<concatfilter prepend="src/header.js" />
 			</filterchain>
@@ -182,17 +145,13 @@
 
 	<target name="_build_cont">
 		<!-- user.js -->
-		<exec executable="${tools_dir}/base64/base64.exe">
-			<arg line="-e ${build_dir}/${PROJECT_NAME_SHORT}.js ${temp_file}" />
-		</exec>
+		<java classpath="tools/base64" classname="Base64">
+			<arg line="-e ${dir.build}/${PROJECT_NAME_SHORT}.js ${file.temp}" />
+		</java>
 
-		<loadfile property="ENCODED_CONTENT" srcfile="${temp_file}">
-			<filterchain>
-				<striplinebreaks />
-			</filterchain>
-		</loadfile>
+		<loadfile property="ENCODED_CONTENT" srcfile="${file.temp}" />
 
-		<copy file="src/user/bolanderi.user.js" todir="${build_dir}/user">
+		<copy file="src/user/bolanderi.user.js" todir="${dir.build}/user">
 			<filterchain>
 				<concatfilter prepend="src/header.js" />
 			</filterchain>
@@ -202,37 +161,37 @@
 		</copy>
 
 		<!-- xpi -->
-		<copy todir="${build_dir}/xpi">
+		<copy todir="${dir.build}/xpi">
 			<fileset dir="src/xpi" />
 		</copy>
-		<copy file="${build_dir}/${PROJECT_NAME_SHORT}.js" todir="${build_dir}/xpi/content/" />
+		<copy file="${dir.build}/${PROJECT_NAME_SHORT}.js" todir="${dir.build}/xpi/content/" />
 
 		<!-- m2f -->
-		<copy file="src/m2f/bolanderi.xml" todir="${build_dir}/m2f" />
-		<copy file="${build_dir}/${PROJECT_NAME_SHORT}.js" todir="${build_dir}/m2f/${PROJECT_NAME_SHORT}/scripts" />
+		<copy file="src/m2f/bolanderi.xml" todir="${dir.build}/m2f" />
+		<copy file="${dir.build}/${PROJECT_NAME_SHORT}.js" todir="${dir.build}/m2f/${PROJECT_NAME_SHORT}/scripts" />
 
 		<!-- crx -->
-		<copy todir="${build_dir}/crx">
+		<copy todir="${dir.build}/crx">
 			<fileset dir="src/crx" />
-			<fileset file="${build_dir}/${PROJECT_NAME_SHORT}.js" />
+			<fileset file="${dir.build}/${PROJECT_NAME_SHORT}.js" />
 		</copy>
 
 		<!-- privoxy -->
-		<copy todir="${build_dir}/privoxy">
+		<copy todir="${dir.build}/privoxy">
 			<fileset dir="src/privoxy" />
 		</copy>
 
 		<!-- rename files -->
-		<move todir="${build_dir}">
+		<move todir="${dir.build}">
 			<filtermapper>
 				<replacestring from="bolanderi" to="${PROJECT_NAME_SHORT}" />
 			</filtermapper>
-			<fileset dir="${build_dir}" includes="**/bolanderi.*" />
+			<fileset dir="${dir.build}" includes="**/bolanderi.*" />
 		</move>
 
 		<!-- replace tokens -->
-		<replace dir="${build_dir}">
-			<patternset refid="text_files" />
+		<replace dir="${dir.build}">
+			<patternset refid="pattern.text" />
 
 			<replacefilter token="@PROJECT_AUTHOR@" value="${PROJECT_AUTHOR}" />
 			<replacefilter token="@PROJECT_BUILD_TIME@" value="${PROJECT_BUILD_TIME}" />
@@ -253,46 +212,58 @@
 	</target>
 
 	<target name="_dist">
-		<delete dir="${dist_dir}" />
-		<mkdir dir="${dist_dir}" />
+		<delete dir="${dir.dist-sub}" />
+		<mkdir dir="${dir.dist-sub}" />
 
 		<!-- scripts -->
-		<copy todir="${dist_dir}">
-			<fileset dir="${build_dir}" includes="${PROJECT_NAME_SHORT}.js" />
-			<fileset dir="${build_dir}/user" includes="${PROJECT_NAME_SHORT}.user.js" />
+		<copy todir="${dir.dist-sub}">
+			<fileset dir="${dir.build}" includes="${PROJECT_NAME_SHORT}.js" />
+			<fileset dir="${dir.build}/user" includes="${PROJECT_NAME_SHORT}.user.js" />
 		</copy>
 
-		<!-- crx -->
-		<exec executable="cmd">
-			<!-- http://github.com/Constellation/crxmake -->
-			<arg value="/C crxmake --pack-extension=${build_dir}/crx --pack-extension-key=${key_file} --extension-out=${dist_dir}/${PROJECT_NAME_SHORT}.crx" />
+		<!-- crx - http://github.com/Constellation/crxmake -->
+		<exec executable="crxmake" failifexecutionfails="false">
+			<arg value="--pack-extension=${dir.build}/crx --pack-extension-key=${crx.key} --extension-out=${dir.dist-sub}/${PROJECT_NAME_SHORT}.crx" />
+		</exec>
+		<exec executable="cmd" osfamily="windows">
+			<arg value="/C crxmake --pack-extension=${dir.build}/crx --pack-extension-key=${crx.key} --extension-out=${dir.dist-sub}/${PROJECT_NAME_SHORT}.crx" />
 		</exec>
 
 		<!-- xpi -->
-		<mkdir dir="${build_dir}/xpi_package/chrome" />
+		<mkdir dir="${dir.build}/xpi_package/chrome" />
 
-		<zip destfile="${build_dir}/xpi_package/chrome/${PROJECT_NAME_SHORT}.jar" basedir="${build_dir}/xpi" includes="content/,locale/,skin/" />
-		<copy todir="${build_dir}/xpi_package">
-			<fileset dir="${build_dir}/xpi" includes="*/" excludes="content/,locale/,skin/" />
+		<zip destfile="${dir.build}/xpi_package/chrome/${PROJECT_NAME_SHORT}.jar" basedir="${dir.build}/xpi" includes="content/,locale/,skin/" />
+		<copy todir="${dir.build}/xpi_package">
+			<fileset dir="${dir.build}/xpi" includes="**" excludes="content/,locale/,skin/" />
 		</copy>
-		<replaceregexp file="${build_dir}/xpi_package/chrome.manifest" match=" (?=(?:content|locale|skin)/)" replace=" jar:chrome/${PROJECT_NAME_SHORT}.jar!/" flags="g" />
+		<replaceregexp file="${dir.build}/xpi_package/chrome.manifest" match=" (?=(?:content|locale|skin)/)" replace=" jar:chrome/${PROJECT_NAME_SHORT}.jar!/" flags="g" />
 
-		<zip destfile="${dist_dir}/${PROJECT_NAME_SHORT}.xpi" basedir="${build_dir}/xpi_package" />
+		<zip destfile="${dir.dist-sub}/${PROJECT_NAME_SHORT}.xpi" basedir="${dir.build}/xpi_package" />
 
 		<!-- m2f -->
-		<zip destfile="${dist_dir}/${PROJECT_NAME_SHORT}.m2f" basedir="${build_dir}/m2f" />
+		<zip destfile="${dir.dist-sub}/${PROJECT_NAME_SHORT}.m2f" basedir="${dir.build}/m2f" />
 
 		<!-- privoxy -->
-		<zip destfile="${dist_dir}/${PROJECT_NAME_SHORT}.privoxy.zip" basedir="${build_dir}/privoxy" />
+		<zip destfile="${dir.dist-sub}/${PROJECT_NAME_SHORT}.privoxy.zip" basedir="${dir.build}/privoxy" />
+
+		<!-- version.js -->
+		<copy file="src/version.js" todir="${dir.dist}">
+			<filterset>
+				<filter token="PROJECT_VERSION" value="${PROJECT_VERSION}" />
+				<filter token="PROJECT_VERSION_STABLE" value="${PROJECT_VERSION_STABLE}" />
+			</filterset>
+		</copy>
 	</target>
 
 	<target name="_stable">
-		<property name="dist_dir" value="${dist_parent_dir}/stable" />
-		<property name="PROJECT_FILE_URL" value="${dist_url}/stable/${PROJECT_NAME_SHORT}.js" />
+		<property name="dir.dist-sub" value="${dir.dist}/stable" />
+		<property name="PROJECT_FILE_URL" value="${url.dist}/stable/${PROJECT_NAME_SHORT}.js" />
+		<property name="PROJECT_VERSION_STABLE" value="${PROJECT_VERSION}" />
 	</target>
 
 	<target name="_beta">
-		<property name="dist_dir" value="${dist_parent_dir}/beta" />
-		<property name="PROJECT_FILE_URL" value="${dist_url}/beta/${PROJECT_NAME_SHORT}.js" />
+		<property name="dir.dist-sub" value="${dir.dist}/beta" />
+		<property name="PROJECT_FILE_URL" value="${url.dist}/beta/${PROJECT_NAME_SHORT}.js" />
+		<property name="PROJECT_VERSION_STABLE" value="${version.stable}" />
 	</target>
 </project>

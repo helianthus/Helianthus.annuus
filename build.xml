@@ -102,7 +102,31 @@
 		<mkdir dir="${build_dir}" />
 
 		<!-- CONTENT -->
-		<concat destfile="${content_file}" encoding="utf-8">
+		<concat destfile="${content_file}">
+			<filterchain>
+				<stripjavacomments />
+				<striplinebreaks />
+				<tokenfilter>
+					<replacestring from="&apos;" to="&quot;" />
+				</tokenfilter>
+			</filterchain>
+
+			<header filtering="false" trim="true">
+(function()
+{
+	var style = document.createElement('style');
+	style.appendChild(document.createTextNode('
+			</header>
+			<footer filtering="false" trim="true">
+	'));
+	document.getElementsByTagName('head')[0].appendChild(style);
+})();
+			</footer>
+
+			<fileset dir="src/script/kernel" includes="**/*.css" />
+		</concat>
+
+		<concat destfile="${content_file}" append="true" encoding="utf-8">
 			<filterchain>
 				<escapeunicode />
 				<tokenfilter>

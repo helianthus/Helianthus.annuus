@@ -107,7 +107,7 @@
 				<escapeunicode />
 				<tokenfilter>
 					<filetokenizer />
-					<replaceregex pattern=" *\\\n\t+" replace="" flags="g" />
+					<replaceregex pattern=" *\\\n\t+" replace="\\\\n" flags="g" />
 				</tokenfilter>
 			</filterchain>
 

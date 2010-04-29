@@ -1,7 +1,7 @@
 $(bolanderi).one('init', function()
 {
 
-if(bolanderi.get('STORAGE_MODE', $.cookie('an_storagemode') !== 'Flash' && Modernizr.localStorage && 'DOM' || 'Flash') === 'Flash') {
+if(bolanderi.get('STORAGE_MODE', $.cookie('an_storagemode') !== 'Flash' && window.localStorage && 'DOM' || 'Flash') === 'Flash') {
 	bolanderi.get('FLASH_API', $('<div />', { id: 'bolanderi-lso' }).appendTo('#an').toFlash('http://helianthus-annuus.googlecode.com/svn/other/lso.swf' + ($.browser.msie ? '?' + $.time() : ''))[0]);
 }
 

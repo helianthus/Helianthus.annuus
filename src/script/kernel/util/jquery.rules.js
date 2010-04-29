@@ -1,17 +1,17 @@
 (function($)
 {
 
-var node, cache = [];
+var jStyle, cache = [];
 
 function writeCSS(css, isOverWrite)
 {
-	if(!node) node = $('<style />').appendTo('#an')[0];
+	if(!jStyle) jStyle = $('<style />').appendTo('#an');
 
-	if(node.styleSheet) {
-		node.styleSheet.cssText = (isOverWrite ? '' : node.styleSheet.cssText) + css;
+	if(jStyle[0].styleSheet) {
+		isOverWrite ? jStyle[0].styleSheet.cssText = css : jStyle[0].styleSheet.cssText += css;
 	}
 	else {
-		$(node)[isOverWrite ? 'html' : 'append'](document.createTextNode(css));
+		jStyle[isOverWrite ? 'html' : 'append'](document.createTextNode(css));
 	}
 }
 
@@ -24,30 +24,71 @@ $(bolanderi).bind('groupend', function(event, groupNo)
 	}
 });
 
-var inconsistencies = (function()
+var inconsistencies = [];
+var alternatives = [];
+
+$.rules = function()
+{
+	var css = $.format.apply(null, arguments).replace(/\t+/g, '\n');
+
+	css = css.replace(/\[style.?="[^"]*"\]/g, function(styleSelector)
+	{
+		$.each(inconsistencies, function(i, fix)
+		{
+			styleSelector = ''.replace.apply(styleSelector, fix);
+		});
+		return styleSelector;
+	});
+
+	css = css.replace(/{[^}]+/g, function(cssBlock)
+	{
+		$.each(alternatives, function(i, change)
+		{
+			cssBlock = ''.replace.apply(cssBlock, change);
+		});
+
+		if($.support.filter) {
+			var rFilter = /-ms-filter: "([^"]+)"; */g;
+			var filter, groupedFilters = [];
+			while(filter = rFilter.exec(cssBlock)) {
+				groupedFilters.push(filter[1]);
+			}
+
+			if(groupedFilters.length > 1) {
+				cssBlock = cssBlock.replace(rFilter, '') + $.format('-ms-filter: "{0}"; ', groupedFilters.join(' '));
+			}
+		}
+
+		return cssBlock;
+	});
+
+	cache ? cache.push(css) : writeCSS(css, false);
+};
+
+(function()
 {
 	var cssTEXT = $('<div/>').append('<div style="border-top: solid 1px blue; border-left: dashed; padding: 3px 3PX; COLor : #000;" />').html().replace(/<div style="([^"]+).+/i, '$1');
 	var csstext = cssTEXT.toLowerCase();
 	var rWidth = /\d+\S+|thin|medium|thick/i;
 	var rStyle = /none|hidden|dotted|dashed|solid|double|groove|ridge|inset|outset/i;
 
-	return {
-		// IE, FF
-		textIndented: csstext.indexOf('color:') !== -1 && [/ +[:;\"] +/g, function($0)
+	$.each([
+		// textIndented: IE, FF
+		[csstext.indexOf('color:') !== -1, / +[:;\"] +/g, function($0)
 		{
 			var trimmed = $.trim($0);
 			return trimmed === ':' ? ': ' : trimmed;
 		}],
-		// FF
-		colorConvertedToRGB: csstext.indexOf('rgb(') !== -1 && [/#(\d+)/g, function($0, $1)
+		// colorConvertedToRGB: FF
+		[csstext.indexOf('rgb(') !== -1, /#(\d+)/g, function($0, $1)
 		{
 			if($1.length === 3) {
 				$1 = $.format('{0[0]!*2}{0[1]!*2}{0[2]!*2}', $1);
 			}
 			return $.format('rgb({0}, {1}, {2})', parseInt($1.substr(0,2), 16), parseInt($1.substr(2,2), 16), parseInt($1.substr(4,2), 16));
 		}],
-		// FF
-		borderAutofilled: csstext.indexOf('medium') !== -1 && [/border(?:-(?:top|right|bottom|left))? *: *[^;\"]+/gi, function($0)
+		// borderAutofilled: FF
+		[csstext.indexOf('medium') !== -1, /border(?:-(?:top|right|bottom|left))? *: *[^;\"]+/gi, function($0)
 		{
 			if(!rWidth.test($0)) {
 				$0 += ' medium';
@@ -57,8 +98,8 @@ var inconsistencies = (function()
 			}
 			return $0;
 		}],
-		// IE
-		borderReordered_CWS: csstext.indexOf(': blue') !== -1 && [/(border(?:-(?:top|right|bottom|left))? *: *)([^;\"]+)/gi, function($0, $1, $2)
+		// borderReordered_CWS: IE
+		[csstext.indexOf(': blue') !== -1, /(border(?:-(?:top|right|bottom|left))? *: *)([^;\"]+)/gi, function($0, $1, $2)
 		{
 			var values = $2.split(' ');
 			$.each(values, function(i, value)
@@ -78,8 +119,8 @@ var inconsistencies = (function()
 			});
 			return $1 + values.join(' ');
 		}],
-		// FF
-		borderReordered_WSC: csstext.indexOf(': 1px') !== -1 && [/(border(?:-(?:top|right|bottom|left))? *: *)([^;\"]+)/gi, function($0, $1, $2)
+		// borderReordered_WSC: FF
+		[csstext.indexOf(': 1px') !== -1, /(border(?:-(?:top|right|bottom|left))? *: *)([^;\"]+)/gi, function($0, $1, $2)
 		{
 			var values = $2.split(' ');
 			$.each(values, function(i, value)
@@ -99,8 +140,8 @@ var inconsistencies = (function()
 			});
 			return $1 + values.join(' ');
 		}],
-		// FF
-		paddingContracted: csstext.indexOf('padding: 3px;') !== -1 && [/(padding *: *)([^;\"]+)/gi, function($0, $1, $2)
+		// paddingContracted: FF
+		[csstext.indexOf('padding: 3px;') !== -1, /(padding *: *)([^;\"]+)/gi, function($0, $1, $2)
 		{
 			var values = $2.split(' ');
 			while(values.length === 4 && values[1] === values[3] || values.length === 3 && values[0] === values[2] || values.length === 2 && values[0] === values[1]) {
@@ -108,8 +149,8 @@ var inconsistencies = (function()
 			}
 			return $1 + values.join(' ');
 		}],
-		// IE
-		paddingBorderExpanded: csstext.indexOf('padding-top') !== -1 && [/.+?(padding|border) *: *([^;\"]+).+/gi, function($0, $1, $2)
+		// paddingBorderExpanded: IE
+		[csstext.indexOf('padding-top') !== -1, /.+?(padding|border) *: *([^;\"]+).+/gi, function($0, $1, $2)
 		{
 			var ret = '';
 			var sides = ['top', 'right', 'bottom', 'left'];
@@ -132,105 +173,72 @@ var inconsistencies = (function()
 			}
 			return ret;
 		}],
-		// FF
-		selectorLowerCased: cssTEXT.indexOf('color') !== -1 && [/[;\"][^:\]]+:/g, function($0)
+		// selectorLowerCased: FF
+		[cssTEXT.indexOf('color') !== -1, /[;\"][^:\]]+:/g, function($0)
 		{
 			return $0.toLowerCase();
 		}],
-		// IE
-		selectorUpperCased: cssTEXT.indexOf('COLOR') !== -1 && [/[;\"][^:\]]+:/g, function($0)
+		// selectorUpperCased: IE
+		[cssTEXT.indexOf('COLOR') !== -1, /[;\"][^:\]]+:/g, function($0)
 		{
 			return $0.toUpperCase();
 		}],
-		// IE, FF
-		valuesLowerCased: cssTEXT.indexOf('3PX') === -1 && [/:[^;\"]+/g, function($0)
+		// valuesLowerCased: IE, FF
+		[cssTEXT.indexOf('3PX') === -1, /:[^;\"]+/g, function($0)
 		{
 			return $0.toLowerCase();
 		}],
-		// IE
-		endSemiColonRemoved: csstext.slice(-1) !== ';' && [/;\"/, '"']
-	};
+		// endSemiColonRemoved: IE
+		[csstext.slice(-1) !== ';', /;\"/, '"']
+	], function(i, set)
+	{
+		if(set.shift()) {
+			inconsistencies.push(set);
+		}
+	});
 })();
-
-var vendorPrefixes = {};
 
 (function()
 {
-	var testStyle = document.createElement('div').style;
+	var testStyle = $('<div style="color: rgba(1,1,1,0.5)" />')[0].style;
+	var toCamel = function(target)
+	{
+		return target.replace(/-\w/g, function($0)
+		{
+			return $0[1].toUpperCase();
+		});
+	};
 
 	$.each(['border-radius', 'box-shadow', 'text-overflow'], function(i, property)
 	{
-		var camel = property.replace(/-\w/g, function($0)
+		$.each(['Khtml', 'Moz', 'O', 'Webkit'], function(j, prefix)
 		{
-			return $0[1].toUpperCase();
-		})
-
-		$.each(['Moz', 'O', 'Webkit'], function(j, prefix)
-		{
-			if(typeof testStyle[prefix + camel] !== 'undefined') {
-				vendorPrefixes[property] = prefix;
+			if(typeof testStyle[prefix + toCamel(property)] !== 'undefined') {
+				alternatives.push([new RegExp($.format('{0}(?!-)', property), 'g'), $.format('-{0}-{1}', prefix.toLowerCase(), property)]);
 				return false;
 			}
 		});
 	});
-})();
 
-var filters = typeof document.createElement('div').style.filter !== 'undefined' && {
-	rgba: !Modernizr.rgba && [/background-color *: *rgba\( *([.\d]+), *([.\d]+), *([.\d]+), *([.\d]+) *;\)/, function($0, $1, $2, $3, $4)
-	{
-		return $.format('-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr=#{0},EndColorStr=#{0});"', $.format('{0:x}{1:x}{2:x}{3:x}', $4 * 255, $1, $2, $3));
-	}],
-	opacity: !Modernizr.opacity && [/opacity *:([^;]+);/, function($0)
-	{
-		return $.format('-ms-filter: "progid:DXImageTransform.Microsoft.alpha(opacity={0});"', Number($0) * 100);
-	}]
-};
+	$.support.filter = typeof testStyle.filter !== 'undefined';
 
-$.rules = function()
-{
-	var css = $.format.apply(null, arguments).replace(/\t+/g, '\n');
-
-	css = css.replace(/\[style.?="[^"]*"\]/g, function(styleSelector)
-	{
-		$.each(inconsistencies, function(name, fix)
-		{
-			if(fix) {
-				styleSelector = ''.replace.apply(styleSelector, fix);
-			}
-		});
-		return styleSelector;
-	});
-
-	css = css.replace(/{[^}]+/g, function(cssBlock)
-	{
-		if(filters) {
-			$.each(filters, function(property, converter)
+	if($.support.filter) {
+		$.each([
+			[testStyle.cssText.toLowerCase().indexOf('rgba') === -1, /background-color *: *rgba\( *([.\d]+), *([.\d]+), *([.\d]+), *([.\d]+) *;\)/, function($0, $1, $2, $3, $4)
 			{
-				if(converter) {
-					cssBlock = ''.replace.apply(cssBlock, converter);
-				}
-			});
-
-			var rFilter = /-ms-filter: "([^"]+)"; */g;
-			var filter, groupedFilters = [];
-			while(filter = rFilter.exec(cssBlock)) {
-				groupedFilters.push(filter[1]);
-			}
-
-			if(groupedFilters.length > 1) {
-				cssBlock = cssBlock.replace(rFilter, '') + $.format('-ms-filter: "{0}"; ', groupedFilters.join(' '));
-			}
-		}
-
-		$.each(vendorPrefixes, function(property, prefix)
+				return $.format('-ms-filter: "progid:DXImageTransform.Microsoft.Gradient(startColorStr=#{0},EndColorStr=#{0});"', $.format('{0:x}{1:x}{2:x}{3:x}', $4 * 255, $1, $2, $3));
+			}],
+			[typeof testStyle.opacity === 'undefined', /opacity *:([^;]+);/, function($0)
+			{
+				return $.format('-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(opacity={0});"', $0 * 100);
+			}]
+		], function(i, set)
 		{
-			cssBlock = cssBlock.replace(property, prefix + '$&');
+			if(set.shift()) {
+				alternatives.push(set);
+			}
 		});
-
-		return cssBlock;
-	});
-
-	cache ? cache.push(css) : writeCSS(css, false);
-};
+	}
+})();
 
 })(jQuery);

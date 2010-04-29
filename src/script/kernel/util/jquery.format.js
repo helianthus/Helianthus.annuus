@@ -2,24 +2,36 @@
 {
 	var
 	convertors = {
-		'*': function(target, val)
+		's': function(target)
 		{
-			if($.isNumber(target)) {
-				target *= val;
-			}
-			else if(typeof target === 'string') {
-				var tmp = target;
-				for(var i=1; i<val; ++i) {
-					target += tmp;
-				}
-			}
-
-			return target;
+			return target + '';
 		},
-		'|': function(target, val){ return $.isWord(target) ? target : val; }
+		'n': function(target)
+		{
+			return target * 1;
+		}
 	},
 	formatters = {
-		'x': function(target){ return $.isNumber(target) ? (target * 1).toString(16) : target; }
+		'number': function(target, format)
+		{
+			if(format.toLowerCase() === 'x') {
+				target = target.toString(16);
+				if(format === 'X') {
+					target = target.toUpperCase();
+				}
+			}
+			return target;
+		},
+		'string': function(target, format)
+		{
+			if(format[0] === '*') {
+				var temp = target;
+				for(var i=1; i<format[1]; ++i) {
+					target += temp;
+				}
+			}
+			return target;
+		}
 	};
 
 	$.format = function(target)
@@ -28,32 +40,29 @@
 
 		var args = $.slice(arguments, 1);
 
-		return target.replace(/{(\d+)((?:[[.][^[.!:}]+)*)(?:!([^:}]+))?(?::([^}]+))?}/g, function($0, index, props, convert, format)
+		return target.replace(/{(\d+)((?:[[.][^[.|!:}]+)*)(?:\|([^:!}]+))?(?:!([^:}]))?(?::([^}]+))?}/g, function($0, index, props, alt, convert, format)
 		{
 			var prop, replacement = args[index];
 
 			if(props) {
-				props = props.match(/[[.][^[.]+/g);
-				while(replacement && props.length) {
-					prop = props.shift().match(/[[.]([^\](]+)]?(\(([^)]*))?/);
-
-					if(prop[2]) {
-						replacement = replacement[prop[1]].apply(replacement, prop[3].split(','));
-					}
-					else {
-						replacement = replacement[prop[1]];
-					}
-				}
+				replacement = $.dig.apply(null, [].concat(replacement, props.split(/[.[\]]+/)));
 			}
-			if(convert) replacement = convertors[convert[0]](replacement, convert.substr(1));
-			if(format) replacement = formatters[format[0]](replacement, format.substr(1));
+			if(alt && !replacement) {
+				replacement = alt;
+			}
+			if(convert && convertors[convert]) {
+				replacement = convertors[convert](replacement);
+			}
+			if(format && formatters[typeof replacement]) {
+				replacement = formatters[typeof replacement](replacement, format);
+			}
 
 			if(!$.isWord(replacement)) {
 				try {
 					$.err('jQuery.format: replacement is not a string');
 				}
 				finally {
-					$.debug(target);
+					$.debug(target, $0);
 				}
 			}
 

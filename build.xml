@@ -1,20 +1,20 @@
 <project name="Helianthus.bolanderi" default="beta">
-	<property file="build.properties" />
-
 	<propertyfile file="version.properties">
-		<entry key="version.main" default="0.0" />
-		<entry key="version.release" default="0" />
-		<entry key="version.build" default="0" type="int" pattern="####" operation="+" />
-		<entry key="version.stable" default="0.0.0.0" />
+		<entry key="project.version.main" default="0.0" />
+		<entry key="project.version.release" default="0" />
+		<entry key="project.version.build" default="0" type="int" pattern="####" operation="+" />
+		<entry key="project.version.stable" default="0.0.0.0" />
 	</propertyfile>
+
+	<property file="build.properties" />
 	<property file="version.properties" />
-
-	<property name="PROJECT_VERSION" value="${version.main}.${version.release}.${version.build}" />
-
+	<property name="project.version" value="${project.version.main}.${project.version.release}.${project.version.build}" />
 	<tstamp>
-		<format property="PROJECT_BUILD_YEAR" pattern="yyyy" />
-		<format property="PROJECT_BUILD_TIME" pattern="yyyy-MM-dd HH:mm:ss" />
+		<format property="project.build.year" pattern="yyyy" />
+		<format property="project.build.time" pattern="yyyy-MM-dd HH:mm:ss" />
 	</tstamp>
+
+	<echoproperties prefix="project" />
 
 	<patternset id="pattern.text">
 		<include name="**/*.action" />
@@ -42,13 +42,12 @@
 	<target name="stable" depends="_stable, build, _dist">
 		<!-- duplicate as beta -->
 		<copy todir="${dir.dist}/beta">
-		 <fileset dir="${dir.dist}/stable" includes="/" />
+		 <fileset dir="${dir.dist}/stable" includes="**" />
 		</copy>
 
-		<!-- version.properties -->
 		<propertyfile file="version.properties">
-			<entry key="version.release" type="int" operation="+" value="1" />
-			<entry key="version.stable" value="${PROJECT_VERSION}" />
+			<entry key="project.version.release" type="int" operation="+" value="1" />
+			<entry key="project.version.stable" value="${project.version}" />
 		</propertyfile>
 	</target>
 
@@ -63,7 +62,7 @@
 			<patternset refid="pattern.text" />
 		</fixcrlf>
 
-		<property name="PROJECT_FILE_URL" value="${url.test}/${PROJECT_NAME_SHORT}.js" />
+		<property name="project.file.url" value="${file.url.test}/${project.name.short}.js" />
 
 		<delete dir="${dir.build}" />
 		<mkdir dir="${dir.build}" />
@@ -115,7 +114,7 @@
 		<loadfile property="CONTENT" srcfile="${file.content}" />
 
 		<!-- js -->
-		<copy file="src/script/bolanderi.js" tofile="${dir.build}/${PROJECT_NAME_SHORT}.js">
+		<copy file="src/script/bolanderi.js" tofile="${dir.build}/${project.name.short}.js">
 			<filterchain>
 				<concatfilter prepend="src/header.js" />
 			</filterchain>
@@ -125,19 +124,19 @@
 		</copy>
 	</target>
 
-	<taskdef name="jscomp" classname="com.google.javascript.jscomp.ant.CompileTask" classpath="${dir.tools}/closurecompiler/compiler.jar" />
+	<taskdef name="jscomp" classname="com.google.javascript.jscomp.ant.CompileTask" classpath="${dir.lib}/closurecompiler/compiler.jar" />
 	<target name="_minify">
 		<!-- js(raw) -->
-		<move file="${dir.build}/${PROJECT_NAME_SHORT}.js" tofile="${dir.build}/${PROJECT_NAME_SHORT}-raw.js" />
+		<move file="${dir.build}/${project.name.short}.js" tofile="${dir.build}/${project.name.short}-raw.js" />
 
 		<!-- js(minified) -->
 		<jscomp compilationLevel="simple" warning="quiet" debug="false" output="${file.temp}">
 			<sources dir="${dir.build}">
-				<file name="${PROJECT_NAME_SHORT}-raw.js" />
+				<file name="${project.name.short}-raw.js" />
 			</sources>
 		</jscomp>
 
-		<copy file="${file.temp}" tofile="${dir.build}/${PROJECT_NAME_SHORT}.js">
+		<copy file="${file.temp}" tofile="${dir.build}/${project.name.short}.js">
 			<filterchain>
 				<concatfilter prepend="src/header.js" />
 			</filterchain>
@@ -146,8 +145,8 @@
 
 	<target name="_build_cont">
 		<!-- user.js -->
-		<java classpath="tools/base64" classname="Base64">
-			<arg line="-e ${dir.build}/${PROJECT_NAME_SHORT}.js ${file.temp}" />
+		<java classpath="lib/base64" classname="Base64">
+			<arg line="-e ${dir.build}/${project.name.short}.js ${file.temp}" />
 		</java>
 
 		<loadfile property="ENCODED_CONTENT" srcfile="${file.temp}" />
@@ -165,16 +164,16 @@
 		<copy todir="${dir.build}/xpi">
 			<fileset dir="src/xpi" />
 		</copy>
-		<copy file="${dir.build}/${PROJECT_NAME_SHORT}.js" todir="${dir.build}/xpi/content/" />
+		<copy file="${dir.build}/${project.name.short}.js" todir="${dir.build}/xpi/content/" />
 
 		<!-- m2f -->
 		<copy file="src/m2f/bolanderi.xml" todir="${dir.build}/m2f" />
-		<copy file="${dir.build}/${PROJECT_NAME_SHORT}.js" todir="${dir.build}/m2f/${PROJECT_NAME_SHORT}/scripts" />
+		<copy file="${dir.build}/${project.name.short}.js" todir="${dir.build}/m2f/${project.name.short}/scripts" />
 
 		<!-- crx -->
 		<copy todir="${dir.build}/crx">
 			<fileset dir="src/crx" />
-			<fileset file="${dir.build}/${PROJECT_NAME_SHORT}.js" />
+			<fileset file="${dir.build}/${project.name.short}.js" />
 		</copy>
 
 		<!-- privoxy -->
@@ -185,7 +184,7 @@
 		<!-- rename files -->
 		<move todir="${dir.build}">
 			<filtermapper>
-				<replacestring from="bolanderi" to="${PROJECT_NAME_SHORT}" />
+				<replacestring from="bolanderi" to="${project.name.short}" />
 			</filtermapper>
 			<fileset dir="${dir.build}" includes="**/bolanderi.*" />
 		</move>
@@ -194,77 +193,77 @@
 		<replace dir="${dir.build}">
 			<patternset refid="pattern.text" />
 
-			<replacefilter token="@PROJECT_AUTHOR@" value="${PROJECT_AUTHOR}" />
-			<replacefilter token="@PROJECT_BUILD_TIME@" value="${PROJECT_BUILD_TIME}" />
-			<replacefilter token="@PROJECT_BUILD_YEAR@" value="${PROJECT_BUILD_YEAR}" />
-			<replacefilter token="@PROJECT_DESCRIPTION@" value="${PROJECT_DESCRIPTION}" />
-			<replacefilter token="@PROJECT_FILE_URL@" value="${PROJECT_FILE_URL}" />
-			<replacefilter token="@PROJECT_LICENSE@" value="${PROJECT_LICENSE}" />
-			<replacefilter token="@PROJECT_LICENSE_URL@" value="${PROJECT_LICENSE_URL}" />
-			<replacefilter token="@PROJECT_NAME@" value="${PROJECT_NAME}" />
-			<replacefilter token="@PROJECT_NAME_SHORT@" value="${PROJECT_NAME_SHORT}" />
-			<replacefilter token="@PROJECT_TARGET_INCLUDE@" value="${PROJECT_TARGET_INCLUDE}" />
-			<replacefilter token="@PROJECT_TARGET_MATCH@" value="${PROJECT_TARGET_MATCH}" />
-			<replacefilter token="@PROJECT_TARGET_PRIVOXY@" value="${PROJECT_TARGET_PRIVOXY}" />
-			<replacefilter token="@PROJECT_TARGET_REGEX@" value="${PROJECT_TARGET_REGEX}" />
-			<replacefilter token="@PROJECT_URL@" value="${PROJECT_URL}" />
-			<replacefilter token="@PROJECT_VERSION@" value="${PROJECT_VERSION}" />
+			<replacefilter token="@PROJECT_AUTHOR@" value="${project.author}" />
+			<replacefilter token="@PROJECT_BUILD_TIME@" value="${project.build.time}" />
+			<replacefilter token="@PROJECT_BUILD_YEAR@" value="${project.build.year}" />
+			<replacefilter token="@PROJECT_DESCRIPTION@" value="${project.description}" />
+			<replacefilter token="@PROJECT_FILE_URL@" value="${project.file.url}" />
+			<replacefilter token="@PROJECT_LICENSE@" value="${project.license}" />
+			<replacefilter token="@PROJECT_LICENSE_URL@" value="${project.license.url}" />
+			<replacefilter token="@PROJECT_NAME@" value="${project.name}" />
+			<replacefilter token="@PROJECT_NAME_SHORT@" value="${project.name.short}" />
+			<replacefilter token="@PROJECT_TARGET_INCLUDE@" value="${project.target.include}" />
+			<replacefilter token="@PROJECT_TARGET_MATCH@" value="${project.target.match}" />
+			<replacefilter token="@PROJECT_TARGET_PRIVOXY@" value="${project.target.privoxy}" />
+			<replacefilter token="@PROJECT_TARGET_REGEX@" value="${project.target.regex}" />
+			<replacefilter token="@PROJECT_URL@" value="${project.url}" />
+			<replacefilter token="@PROJECT_VERSION@" value="${project.version}" />
 		</replace>
 	</target>
 
 	<target name="_dist">
-		<delete dir="${dir.dist-sub}" />
-		<mkdir dir="${dir.dist-sub}" />
+		<delete dir="${dir.dist.sub}" />
+		<mkdir dir="${dir.dist.sub}" />
 
 		<!-- scripts -->
-		<copy todir="${dir.dist-sub}">
-			<fileset dir="${dir.build}" includes="${PROJECT_NAME_SHORT}.js" />
-			<fileset dir="${dir.build}/user" includes="${PROJECT_NAME_SHORT}.user.js" />
+		<copy todir="${dir.dist.sub}">
+			<fileset dir="${dir.build}" includes="${project.name.short}.js" />
+			<fileset dir="${dir.build}/user" includes="${project.name.short}.user.js" />
 		</copy>
 
 		<!-- crx - http://github.com/Constellation/crxmake -->
 		<exec executable="crxmake" failifexecutionfails="false">
-			<arg value="--pack-extension=${dir.build}/crx --pack-extension-key=${crx.key} --extension-out=${dir.dist-sub}/${PROJECT_NAME_SHORT}.crx" />
+			<arg value="--pack-extension=${dir.build}/crx --pack-extension-key=${crx.key} --extension-out=${dir.dist.sub}/${project.name.short}.crx" />
 		</exec>
 		<exec executable="cmd" osfamily="windows">
-			<arg value="/C crxmake --pack-extension=${dir.build}/crx --pack-extension-key=${crx.key} --extension-out=${dir.dist-sub}/${PROJECT_NAME_SHORT}.crx" />
+			<arg value="/C crxmake --pack-extension=${dir.build}/crx --pack-extension-key=${crx.key} --extension-out=${dir.dist.sub}/${project.name.short}.crx" />
 		</exec>
 
 		<!-- xpi -->
 		<mkdir dir="${dir.build}/xpi_package/chrome" />
 
-		<zip destfile="${dir.build}/xpi_package/chrome/${PROJECT_NAME_SHORT}.jar" basedir="${dir.build}/xpi" includes="content/,locale/,skin/" />
+		<zip destfile="${dir.build}/xpi_package/chrome/${project.name.short}.jar" basedir="${dir.build}/xpi" includes="content/,locale/,skin/" />
 		<copy todir="${dir.build}/xpi_package">
 			<fileset dir="${dir.build}/xpi" includes="**" excludes="content/,locale/,skin/" />
 		</copy>
-		<replaceregexp file="${dir.build}/xpi_package/chrome.manifest" match=" (?=(?:content|locale|skin)/)" replace=" jar:chrome/${PROJECT_NAME_SHORT}.jar!/" flags="g" />
+		<replaceregexp file="${dir.build}/xpi_package/chrome.manifest" match=" (?=(?:content|locale|skin)/)" replace=" jar:chrome/${project.name.short}.jar!/" flags="g" />
 
-		<zip destfile="${dir.dist-sub}/${PROJECT_NAME_SHORT}.xpi" basedir="${dir.build}/xpi_package" />
+		<zip destfile="${dir.dist.sub}/${project.name.short}.xpi" basedir="${dir.build}/xpi_package" />
 
 		<!-- m2f -->
-		<zip destfile="${dir.dist-sub}/${PROJECT_NAME_SHORT}.m2f" basedir="${dir.build}/m2f" />
+		<zip destfile="${dir.dist.sub}/${project.name.short}.m2f" basedir="${dir.build}/m2f" />
 
 		<!-- privoxy -->
-		<zip destfile="${dir.dist-sub}/${PROJECT_NAME_SHORT}.privoxy.zip" basedir="${dir.build}/privoxy" />
+		<zip destfile="${dir.dist.sub}/${project.name.short}.privoxy.zip" basedir="${dir.build}/privoxy" />
 
 		<!-- version.js -->
 		<copy file="src/version.js" todir="${dir.dist}">
 			<filterset>
-				<filter token="PROJECT_VERSION" value="${PROJECT_VERSION}" />
-				<filter token="PROJECT_VERSION_STABLE" value="${PROJECT_VERSION_STABLE}" />
+				<filter token="PROJECT_VERSION" value="${project.version}" />
+				<filter token="PROJECT_VERSION_STABLE" value="${project.version.stable}" />
 			</filterset>
 		</copy>
 	</target>
 
 	<target name="_stable">
-		<property name="dir.dist-sub" value="${dir.dist}/stable" />
-		<property name="PROJECT_FILE_URL" value="${url.dist}/stable/${PROJECT_NAME_SHORT}.js" />
-		<property name="PROJECT_VERSION_STABLE" value="${PROJECT_VERSION}" />
+		<property name="dir.dist.sub" value="${dir.dist}/stable" />
+		<property name="project.file.url" value="${file.url.dist}/stable/${project.name.short}.js" />
+		<property name="project.version.stable" value="${project.version}" />
 	</target>
 
 	<target name="_beta">
-		<property name="dir.dist-sub" value="${dir.dist}/beta" />
-		<property name="PROJECT_FILE_URL" value="${url.dist}/beta/${PROJECT_NAME_SHORT}.js" />
-		<property name="PROJECT_VERSION_STABLE" value="${version.stable}" />
+		<property name="dir.dist.sub" value="${dir.dist}/beta" />
+		<property name="project.file.url" value="${file.url.dist}/beta/${project.name.short}.js" />
+		<property name="project.version.stable" value="${project.version.stable}" />
 	</target>
 </project>

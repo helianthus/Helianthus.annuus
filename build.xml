@@ -80,8 +80,8 @@
 			<header filtering="false" trim="true" trimleading="true">
 			(function(style, css)
 			{
-				style.appendChild(document.createTextNode(css));
 				document.getElementsByTagName('head')[0].appendChild(style);
+				style.styleSheet ? style.styleSheet.cssText += css : style.appendChild(document.createTextNode(css));
 			})(document.createElement('style'), '</header><footer filtering="false" trimleading="true">');
 
 			</footer>

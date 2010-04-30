@@ -35,11 +35,11 @@ var defaultData = {
 $.each(bolanderi.get('MODULES'), function(moduleId, module)
 {
 	if(moduleId in defaultData.privateData) {
-		$.err('module id "{0}" already exists.', moduleId);
+		$.error('module id "{0}" already exists.', moduleId);
 	}
 
 	if(!module.title || !module.pages) {
-		$.err('missing a "title" or "pages" property. [{0}]', moduleId);
+		$.error('missing a "title" or "pages" property. [{0}]', moduleId);
 	}
 
 	module.id = moduleId;
@@ -62,7 +62,7 @@ $.each(bolanderi.get('MODULES'), function(moduleId, module)
 			}
 			else {
 				if(dataSet.access === 'public' && $.dig(defaultData.publicData, dataType, dataId)) {
-					$.err('public {0} id "{0}" already exists. [{0}]', dataType, dataId, module.title);
+					$.error('public {0} id "{0}" already exists. [{0}]', dataType, dataId, module.title);
 				}
 
 				$.make(dataSet.access === 'protected' ? defaultData.privateData[moduleId] : defaultData.publicData, dataType)[dataId] = dataSet.defaultValue;

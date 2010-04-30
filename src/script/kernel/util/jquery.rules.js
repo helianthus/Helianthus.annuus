@@ -48,19 +48,23 @@ $.rules = function()
 		});
 
 		if($.support.filter) {
-			var rFilter = /-ms-filter: "([^"]+)"; */g;
+			var rFilter = /-ms-filter: "([^"]+)"[; ]*/g;
 			var filter, groupedFilters = [];
 			while(filter = rFilter.exec(cssBlock)) {
 				groupedFilters.push(filter[1]);
 			}
 
 			if(groupedFilters.length > 1) {
-				cssBlock = cssBlock.replace(rFilter, '') + $.format('-ms-filter: "{0}"; ', groupedFilters.join(' '));
+				cssBlock = cssBlock.replace(rFilter, '') + $.format(';-ms-filter: "{0}"; ', groupedFilters.join(' '));
 			}
 		}
 
 		return cssBlock;
 	});
+
+	if(annuus.get('WINDOW_IS_LOADED')) {
+		$.debug(css);
+	}
 
 	cache ? cache.push(css) : writeCSS(css, false);
 };
@@ -85,7 +89,7 @@ $.rules = function()
 			if($1.length === 3) {
 				$1 = $.format('{0[0]:*2}{0[1]:*2}{0[2]:*2}', $1);
 			}
-			return $.format('rgb({0}, {1}, {2})', parseInt($1.substr(0,2), 16), parseInt($1.substr(2,2), 16), parseInt($1.substr(4,2), 16));
+			return $.format('rgb({0.substr(0,2)!x}, {0.substr(2,2)!x}, {0.substr(4,2)!x})', $1);
 		}],
 		// borderAutofilled: FF
 		[csstext.indexOf('medium') !== -1, /border(?:-(?:top|right|bottom|left))? *: *[^;\"]+/gi, function($0)
@@ -208,29 +212,43 @@ $.rules = function()
 			return $0[1].toUpperCase();
 		});
 	};
+	var prefixes = ['', 'Khtml', 'Moz', 'O', 'Webkit'];
 
 	$.each(['border-radius', 'box-shadow', 'text-overflow'], function(i, property)
 	{
-		$.each(['Khtml', 'Moz', 'O', 'Webkit'], function(j, prefix)
+		$.each(prefixes, function(j, prefix)
 		{
-			if(typeof testStyle[prefix + toCamel(property)] !== 'undefined') {
-				alternatives.push([new RegExp($.format('{0}(?!-)', property), 'g'), $.format('-{0}-{1}', prefix.toLowerCase(), property)]);
+			if(typeof testStyle[toCamel($.format('{0}-{1}', prefix, property))] !== 'undefined') {
+				if(j !== 0) {
+					alternatives.push([new RegExp(property, 'gi'), $.format('-{0}-$&', prefix.toLowerCase())]);
+				}
 				return false;
 			}
 		});
+	});
+
+	$.each(prefixes, function(j, prefix)
+	{
+		if(typeof testStyle[prefix + 'BorderRadiusTopleft'] !== 'undefined') {
+			alternatives.push([/border-([a-z]+-[a-z]+)-radius/gi, function($0, $1)
+			{
+				return $.format('-{0}-border-radius-{1}', prefix.toLowerCase(), $1.replace(/-/, ''));
+			}]);
+			return false;
+		}
 	});
 
 	$.support.filter = typeof testStyle.filter !== 'undefined';
 
 	if($.support.filter) {
 		$.each([
-			[testStyle.cssText.toLowerCase().indexOf('rgba') === -1, /background-color *: *rgba\( *([.\d]+), *([.\d]+), *([.\d]+), *([.\d]+) *;\)/, function($0, $1, $2, $3, $4)
+			[testStyle.cssText.indexOf('rgba') === -1, /background-color *: *rgba\( *(\d+), *(\d+), *(\d+), *([.\d]+) *\)[; ]*/i, function($0, $1, $2, $3, $4)
 			{
-				return $.format('-ms-filter: "progid:DXImageTransform.Microsoft.Gradient(startColorStr=#{0},EndColorStr=#{0});"', $.format('{0:x}{1:x}{2:x}{3:x}', $4 * 255, $1, $2, $3));
+				return $.format('-ms-filter: "progid:DXImageTransform.Microsoft.Gradient(startColorStr=#{0},EndColorStr=#{0});"', $.format('{0:x}{1:x}{2:x}{3:x}', ($4 * 255).toFixed(), $1, $2, $3));
 			}],
-			[typeof testStyle.opacity === 'undefined', /opacity *:([^;]+);/, function($0)
+			[typeof testStyle.opacity === 'undefined', /opacity *:([^;]+)[; ]*/i, function($0, $1)
 			{
-				return $.format('-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(opacity={0});"', $0 * 100);
+				return $.format('-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(opacity={0});"', $1 * 100);
 			}]
 		], function(i, set)
 		{

@@ -20,7 +20,7 @@ var bolanderi = window['@PROJECT_NAME_SHORT@'] = {
 };
 
 bolanderi.get('VERSION', '@PROJECT_VERSION@');
-bolanderi.get('DEBUG_MODE', false);
+bolanderi.get('DEBUG_MODE', eval('@PROJECT_DEBUG@'));
 
 /*@CONTENT@*/
 

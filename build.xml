@@ -63,6 +63,7 @@
 		</fixcrlf>
 
 		<property name="project.file.url" value="${file.url.test}/${project.name.short}.js" />
+		<property name="project.debug" value="true" />
 
 		<delete dir="${dir.build}" />
 		<mkdir dir="${dir.build}" />
@@ -196,6 +197,7 @@
 			<replacefilter token="@PROJECT_AUTHOR@" value="${project.author}" />
 			<replacefilter token="@PROJECT_BUILD_TIME@" value="${project.build.time}" />
 			<replacefilter token="@PROJECT_BUILD_YEAR@" value="${project.build.year}" />
+			<replacefilter token="@PROJECT_DEBUG@" value="${project.debug}" />
 			<replacefilter token="@PROJECT_DESCRIPTION@" value="${project.description}" />
 			<replacefilter token="@PROJECT_FILE_URL@" value="${project.file.url}" />
 			<replacefilter token="@PROJECT_LICENSE@" value="${project.license}" />
@@ -259,11 +261,13 @@
 		<property name="dir.dist.sub" value="${dir.dist}/stable" />
 		<property name="project.file.url" value="${file.url.dist}/stable/${project.name.short}.js" />
 		<property name="project.version.stable" value="${project.version}" />
+		<property name="project.debug" value="false" />
 	</target>
 
 	<target name="_beta">
 		<property name="dir.dist.sub" value="${dir.dist}/beta" />
 		<property name="project.file.url" value="${file.url.dist}/beta/${project.name.short}.js" />
 		<property name="project.version.stable" value="${project.version.stable}" />
+		<property name="project.debug" value="false" />
 	</target>
 </project>

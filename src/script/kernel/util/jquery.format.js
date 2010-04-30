@@ -40,42 +40,53 @@
 
 		var args = $.slice(arguments, 1);
 
-		return target.replace(/{(\d+)((?:[[.][^[.|!:}]+)*)(?:\|([^:!}]+))?(?:!([^:}]))?(?::([^}]+))?}/g, function($0, index, props, alt, convert, format)
+		return target.replace(/{(\d+)((?:[^{}]|(?:{\d[^{}]*}))*)}/g, function(field, index, mods)
 		{
-			var prop, replacement = args[index];
+			var count = 0;
+			do {
+				var temp = mods;
+				mods = $.format.apply(null, [mods].concat(args));
 
-			if(props) {
-				$.each(props.replace(/(?:^[.[]|[\]\) ])/g, '').split(/[.[]/), function(i, fragment)
-				{
-					fragment = fragment.split('(');
-					if(fragment[1]) {
-						replacement = replacement[fragment[0]].apply(replacement, fragment[1].split(','));
-					}
-					else {
-						replacement = replacement[fragment[0]];
-					}
-				});
+				if(++count === 10) {
+					$.debug(target, mods);
+					$.err('jQuery.format: too many recursions!');
+				}
 			}
-			if(alt && !replacement) {
-				replacement = alt;
-			}
-			if(convert && convertors[convert]) {
-				replacement = convertors[convert](replacement);
-			}
-			if(format && formatters[typeof replacement]) {
-				replacement = formatters[typeof replacement](replacement, format);
-			}
+			while(mods !== temp);
 
-			if(!$.isWord(replacement)) {
-				try {
+			return mods.replace(/((?:[[.][^[.|!:]+)*)(?:\|([^:!]+))?(?:!([^:]))?(?::(.+))?/, function($0, props, alt, convert, format)
+			{
+				var replacement = args[index];
+
+				if(props) {
+					$.each(props.replace(/(?:^[.[]|[\]\) ])/g, '').split(/[.[]/), function(i, prop)
+					{
+						prop = prop.split('(');
+						if(prop[1]) {
+							replacement = replacement[prop[0]].apply(replacement, prop[1].split(','));
+						}
+						else {
+							replacement = replacement[prop[0]];
+						}
+					});
+				}
+				if(alt && !replacement) {
+					replacement = alt;
+				}
+				if(convert && convertors[convert]) {
+					replacement = convertors[convert](replacement);
+				}
+				if(format && formatters[typeof replacement]) {
+					replacement = formatters[typeof replacement](replacement, format);
+				}
+
+				if(!$.isWord(replacement)) {
+					$.debug(target, $0);
 					$.err('jQuery.format: replacement is not a string');
 				}
-				finally {
-					$.debug(target, $0);
-				}
-			}
 
-			return replacement;
+				return replacement;
+			});
 		});
 	};
 })(jQuery);

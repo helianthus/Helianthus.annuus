@@ -68,7 +68,7 @@ Job.prototype.data = function(name, value)
 $(bolanderi).one('kernelready', function()
 {
 	bolanderi.__jobGroups = {};
-	$.each($.range(1, $.len(bolanderi.get('RUN_AT')) * $.len(bolanderi.get('PRIORITY'))), function(i, groupNo)
+	$.each($.range(1, $.size(bolanderi.get('RUN_AT')) * $.size(bolanderi.get('PRIORITY'))), function(i, groupNo)
 	{
 		bolanderi.__jobGroups[groupNo] = [];
 	});

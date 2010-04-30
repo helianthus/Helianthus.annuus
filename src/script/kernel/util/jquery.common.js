@@ -36,22 +36,19 @@ $.extend({
 				return cookieSet;
 			}
 		}
-		else if(val === undefined) {
+		else if(typeof val === 'undefined') {
 			var match = document.cookie.match(new RegExp("\\b" + name + "=([^;]*)"));
       return match && match[1];
 		}
 		else {
-			var
-			cookie = $.format('{0}={1}; path=/', name, val || ''),
-			expire = new Date;
-
-			expire.setFullYear(val === null ? 1999 : 2999);
+			var cookie = $.format('{0}={1}; path=/', name, val || '');
+			var expire = (new Date(val === null ? '1999' : '2999')).toUTCString();
 
 			if(val !== null) {
-				document.cookie = $.format('{0}; expires={1}; domain={2}', cookie, expire.toUTCString(), topLevel ? $.uriSet().domain : location.hostname);
+				document.cookie = $.format('{0}; expires={1}; domain={2}', cookie, expire, topLevel ? $.uriSet().domain : location.hostname);
 			}
 			else {
-				cookie = $.format('{0}; expires={1}', cookie, expire.toUTCString());
+				cookie = $.format('{0}; expires={1}', cookie, expire);
 
 				document.cookie = $.format('{0}; domain={1}', cookie, location.hostname);
 				document.cookie = cookie;
@@ -84,16 +81,6 @@ $.extend({
 		}
 		else {
 			return target;
-		}
-	},
-
-	debug: function()
-	{
-		if(window.console) {
-			console[console.debug ? 'debug' : 'log'](arguments.length === 1 ? arguments[0] : arguments);
-		}
-		else {
-			alert($.slice(arguments).join(' '));
 		}
 	},
 
@@ -149,26 +136,26 @@ $.extend({
 
 	isNumber: function(target)
 	{
-		return !isNaN(target * 1) && !isNaN(parseInt(target));
+		return !isNaN(target * 1);
 	},
 
 	isWord: function(target)
 	{
-		return typeof target === 'string' || $.isNumber(target);
+		return typeof target === 'string' || typeof target === 'number';
 	},
 
 	isGarbage: function(target)
 	{
-		return target === null || target === undefined || target === NaN;
+		return target == null || target === NaN;
 	},
 
-	len: function(target)
+	size: function(target)
 	{
-		var len = 0;
+		var size = 0;
 		for(var name in target) {
-			++len;
+			++size;
 		}
-		return len;
+		return size;
 	},
 
 	make: function(obj)

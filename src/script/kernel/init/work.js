@@ -3,7 +3,7 @@
 
 function execGroups(eventType)
 {
-	for(var groupNo = bolanderi.get('RUN_AT')[eventType], until = groupNo + $.len(bolanderi.get('PRIORITY')) - 1; groupNo <= until; ++groupNo) {
+	for(var groupNo = bolanderi.get('RUN_AT')[eventType], until = groupNo + $.size(bolanderi.get('PRIORITY')) - 1; groupNo <= until; ++groupNo) {
 		var group = bolanderi.__jobGroups[groupNo];
 
 		$(bolanderi).trigger('groupstart', [groupNo]);
@@ -22,7 +22,12 @@ function execGroups(eventType)
 				job.js && $[job.__ui].call(job, job);
 			}
 			catch(e) {
-				$.debug('Error occurred: ' + job.module.title, 'error:', e, 'job:', job, 'context:', job.context());
+				$.debug({
+					module: job.module.title,
+					error: e,
+					job: job,
+					context: job.context()
+				});
 			}
 
 			$(bolanderi).trigger('jobend', [job, groupNo]);

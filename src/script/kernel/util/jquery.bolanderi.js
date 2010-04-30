@@ -22,7 +22,19 @@ $.extend({
 		}));
 	},
 
-	err: function(msg)
+
+	debug: function()
+	{
+		if(bolanderi.get('DEBUG_MODE')) {
+			if(window.console) {
+				console[console.debug ? 'debug' : 'log'](arguments.length === 1 ? arguments[0] : arguments);
+			}
+			else {
+				alert($.slice(arguments).join(' '));
+			}
+		}
+	},
+	error: function(msg)
 	{
 		msg = '[@PROJECT_NAME_SHORT@] ' + msg;
 		throw new Error($.format.apply(null, arguments));
@@ -30,11 +42,11 @@ $.extend({
 	notify: function(type, msg)
 	{
 		if(!/debug|error|info|log|warn/.test(type)) {
-			$.notify('warn', 'unknown notification type {0} encountered, falls back to "log".', type);
+			$.notify('warn', 'unknown notification type "{0}" encountered, falls back to "log".', type);
 			type = 'log';
 		}
 
-		if(type === 'debug' && bolanderi.get('DEBUG_MODE') === false) {
+		if(type === 'debug' && !bolanderi.get('DEBUG_MODE')) {
 			return;
 		}
 
@@ -46,9 +58,6 @@ $.extend({
 				type = 'log';
 			}
 			console[type](msg);
-		}
-		else {
-			//alert($.format('{0}:\n\n{1}', type.toUpperCase(), msg));
 		}
 	}
 });

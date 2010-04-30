@@ -45,7 +45,16 @@
 			var prop, replacement = args[index];
 
 			if(props) {
-				replacement = $.dig.apply(null, [].concat(replacement, props.split(/[.[\]]+/)));
+				$.each(props.replace(/(?:^[.[]|[\]\) ])/g, '').split(/[.[]/), function(i, fragment)
+				{
+					fragment = fragment.split('(');
+					if(fragment[1]) {
+						replacement = replacement[fragment[0]].apply(replacement, fragment[1].split(','));
+					}
+					else {
+						replacement = replacement[fragment[0]];
+					}
+				});
 			}
 			if(alt && !replacement) {
 				replacement = alt;

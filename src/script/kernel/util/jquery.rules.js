@@ -83,7 +83,7 @@ $.rules = function()
 		[csstext.indexOf('rgb(') !== -1, /#(\d+)/g, function($0, $1)
 		{
 			if($1.length === 3) {
-				$1 = $.format('{0[0]!*2}{0[1]!*2}{0[2]!*2}', $1);
+				$1 = $.format('{0[0]:*2}{0[1]:*2}{0[2]:*2}', $1);
 			}
 			return $.format('rgb({0}, {1}, {2})', parseInt($1.substr(0,2), 16), parseInt($1.substr(2,2), 16), parseInt($1.substr(4,2), 16));
 		}],

@@ -2,7 +2,7 @@
      xmlns:em="http://www.mozilla.org/2004/em-rdf#">
 
   <Description about="urn:mozilla:install-manifest">
-    <em:id>Helianthus.annuus@project.helianthus</em:id>
+    <em:id>@PROJECT_NAME@@@PROJECT_AUTHOR@</em:id>
     <em:type>2</em:type>
     <em:iconURL>chrome://@PROJECT_NAME_SHORT@/skin/icon.png</em:iconURL>
 

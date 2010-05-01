@@ -244,7 +244,7 @@ $.rules = function()
 		$.each([
 			[testStyle.cssText.indexOf('rgba') === -1, /background-color *: *rgba\( *(\d+), *(\d+), *(\d+), *([.\d]+) *\)[; ]*/i, function($0, $1, $2, $3, $4)
 			{
-				return $.format('-ms-filter: "progid:DXImageTransform.Microsoft.Gradient(startColorStr=#{0},EndColorStr=#{0});"', $.format('{0:x}{1:x}{2:x}{3:x}', ($4 * 255).toFixed(), $1, $2, $3));
+				return $.format('-ms-filter: "progid:DXImageTransform.Microsoft.Gradient(startColorStr=#{0},EndColorStr=#{0});"', $.format('{0:x}{1:x}{2:x}{3:x}', $4 * 255, $1, $2, $3));
 			}],
 			[typeof testStyle.opacity === 'undefined', /opacity *:([^;]+)[; ]*/i, function($0, $1)
 			{

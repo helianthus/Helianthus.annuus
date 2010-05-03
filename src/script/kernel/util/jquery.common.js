@@ -6,7 +6,7 @@ $.extend({
 		var pass = true;
 		$.digEach.apply(null, args.concat(function()
 		{
-			if(!callback(arguments[arguments.length - 1])) {
+			if(!callback.apply(this, arguments)) {
 				pass = false;
 				return false;
 			}
@@ -112,37 +112,30 @@ $.extend({
 
 	digEach: function(target)
 	{
-		var
-		args = $.slice(arguments, 1, -1),
-		len = args.length,
-		callback = arguments[len + 1];
+		var args = $.slice(arguments, 1);
+		var callback = args.pop();
+		var len = args.length;
+		if(len === 0) {
+			args[len++] = null;
+		}
 
 		(function dig(target, argIndex, ids)
 		{
-			if(!target) {
-				return;
-			}
-
 			if(argIndex === len) {
 				return callback.apply(target, ids.concat(target));
 			}
 
 			var digIds = args[argIndex++];
+			if(typeof digIds === 'string') {
+				digIds = [digIds];
+			}
 			var ret;
-
-			if(digIds === null) {
-				$.each(target, function(id, prop)
-				{
+			$.each(target, function(id, prop)
+			{
+				if(!digIds || $.inArray(id, digIds) !== -1) {
 					return (ret = dig(prop, argIndex, ids.concat(id)));
-				});
-			}
-			else {
-				$.each([].concat(digIds), function(i, id)
-				{
-					return (ret = dig(target[id], argIndex, ids.concat(id)));
-				});
-			}
-
+				}
+			});
 			return ret;
 		})(target, 0, []);
 

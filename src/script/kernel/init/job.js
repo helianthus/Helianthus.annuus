@@ -106,10 +106,10 @@ $(bolanderi).one('storageready', function()
 	var profile = bolanderi.__storage();
 	var passBasicRequirements = function(target)
 	{
-		return $.all(target.requires, ['truthy', 'options'], function(requirement)
+		return $.all(target.requires || {}, ['truthy', 'options'], function(type, requirement)
 		{
 			return (type === 'truthy' && requirement
-			|| type === 'options' && $.all(requirement, function(optionSet)
+			|| type === 'options' && $.all(requirement, function(i, optionSet)
 			{
 				return Job.prototype.options.call({ module: target.module || target }, optionSet.id) !== optionSet.value
 			}));
@@ -152,7 +152,7 @@ $(bolanderi).one('storageready', function()
 
 	var passApiRequirements = function(task)
 	{
-		return $.all([].concat($.dig(task.module.requires, 'api'), $.dig(task.requires, 'api')), function(api)
+		return $.all([].concat($.dig(task.module.requires, 'api'), $.dig(task.requires, 'api')), function(i, api)
 		{
 			return !api || $.dig.apply(null, [$].concat(requirements[i].split('.')));
 		});

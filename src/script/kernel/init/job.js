@@ -106,17 +106,14 @@ $(bolanderi).one('storageready', function()
 	var profile = bolanderi.__storage();
 	var passBasicRequirements = function(target)
 	{
-		var pass = true;
-		$.digEach(target.requires, ['truthy', 'options'], null, function(type, i, requirement)
+		return $.all(target.requires, ['truthy', 'options'], function(requirement)
 		{
-			if(type === 'truthy' && !requirement
-			|| type === 'options' && Job.prototype.options.call({ module: target.module || target }, requirement.id) !== requirement.value
-			) {
-				pass = false;
-				return false;
-			}
+			return (type === 'truthy' && requirement
+			|| type === 'options' && $.all(requirement, function(optionSet)
+			{
+				return Job.prototype.options.call({ module: target.module || target }, optionSet.id) !== optionSet.value
+			}));
 		});
-		return pass;
 	};
 
 	var apiTasks = [];
@@ -155,13 +152,10 @@ $(bolanderi).one('storageready', function()
 
 	var passApiRequirements = function(task)
 	{
-		var requirements = [].concat($.dig(task.module.requires, 'api'), $.dig(task.requires, 'api'));
-		for(var i=0; i<requirements.length; ++i) {
-			if(requirements[i] && !$.dig.apply(null, [$].concat(requirements[i].split('.')))) {
-				return false;
-			}
-		}
-		return true;
+		return $.all([].concat($.dig(task.module.requires, 'api'), $.dig(task.requires, 'api')), function(api)
+		{
+			return !api || $.dig.apply(null, [$].concat(requirements[i].split('.')));
+		});
 	};
 
 	var passedUI = ['auto'];

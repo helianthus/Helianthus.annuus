@@ -1,4 +1,19 @@
 $.extend({
+	all: function()
+	{
+		var args = $.slice(arguments);
+		var callback = args.pop();
+		var pass = true;
+		$.digEach.apply(null, args.concat(function()
+		{
+			if(!callback(arguments[arguments.length - 1])) {
+				pass = false;
+				return false;
+			}
+		}));
+		return pass;
+	},
+
 	bitmasks: function(flag, masks)
 	{
 		if($.isArray(masks)) {

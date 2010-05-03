@@ -75,6 +75,10 @@ $.each(bolanderi.get('MODULES'), function(moduleId, module)
 		task.id = taskId;
 
 		if((task.type || 'job') === 'job') {
+			if(task.frequency === 'always' && task.css) {
+				$.notify('warn', '"css" property found in task with frequency "always", make sure this is intended. [{0}, {1}]', module.title, taskId);
+			}
+
 			$.make(defaultData.privateData[moduleId], 'tasks')[taskId] = {
 				ui: task.ui,
 				hotkey: task.default_hotkey

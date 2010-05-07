@@ -3,9 +3,8 @@
 
 (function($)
 {
-	var
-	keys = ['source','protocol','authority','userinfo','user','password','host','hostname','subdomain','domain','port','relative','pathname','directory','filename','query','fragment'],
-	regex = /^(?:([^:\/?#]+):)?(?:\/\/((?:(([^:@]+)(?::([^:@]*))?)?@)?(((?:([^:\/?#]+?)\.)?([^:\/?#.]+\.[^:\/?#]+))?(?::(\d*))?)))?((((?:[^?#\/]*\/)*)([^?#]*))(?:\?([^#]*))?(?:#(.*))?)/;
+	var keys = ['source','scheme','authority','userinfo','user','password','host','subdomain','domain','port','relative','path','directory','file','query','fragment'];
+	var regex = /^(?:([^:\/?#]+):)?(?:\/\/((?:(([^:@]+)(?::([^:@]*))?)@)?((?:([^:\/?]+?)\.)?([^:\/?.]+\.[^:\/?]+)(?::(\d*))?)))?((((?:[^?#\/]*\/)*)([^?#]*))(?:\?([^#]*))?(?:#(.*))?)/;
 
 	function clean(obj)
 	{
@@ -23,11 +22,11 @@
 
 	function parse(url)
 	{
-		// unescape is for search page, on9 admin!!
-		// will have unexpected result with encoded URI!!
 		var uriSet = {}, i = keys.length, arr = regex.exec(unescape(url));
 
-		while(i--) uriSet[keys[i]] = arr[i] || '';
+		while(i--) {
+			uriSet[keys[i]] = arr[i] || '';
+		}
 
 		return clean($.extend(uriSet, { querySet: $.deparam(uriSet.query), fragmentSet: $.deparam(uriSet.fragment) }));
 	}
@@ -153,29 +152,3 @@
 		if(location.hash || hash !== '#') location.hash = hash === '#' ? '#poweredBy=annuus' : hash;
 	};
 })(jQuery);
-
-/*
-^
-(?:([^:\/?#]+):)? // protocol
-
-(?:\/\/( // authority
-	(?:( // userInfo
-		([^:@]*)(?::([^:@]*))?)?@ // user & password
-	)?
-	( // host
-		( hostname
-			(?:([^:\/?#]+?)\.)?([^:\/?#.]+\.[^:\/?#]+))? // subdomain & domain
-		)
-		(?::(\d*))? // port
-	)
-))?
-
-( // relative
-	( // pathname
-		((?:[^?#\/]*\/)*) // directory
-		([^?#]*) // filename
-	)
-	(?:\?([^#]*))? // query
-	(?:#(.*))? // fragment
-)
-*/

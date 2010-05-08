@@ -47,6 +47,7 @@
 
 		<propertyfile file="version.properties">
 			<entry key="project.version.release" type="int" operation="+" value="1" />
+			<entry key="project.version.build" type="int" value="0" />
 			<entry key="project.version.stable" value="${project.version}" />
 		</propertyfile>
 	</target>
@@ -57,16 +58,17 @@
 	<tempfile property="file.temp" destdir="${dir.build}" suffix=".js" deleteonexit="true" />
 
 	<target name="_build">
-		<!-- fix eol -->
-		<fixcrlf srcdir="src" eol="unix" encoding="utf-8">
-			<patternset refid="pattern.text" />
-		</fixcrlf>
-
+		<property name="project.version.channel" value="dev" />
 		<property name="project.file.url" value="${file.url.test}/${project.name.short}.js" />
 		<property name="project.debug" value="true" />
 
 		<delete dir="${dir.build}" />
 		<mkdir dir="${dir.build}" />
+
+		<!-- fix eol -->
+		<fixcrlf srcdir="src" eol="unix" encoding="utf-8">
+			<patternset refid="pattern.text" />
+		</fixcrlf>
 
 		<!-- CONTENT -->
 		<concat destfile="${file.content}">
@@ -210,10 +212,13 @@
 			<replacefilter token="@PROJECT_TARGET_REGEX@" value="${project.target.regex}" />
 			<replacefilter token="@PROJECT_URL@" value="${project.url}" />
 			<replacefilter token="@PROJECT_VERSION@" value="${project.version}" />
+			<replacefilter token="@PROJECT_VERSION_CHANNEL@" value="${project.version.channel}" />
 		</replace>
 	</target>
 
 	<target name="_dist">
+		<property name="dir.dist.sub" value="${dir.dist}/${project.version.channel}" />
+
 		<delete dir="${dir.dist.sub}" />
 		<mkdir dir="${dir.dist.sub}" />
 
@@ -258,14 +263,14 @@
 	</target>
 
 	<target name="_stable">
-		<property name="dir.dist.sub" value="${dir.dist}/stable" />
+		<property name="project.version.channel" value="stable" />
 		<property name="project.file.url" value="${file.url.dist}/stable/${project.name.short}.js" />
 		<property name="project.version.stable" value="${project.version}" />
 		<property name="project.debug" value="false" />
 	</target>
 
 	<target name="_beta">
-		<property name="dir.dist.sub" value="${dir.dist}/beta" />
+		<property name="project.version.channel" value="beta" />
 		<property name="project.file.url" value="${file.url.dist}/beta/${project.name.short}.js" />
 		<property name="project.version.stable" value="${project.version.stable}" />
 		<property name="project.debug" value="false" />

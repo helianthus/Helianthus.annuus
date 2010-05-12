@@ -92,7 +92,7 @@ $.extend({
 	correct: function(target)
 	{
 		if($.isNumber(target)) {
-			return target * 1;
+			return +target;
 		}
 		else {
 			return target;
@@ -144,7 +144,7 @@ $.extend({
 
 	isNumber: function(target)
 	{
-		return !isNaN(target * 1);
+		return !isNaN(+target);
 	},
 
 	isWord: function(target)

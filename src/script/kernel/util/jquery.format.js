@@ -44,10 +44,10 @@
 				}
 
 				if(/[bcdoxX]/.test(type)) {
-					target = (target * 1).toFixed(0);
+					target = (+target).toFixed(0);
 
 					if(type in radixes) {
-						target = (target * 1).toString(radixes[type]);
+						target = (+target).toString(radixes[type]);
 					}
 					else if(type === 'c') {
 						target = String.fromCharCode(target);

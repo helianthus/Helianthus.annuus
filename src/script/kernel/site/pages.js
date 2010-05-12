@@ -61,7 +61,7 @@ $.fn.extend({
 
 		for(var code in bolanderi.get('PAGES')) {
 			if(bolanderi.get('PAGES')[code].name === pageName) {
-				return this.__pageCode = code * 1;
+				return this.__pageCode = +code;
 			}
 		}
 

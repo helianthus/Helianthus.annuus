@@ -3,8 +3,8 @@
 
 (function($)
 {
-	var keys = ['source','scheme','authority','userinfo','user','password','host','subdomain','domain','port','relative','path','directory','file','query','fragment'];
-	var regex = /^(?:([^:\/?#]+):)?(?:\/\/((?:(([^:@]+)(?::([^:@]*))?)@)?((?:([^:\/?]+?)\.)?([^:\/?.]+\.[^:\/?]+)(?::(\d*))?)))?((((?:[^?#\/]*\/)*)([^?#]*))(?:\?([^#]*))?(?:#(.*))?)/;
+	var keys = ['source','scheme','authority','userinfo','user','password','host','hostname','subdomain','domain','port','relative','path','directory','file','query','fragment'];
+	var regex = /^(?:([^:\/?#]+):)?(?:\/\/((?:(([^:@]+)(?::([^:@]*))?)@)?(((?:([^:\/?]+?)\.)?([^:\/?.]+\.[^:\/?]+))(?::(\d*))?)))?((((?:[^?#\/]*\/)*)([^?#]*))(?:\?([^#]*))?(?:#(.*))?)/;
 
 	function clean(obj)
 	{

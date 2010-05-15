@@ -1,32 +1,6 @@
 $(bolanderi).one('modulesready', function()
 {
 
-var storage = {
-	'Flash': {
-		get: function() {
-			return bolanderi.get('FLASH_API').get('bolanderi', 'bolanderi');
-		},
-		set: function(val) {
-			bolanderi.get('FLASH_API').set('bolanderi', 'bolanderi', val.replace(/\\/g, '\\\\'));
-		},
-		clear: function() {
-			bolanderi.get('FLASH_API').remove('bolanderi', 'bolanderi');
-		}
-	},
-
-	'DOM': {
-		get: function() {
-			return localStorage.bolanderi;
-		},
-		set: function(val) {
-			localStorage['bolanderi'] = val;
-		},
-		clear: function() {
-			localStorage.removeItem('bolanderi');
-		}
-	}
-}[bolanderi.get('STORAGE_MODE')];
-
 var defaultData = {
 	publicData: {},
 	privateData: {}
@@ -87,30 +61,87 @@ $.each(bolanderi.get('MODULES'), function(moduleId, module)
 	});
 });
 
+var storageEngines = {
+	'flash': {
+		get: function() {
+			return bolanderi.get('FLASH_API').get('@PROJECT_NAME_SHORT@', '@PROJECT_NAME_SHORT@');
+		},
+		set: function(value) {
+			bolanderi.get('FLASH_API').set('@PROJECT_NAME_SHORT@', '@PROJECT_NAME_SHORT@', value.replace(/\\/g, '\\\\'));
+		},
+		clear: function() {
+			bolanderi.get('FLASH_API').remove('@PROJECT_NAME_SHORT@', '@PROJECT_NAME_SHORT@');
+		}
+	},
+
+	'localStorage': {
+		get: function() {
+			return localStorage.getItem('@PROJECT_NAME_SHORT@');
+		},
+		set: function(value) {
+			localStorage.setItem('@PROJECT_NAME_SHORT@', value);
+		},
+		clear: function() {
+			localStorage.removeItem('@PROJECT_NAME_SHORT@');
+		}
+	},
+
+	'sessionStorage': {
+		get: function() {
+			return sessionStorage.getItem('@PROJECT_NAME_SHORT@');
+		},
+		set: function(value) {
+			sessionStorage.setItem('@PROJECT_NAME_SHORT@', value);
+		},
+		clear: function() {
+			sessionStorage.removeItem('@PROJECT_NAME_SHORT@');
+		}
+	},
+
+	'null': {
+		get: $.noop,
+		set: $.noop,
+		clear: $.noop
+	}
+};
+
+var storage, storageMode;
 var cache = {};
 
-bolanderi.__storage = $.extend(function(options)
-{
-	options = $.extend({ curProfileOnly: true, savedOrDefault: 'both', noCache: false }, options);
+bolanderi.__storage = {
+	mode: function(mode)
+	{
+		if(mode) {
+			storageMode = mode;
+			storage = storageEngines[mode];
+		}
+		else {
+			return storageMode;
+		}
+	},
 
-	if(options.noCache || !cache[options.savedOrDefault]) {
-		cache[options.savedOrDefault] = options.savedOrDefault !== 'default' && storage.get() && JSON.parse(storage.get()) || {
-			curProfile: 'default',
-			profiles: {
-				'default': {}
-			}
-		};
+	get: function(options)
+	{
+		options = $.extend({ curProfileOnly: true, savedOrDefault: 'both', noCache: false }, options);
 
-		if(options.savedOrDefault !== 'saved') {
-			for(var profileId in cache[options.savedOrDefault].profiles) {
-				cache[options.savedOrDefault].profiles[profileId] = $.copy({}, defaultData, cache[options.savedOrDefault].profiles[profileId]);
+		if(options.noCache || !cache[options.savedOrDefault]) {
+			cache[options.savedOrDefault] = options.savedOrDefault !== 'default' && storage.get() && JSON.parse(storage.get()) || {
+				curProfile: 'default',
+				profiles: {
+					'default': {}
+				}
+			};
+
+			if(options.savedOrDefault !== 'saved') {
+				for(var profileId in cache[options.savedOrDefault].profiles) {
+					cache[options.savedOrDefault].profiles[profileId] = $.copy({}, defaultData, cache[options.savedOrDefault].profiles[profileId]);
+				}
 			}
 		}
-	}
 
-	return options.curProfileOnly ? cache[options.savedOrDefault].profiles[cache[options.savedOrDefault].curProfile] : cache[options.savedOrDefault];
-},
-{
+		return options.curProfileOnly ? cache[options.savedOrDefault].profiles[cache[options.savedOrDefault].curProfile] : cache[options.savedOrDefault];
+	},
+
 	save: function()
 	{
 		cache.saved ? storage.set(JSON.stringify(cache.saved)) : $.notify('warn', 'storage cache is not found, save failed.');
@@ -122,6 +153,6 @@ bolanderi.__storage = $.extend(function(options)
 		storage.clear();
 		cache.saved = cache.both = null;
 	}
-});
+};
 
 });

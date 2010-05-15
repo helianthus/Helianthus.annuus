@@ -214,7 +214,7 @@ $.rules = function()
 	};
 	var prefixes = ['', 'Khtml', 'Moz', 'O', 'Webkit'];
 
-	$.each(['border-radius', 'box-shadow', 'text-overflow'], function(i, property)
+	$.each(['border-radius', 'box-shadow', 'text-overflow', 'transition', 'transform'], function(i, property)
 	{
 		$.each(prefixes, function(j, prefix)
 		{

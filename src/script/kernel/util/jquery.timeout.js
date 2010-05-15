@@ -2,47 +2,63 @@
 {
 	var cache = {};
 
-	function proxy(id, fn, args)
+	function proxy(id, callback, args)
 	{
 		return function()
 		{
-			cache[id].destory = true;
-			fn.apply(null, args || []);
-			if(cache[id] && cache[id].destory) delete cache[id];
+			if(id) {
+				cache[id].destory = true;
+			}
+
+			callback.apply(null, args);
+
+			if(id && cache[id] && cache[id].destory) {
+				delete cache[id];
+			}
 		};
 	}
 
-	$.timeout = function(id, delay, callback)
+	// $.timeout(id);
+	// $.timeout(id, null);
+	// $.timeout(id, args);
+	// $.timeout(id, callback);
+	// $.timeout(id, callback, args);
+	// $.timeout(id, delay);
+	// $.timeout(id, delay, args);
+	// $.timeout(id, delay, callback);
+	// $.timeout(id, delay, callback, args);
+	// $.timeout(delay, callback);
+	// $.timeout(delay, callback, args);
+	// $.timeout(callback);
+	// $.timeout(callback, args);
+
+	$.timeout = function()
 	{
-		if(typeof id !== 'string') {
-			delay ? setTimeout(delay, id) : setTimeout(id, 0);
-			return;
-		}
+		var id;
+		var args = $.slice(arguments);
 
-		if(cache[id]) {
-			clearTimeout(cache[id].timer);
-		}
+		if(typeof args[0] === 'string') {
+			id = args.shift();
 
-		if(delay === null) {
-			delete cache[id];
-		}
-		else {
-			var args = callback === undefined ? null : $.slice(arguments, $.isFunction(callback) ? 3 : 2);
+			if(cache[id]) {
+				clearTimeout(cache[id].timer);
 
-			if($.isFunction(delay)) {
-				callback = delay;
-				delay = 0;
+				if(args[0] === null) {
+					delete cache[id];
+					return;
+				}
 			}
-			else if(!$.isFunction(callback)) {
-				if(delay === undefined)  delay = cache[id].delay;
-				callback = cache[id].callback;
-			}
+		}
 
+		var delay = typeof args[0] === 'number' ? args.shift() : id && cache[id] && cache[id].delay || 0;
+		var callback = $.isFunction(args[0]) ? args.shift() : cache[id].callback;
+		var timer = setTimeout(proxy(id, callback, args[0]), delay);
+
+		if(id) {
 			cache[id] = {
-				destory: false,
 				delay: delay,
 				callback: callback,
-				timer: setTimeout(proxy(id, callback, args), delay)
+				timer: timer
 			};
 		}
 	};

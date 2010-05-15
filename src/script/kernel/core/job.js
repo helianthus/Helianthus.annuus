@@ -30,7 +30,7 @@ $.each(['options', 'database'], function(i, dataType)
 		var dataDef = $.dig(this.module, dataType, id);
 
 		if(!dataDef && !(id in profile.publicData[dataType])) {
-			$.notify('warn', 'public {0} with id "{1}" does not exist.', dataType, id);
+			$.log('warn', 'public {0} with id "{1}" does not exist.', dataType, id);
 			return;
 		}
 
@@ -139,7 +139,7 @@ $(bolanderi).one('storageready', function()
 								jobsTasks.push(task);
 							}
 							else {
-								$.notify('warn', 'unknown task type "{0}" encountered. [{1}, {2}]', api.type, module.title, task.id);
+								$.log('warn', 'unknown task type "{0}" encountered. [{1}, {2}]', api.type, module.title, task.id);
 							}
 						}
 					});
@@ -163,8 +163,7 @@ $(bolanderi).one('storageready', function()
 	do {
 		var oldLength = apiTasks.length;
 
-		for(var i=0; i<apiTasks.length; ++i)
-		{
+		for(var i=0; i<apiTasks.length; ++i) {
 			var task = apiTasks[i];
 
 			if(!passApiRequirements(task)) {
@@ -177,7 +176,7 @@ $(bolanderi).one('storageready', function()
 			}
 			else if(task.type === 'utility') {
 				if(task.css) {
-					$.notify('warn', '"css" property for task type "utility" has no effect. [{0}, {1}]', task.module.title, task.id);
+					$.log('warn', '"css" property for task type "utility" has no effect. [{0}, {1}]', task.module.title, task.id);
 				}
 				task.js();
 			}
@@ -205,7 +204,7 @@ $(bolanderi).one('storageready', function()
 		});
 
 		if(!task.__ui) {
-			$.notify('log', 'no registered ui found, task dropped. [{0}, {1}]', task.module.title, task.id);
+			$.log('log', 'no registered ui found, task dropped. [{0}, {1}]', task.module.title, task.id);
 			return;
 		}
 

@@ -39,10 +39,10 @@ $.extend({
 		msg = '[@PROJECT_NAME_SHORT@] ' + msg;
 		throw new Error($.format.apply(null, arguments));
 	},
-	notify: function(type, msg)
+	log: function(type, msg)
 	{
 		if(!/debug|error|info|log|warn/.test(type)) {
-			$.notify('warn', 'unknown notification type "{0}" encountered, falls back to "log".', type);
+			$.log('warn', 'unknown notification type "{0}" encountered, falls back to "log".', type);
 			type = 'log';
 		}
 

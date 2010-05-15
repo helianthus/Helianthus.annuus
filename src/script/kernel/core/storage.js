@@ -50,7 +50,7 @@ $.each(bolanderi.get('MODULES'), function(moduleId, module)
 
 		if((task.type || 'job') === 'job') {
 			if(task.frequency === 'always' && task.css) {
-				$.notify('warn', '"css" property found in task with frequency "always", make sure this is intended. [{0}, {1}]', module.title, taskId);
+				$.log('warn', '"css" property found in task with frequency "always", make sure this is intended. [{0}, {1}]', module.title, taskId);
 			}
 
 			$.make(defaultData.privateData[moduleId], 'tasks')[taskId] = {
@@ -144,7 +144,7 @@ bolanderi.__storage = {
 
 	save: function()
 	{
-		cache.saved ? storage.set(JSON.stringify(cache.saved)) : $.notify('warn', 'storage cache is not found, save failed.');
+		cache.saved ? storage.set(JSON.stringify(cache.saved)) : $.log('warn', 'storage cache is not found, save failed.');
 		cache.both = null;
 	},
 

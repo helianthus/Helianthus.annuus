@@ -53,7 +53,7 @@ $.fn.work = function()
 		{
 			execGroups('window_loaded');
 
-			$.notify('info', 'bolanderi() completed successfully.');
+			$.log('info', 'bolanderi() completed successfully.');
 		});
 
 		if(bolanderi.get('WINDOW_IS_LOADED')) {
@@ -68,7 +68,7 @@ $.fn.work = function()
 	return this;
 };
 
-$(bolanderi).one('storageready', function()
+$(bolanderi).one('kernelready', function()
 {
 	$.timeout('checkDOM', function()
 	{

@@ -21,7 +21,7 @@
 		}
 
 		var delay = typeof args[0] === 'number' ? args.shift() : id && cache[id] && cache[id].delay || 0;
-		var params = $.isArray(args[0]) ? args.shift() : null;
+		var params = $.isArray(args[0]) ? args.shift() : [];
 		var callback = args[0] || cache[id].callback;
 
 		var timer = setTimeout(function()

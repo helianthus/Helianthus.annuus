@@ -10,7 +10,7 @@ $.each(['options', 'database'], function(i, dataType)
 {
 	Job.prototype[dataType] = function(id, value)
 	{
-		var profile = bolanderi.__storage({ savedOrDefault: typeof value === 'undefined' ? 'both' : 'saved' });
+		var profile = bolanderi.__storage.get({ savedOrDefault: typeof value === 'undefined' ? 'both' : 'saved' });
 		var paths = {
 			'public': [profile, 'publicData', dataType],
 			'protected': [profile, 'privateData', this.module.id, dataType],
@@ -103,7 +103,7 @@ $.auto = wrapUI({
 $(bolanderi).one('storageready', function()
 {
 	var docPageCode = $(document).pageCode();
-	var profile = bolanderi.__storage();
+	var profile = bolanderi.__storage.get();
 	var passBasicRequirements = function(target)
 	{
 		return $.all(target.requires || {}, ['truthy', 'options'], function(type, requirement)

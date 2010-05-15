@@ -1,0 +1,27 @@
+# Others // ForceMarkup got to be done first
+{ +filter{annuus.ForceMarkup} }
+@PROJECT_TARGET_PRIVOXY@
+{ +filter{annuus.ForceStrictMode} }
+@PROJECT_TARGET_PRIVOXY@
+
+# Scripts
+{ +filter{@PROJECT_NAME_SHORT@.js} }
+@PROJECT_TARGET_PRIVOXY@
+
+# IE8 Re-enabler
+{ +filter{annuus.ForceIE8} }
+@PROJECT_TARGET_PRIVOXY@
+{ +filter{annuus.FixInnerForm} }
+forum*.hkgolden.com/(?:$|topic|search|tags)
+{ +filter{annuus.FixProfileLayout} }
+forum*.hkgolden.com/Profilepage
+{ +filter{annuus.FixBookmarkBar} }
+forum*.hkgolden.com/golden_apps
+
+# Rubbish Remover
+{ +filter{annuus.EndScripts} }
+@PROJECT_TARGET_PRIVOXY@
+{ +filter{annuus.DynScripts} }
+@PROJECT_TARGET_PRIVOXY@
+{ +filter{annuus.BookmarkBar} }
+### @PROJECT_TARGET_PRIVOXY@

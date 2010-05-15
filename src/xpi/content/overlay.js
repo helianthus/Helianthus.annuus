@@ -1,15 +1,14 @@
 window.addEventListener('load', function()
 {
-	var
-	pref = Components.classes['@mozilla.org/preferences-service;1'].getService(Components.interfaces.nsIPrefBranch).getBranch('extensions.annuus.'),
-	status = pref.getBoolPref('status'),
-	overlay = document.getElementById('annuus-overlay'),
-	rHKG = /^http:\/\/forum\d+\.hkgolden\.com/i,
-	noop = function(){};
+	var pref = Components.classes['@mozilla.org/preferences-service;1'].getService(Components.interfaces.nsIPrefBranch).getBranch('extensions.@PROJECT_NAME_SHORT@.');
+	var status = pref.getBoolPref('status');
+	var overlay = document.getElementById('@PROJECT_NAME_SHORT@-overlay');
+	var rTarget = /@PROJECT_TARGET_REGEX@/i;
+	var noop = function(){};
 
 	function setStatus()
 	{
-		overlay.src = status ? 'chrome://annuus/skin/status-on.png' : 'chrome://annuus/skin/status-off.png';
+		overlay.src = status ? 'chrome://@PROJECT_NAME_SHORT@/skin/status-on.png' : 'chrome://@PROJECT_NAME_SHORT@/skin/status-off.png';
 	}
 	setStatus();
 
@@ -23,7 +22,7 @@ window.addEventListener('load', function()
 	gBrowser.addProgressListener({
 		onLocationChange: function(progress, request, uri)
 		{
-			overlay.hidden = !(uri && rHKG.test(uri.prePath));
+			overlay.hidden = !(uri && rTarget.test(uri.spec));
 		},
 		onStateChange: noop,
 		onProgressChange: noop,
@@ -34,13 +33,18 @@ window.addEventListener('load', function()
 	gBrowser.addTabsProgressListener({
 		onLocationChange: function(browser, progress, request, uri)
 		{
-			if(progress.isLoadingDocument && status && rHKG.test(uri.prePath)) {
-				var
-				doc = browser.contentDocument,
-				script = doc.createElement('script');
-				script.charset = 'utf-8';
-				script.src = 'resource://annuus/annuus.js';
-				doc.getElementsByTagName('head')[0].appendChild(script);
+			if(progress.isLoadingDocument && status && rTarget.test(uri.spec))
+			{
+				var doc = browser.contentDocument;
+				var head = doc.getElementsByTagName('head');
+				var script = doc.createElement('script');
+
+				script.src = 'resource://@PROJECT_NAME_SHORT@/@PROJECT_NAME_SHORT@.js';
+
+				(function inject()
+				{
+					head[0] ? head[0].appendChild(script) : setTimeout(inject, 50);
+				})();
 			}
 		},
 		onStateChange: noop,

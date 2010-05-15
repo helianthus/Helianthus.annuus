@@ -1,15 +1,17 @@
-if(!document.getElementById('annuus') && /forum\d+\.hkgolden\.com/.test(location.href))
+if(/@PROJECT_TARGET_REGEX@/i.test(location.href))
 {
-	var
-	head = document.getElementsByTagName('head'),
-	script = document.createElement('script');
-
-	script.id = 'annuus';
-	script.charset = 'utf-8';
-	script.src = chrome.extension.getURL("annuus.js");
-
-	(function append()
+	chrome.extension.sendRequest(true, function(status)
 	{
-		head[0] ? head[0].appendChild(script) : setTimeout(append, 50);
-	})();
+		if(!status) return;
+
+		var head = document.getElementsByTagName('head');
+		var script = document.createElement('script');
+
+		script.src = chrome.extension.getURL("@PROJECT_NAME_SHORT@.js");
+
+		(function inject()
+		{
+			head[0] ? head[0].appendChild(script) : setTimeout(inject, 50);
+		})();
+	});
 }

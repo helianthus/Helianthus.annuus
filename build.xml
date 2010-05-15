@@ -1,8 +1,33 @@
-﻿<project name="Helianthus.annuus">
-	<tempfile property="temp" destdir="test" suffix=".js" deleteonexit="true" />
-	<tempfile property="temp2" destdir="test" suffix=".js" deleteonexit="true" />
+<project name="Helianthus.bolanderi" default="beta">
+	<propertyfile file="version.properties">
+		<entry key="project.version.main" default="0.0" />
+		<entry key="project.version.release" default="0" />
+		<entry key="project.version.build" default="0" type="int" pattern="####" operation="+" />
+		<entry key="project.version.stable" default="0.0.0.0" />
+	</propertyfile>
 
-	<property name="dist_prefix" value="../dist/v3" />
+	<property file="build.properties" />
+	<property file="version.properties" />
+	<property name="project.version" value="${project.version.main}.${project.version.release}.${project.version.build}" />
+	<tstamp>
+		<format property="project.build.year" pattern="yyyy" />
+		<format property="project.build.time" pattern="yyyy-MM-dd HH:mm:ss" />
+	</tstamp>
+
+	<echoproperties prefix="project" />
+
+	<patternset id="pattern.text">
+		<include name="**/*.action" />
+		<include name="**/*.css" />
+		<include name="**/*.filter" />
+		<include name="**/*.html" />
+		<include name="**/*.js" />
+		<include name="**/*.json" />
+		<include name="**/*.manifest" />
+		<include name="**/*.rdf" />
+		<include name="**/*.xml" />
+		<include name="**/*.xul" />
+	</patternset>
 
 	<!--** test **-->
 	<target name="test" depends="_build,_build_cont" />
@@ -10,250 +35,244 @@
 	<!--** build **-->
 	<target name="build" depends="_build,_minify,_build_cont" />
 
-	<!--** stable **-->
-	<target name="stable" depends="_stable, _clean, build, _dist">
-		<!-- duplicate as beta -->
-		<delete failonerror="false">
-			<fileset dir="${dist_prefix}/beta" includes="**/*" />
-		</delete>
-
-		<copy todir="${dist_prefix}/beta">
-		 <fileset dir="${dist_prefix}/stable" includes="**/*" />
-		</copy>
-
-		<!-- version.js -->
-		<copy file="src/version.js" tofile="../other/an.v3.main.js" overwrite="true" encoding="UTF-8">
-			<filterset>
-				<filter token="AN_BETA" value="${AN_VERSION}" />
-				<filter token="AN_STABLE" value="${AN_VERSION}" />
-			</filterset>
-		</copy>
-
-		<!-- an.crx.xml
-		<copy file="src/crx.xml" tofile="../other/annuus.crx.xml" overwrite="true" encoding="UTF-8">
-			<filterchain>
-				<expandproperties/>
-			</filterchain>
-		</copy>
-		-->
-
-		<!-- build.ini -->
-		<propertyfile file="build.ini">
-			<entry key="AN_VERSION_STABLE" value="${AN_VERSION}" />
-			<entry key="_AN_VERSION" type="int" operation="+" value="1" />
-		</propertyfile>
-
-		<echo>Version: ${AN_VERSION}</echo>
-	</target>
-
 	<!--** beta **-->
-	<target name="beta" depends="_beta, _clean, build, _dist">
-		<copy file="src/version.js" tofile="../other/an.v3.main.js" overwrite="true" encoding="UTF-8">
-			<filterset>
-				<filter token="AN_BETA" value="${AN_VERSION}" />
-				<filter token="AN_STABLE" value="${AN_VERSION_STABLE}" />
-			</filterset>
+	<target name="beta" depends="_beta, build, _dist" />
+
+	<!--** stable **-->
+	<target name="stable" depends="_stable, build, _dist">
+		<!-- duplicate as beta -->
+		<copy todir="${dir.dist}/beta">
+		 <fileset dir="${dir.dist}/stable" includes="**" />
 		</copy>
 
-		<echo>Version: ${AN_VERSION}</echo>
+		<propertyfile file="version.properties">
+			<entry key="project.version.release" type="int" operation="+" value="1" />
+			<entry key="project.version.build" type="int" value="0" />
+			<entry key="project.version.stable" value="${project.version}" />
+		</propertyfile>
 	</target>
 
 	<!--** internals **-->
 
-	<target name="_build" depends="_beta">
-		<propertyfile file="build.ini">
-			<entry key="_AN_VERSION" default="0" />
-			<entry key="MAIN_VERSION" default="0" />
+	<tempfile property="file.content" destdir="${dir.build}" suffix=".js" deleteonexit="true" />
+	<tempfile property="file.temp" destdir="${dir.build}" suffix=".js" deleteonexit="true" />
 
-			<entry key="BUILD_NUMBER" default="0" type="int" pattern="0000" operation="+" />
-		</propertyfile>
+	<target name="_build">
+		<property name="project.version.channel" value="dev" />
+		<property name="project.file.url" value="${file.url.test}/${project.name.short}.js" />
+		<property name="project.debug" value="true" />
 
-		<property file="build.ini" />
+		<delete dir="${dir.build}" />
+		<mkdir dir="${dir.build}" />
 
-		<tstamp>
-			<format property="BUILD_TIME" pattern="yyyy-MM-dd HH:mm:ss" />
-		</tstamp>
-		<property name="AN_VERSION" value="${MAIN_VERSION}.${_AN_VERSION}.${BUILD_NUMBER}" />
+		<!-- fix eol -->
+		<fixcrlf srcdir="src" eol="unix" encoding="utf-8">
+			<patternset refid="pattern.text" />
+		</fixcrlf>
 
-		<delete dir="test" />
-		<mkdir dir="test" />
-
-		<!-- annuus.js -->
-		<concat destfile="${temp}" fixlastline="true" encoding="UTF-8">
+		<!-- CONTENT -->
+		<concat destfile="${file.content}">
 			<filterchain>
-				<expandproperties/>
+				<stripjavacomments />
+				<striplinebreaks />
+				<tokenfilter>
+					<replacestring from="&apos;" to="&quot;" />
+				</tokenfilter>
 			</filterchain>
 
-			<fileset file="src/script/intro.js" />
+			<header filtering="false" trim="true" trimleading="true">
+			(function(style, css)
+			{
+				document.getElementsByTagName('head')[0].appendChild(style);
+				style.styleSheet ? style.styleSheet.cssText += css : style.appendChild(document.createTextNode(css));
+			})(document.createElement('style'), '</header><footer filtering="false" trimleading="true">');
 
-			<!-- opera -->
-			<filelist dir="src/script/opera">
-				<file name="opera9.js" />
-				<file name="rubbish.js" />
+			</footer>
+
+			<fileset dir="src/script/kernel" includes="**/*.css" />
+		</concat>
+
+		<concat destfile="${file.content}" append="true" encoding="utf-8">
+			<filterchain>
+				<escapeunicode />
+				<tokenfilter>
+					<filetokenizer />
+					<replaceregex pattern=" *\\\n\t+" replace="\\\\n" flags="g" />
+					<replaceregex pattern="(/\*@cc_on@.+?@end@[^)]+)" replace="eval('\1')" flags="gs" />
+				</tokenfilter>
+			</filterchain>
+
+			<filelist dir="src/script">
+				<file name="opera/opera9.js" />
+				<file name="opera/rubbish.js" />
+				<file name="kernel/lib/jquery.js" />
 			</filelist>
-			<!-- lib -->
-			<fileset file="src/script/lib/jquery.js" />
-			<fileset file="src/script/lib/jquery.followup.js" />
-			<fileset dir="src/script/lib" includes="*.js" excludes="jquery.js,jquery.followup.js" />
-			<!-- modules -->
-			<fileset dir="src/script/modules" includes="*.js" />
-			<!-- kernel -->
-			<fileset dir="src/script/kernel" includes="*.js" excludes="init.js" />
-			<fileset file="src/script/kernel/init.js" />
-
-			<fileset file="src/script/outro.js" />
+			<fileset dir="src/script">
+				<include name="kernel/**/*.js" />
+				<include name="modules/**/*.js" />
+				<exclude name="kernel/lib/jquery.js" />
+			</fileset>
 		</concat>
 
-		<concat destfile="test/annuus.js" encoding="UTF-8">
+		<loadfile property="CONTENT" srcfile="${file.content}" />
+
+		<!-- js -->
+		<copy file="src/script/bolanderi.js" tofile="${dir.build}/${project.name.short}.js">
 			<filterchain>
-				<expandproperties/>
+				<concatfilter prepend="src/header.js" />
 			</filterchain>
-
-			<fileset file="src/script/header.js" />
-			<fileset file="${temp}" />
-		</concat>
+			<filterset begintoken="/*@" endtoken="@*/">
+				<filter token="CONTENT" value="${CONTENT}" />
+			</filterset>
+		</copy>
 	</target>
 
-	<taskdef name="jscomp" classname="com.google.javascript.jscomp.ant.CompileTask" classpath="build/closurecompiler/compiler.jar" />
+	<taskdef name="jscomp" classname="com.google.javascript.jscomp.ant.CompileTask" classpath="${dir.lib}/closurecompiler/compiler.jar" />
 	<target name="_minify">
-		<!-- annuus-raw.js -->
-		<move file="test/annuus.js" tofile="test/annuus-raw.js" />
+		<!-- js(raw) -->
+		<move file="${dir.build}/${project.name.short}.js" tofile="${dir.build}/${project.name.short}-raw.js" />
 
-		<!--<java jar="build/yuicompressor/yuicompressor.jar" fork="true" failonerror="true">
-			<arg line="test/annuus-raw.js -o ${temp} - -charset UTF-8" />
-		</java>-->
-
-		<!--<java jar="build/closurecompiler/compiler.jar" fork="true" failonerror="true">
-			<arg line="- -js test/annuus-raw.js - -js_output_file ${temp} - -charset UTF-8 - -warning_level QUIET" />
-		</java>-->
-
-		<jscomp compilationLevel="simple" warning="quiet" debug="false" output="${temp}">
-			<sources dir="test">
-				<file name="annuus-raw.js"/>
+		<!-- js(minified) -->
+		<jscomp compilationLevel="simple" warning="quiet" debug="false" output="${file.temp}">
+			<sources dir="${dir.build}">
+				<file name="${project.name.short}-raw.js" />
 			</sources>
 		</jscomp>
 
-		<concat destfile="test/annuus.js" encoding="UTF-8">
+		<copy file="${file.temp}" tofile="${dir.build}/${project.name.short}.js">
 			<filterchain>
-				<expandproperties/>
+				<concatfilter prepend="src/header.js" />
 			</filterchain>
-
-			<fileset file="src/script/header.js" />
-			<fileset file="${temp}" />
-		</concat>
+		</copy>
 	</target>
 
 	<target name="_build_cont">
-		<!-- annuus.user.js -->
-		<exec executable="build/base64/base64.exe">
-			<arg line="-e ${temp} ${temp2}" />
-		</exec>
+		<!-- user.js -->
+		<java classpath="lib/base64" classname="Base64">
+			<arg line="-e ${dir.build}/${project.name.short}.js ${file.temp}" />
+		</java>
 
-		<loadfile property="ENCODED_SCRIPT_CONTENT" srcfile="${temp2}">
+		<loadfile property="ENCODED_CONTENT" srcfile="${file.temp}" />
+
+		<copy file="src/user/bolanderi.user.js" todir="${dir.build}/user">
 			<filterchain>
-				<striplinebreaks />
+				<concatfilter prepend="src/header.js" />
 			</filterchain>
-		</loadfile>
-
-		<concat destfile="test/user/annuus.user.js" fixlastline="true" encoding="UTF-8">
-			<filterchain>
-				<expandproperties/>
-			</filterchain>
-
-			<fileset file="src/script/header.js" />
-			<fileset file="src/user/annuus.user.js" />
-		</concat>
+			<filterset>
+				<filter token="ENCODED_CONTENT" value="${ENCODED_CONTENT}" />
+			</filterset>
+		</copy>
 
 		<!-- xpi -->
-		<copy todir="test" overwrite="true">
-			<fileset dir="src" includes="xpi/" />
+		<copy todir="${dir.build}/xpi">
+			<fileset dir="src/xpi" />
 		</copy>
-
-		<copy file="src/xpi/install.rdf" todir="test/xpi" overwrite="true" encoding="UTF-8">
-			<filterchain>
-				<expandproperties/>
-			</filterchain>
-		</copy>
-
-		<copy file="test/annuus.js" todir="test/xpi/content/" />
+		<copy file="${dir.build}/${project.name.short}.js" todir="${dir.build}/xpi/content/" />
 
 		<!-- m2f -->
-		<copy todir="test" overwrite="true">
-			<fileset dir="src" includes="m2f/" />
-		</copy>
-
-		<copy file="src/m2f/Helianthus.annuus.xml" todir="test/m2f" overwrite="true" encoding="UTF-8">
-			<filterchain>
-				<expandproperties/>
-			</filterchain>
-		</copy>
-
-		<copy file="test/annuus.js" todir="test/m2f/Helianthus.annuus/Scripts" />
+		<copy file="src/m2f/bolanderi.xml" todir="${dir.build}/m2f" />
+		<copy file="${dir.build}/${project.name.short}.js" todir="${dir.build}/m2f/${project.name.short}/scripts" />
 
 		<!-- crx -->
-		<copy todir="test" overwrite="true" encoding="UTF-8">
-			<filterchain>
-				<expandproperties/>
-			</filterchain>
-
-			<fileset dir="src" includes="crx/" />
+		<copy todir="${dir.build}/crx">
+			<fileset dir="src/crx" />
+			<fileset file="${dir.build}/${project.name.short}.js" />
 		</copy>
-		<copy file="test/annuus.js" tofile="test/crx/annuus.js" overwrite="true" />
 
 		<!-- privoxy -->
-		<copy todir="test/privoxy" overwrite="true" encoding="UTF-8">
-			<filterchain>
-				<expandproperties/>
-			</filterchain>
-
-			<fileset dir="src/privoxy" includes="**/*" />
+		<copy todir="${dir.build}/privoxy">
+			<fileset dir="src/privoxy" />
 		</copy>
+
+		<!-- rename files -->
+		<move todir="${dir.build}">
+			<filtermapper>
+				<replacestring from="bolanderi" to="${project.name.short}" />
+			</filtermapper>
+			<fileset dir="${dir.build}" includes="**/bolanderi.*" />
+		</move>
+
+		<!-- replace tokens -->
+		<replace dir="${dir.build}">
+			<patternset refid="pattern.text" />
+
+			<replacefilter token="@PROJECT_AUTHOR@" value="${project.author}" />
+			<replacefilter token="@PROJECT_BUILD_TIME@" value="${project.build.time}" />
+			<replacefilter token="@PROJECT_BUILD_YEAR@" value="${project.build.year}" />
+			<replacefilter token="@PROJECT_DEBUG@" value="${project.debug}" />
+			<replacefilter token="@PROJECT_DESCRIPTION@" value="${project.description}" />
+			<replacefilter token="@PROJECT_FILE_URL@" value="${project.file.url}" />
+			<replacefilter token="@PROJECT_LICENSE@" value="${project.license}" />
+			<replacefilter token="@PROJECT_LICENSE_URL@" value="${project.license.url}" />
+			<replacefilter token="@PROJECT_NAME@" value="${project.name}" />
+			<replacefilter token="@PROJECT_NAME_SHORT@" value="${project.name.short}" />
+			<replacefilter token="@PROJECT_TARGET_INCLUDE@" value="${project.target.include}" />
+			<replacefilter token="@PROJECT_TARGET_MATCH@" value="${project.target.match}" />
+			<replacefilter token="@PROJECT_TARGET_PRIVOXY@" value="${project.target.privoxy}" />
+			<replacefilter token="@PROJECT_TARGET_REGEX@" value="${project.target.regex}" />
+			<replacefilter token="@PROJECT_URL@" value="${project.url}" />
+			<replacefilter token="@PROJECT_VERSION@" value="${project.version}" />
+			<replacefilter token="@PROJECT_VERSION_CHANNEL@" value="${project.version.channel}" />
+		</replace>
 	</target>
 
 	<target name="_dist">
+		<property name="dir.dist.sub" value="${dir.dist}/${project.version.channel}" />
+
+		<delete dir="${dir.dist.sub}" />
+		<mkdir dir="${dir.dist.sub}" />
+
 		<!-- scripts -->
-		<copy todir="${dist_dir}">
-			<fileset dir="test" includes="annuus.js" />
-			<fileset dir="test/user" includes="annuus.user.js" />
+		<copy todir="${dir.dist.sub}">
+			<fileset dir="${dir.build}" includes="${project.name.short}.js" />
+			<fileset dir="${dir.build}/user" includes="${project.name.short}.user.js" />
 		</copy>
 
-		<!-- crx -->
-		<exec executable="cmd">
-			<!-- http://github.com/Constellation/crxmake -->
-			<arg value="/C crxmake --pack-extension=test/crx --pack-extension-key=build/key.pem --extension-out=${dist_dir}/annuus.crx" />
+		<!-- crx - http://github.com/Constellation/crxmake -->
+		<exec executable="crxmake" failifexecutionfails="false">
+			<arg value="--pack-extension=${dir.build}/crx --pack-extension-key=${crx.key} --extension-out=${dir.dist.sub}/${project.name.short}.crx" />
+		</exec>
+		<exec executable="cmd" osfamily="windows">
+			<arg value="/C crxmake --pack-extension=${dir.build}/crx --pack-extension-key=${crx.key} --extension-out=${dir.dist.sub}/${project.name.short}.crx" />
 		</exec>
 
 		<!-- xpi -->
-		<mkdir dir="test/xpi_package" />
-		<mkdir dir="test/xpi_package/chrome" />
-		<zip destfile="test/xpi_package/chrome/annuus.jar" basedir="test/xpi" includes="content/*,locale/*,skin/*" />
-		<copy todir="test/xpi_package">
-			<fileset dir="test/xpi" includes="*/**" excludes="content/,locale/,skin/" />
-		</copy>
-		<replaceregexp file="test/xpi_package/chrome.manifest" match=" (?=(?:content|locale|skin)/)" replace=" jar:chrome/annuus.jar!/" flags="g" encoding="UTF-8" />
+		<mkdir dir="${dir.build}/xpi_package/chrome" />
 
-		<zip destfile="${dist_dir}/annuus.xpi" basedir="test/xpi_package" />
+		<zip destfile="${dir.build}/xpi_package/chrome/${project.name.short}.jar" basedir="${dir.build}/xpi" includes="content/,locale/,skin/" />
+		<copy todir="${dir.build}/xpi_package">
+			<fileset dir="${dir.build}/xpi" includes="**" excludes="content/,locale/,skin/" />
+		</copy>
+		<replaceregexp file="${dir.build}/xpi_package/chrome.manifest" match=" (?=(?:content|locale|skin)/)" replace=" jar:chrome/${project.name.short}.jar!/" flags="g" />
+
+		<zip destfile="${dir.dist.sub}/${project.name.short}.xpi" basedir="${dir.build}/xpi_package" />
 
 		<!-- m2f -->
-		<zip destfile="${dist_dir}/annuus.m2f" basedir="test/m2f" />
+		<zip destfile="${dir.dist.sub}/${project.name.short}.m2f" basedir="${dir.build}/m2f" />
 
 		<!-- privoxy -->
-		<zip destfile="${dist_dir}/annuus.privoxy.zip" basedir="test/privoxy" />
-	</target>
+		<zip destfile="${dir.dist.sub}/${project.name.short}.privoxy.zip" basedir="${dir.build}/privoxy" />
 
-	<target name="_clean">
-		<delete failonerror="false">
-			<fileset dir="${dist_dir}" includes="*/**" />
-		</delete>
+		<!-- version.js -->
+		<copy file="src/version.js" todir="${dir.dist}">
+			<filterset>
+				<filter token="PROJECT_VERSION" value="${project.version}" />
+				<filter token="PROJECT_VERSION_STABLE" value="${project.version.stable}" />
+			</filterset>
+		</copy>
 	</target>
 
 	<target name="_stable">
-		<property name="dist_dir" value="${dist_prefix}/stable" />
-		<property name="AN_URL" value="http://helianthus-annuus.googlecode.com/svn/dist/v3/stable/annuus.js" />
+		<property name="project.version.channel" value="stable" />
+		<property name="project.file.url" value="${file.url.dist}/stable/${project.name.short}.js" />
+		<property name="project.version.stable" value="${project.version}" />
+		<property name="project.debug" value="false" />
 	</target>
 
 	<target name="_beta">
-		<property name="dist_dir" value="${dist_prefix}/beta" />
-		<property name="AN_URL" value="http://helianthus-annuus.googlecode.com/svn/dist/v3/beta/annuus.js" />
+		<property name="project.version.channel" value="beta" />
+		<property name="project.file.url" value="${file.url.dist}/beta/${project.name.short}.js" />
+		<property name="project.version.stable" value="${project.version.stable}" />
+		<property name="project.debug" value="false" />
 	</target>
 </project>

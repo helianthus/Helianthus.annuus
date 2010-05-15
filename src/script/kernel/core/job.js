@@ -57,11 +57,11 @@ Job.prototype.data = function(name, value)
 	var data = this.module.data = this.module.data || {};
 
 	if(typeof value === 'undefined') {
-		data[name] = value;
-		return this;
+		return name ? data[name] : data;
 	}
 	else {
-		return data[name];
+		data[name] = value;
+		return this;
 	}
 };
 
@@ -178,7 +178,7 @@ $(bolanderi).one('storageready', function()
 				if(task.css) {
 					$.log('warn', '"css" property for task type "utility" has no effect. [{0}, {1}]', task.module.title, task.id);
 				}
-				task.js();
+				task.js(new Job(task));
 			}
 
 			apiTasks.splice(i--, 1);

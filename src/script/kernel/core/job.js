@@ -117,7 +117,7 @@ $(bolanderi).one('storageready', function()
 	};
 
 	var apiTasks = [];
-	var jobsTasks = [];
+	var actionTasks = [];
 
 	$.each(bolanderi.get('MODULES'), function(moduleId, module)
 	{
@@ -135,8 +135,8 @@ $(bolanderi).one('storageready', function()
 							if(task.type in { ui:1, utility:1 }) {
 								apiTasks.push(task);
 							}
-							else if((task.type || 'job') === 'job') {
-								jobsTasks.push(task);
+							else if((task.type || 'action') === 'action') {
+								actionTasks.push(task);
 							}
 							else {
 								$.log('warn', 'unknown task type "{0}" encountered. [{1}, {2}]', api.type, module.title, task.id);
@@ -186,7 +186,7 @@ $(bolanderi).one('storageready', function()
 	}
 	while(oldLength !== apiTasks.length);
 
-	$.each(jobsTasks, function(i, task)
+	$.each(actionTasks, function(i, task)
 	{
 		if(!passApiRequirements(task)) {
 			return;

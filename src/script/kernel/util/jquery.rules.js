@@ -1,11 +1,58 @@
 (function($)
 {
 
-var jStyle, cache = [];
+var cache = true;
+var cssSet = [''];
+var map = {
+	__anonymous: 0
+};
 
-function writeCSS(css, isOverWrite)
+$.rules = function()
 {
-	if(!jStyle) jStyle = $('<style />').appendTo('#an');
+	var args = $.slice(arguments);
+
+	if(typeof args[0] !== 'string') {
+		var options = args.shift();
+	}
+
+	var css = compile(args);
+
+	if(options && options.id) {
+		if(options.id in map) {
+			cssSet[map[options.id]] = css;
+		}
+		else {
+			map[options.id] = cssSet.push(css);
+			map.__anonymous = cssSet.push('');
+		}
+	}
+	else {
+		cssSet[map.__anonymous] += css;
+	}
+
+	if(!cache) {
+		write();
+	}
+};
+
+$(bolanderi).bind('groupend', function(event, groupNo)
+{
+	if(groupNo === 3) {
+		write();
+		$(bolanderi).unbind(event);
+		cache = false;
+	}
+});
+
+var jStyle;
+
+function write(isOverWrite)
+{
+	if(!jStyle) {
+		jStyle = $('<style />').appendTo('#an');
+	}
+
+	var css = cssSet.join('');
 
 	if(jStyle[0].styleSheet) {
 		isOverWrite ? jStyle[0].styleSheet.cssText = css : jStyle[0].styleSheet.cssText += css;
@@ -15,32 +62,22 @@ function writeCSS(css, isOverWrite)
 	}
 }
 
-$(bolanderi).bind('groupend', function(event, groupNo)
-{
-	if(groupNo === 3) {
-		writeCSS(cache.join(''));
-		$(bolanderi).unbind(event);
-		cache = null;
-	}
-});
-
 var inconsistencies = [];
 var alternatives = [];
 
-$.rules = function()
+function compile(params)
 {
-	var css = $.format.apply(null, arguments).replace(/\t+/g, '\n');
-
-	css = css.replace(/\[style.?="[^"]*"\]/g, function(styleSelector)
+	return $.format.apply(null, params)
+	.replace(/\t+/g, '\n')
+	.replace(/\[style.?="[^"]*"\]/g, function(styleSelector)
 	{
 		$.each(inconsistencies, function(i, fix)
 		{
 			styleSelector = ''.replace.apply(styleSelector, fix);
 		});
 		return styleSelector;
-	});
-
-	css = css.replace(/{[^}]+/g, function(cssBlock)
+	})
+	.replace(/{[^}]+/g, function(cssBlock)
 	{
 		$.each(alternatives, function(i, change)
 		{
@@ -61,13 +98,7 @@ $.rules = function()
 
 		return cssBlock;
 	});
-
-	if(annuus.get('WINDOW_IS_LOADED')) {
-		$.debug(css);
-	}
-
-	cache ? cache.push(css) : writeCSS(css, false);
-};
+}
 
 (function()
 {

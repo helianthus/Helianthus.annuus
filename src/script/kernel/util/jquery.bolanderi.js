@@ -66,5 +66,11 @@ $.fn.extend({
 	pageNo: function()
 	{
 		return this.__pageNo || (this.__pageNo = +this.uriSet().querySet.page || 1);
+	},
+
+	debug: function()
+	{
+		$.debug(this);
+		return this;
 	}
 });

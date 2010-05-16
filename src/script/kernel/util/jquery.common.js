@@ -240,12 +240,6 @@ $.fn.extend({
 		}
 	},
 
-	debug: function()
-	{
-		$.debug(this);
-		return this;
-	},
-
 	toFlash: function(url, attrSet, paramSet)
 	{
 		attrSet = $.extend({ width: 0, height: 0, id: this[0].id || 'jquery-flash-' + $.time() }, attrSet);

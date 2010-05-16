@@ -22,6 +22,7 @@ function execGroups(eventType)
 				job.js && $[job.__ui].call(job, job);
 			}
 			catch(e) {
+				$.log('error', 'An error occurred: {0}. ({1})', e.message, job.module.title);
 				$.debug({
 					module: job.module.title,
 					error: e,

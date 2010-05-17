@@ -22,7 +22,7 @@ $.each(['options', 'database'], function(i, dataType)
 			data = {};
 			$.each(paths, function(modifier, path)
 			{
-				$.extend(data, $.dig.apply(null, path));
+				$.extend(data, $.dig(path));
 			});
 			return typeof id === 'undefined' ? data : data[id];
 		}
@@ -78,6 +78,8 @@ function wrapUI(task)
 {
 	return function(options)
 	{
+		var job = new Job(task);
+
 		$.digEach(task, ['setup', 'add'], function(type, actions)
 		{
 			if(type === 'setup' && task.__created) {
@@ -85,15 +87,15 @@ function wrapUI(task)
 			}
 
 			task.__created = true;
-			actions.css && $.rules(actions.css);
-			actions.js && actions.js(options);
+			actions.css && $.rules(actions.css, job);
+			actions.js && actions.js(job, options);
 		});
 	};
 }
 
 $.auto = wrapUI({
 	add: {
-		js: function(options)
+		js: function(job, options)
 		{
 			options.js(options);
 		}
@@ -154,7 +156,7 @@ $(bolanderi).one('storageready', function()
 	{
 		return $.all([].concat($.dig(task.module.requires, 'api'), $.dig(task.requires, 'api')), function(i, api)
 		{
-			return !api || $.dig.apply(null, [$].concat(requirements[i].split('.')));
+			return !api || $.dig([$].concat(requirements[i].split('.')));
 		});
 	};
 

@@ -2,16 +2,20 @@
 {
 	var radixes = { b:2, o:8, d: 10, x:16, X:16 };
 
-	var convertors = {
+	var converters = {
 		's': function(target)
 		{
 			return target + '';
+		},
+		'-': function(target)
+		{
+			return -target;
 		}
 	};
 
 	$.each(radixes, function(type, radix)
 	{
-		convertors[type] = function(target)
+		converters[type] = function(target)
 		{
 			return parseInt(target, radix);
 		};
@@ -137,7 +141,7 @@
 			}
 			while(mods !== temp);
 
-			return mods.replace(/((?:[[.][^[.|!:]+)*)(?:\|([^:!]+))?(?:!([^:]))?(?::(.+))?/, function($0, props, alt, convert, format)
+			return mods.replace(/((?:[[.][^[.|!:]+)*)(?:\|([^:!]+))?(?:!([^:]+))?(?::(.+))?/, function($0, props, alt, convert, format)
 			{
 				var replacement = args[index];
 
@@ -156,8 +160,13 @@
 				if(alt && !replacement) {
 					replacement = alt;
 				}
-				if(convert && convertors[convert]) {
-					replacement = convertors[convert](replacement);
+				if(convert) {
+					$.each(convert.split(''), function(i, converter)
+					{
+						if(converters[converter]) {
+							replacement = converters[converter](replacement);
+						}
+					});
 				}
 				if(format) {
 					replacement = formatters(replacement, format);

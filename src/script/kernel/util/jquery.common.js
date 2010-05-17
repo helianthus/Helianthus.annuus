@@ -150,6 +150,10 @@ $.extend({
 
 	dig: function(obj)
 	{
+		if(arguments.length === 1 && $.isArray(obj)) {
+			return $.dig.apply(null, obj);
+		}
+
 		for(var i=1; i<arguments.length; ++i) {
 			if($.isGarbage(obj)) {
 				return;

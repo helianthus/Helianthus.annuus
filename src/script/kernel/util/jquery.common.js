@@ -14,6 +14,55 @@ $.extend({
 		return pass;
 	},
 
+	any: function()
+	{
+		var args = $.slice(arguments);
+		args.push((function(callback)
+		{
+			return function()
+			{
+				return !callback.apply(this, arguments);
+			};
+		})(args.pop()));
+		return !$.all.apply(null, args);
+
+		/* this one is faster, but less interesting
+		var args = $.slice(arguments);
+		var callback = args.pop();
+		var pass = false;
+		$.digEach.apply(null, args.concat(function()
+		{
+			if(callback.apply(this, arguments)) {
+				pass = true;
+				return false;
+			}
+		}));
+		return pass;
+		*/
+	},
+
+	compile: function()
+	{
+		var args = $.slice(arguments);
+		var callback = args.pop();
+		var ret = [];
+
+		(function recurse(argsIndex, params)
+		{
+			if(argsIndex !== args.length) {
+				$.each(args[argsIndex], function(i, value)
+				{
+					recurse(argsIndex + 1, params.concat(value));
+				});
+			}
+			else {
+				ret.push(callback.apply(null, params));
+			}
+		})(0, []);
+
+		return ret;
+	},
+
 	bitmasks: function(flag, masks)
 	{
 		if($.isArray(masks)) {

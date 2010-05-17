@@ -46,7 +46,7 @@ $(bolanderi).bind('groupend', function(event, groupNo)
 
 var jStyle;
 
-function write(isOverWrite)
+function write()
 {
 	if(!jStyle) {
 		jStyle = $('<style />').appendTo('#an');
@@ -55,10 +55,10 @@ function write(isOverWrite)
 	var css = cssSet.join('');
 
 	if(jStyle[0].styleSheet) {
-		isOverWrite ? jStyle[0].styleSheet.cssText = css : jStyle[0].styleSheet.cssText += css;
+		jStyle[0].styleSheet.cssText = css;
 	}
 	else {
-		jStyle[isOverWrite ? 'html' : 'append'](document.createTextNode(css));
+		jStyle.html(document.createTextNode(css));
 	}
 }
 
@@ -245,7 +245,7 @@ function compile(params)
 	};
 	var prefixes = ['', 'Khtml', 'Moz', 'O', 'Webkit'];
 
-	$.each(['border-radius', 'box-shadow', 'text-overflow', 'transition', 'transform'], function(i, property)
+	$.each(['border-radius', 'box-shadow', 'box-sizing', 'text-overflow', 'transform', 'transition'], function(i, property)
 	{
 		$.each(prefixes, function(j, prefix)
 		{

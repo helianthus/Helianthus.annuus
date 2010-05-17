@@ -280,6 +280,11 @@ function compile(params)
 			[typeof testStyle.opacity === 'undefined', /opacity *:([^;]+)[; ]*/i, function($0, $1)
 			{
 				return $.format('-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(opacity={0});"', $1 * 100);
+			}],
+			[!$.any(testStyle, $.compile(prefixes, ['Transform'], function(){ return $.format('-{0[0]}-{0[1]}', arguments); }).concat('transform'), function(){ return true; }), /transform *: *rotate\(([^)]+)\)[; ]*/i, function($0, $1)
+			{
+				var rad = parseInt($1, 10) * Math.PI / 180;
+				return $.format('-ms-filter: "progid:DXImageTransform.Microsoft.Matrix(M11={0},M12={1!-},M21={1},M22={0},sizingMethod=\'auto expand\')";', Math.cos(rad), Math.sin(rad));
 			}]
 		], function(i, set)
 		{

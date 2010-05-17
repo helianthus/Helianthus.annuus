@@ -8,15 +8,6 @@ var defaultData = {
 
 $.each(bolanderi.get('MODULES'), function(moduleId, module)
 {
-	if(moduleId in defaultData.privateData) {
-		$.error('module id "{0}" already exists.', moduleId);
-	}
-
-	if(!module.title || !module.pages) {
-		$.error('missing a "title" or "pages" property. [{0}]', moduleId);
-	}
-
-	module.id = moduleId;
 	defaultData.privateData[moduleId] = {};
 
 	$.digEach(module.pages, null, null, function(status, i, pageCode)

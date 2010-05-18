@@ -27,6 +27,7 @@ annuus.addModules(function(){ return {
 					')
 					.hover(function(event)
 					{
+						$('#an-buttonpanel-container').find('.ui-state-focus,.ui-state-hover').removeClass('ui-state-focus ui-state-hover');
 						$('#an-buttonpanel-ui')[event.type === 'mouseenter' ? 'filter' : 'not'](':hidden').toggle('fold');
 					})
 					.mousewheel(function(event, delta)
@@ -40,10 +41,17 @@ annuus.addModules(function(){ return {
 			add: {
 				js: function(job, options)
 				{
-					var button = $('<a></a>', { html: options.title, href: options.href || '#' }).button().appendTo('#an-buttonpanel-container');
+					var button = $('<a />', {
+						html: options.title,
+						href: options.href || $.browser.opera && 'javascript:window.close()' || 'javascript:'
+					})
+					.button()
+					.appendTo('#an-buttonpanel-container');
+
 					if(options.js) {
-						button.click(function()
+						button.click(function(event)
 						{
+							event.preventDefault();
 							options.js(options);
 						});
 					}

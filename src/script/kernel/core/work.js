@@ -19,7 +19,7 @@ function execGroups(eventType)
 
 			try {
 				job.css && $.rules(job.css, job);
-				job.js && $[job.__ui].call(job, job);
+				job.js && $[job.__ui](job);
 			}
 			catch(e) {
 				$.log('error', 'An error occurred: {0}. [{1}]', e.message, job.module.title);

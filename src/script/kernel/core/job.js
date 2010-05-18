@@ -133,7 +133,7 @@ $(bolanderi).one('storageready', function()
 					{
 						task.module = module;
 
-						if((task.page || -1) & docPageCode && passBasicRequirements(task)) {
+						if((!('page' in task) || (task.page & docPageCode)) && passBasicRequirements(task)) {
 							if(task.type in { ui:1, utility:1 }) {
 								apiTasks.push(task);
 							}

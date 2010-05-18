@@ -64,6 +64,16 @@ annuus.addModules(function(){ return {
 						\
 						.ui-widget-overlay { background: #{0[bgColorOverlay]}; } \
 						.ui-widget-shadow { background: #{0[bgColorShadow]}; } \
+						\
+						.an-content-border { border: 0 solid #{0[borderColorContent]}; } \
+						.an-content-background { background-color: #{0[bgColorContent]}; } \
+						.an-content-color { color: #{0[fcContent]}; } \
+						.an-header-border { border: 0 solid #{0[borderColorHeader]}; } \
+						.an-header-background { background-color: #{0[bgColorHeader]}; } \
+						.an-header-color { color: #{0[fcHeader]}; } \
+						.an-default-border { border: 0 solid #{0[borderColorDefault]}; } \
+						.an-default-background { background-color: #{0[bgColorDefault]}; } \
+						.an-default-color { color: #{0[fcDefault]}; } \
 					',
 					options);
 				};

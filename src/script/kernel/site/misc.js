@@ -2,9 +2,17 @@ document.domain = 'hkgolden.com';
 
 $.ajaxSetup({ cache: false });
 
+// jQuery's event.which normalization is flawed
+// fortunately event.button is always 0 for left click
+
 $(document).click(function(event)
 {
-	if(/^(?:#|javascript:)$/.test($(event.target).closest('a').attr('href'))) {
+	var href = $(event.target).closest('a').attr('href');
+
+	if(href in { '#':1, 'javascript:':1 }
+	// this works for gecko and webkit only
+	|| event.button !== 0 && /^javascript:/.test(href)
+	) {
 		event.preventDefault();
 	}
 });
@@ -20,7 +28,7 @@ $.event.special.click = {
 		var handler = details.handler;
 		details.handler = function(event)
 		{
-			if(event.which === 1) {
+			if(event.button === 0) {
 				handler.apply(this, arguments);
 			}
 		};

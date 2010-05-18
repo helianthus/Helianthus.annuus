@@ -2,9 +2,9 @@ document.domain = 'hkgolden.com';
 
 $.ajaxSetup({ cache: false });
 
-$(document).delegate('a', 'click', function(event)
+$(document).click(function(event)
 {
-	if(/^(?:#|javascript:)$/.test(this.href)) {
+	if(/^(?:#|javascript:)$/.test($(event.target).closest('a').attr('href'))) {
 		event.preventDefault();
 	}
 });

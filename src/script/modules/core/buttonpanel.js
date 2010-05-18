@@ -11,8 +11,8 @@ annuus.addModules(function(){ return {
 			setup: {
 				css: '\
 					#an-buttonpanel { position: fixed; top: 10%; height: 80%; min-width: 10px; } \
-					#an-buttonpanel-ui { display: none; box-sizing: border-box; height: 100%; border-top-width: 0.5em; } \
-					#an-buttonpanel-container { overflow: hidden; box-sizing: border-box; height: 100%; min-width: 50px; border-top: 0.2em solid transparent; border-left-width: 5px; font-size: 75%; } \
+					#an-buttonpanel-ui { display: none; box-sizing: border-box; height: 100%; border-top-width: 0.5em; padding-top: 0.2em; } \
+					#an-buttonpanel-container { overflow: hidden; box-sizing: border-box; height: 100%; min-width: 50px; border-left-width: 5px; font-size: 75%; } \
 					#an-buttonpanel-container > .ui-button { display: block; margin: 0 0 3px 0; text-align: left; } \
 					#an-buttonpanel-container > .ui-button > span { padding: 0.1em 1em; white-space: nowrap; } \
 				',
@@ -28,7 +28,27 @@ annuus.addModules(function(){ return {
 					.hover(function(event)
 					{
 						$('#an-buttonpanel-container').find('.ui-state-focus,.ui-state-hover').removeClass('ui-state-focus ui-state-hover');
-						$('#an-buttonpanel-ui')[event.type === 'mouseenter' ? 'filter' : 'not'](':hidden').toggle('fold');
+
+						var enter = event.type === 'mouseenter';
+						var queue = ui.queue('fx');
+
+						if(typeof queue[0] === 'string') {
+							if(queue.length > 1) {
+								queue.pop();
+							}
+							if(showing !== enter) {
+								queue.push(function(next)
+								{
+									showing = !showing;
+									ui.toggle('fold');
+									next();
+								});
+							}
+						}
+						else if(showing !== enter) {
+							showing = !showing;
+							ui.toggle('fold');
+						}
 					})
 					.mousewheel(function(event, delta)
 					{
@@ -36,6 +56,9 @@ annuus.addModules(function(){ return {
 						$('#an-buttonpanel-container').clearQueue().animate({ scrollTop: $.format('{0}={1}', delta < 0 ? '+' : '-', Math.abs(delta) * 100) }, 'fast', 'linear');
 					})
 					.appendTo('#an');
+
+					var showing = false;
+					var ui = $('#an-buttonpanel-ui');
 				}
 			},
 			add: {

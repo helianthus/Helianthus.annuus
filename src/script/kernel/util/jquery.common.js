@@ -227,10 +227,11 @@ $.extend({
 		return obj;
 	},
 
-	range: function(start, end)
+	range: function(start, end, step)
 	{
+		step = step || 1;
 		var ret = [];
-		for(var i=start; i<=end; ++i) {
+		for(var i=start; i<=end; i+=step) {
 			ret.push(i);
 		}
 		return ret;

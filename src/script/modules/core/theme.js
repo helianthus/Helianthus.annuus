@@ -5,6 +5,7 @@ annuus.addModules(function(){ return {
 	title: '樣式設定',
 	pages: { comp: [all] },
 	options: {
+		ffDefault: { title: '字體名稱', type: 'text', defaultValue: 'sans-serif' },
 		borderColorContent: { title: '內容邊框顏色', type: 'text', defaultValue: 'cccccc' },
 		bgColorContent: { title: '內容背景顏色', type: 'text', defaultValue: 'ffffff' },
 		fcContent: { title: '內容字體顏色', type: 'text', defaultValue: '000000' },
@@ -36,7 +37,8 @@ annuus.addModules(function(){ return {
 				.ui-state-error-text, .ui-widget-content .ui-state-error-text, .ui-widget-header .ui-state-error-text { color: #{0[fcError]}; }*/
 
 				$.theme = function(options) {
-					$.rules('\
+					$.rules({ id: 'theme' }, '\
+						.ui-widget { font-family: {0[ffDefault]}; } \
 						.ui-widget-content { border-color: #{0[borderColorContent]}; background: #{0[bgColorContent]}; color: #{0[fcContent]}; } \
 						.ui-widget-content a { color: #{0[fcContent]}; } \
 						.ui-widget-header { border-color: #{0[borderColorHeader]}; background: #{0[bgColorHeader]}; color: #{0[fcHeader]}; } \

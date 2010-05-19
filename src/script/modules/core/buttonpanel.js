@@ -27,10 +27,12 @@ annuus.addModules(function(){ return {
 					')
 					.hover(function(event)
 					{
-						$('#an-buttonpanel-container').find('.ui-state-focus,.ui-state-hover').removeClass('ui-state-focus ui-state-hover');
-
 						var enter = event.type === 'mouseenter';
 						var queue = ui.queue('fx');
+
+						if(enter) {
+							$('#an-buttonpanel-container').find('.ui-state-focus,.ui-state-hover').removeClass('ui-state-focus ui-state-hover');
+						}
 
 						if(typeof queue[0] === 'string') {
 							if(queue.length > 1) {
@@ -89,7 +91,7 @@ annuus.addModules(function(){ return {
 				$.each($.range(1, 40), function(i, val)
 				{
 					$.button({
-						title: 'test button ' + val,
+						title: '測試按扭' + val,
 						js: function()
 						{
 							alert(this.title);

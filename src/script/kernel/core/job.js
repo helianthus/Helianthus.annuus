@@ -34,7 +34,7 @@ $.each(['options', 'database'], function(i, dataType)
 			return;
 		}
 
-		data = $.make.apply(null, paths[dataDef ? dataDef.access || 'private' : 'public']);
+		data = $.make.apply(null, paths[dataDef ? dataDef.access || 'protected' : 'public']);
 
 		if(value === null) {
 			delete data[id];

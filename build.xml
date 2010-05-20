@@ -54,7 +54,6 @@
 
 	<!--** internals **-->
 
-	<tempfile property="file.content" destdir="${dir.build}" suffix=".js" deleteonexit="true" />
 	<tempfile property="file.temp" destdir="${dir.build}" suffix=".js" deleteonexit="true" />
 
 	<target name="_build">
@@ -70,8 +69,8 @@
 			<patternset refid="pattern.text" />
 		</fixcrlf>
 
-		<!-- CONTENT -->
-		<concat destfile="${file.content}">
+		<!-- PRE_CONTENT -->
+		<concat destfile="${file.temp}">
 			<filterchain>
 				<stripjavacomments />
 				<striplinebreaks />
@@ -89,10 +88,17 @@
 
 			</footer>
 
-			<fileset dir="src/script/kernel" includes="**/*.css" />
+			<fileset dir="src/script" includes="**/*.css" />
 		</concat>
 
-		<concat destfile="${file.content}" append="true" encoding="utf-8">
+		<concat destfile="${file.temp}" append="true">
+			<fileset dir="src/script/lib" includes="*.js" />
+		</concat>
+
+		<loadfile property="PRE_CONTENT" srcfile="${file.temp}" />
+
+		<!-- CONTENT -->
+		<concat destfile="${file.temp}" encoding="utf-8">
 			<filterchain>
 				<escapeunicode />
 				<tokenfilter>
@@ -102,19 +108,18 @@
 				</tokenfilter>
 			</filterchain>
 
-			<filelist dir="src/script">
-				<file name="opera/opera9.js" />
-				<file name="opera/rubbish.js" />
-				<file name="kernel/lib/jquery.js" />
-			</filelist>
-			<fileset dir="src/script">
-				<include name="kernel/**/*.js" />
-				<include name="modules/**/*.js" />
-				<exclude name="kernel/lib/jquery.js" />
+			<fileset dir="src/script/lib">
+				<include name="1/**/*.js" />
+				<include name="2/**/*.js" />
+				<include name="3/**/*.js" />
+				<include name="4/**/*.js" />
+				<include name="5/**/*.js" />
 			</fileset>
+			<fileset dir="src/script/kernel" includes="**/*.js" />
+			<fileset dir="src/script/modules" includes="**/*.js" />
 		</concat>
 
-		<loadfile property="CONTENT" srcfile="${file.content}" />
+		<loadfile property="CONTENT" srcfile="${file.temp}" />
 
 		<!-- js -->
 		<copy file="src/script/bolanderi.js" tofile="${dir.build}/${project.name.short}.js">
@@ -122,6 +127,7 @@
 				<concatfilter prepend="src/header.js" />
 			</filterchain>
 			<filterset begintoken="/*@" endtoken="@*/">
+				<filter token="PRE_CONTENT" value="${PRE_CONTENT}" />
 				<filter token="CONTENT" value="${CONTENT}" />
 			</filterset>
 		</copy>

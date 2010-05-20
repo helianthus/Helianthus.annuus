@@ -4,20 +4,17 @@
 
 	bolanderi.addModules = function(getModules)
 	{
-		$(bolanderi).one('kernelready', function()
+		$.each(getModules(), function(moduleId, module)
 		{
-			$.each(getModules(), function(moduleId, module)
-			{
-				if(moduleId in modules) {
-					$.error('module id "{0}" already exists.', moduleId);
-				}
-				if(!module.title || !module.pages) {
-					$.error('missing a "title" or "pages" property. [{0}]', moduleId);
-				}
+			if(moduleId in modules) {
+				$.error('module id "{0}" already exists.', moduleId);
+			}
+			if(!module.title || !module.pages) {
+				$.error('missing a "title" or "pages" property. [{0}]', moduleId);
+			}
 
-				module.id = moduleId;
-				modules[moduleId] = module;
-			});
+			module.id = moduleId;
+			modules[moduleId] = module;
 		});
 	};
 })();

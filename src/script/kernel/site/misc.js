@@ -36,3 +36,8 @@ $.event.special.click = {
 };
 
 $('<div />', { id: 'an' }).appendTo(document.documentElement);
+
+$(function()
+{
+	$('body').find('script').empty().removeAttr('src');
+});

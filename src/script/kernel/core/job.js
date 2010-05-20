@@ -76,10 +76,9 @@ $(bolanderi).one('kernelready', function()
 
 function wrapUI(task)
 {
+	var job = new Job(task);
 	return function(options)
 	{
-		var job = new Job(task);
-
 		$.digEach(task, ['setup', 'add'], function(type, actions)
 		{
 			if(type === 'setup' && task.__created) {

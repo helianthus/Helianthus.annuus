@@ -92,7 +92,7 @@
 		</concat>
 
 		<concat destfile="${file.temp}" append="true">
-			<fileset dir="src/script/lib" includes="*.js" />
+			<fileset dir="src/script" includes="lib/*.js" />
 		</concat>
 
 		<loadfile property="PRE_CONTENT" srcfile="${file.temp}" />
@@ -108,15 +108,15 @@
 				</tokenfilter>
 			</filterchain>
 
-			<fileset dir="src/script/lib">
-				<include name="1/**/*.js" />
-				<include name="2/**/*.js" />
-				<include name="3/**/*.js" />
-				<include name="4/**/*.js" />
-				<include name="5/**/*.js" />
+			<fileset dir="src/script">
+				<include name="lib/1/**/*.js" />
+				<include name="lib/2/**/*.js" />
+				<include name="lib/3/**/*.js" />
+				<include name="lib/4/**/*.js" />
+				<include name="lib/5/**/*.js" />
 			</fileset>
-			<fileset dir="src/script/kernel" includes="**/*.js" />
-			<fileset dir="src/script/modules" includes="**/*.js" />
+			<fileset dir="src/script" includes="kernel/**/*.js" />
+			<fileset dir="src/script" includes="modules/**/*.js" />
 		</concat>
 
 		<loadfile property="CONTENT" srcfile="${file.temp}" />

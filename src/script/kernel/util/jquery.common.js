@@ -175,17 +175,18 @@ $.extend({
 		(function dig(target, argIndex, ids)
 		{
 			if(argIndex === len) {
-				return callback.apply(target, ids.concat(target));
+				ids.push(target);
+				return callback.apply(target, ids);
 			}
 
 			var digIds = args[argIndex++];
-			if(typeof digIds === 'string') {
-				digIds = [digIds];
+			if(digIds !== null) {
+				digIds = [].concat(digIds);
 			}
 			var ret;
 			$.each(target, function(id, prop)
 			{
-				if(!digIds || $.inArray(id, digIds) !== -1) {
+				if(digIds === null || $.inArray(id, digIds) !== -1) {
 					return (ret = dig(prop, argIndex, ids.concat(id)));
 				}
 			});

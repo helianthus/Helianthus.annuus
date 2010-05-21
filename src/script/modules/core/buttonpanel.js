@@ -11,16 +11,16 @@ annuus.addModules(function(){ return {
 			setup: {
 				css: '\
 					#an-buttonpanel { position: fixed; top: 10%; height: 80%; min-width: 10px; } \
-					#an-buttonpanel-ui { display: none; box-sizing: border-box; height: 100%; border-top-width: 0.5em; padding-top: 0.2em; } \
-					#an-buttonpanel-container { overflow: hidden; box-sizing: border-box; height: 100%; min-width: 50px; border-left-width: 5px; font-size: 75%; } \
-					#an-buttonpanel-container > .ui-button { display: block; margin: 0 0 3px 0; text-align: left; } \
+					#an-buttonpanel-ui { display: none; box-sizing: border-box; height: 100%; border-width: 0.5em 0; padding: 0.2em 0; } \
+					#an-buttonpanel-container { overflow: hidden; box-sizing: border-box; height: 100%; min-width: 100px; border-left-width: 5px; font-size: 75%; } \
+					#an-buttonpanel-container > .ui-button { display: block; margin: 0 0 3px 0; border-left: 0; border-top-left-radius: 0; border-bottom-left-radius: 0; text-align: left; } \
 					#an-buttonpanel-container > .ui-button > span { padding: 0.1em 1em; white-space: nowrap; } \
 				',
 				js: function(job)
 				{
 					$('\
 						<div id="an-buttonpanel"> \
-							<div id="an-buttonpanel-ui" class="an-header-border"> \
+							<div id="an-buttonpanel-ui" class="an-header-border ui-corner-right"> \
 								<div id="an-buttonpanel-container" class="an-default-border"></div> \
 							</div> \
 						</div> \
@@ -77,7 +77,7 @@ annuus.addModules(function(){ return {
 						button.click(function(event)
 						{
 							event.preventDefault();
-							options.js(options);
+							options.js.call(button, options, event);
 						});
 					}
 				}
@@ -85,7 +85,6 @@ annuus.addModules(function(){ return {
 		},
 
 		'49ca8ab8': {
-			run_at: 'document_start',
 			js: function()
 			{
 				$.each($.range(1, 40), function(i, val)

@@ -38,5 +38,9 @@ $.event.special.click = {
 // clear all script tags to prevent js re-execution
 $(function()
 {
-	$('body').find('script').empty().removeAttr('src');
+	// removeAttr somehow causes IE to re-fire window load event
+	$('body').find('script').empty().each(function()
+	{
+		this.removeAttribute('src');
+	});
 });

@@ -22,8 +22,8 @@ $.rules = function()
 			cssSet[map[options.id]] = css;
 		}
 		else {
-			map[options.id] = cssSet.push(css);
-			map.__anonymous = cssSet.push('');
+			map[options.id] = cssSet.push(css) - 1;
+			map.__anonymous = cssSet.push('') - 1;
 		}
 	}
 	else {
@@ -115,7 +115,7 @@ function compile(params)
 			return trimmed === ':' ? ': ' : trimmed;
 		}],
 		// colorConvertedToRGB: FF
-		[csstext.indexOf('rgb(') !== -1, /#(\d+)/g, function($0, $1)
+		[csstext.indexOf('rgb(') !== -1, /#(\w+)/g, function($0, $1)
 		{
 			if($1.length === 3) {
 				$1 = $.format('{0[0]:*2}{0[1]:*2}{0[2]:*2}', $1);
@@ -136,44 +136,32 @@ function compile(params)
 		// borderReordered_CWS: IE
 		[csstext.indexOf(': blue') !== -1, /(border(?:-(?:top|right|bottom|left))? *: *)([^;\"]+)/gi, function($0, $1, $2)
 		{
-			var values = $2.split(' ');
-			$.each(values, function(i, value)
+			var remains = $2;
+			var ret = [];
+			$.each([rWidth, rStyle], function(i, re)
 			{
-				// width
-				if(rWidth.test(value)) {
-					// do nth
-				}
-				// style
-				else if(rStyle.test(value)) {
-					values.push(values.splice(i, 1)[0]);
-				}
-				// color
-				else {
-					values.shift(values.splice(i, 1)[0]);
-				}
+				remains = remains.replace(re, function(match)
+				{
+					ret.push(match);
+					return '';
+				});
 			});
-			return $1 + values.join(' ');
+			return $1 + [$.trim(remains)].concat(ret).join(' ');
 		}],
 		// borderReordered_WSC: FF
 		[csstext.indexOf(': 1px') !== -1, /(border(?:-(?:top|right|bottom|left))? *: *)([^;\"]+)/gi, function($0, $1, $2)
 		{
-			var values = $2.split(' ');
-			$.each(values, function(i, value)
+			var remains = $2;
+			var ret = [];
+			$.each([rWidth, rStyle], function(i, re)
 			{
-				// width
-				if(rWidth.test(value)) {
-					values.shift(values.splice(i, 1)[0]);
-				}
-				// style
-				else if(rStyle.test(value)) {
-					// do nth
-				}
-				// color
-				else {
-					values.push(values.splice(i, 1)[0]);
-				}
+				remains = remains.replace(re, function(match)
+				{
+					ret.push(match);
+					return '';
+				});
 			});
-			return $1 + values.join(' ');
+			return $1 + ret.concat($.trim(remains)).join(' ');
 		}],
 		// paddingContracted: FF
 		[csstext.indexOf('padding: 3px;') !== -1, /(padding *: *)([^;\"]+)/gi, function($0, $1, $2)

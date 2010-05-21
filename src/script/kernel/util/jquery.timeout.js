@@ -31,22 +31,24 @@
 			};
 		}
 
-		if(typeof delay !== 'number') {
+		var fn = function()
+		{
+			if(id) {
+				cache[id].destory = true;
+			}
+
 			callback.apply(null, params);
+
+			if(id && cache[id] && cache[id].destory) {
+				delete cache[id];
+			}
+		};
+
+		if(typeof delay !== 'number') {
+			fn();
 		}
 		else {
-			var timer = setTimeout(function()
-			{
-				if(id) {
-					cache[id].destory = true;
-				}
-
-				callback.apply(null, params);
-
-				if(id && cache[id] && cache[id].destory) {
-					delete cache[id];
-				}
-			}, delay);
+			var timer = setTimeout(fn, delay);
 
 			if(id) {
 				cache[id].timer = timer;

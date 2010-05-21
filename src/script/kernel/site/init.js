@@ -1,6 +1,16 @@
 $(bolanderi).one('init', function()
 {
 
+$.timeout('checkbody', function()
+{
+
+// Opera has a bug which breaks innerHTML when the node is not inside body
+if(window.opera && !document.body) {
+	return $.timeout('checkbody', 50);
+}
+
+$('<div />', { id: 'an' })[document.body ? 'prependTo' : 'appendTo'](document.body || document.documentElement);
+
 var mode = $.cookie('an_storagemode') || 'localStorage';
 
 if(mode === 'localStorage' && !window.localStorage || mode === 'sessionStorage' && !window.sessionStorage) {
@@ -44,6 +54,8 @@ $.timeout('checkStorage', [100], function(countdown)
 		mode = window.localStorage ? 'localStorage' : 'null';
 		init();
 	}
+});
+
 });
 
 });

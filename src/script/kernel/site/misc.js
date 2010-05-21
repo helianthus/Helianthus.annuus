@@ -35,8 +35,7 @@ $.event.special.click = {
 	}
 };
 
-$('<div />', { id: 'an' }).appendTo(document.documentElement);
-
+// clear all script tags to prevent js re-execution
 $(function()
 {
 	$('body').find('script').empty().removeAttr('src');

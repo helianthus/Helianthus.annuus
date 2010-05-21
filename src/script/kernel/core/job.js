@@ -101,6 +101,7 @@ $.auto = wrapUI({
 	}
 });
 
+
 $(bolanderi).one('storageready', function()
 {
 	var docPageCode = $(document).pageCode();
@@ -119,6 +120,11 @@ $(bolanderi).one('storageready', function()
 
 	var apiTasks = [];
 	var actionTasks = [];
+	var resources = {};
+	$.resources = function(type, name)
+	{
+		return resources[type] && (name ? resources[type][name] : resources[type]);
+	};
 
 	$.each(bolanderi.get('MODULES'), function(moduleId, module)
 	{
@@ -133,15 +139,21 @@ $(bolanderi).one('storageready', function()
 						task.module = module;
 
 						if((!('page' in task) || (task.page & docPageCode)) && passBasicRequirements(task)) {
-							if(task.type in { ui:1, utility:1 }) {
-								apiTasks.push(task);
+							switch(task.type) {
+								case 'action':
+								case undefined:
+									actionTasks.push(task);
+									return;
+								case 'ui':
+								case 'utility':
+									apiTasks.push(task);
+									return;
+								case 'resource':
+									resources[task.title] = task.resource;
+									return;
 							}
-							else if((task.type || 'action') === 'action') {
-								actionTasks.push(task);
-							}
-							else {
-								$.log('warn', 'unknown task type "{0}" encountered. [{1}, {2}]', api.type, module.title, task.id);
-							}
+
+							$.log('warn', 'unknown task type "{0}" encountered. [{1}, {2}]', task.type, module.title, task.id);
 						}
 					});
 				}

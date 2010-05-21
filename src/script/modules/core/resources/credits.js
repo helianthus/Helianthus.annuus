@@ -2,14 +2,13 @@ annuus.addModules(function(){ return {
 
 '2de3e000-9db8-40cf-9fb8-598474ce4df8':
 {
-	title: 'Credits API',
+	title: 'Credits',
 	pages: { comp: [all] },
 	tasks: {
 		'99da408d': {
-			type: 'utility',
-			js: function()
-			{
-				var credits = [
+			type: 'resource',
+			title: 'credits',
+			resource: [
 				{
 					name: 'jQuery',
 					url: 'http://jquery.com',
@@ -95,13 +94,7 @@ annuus.addModules(function(){ return {
 					license: 'Creative Commons (Attribution-Share Alike 2.0 Generic)',
 					licenseUrl: 'http://creativecommons.org/licenses/by-sa/2.0/'
 				}
-				];
-
-				$.credits = function()
-				{
-					return credits;
-				};
-			}
+			]
 		}
 	}
 }

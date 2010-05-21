@@ -2,14 +2,13 @@ annuus.addModules(function(){ return {
 
 'c183b764-e03d-426b-a2be-64f3b706787b':
 {
-	title: 'Smiley API',
+	title: 'Smileys',
 	pages: { comp: [all] },
 	tasks: {
 		'3f6e1cd6': {
-			type: 'utility',
-			js: function()
-			{
-				var smileys = [
+			type: 'resource',
+			title: 'smileys',
+			resource: [
 				{
 					desc: '經典表情圖示',
 					path: '/faces/',
@@ -301,13 +300,7 @@ annuus.addModules(function(){ return {
 						]
 					]
 				}
-				];
-
-				$.smileys = function(name)
-				{
-					return smileys;
-				};
-			}
+			]
 		}
 	}
 }

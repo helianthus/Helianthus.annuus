@@ -112,7 +112,7 @@ $(bolanderi).one('storageready', function()
 			return (type === 'truthy' && requirement
 			|| type === 'options' && $.all(requirement, function(i, optionSet)
 			{
-				return Job.prototype.options.call({ module: target.module || target }, optionSet.id) !== optionSet.value
+				return Job.prototype.options.call({ module: target.module || target }, optionSet.id) === optionSet.value
 			}));
 		});
 	};

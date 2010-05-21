@@ -101,7 +101,6 @@ $.auto = wrapUI({
 	}
 });
 
-
 $(bolanderi).one('storageready', function()
 {
 	var docPageCode = $(document).pageCode();
@@ -123,7 +122,7 @@ $(bolanderi).one('storageready', function()
 	var resources = {};
 	$.resources = function(type, name)
 	{
-		return resources[type] && (name ? resources[type][name] : resources[type]);
+		return $.dig([resources].concat($.slice(arguments)));
 	};
 
 	$.each(bolanderi.get('MODULES'), function(moduleId, module)

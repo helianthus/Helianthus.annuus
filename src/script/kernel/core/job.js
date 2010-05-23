@@ -65,6 +65,12 @@ Job.prototype.data = function(name, value)
 	}
 };
 
+var resources = {};
+Job.prototype.resources = function()
+{
+	return $.dig([resources].concat($.slice(arguments)));
+};
+
 $(bolanderi).one('kernelready', function()
 {
 	bolanderi.__jobGroups = {};
@@ -119,11 +125,6 @@ $(bolanderi).one('storageready', function()
 
 	var apiTasks = [];
 	var actionTasks = [];
-	var resources = {};
-	$.resources = function(type, name)
-	{
-		return $.dig([resources].concat($.slice(arguments)));
-	};
 
 	$.each(bolanderi.get('MODULES'), function(moduleId, module)
 	{

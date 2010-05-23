@@ -109,10 +109,9 @@ function compile(params)
 
 	$.each([
 		// textIndented: IE, FF
-		[csstext.indexOf('color:') !== -1, / +[:;\"] +/g, function($0)
+		[csstext.indexOf('color:') !== -1, / *[:;](?![\]\"\']) */g, function($0)
 		{
-			var trimmed = $.trim($0);
-			return trimmed === ':' ? ': ' : trimmed;
+			return $.trim($0) + ' ';
 		}],
 		// colorConvertedToRGB: FF
 		[csstext.indexOf('rgb(') !== -1, /#(\w+)/g, function($0, $1)

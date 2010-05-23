@@ -38,6 +38,7 @@ $.each(bolanderi.get('MODULES'), function(moduleId, module)
 	$.each(module.tasks || {}, function(taskId, task)
 	{
 		task.id = taskId;
+		task.title = task.title || module.title;
 
 		if((task.type || 'job') === 'job') {
 			if(task.frequency === 'always' && task.css) {

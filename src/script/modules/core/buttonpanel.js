@@ -85,6 +85,7 @@ annuus.addModules(function(){ return {
 		},
 
 		'49ca8ab8': {
+			priority: 'low',
 			js: function()
 			{
 				$.each($.range(1, 40), function(i, val)

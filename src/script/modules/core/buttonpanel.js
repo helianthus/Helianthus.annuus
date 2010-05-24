@@ -92,9 +92,9 @@ annuus.addModules(function(){ return {
 				{
 					$.button({
 						title: '測試按扭' + val,
-						js: function()
+						js: function(options)
 						{
-							alert(this.title);
+							alert(options.title);
 						}
 					});
 				});

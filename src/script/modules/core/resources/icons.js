@@ -1,4 +1,4 @@
-annuus.addModules(function(){ return {
+annuus.addModules({
 
 '000b79c2-cbe6-4ce3-ab43-9515ea428078':
 {
@@ -50,4 +50,4 @@ annuus.addModules(function(){ return {
 	}
 }
 
-}; });
+});

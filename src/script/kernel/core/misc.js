@@ -2,9 +2,9 @@
 {
 	var modules = bolanderi.get('MODULES', {});
 
-	bolanderi.addModules = function(getModules)
+	bolanderi.addModules = function(newModules)
 	{
-		$.each(getModules(), function(moduleId, module)
+		$.each(newModules, function(moduleId, module)
 		{
 			if(moduleId in modules) {
 				$.error('module id "{0}" already exists.', moduleId);

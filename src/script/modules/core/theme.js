@@ -2,42 +2,43 @@ annuus.addModules(function(){ return {
 
 '8d20a0be-25e2-48e4-a4c1-9ec8fa809cab':
 {
-	title: '樣式設定',
+	title: '主樣式設定',
 	pages: { comp: [all] },
 	options: {
-		cornerRadius:  { title: '圓角半徑', type: 'text', defaultValue: '0px' },
-		borderColorHeader: { title: '標頭邊框顏色', type: 'text', defaultValue: '6ea0c4' },
-		bgColorHeader: { title: '標頭背景顏色', type: 'text', defaultValue: '6ea0c4' },
-		fcHeader: { title: '標頭字體顏色', type: 'text', defaultValue: 'ffffff' },
-		borderColorContent: { title: '內容邊框顏色', type: 'text', defaultValue: 'cccccc' },
-		bgColorContent: { title: '內容背景顏色', type: 'text', defaultValue: 'ffffff' },
-		fcContent: { title: '內容字體顏色', type: 'text', defaultValue: '000000' },
-		borderColorDefault: { title: '可點擊物件: 預設邊框顏色', type: 'text', defaultValue: 'ccddea' },
-		bgColorDefault: { title: '可點擊物件: 預設背景顏色', type: 'text', defaultValue: 'ccddea' },
-		fcDefault: { title: '可點擊物件: 預設字體顏色', type: 'text', defaultValue: '1a3448' },
-		borderColorHover: { title: '可點擊物件: 懸浮邊框顏色', type: 'text', defaultValue: 'ccddea' },
-		bgColorHover: { title: '可點擊物件: 懸浮背景顏色', type: 'text', defaultValue: 'ccddea' },
-		fcHover: { title: '可點擊物件: 懸浮字體顏色', type: 'text', defaultValue: '33aaaa' },
-		borderColorActive: { title: '可點擊物件: 作用邊框顏色', type: 'text', defaultValue: 'ccddea' },
-		bgColorActive: { title: '可點擊物件: 作用背景顏色', type: 'text', defaultValue: 'ccddea' },
-		fcActive: { title: '可點擊物件: 作用字體顏色', type: 'text', defaultValue: '33aaaa' },
-		borderColorHighlight: { title: '高亮邊框顏色', type: 'text', defaultValue: 'ffffff' },
-		bgColorHighlight: { title: '高亮背景顏色', type: 'text', defaultValue: 'eeeeee' },
-		fcHighlight: { title: '高亮字體顏色', type: 'text', defaultValue: '444444' },
-		bgColorOverlay: { title: '塗層顏色', type: 'text', defaultValue: 'eeeeee' },
-		bgColorShadow: { title: '陰影顏色', type: 'text', defaultValue: 'aaaaaa' }
+		cornerRadius:  { title: '圓角半徑', type: 'text', defaultValue: '0px', access: 'public' },
+		borderColorHeader: { title: '標頭邊框顏色', type: 'text', defaultValue: '6ea0c4', access: 'public' },
+		bgColorHeader: { title: '標頭背景顏色', type: 'text', defaultValue: '6ea0c4', access: 'public' },
+		fcHeader: { title: '標頭文字顏色', type: 'text', defaultValue: 'ffffff', access: 'public' },
+		borderColorContent: { title: '內容邊框顏色', type: 'text', defaultValue: 'cccccc', access: 'public' },
+		bgColorContent: { title: '內容背景顏色', type: 'text', defaultValue: 'f8f8f8', access: 'public' },
+		fcContent: { title: '內容文字顏色', type: 'text', defaultValue: '000000', access: 'public' },
+		borderColorDefault: { title: '可點擊物件: 預設邊框顏色', type: 'text', defaultValue: 'ccddea', access: 'public' },
+		bgColorDefault: { title: '可點擊物件: 預設背景顏色', type: 'text', defaultValue: 'ccddea', access: 'public' },
+		fcDefault: { title: '可點擊物件: 預設文字顏色', type: 'text', defaultValue: '1a3448', access: 'public' },
+		borderColorHover: { title: '可點擊物件: 懸浮邊框顏色', type: 'text', defaultValue: 'ccddea', access: 'public' },
+		bgColorHover: { title: '可點擊物件: 懸浮背景顏色', type: 'text', defaultValue: 'ccddea', access: 'public' },
+		fcHover: { title: '可點擊物件: 懸浮文字顏色', type: 'text', defaultValue: '33aaaa', access: 'public' },
+		borderColorActive: { title: '可點擊物件: 作用邊框顏色', type: 'text', defaultValue: 'ccddea', access: 'public' },
+		bgColorActive: { title: '可點擊物件: 作用背景顏色', type: 'text', defaultValue: 'ccddea', access: 'public' },
+		fcActive: { title: '可點擊物件: 作用文字顏色', type: 'text', defaultValue: '33aaaa', access: 'public' },
+		borderColorHighlight: { title: '高亮邊框顏色', type: 'text', defaultValue: 'ffffff', access: 'public' },
+		bgColorHighlight: { title: '高亮背景顏色', type: 'text', defaultValue: 'eeeeee', access: 'public' },
+		fcHighlight: { title: '高亮文字顏色', type: 'text', defaultValue: '444444', access: 'public' },
+		borderColorError: { title: '錯誤邊框顏色', type: 'text', defaultValue: 'cc2331', access: 'public' },
+		bgColorError: { title: '錯誤背景顏色', type: 'text', defaultValue: 'cc2331', access: 'public' },
+		fcError: { title: '錯誤文字顏色', type: 'text', defaultValue: 'ffffff', access: 'public' },
+		bgColorOverlay: { title: '塗層顏色', type: 'text', defaultValue: 'eeeeee', access: 'public' },
+		bgColorShadow: { title: '陰影顏色', type: 'text', defaultValue: 'aaaaaa', access: 'public' }
 	},
 	tasks: {
 		'd15b72b1': {
-			type: 'utility',
+			run_at: 'document_start',
 			js: function(job)
 			{
-				/*.ui-state-error, .ui-widget-content .ui-state-error, .ui-widget-header .ui-state-error { border-color: #{0[borderColorError]}; background: #{0[bgColorError]}; color: #{0[fcError]}; }
-				.ui-state-error a, .ui-widget-content .ui-state-error a, .ui-widget-header .ui-state-error a,
-				.ui-state-error-text, .ui-widget-content .ui-state-error-text, .ui-widget-header .ui-state-error-text { color: #{0[fcError]}; }*/
 
-				$.theme = function(options) {
-					$.rules({ id: 'theme' }, '\
+				$(annuus).bind('theme', function(event, options)
+				{
+					$.rules({ id: 'main-style' }, '\
 						.ui-widget-content { border-color: #{0[borderColorContent]}; background: #{0[bgColorContent]}; color: #{0[fcContent]}; } \
 						.ui-widget-content a { color: #{0[fcContent]}; } \
 						.ui-widget-header { border-color: #{0[borderColorHeader]}; background: #{0[bgColorHeader]}; color: #{0[fcHeader]}; } \
@@ -52,6 +53,9 @@ annuus.addModules(function(){ return {
 						\
 						.ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight  { border-color: #{0[borderColorHighlight]}; background: #{0[bgColorHighlight]}; color: #{0[fcHighlight]}; } \
 						.ui-state-highlight a, .ui-widget-content .ui-state-highlight a,.ui-widget-header .ui-state-highlight a { color: #{0[fcHighlight]}; } \
+						.ui-state-error, .ui-widget-content .ui-state-error, .ui-widget-header .ui-state-error { border-color: #{0[borderColorError]}; background: #{0[bgColorError]}; color: #{0[fcError]}; } \
+						.ui-state-error a, .ui-widget-content .ui-state-error a, .ui-widget-header .ui-state-error a, \
+						.ui-state-error-text, .ui-widget-content .ui-state-error-text, .ui-widget-header .ui-state-error-text { color: #{0[fcError]}; } \
 						\
 						.ui-icon, \
 						.ui-widget-content .ui-icon, \
@@ -88,22 +92,24 @@ annuus.addModules(function(){ return {
 						.an-hover-border { border: 0 solid #{0[borderColorHover]}; } \
 						.an-hover-background { background-color: #{0[bgColorHover]}; } \
 						.an-hover-color { color: #{0[fcHover]}; } \
+						\
+						a.ui-state-default { color: #{0[fcDefault]}; } \
+						a.ui-state-hover { color: #{0[fcHover]}; } \
+						a.ui-state-active { color: #{0[fcActive]}; } \
+						\
+						#an { position: relative; z-index: 10; } \
 					',
 					options);
-				};
-
-				$(annuus).bind('theme', function(event, options)
-				{
-					$.theme(options);
 				});
 			}
 		},
 
 		'475b4b70': {
 			run_at: 'document_start',
+			priority: 'low',
 			js: function(job)
 			{
-				$.theme(job.options());
+				$(annuus).trigger('theme', job.options());
 			}
 		}
 	}

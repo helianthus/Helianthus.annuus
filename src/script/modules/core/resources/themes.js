@@ -15,7 +15,7 @@ annuus.addModules(function(){ return {
 					"bgColorHeader":"6ea0c4",
 					"fcHeader":"ffffff",
 					"borderColorContent":"cccccc",
-					"bgColorContent":"ffffff",
+					"bgColorContent":"f8f8f8",
 					"fcContent":"000000",
 					"borderColorDefault":"ccddea",
 					"bgColorDefault":"ccddea",
@@ -26,11 +26,23 @@ annuus.addModules(function(){ return {
 					"borderColorActive":"ccddea",
 					"bgColorActive":"ccddea",
 					"fcActive":"33aaaa",
-					"borderColorHighlight":"ffffff",
-					"bgColorHighlight":"eeeeee",
-					"fcHighlight":"444444",
+					"borderColorHighlight":"e9ec6c",
+					"bgColorHighlight":"e9ec6c",
+					"fcHighlight":"000000",
+					"borderColorError":"cc2331",
+					"bgColorError":"cc2331",
+					"fcError":"ffffff",
 					"bgColorOverlay":"eeeeee",
-					"bgColorShadow":"aaaaaa"
+					"bgColorShadow":"aaaaaa",
+
+					"fcAnchorLink":"1a3448",
+					"fcAnchorVisited":"2e5c7f",
+					"fcAnchorHover":"33aaaa",
+
+					"bgColorContent2":"ffffff",
+					"fcContent2":"999999",
+					"fcTime":"800000",
+					"fcQuote":"0000a0"
 				},
 
 				"HKGolden 2": {
@@ -39,7 +51,7 @@ annuus.addModules(function(){ return {
 					"bgColorHeader":"6ea0c4",
 					"fcHeader":"ffffff",
 					"borderColorContent":"cccccc",
-					"bgColorContent":"ffffff",
+					"bgColorContent":"f8f8f8",
 					"fcContent":"000000",
 					"borderColorDefault":"c0c0c0",
 					"bgColorDefault":"ffffff",
@@ -50,11 +62,23 @@ annuus.addModules(function(){ return {
 					"borderColorActive":"99bbee",
 					"bgColorActive":"99bbee",
 					"fcActive":"ffffff",
-					"borderColorHighlight":"ffffff",
-					"bgColorHighlight":"eeeeee",
-					"fcHighlight":"444444",
+					"borderColorHighlight":"e9ec6c",
+					"bgColorHighlight":"e9ec6c",
+					"fcHighlight":"000000",
+					"borderColorError":"cc2331",
+					"bgColorError":"cc2331",
+					"fcError":"ffffff",
 					"bgColorOverlay":"eeeeee",
-					"bgColorShadow":"aaaaaa"
+					"bgColorShadow":"aaaaaa",
+
+					"fcAnchorLink":"336699",
+					"fcAnchorVisited":"997399",
+					"fcAnchorHover":"997399",
+
+					"bgColorContent2":"ffffff",
+					"fcContent2":"999999",
+					"fcTime":"800000",
+					"fcQuote":"0000a0"
 				},
 
 				"UI Lightness": {
@@ -77,8 +101,20 @@ annuus.addModules(function(){ return {
 					"borderColorHighlight":"fed22f",
 					"bgColorHighlight":"ffe45c",
 					"fcHighlight":"363636",
+					"borderColorError":"cd0a0a",
+					"bgColorError":"b81900",
+					"fcError":"ffffff",
 					"bgColorOverlay":"666666",
-					"bgColorShadow":"000000"
+					"bgColorShadow":"000000",
+
+					"fcAnchorLink":"1c94c4",
+					"fcAnchorVisited":"2c75b0",
+					"fcAnchorHover":"c77405",
+
+					"bgColorContent2":"ffffff",
+					"fcContent2":"999999",
+					"fcTime":"966a31",
+					"fcQuote":"20547f"
 				},
 
 				"UI Darkness": {
@@ -101,8 +137,20 @@ annuus.addModules(function(){ return {
 					"borderColorHighlight":"cccccc",
 					"bgColorHighlight":"eeeeee",
 					"fcHighlight":"2e7db2",
+					"borderColorError":"ffb73d",
+					"bgColorError":"ffc73d",
+					"fcError":"111111",
 					"bgColorOverlay":"5c5c5c",
-					"bgColorShadow":"cccccc"
+					"bgColorShadow":"cccccc",
+
+					"fcAnchorLink":"d4d4d4",
+					"fcAnchorVisited":"8c8c8c",
+					"fcAnchorHover":"8c8c8c",
+
+					"bgColorContent2":"1a1a1a",
+					"fcContent2":"999999",
+					"fcTime":"f58400",
+					"fcQuote":"59b4d4"
 				},
 
 				"Smoothness": {
@@ -125,8 +173,20 @@ annuus.addModules(function(){ return {
 					"borderColorHighlight":"fcefa1",
 					"bgColorHighlight":"fbf9ee",
 					"fcHighlight":"363636",
+					"borderColorError":"cd0a0a",
+					"bgColorError":"fef1ec",
+					"fcError":"cd0a0a",
 					"bgColorOverlay":"aaaaaa",
-					"bgColorShadow":"aaaaaa"
+					"bgColorShadow":"aaaaaa",
+
+					"fcAnchorLink":"555555",
+					"fcAnchorVisited":"888888",
+					"fcAnchorHover":"212121",
+
+					"bgColorContent2":"eeeeee",
+					"fcContent2":"999999",
+					"fcTime":"212121",
+					"fcQuote":"212121"
 				},
 
 				"Start": {
@@ -149,8 +209,20 @@ annuus.addModules(function(){ return {
 					"borderColorHighlight":"fcd113",
 					"bgColorHighlight":"f8da4e",
 					"fcHighlight":"915608",
+					"borderColorError":"cd0a0a",
+					"bgColorError":"e14f1c",
+					"fcError":"ffffff",
 					"bgColorOverlay":"aaaaaa",
-					"bgColorShadow":"999999"
+					"bgColorShadow":"999999",
+
+					"fcAnchorLink":"0078ae",
+					"fcAnchorVisited":"a582ad",
+					"fcAnchorHover":"6897ad",
+
+					"bgColorContent2":"cedfe5",
+					"fcContent2":"999999",
+					"fcTime":"5d9126",
+					"fcQuote":"48701d"
 				},
 
 				"Redmond": {
@@ -173,32 +245,56 @@ annuus.addModules(function(){ return {
 					"borderColorHighlight":"fad42e",
 					"bgColorHighlight":"fbec88",
 					"fcHighlight":"363636",
+					"borderColorError":"cd0a0a",
+					"bgColorError":"fef1ec",
+					"fcError":"cd0a0a",
 					"bgColorOverlay":"aaaaaa",
-					"bgColorShadow":"aaaaaa"
+					"bgColorShadow":"aaaaaa",
+
+					"fcAnchorLink":"2e6e9e",
+					"fcAnchorVisited":"9b769e",
+					"fcAnchorHover":"79b7e7",
+
+					"bgColorContent2":"f2f5f7",
+					"fcContent2":"778c8b",
+					"fcTime":"bd5f7a",
+					"fcQuote":"455a73"
 				},
 
 				"Sunny": {
-					"cornerRadius":"5px",
-					"borderColorHeader":"4297d7",
-					"bgColorHeader":"5c9ccc",
+					"cornerRadius":"8px",
+					"borderColorHeader":"494437",
+					"bgColorHeader":"817865",
 					"fcHeader":"ffffff",
-					"borderColorContent":"a6c9e2",
-					"bgColorContent":"fcfdfd",
-					"fcContent":"222222",
-					"borderColorDefault":"c5dbec",
-					"bgColorDefault":"dfeffc",
-					"fcDefault":"2e6e9e",
-					"borderColorHover":"79b7e7",
-					"bgColorHover":"d0e5f5",
-					"fcHover":"1d5987",
-					"borderColorActive":"79b7e7",
-					"bgColorActive":"f5f8f9",
-					"fcActive":"e17009",
-					"borderColorHighlight":"fad42e",
-					"bgColorHighlight":"fbec88",
-					"fcHighlight":"363636",
-					"bgColorOverlay":"aaaaaa",
-					"bgColorShadow":"aaaaaa"
+					"borderColorContent":"8e846b",
+					"bgColorContent":"feeebd",
+					"fcContent":"383838",
+					"borderColorDefault":"d19405",
+					"bgColorDefault":"fece2f",
+					"fcDefault":"4c3000",
+					"borderColorHover":"a45b13",
+					"bgColorHover":"ffdd57",
+					"fcHover":"381f00",
+					"borderColorActive":"655e4e",
+					"bgColorActive":"ffffff",
+					"fcActive":"0074c7",
+					"borderColorHighlight":"eeb420",
+					"bgColorHighlight":"fff9e5",
+					"fcHighlight":"1f1f1f",
+					"borderColorError":"ffb73d",
+					"bgColorError":"d34d17",
+					"fcError":"ffffff",
+					"bgColorOverlay":"5c5c5c",
+					"bgColorShadow":"cccccc",
+
+					"fcAnchorLink":"4c3000",
+					"fcAnchorVisited":"4a4d3a",
+					"fcAnchorHover":"1a140a",
+
+					"bgColorContent2":"d6c89f",
+					"fcContent2":"948f6c",
+					"fcTime":"565e2a",
+					"fcQuote":"383220"
 				},
 
 				"Overcast": {
@@ -221,8 +317,20 @@ annuus.addModules(function(){ return {
 					"borderColorHighlight":"ffffff",
 					"bgColorHighlight":"eeeeee",
 					"fcHighlight":"444444",
+					"borderColorError":"c0402a",
+					"bgColorError":"c0402a",
+					"fcError":"ffffff",
 					"bgColorOverlay":"eeeeee",
-					"bgColorShadow":"aaaaaa"
+					"bgColorShadow":"aaaaaa",
+
+					"fcAnchorLink":"3383bb",
+					"fcAnchorVisited":"b68bba",
+					"fcAnchorHover":"175887",
+
+					"bgColorContent2":"d4d4d4",
+					"fcContent2":"616161",
+					"fcTime":"7f3e7f",
+					"fcQuote":"005ea1"
 				},
 
 				"Le Frog": {
@@ -245,8 +353,20 @@ annuus.addModules(function(){ return {
 					"borderColorHighlight":"f9dd34",
 					"bgColorHighlight":"fbf5d0",
 					"fcHighlight":"363636",
+					"borderColorError":"fad000",
+					"bgColorError":"ffdc2e",
+					"fcError":"2b2b2b",
 					"bgColorOverlay":"444444",
-					"bgColorShadow":"aaaaaa"
+					"bgColorShadow":"aaaaaa",
+
+					"fcAnchorLink":"cfffdf",
+					"fcAnchorVisited":"9bcfac",
+					"fcAnchorHover":"93cf68",
+
+					"bgColorContent2":"2b6300",
+					"fcContent2":"a7c2d1",
+					"fcTime":"c1c46e",
+					"fcQuote":"67b8e0"
 				},
 
 				"Flick": {
@@ -269,8 +389,20 @@ annuus.addModules(function(){ return {
 					"borderColorHighlight":"cccccc",
 					"bgColorHighlight":"ffffff",
 					"fcHighlight":"444444",
+					"borderColorError":"ff0084",
+					"bgColorError":"ffffff",
+					"fcError":"222222",
 					"bgColorOverlay":"eeeeee",
-					"bgColorShadow":"aaaaaa"
+					"bgColorShadow":"aaaaaa",
+
+					"fcAnchorLink":"0073ea",
+					"fcAnchorVisited":"963beb",
+					"fcAnchorHover":"0055b0",
+
+					"bgColorContent2":"eeeeee",
+					"fcContent2":"999999",
+					"fcTime":"c2779c",
+					"fcQuote":"204396"
 				},
 
 				"Pepper Grinder": {
@@ -293,8 +425,20 @@ annuus.addModules(function(){ return {
 					"borderColorHighlight":"b2a266",
 					"bgColorHighlight":"f7f3de",
 					"fcHighlight":"3a3427",
+					"borderColorError":"681818",
+					"bgColorError":"b83400",
+					"fcError":"ffffff",
 					"bgColorOverlay":"6e4f1c",
-					"bgColorShadow":"000000"
+					"bgColorShadow":"000000",
+
+					"fcAnchorLink":"654b24",
+					"fcAnchorVisited":"997237",
+					"fcAnchorHover":"7d6136",
+
+					"bgColorContent2":"e0ded3",
+					"fcContent2":"786d5e",
+					"fcTime":"808f1f",
+					"fcQuote":"c2770e"
 				},
 
 				"Eggplant": {
@@ -317,8 +461,20 @@ annuus.addModules(function(){ return {
 					"borderColorHighlight":"ffdb1f",
 					"bgColorHighlight":"fafafa",
 					"fcHighlight":"333333",
+					"borderColorError":"994d53",
+					"bgColorError":"994d53",
+					"fcError":"ffffff",
 					"bgColorOverlay":"eeeeee",
-					"bgColorShadow":"aaaaaa"
+					"bgColorShadow":"aaaaaa",
+
+					"fcAnchorLink":"b89fd1",
+					"fcAnchorVisited":"8a5eb5",
+					"fcAnchorHover":"9c50ab",
+
+					"bgColorContent2":"393240",
+					"fcContent2":"675b6e",
+					"fcTime":"a13f6b",
+					"fcQuote":"7b72db"
 				},
 
 				"Dark Hive": {
@@ -341,8 +497,20 @@ annuus.addModules(function(){ return {
 					"borderColorHighlight":"cccccc",
 					"bgColorHighlight":"eeeeee",
 					"fcHighlight":"2e7db2",
+					"borderColorError":"ffb73d",
+					"bgColorError":"ffc73d",
+					"fcError":"111111",
 					"bgColorOverlay":"5c5c5c",
-					"bgColorShadow":"cccccc"
+					"bgColorShadow":"cccccc",
+
+					"fcAnchorLink":"cfcfcf",
+					"fcAnchorVisited":"828282",
+					"fcAnchorHover":"0b93d5",
+
+					"bgColorContent2":"121212",
+					"fcContent2":"999999",
+					"fcTime":"08608c",
+					"fcQuote":"0976ad"
 				},
 
 				"Cupertino": {
@@ -365,8 +533,20 @@ annuus.addModules(function(){ return {
 					"borderColorHighlight":"f9dd34",
 					"bgColorHighlight":"ffef8f",
 					"fcHighlight":"363636",
+					"borderColorError":"cd0a0a",
+					"bgColorError":"cd0a0a",
+					"fcError":"ffffff",
 					"bgColorOverlay":"eeeeee",
-					"bgColorShadow":"000000"
+					"bgColorShadow":"000000",
+
+					"fcAnchorLink":"2779aa",
+					"fcAnchorVisited":"4b70ab",
+					"fcAnchorHover":"3baae3",
+
+					"bgColorContent2":"edf0f2",
+					"fcContent2":"818da1",
+					"fcTime":"77a5d4",
+					"fcQuote":"3f63a1"
 				},
 
 				"South Street": {
@@ -389,8 +569,20 @@ annuus.addModules(function(){ return {
 					"borderColorHighlight":"e8e1b5",
 					"bgColorHighlight":"fcf0ba",
 					"fcHighlight":"363636",
+					"borderColorError":"e3a345",
+					"bgColorError":"ffedad",
+					"fcError":"cd5c0a",
 					"bgColorOverlay":"2b2922",
-					"bgColorShadow":"cccccc"
+					"bgColorShadow":"cccccc",
+
+					"fcAnchorLink":"459e00",
+					"fcAnchorVisited":"388200",
+					"fcAnchorHover":"67b021",
+
+					"bgColorContent2":"f0eedf",
+					"fcContent2":"d4ccb0",
+					"fcTime":"858300",
+					"fcQuote":"499447"
 				},
 
 				"Blitzer": {
@@ -413,8 +605,20 @@ annuus.addModules(function(){ return {
 					"borderColorHighlight":"fcd3a1",
 					"bgColorHighlight":"fbf8ee",
 					"fcHighlight":"444444",
+					"borderColorError":"cc0000",
+					"bgColorError":"f3d8d8",
+					"fcError":"2e2e2e",
 					"bgColorOverlay":"a6a6a6",
-					"bgColorShadow":"333333"
+					"bgColorShadow":"333333",
+
+					"fcAnchorLink":"004276",
+					"fcAnchorVisited":"313678",
+					"fcAnchorHover":"000000",
+
+					"bgColorContent2":"f2f2f2",
+					"fcContent2":"838599",
+					"fcTime":"8c8334",
+					"fcQuote":"0f0f57"
 				},
 
 				"Humanity": {
@@ -437,8 +641,20 @@ annuus.addModules(function(){ return {
 					"borderColorHighlight":"d9bb73",
 					"bgColorHighlight":"f5f5b5",
 					"fcHighlight":"060200",
+					"borderColorError":"f8893f",
+					"bgColorError":"fee4bd",
+					"fcError":"592003",
 					"bgColorOverlay":"aaaaaa",
-					"bgColorShadow":"aaaaaa"
+					"bgColorShadow":"aaaaaa",
+
+					"fcAnchorLink":"3f3731",
+					"fcAnchorVisited":"73614e",
+					"fcAnchorHover":"a46313",
+
+					"bgColorContent2":"f0ece8",
+					"fcContent2":"7f756c",
+					"fcTime":"8f452b",
+					"fcQuote":"612f07"
 				},
 
 				"Hot Sneaks": {
@@ -461,8 +677,20 @@ annuus.addModules(function(){ return {
 					"borderColorHighlight":"b4d100",
 					"bgColorHighlight":"ffff38",
 					"fcHighlight":"363636",
+					"borderColorError":"ff6b7f",
+					"bgColorError":"ff3853",
+					"fcError":"ffffff",
 					"bgColorOverlay":"f7f7ba",
-					"bgColorShadow":"ba9217"
+					"bgColorShadow":"ba9217",
+
+					"fcAnchorLink":"333333",
+					"fcAnchorVisited":"577278",
+					"fcAnchorHover":"db4865",
+
+					"bgColorContent2":"e6f0f2",
+					"fcContent2":"748487",
+					"fcTime":"b04c60",
+					"fcQuote":"3e7b87"
 				},
 
 				"Excite Bike": {
@@ -485,32 +713,56 @@ annuus.addModules(function(){ return {
 					"borderColorHighlight":"ffffff",
 					"bgColorHighlight":"c5ddfc",
 					"fcHighlight":"333333",
+					"borderColorError":"e69700",
+					"bgColorError":"e69700",
+					"fcError":"ffffff",
 					"bgColorOverlay":"e6b900",
-					"bgColorShadow":"e69700"
+					"bgColorShadow":"e69700",
+
+					"fcAnchorLink":"1484e6",
+					"fcAnchorVisited":"e69700",
+					"fcAnchorHover":"3772a6",
+
+					"bgColorContent2":"e8e8e8",
+					"fcContent2":"877f71",
+					"fcTime":"e69700",
+					"fcQuote":"116ab8"
 				},
 
 				"Vader": {
-					"cornerRadius":"4px",
-					"borderColorHeader":"e78f08",
-					"bgColorHeader":"f6a828",
+					"cornerRadius":"3px",
+					"borderColorHeader":"404040",
+					"bgColorHeader":"888888",
 					"fcHeader":"ffffff",
-					"borderColorContent":"dddddd",
-					"bgColorContent":"eeeeee",
-					"fcContent":"333333",
+					"borderColorContent":"404040",
+					"bgColorContent":"121212",
+					"fcContent":"eeeeee",
 					"borderColorDefault":"cccccc",
-					"bgColorDefault":"f6f6f6",
-					"fcDefault":"1c94c4",
-					"borderColorHover":"fbcb09",
-					"bgColorHover":"fdf5ce",
-					"fcHover":"c77405",
-					"borderColorActive":"fbd850",
-					"bgColorActive":"ffffff",
-					"fcActive":"eb8f00",
-					"borderColorHighlight":"fed22f",
-					"bgColorHighlight":"ffe45c",
-					"fcHighlight":"363636",
-					"bgColorOverlay":"666666",
-					"bgColorShadow":"000000"
+					"bgColorDefault":"adadad",
+					"fcDefault":"333333",
+					"borderColorHover":"dddddd",
+					"bgColorHover":"dddddd",
+					"fcHover":"000000",
+					"borderColorActive":"000000",
+					"bgColorActive":"121212",
+					"fcActive":"ffffff",
+					"borderColorHighlight":"404040",
+					"bgColorHighlight":"555555",
+					"fcHighlight":"cccccc",
+					"borderColorError":"cd0a0a",
+					"bgColorError":"fef1ec",
+					"fcError":"cd0a0a",
+					"bgColorOverlay":"aaaaaa",
+					"bgColorShadow":"aaaaaa",
+
+					"fcAnchorLink":"adadad",
+					"fcAnchorVisited":"7a7a7a",
+					"fcAnchorHover":"dddddd",
+
+					"bgColorContent2":"141414",
+					"fcContent2":"7f7f7f",
+					"fcTime":"666666",
+					"fcQuote":"b0b0b0"
 				},
 
 				"Dot Luv": {
@@ -533,8 +785,20 @@ annuus.addModules(function(){ return {
 					"borderColorHighlight":"052f57",
 					"bgColorHighlight":"0b58a2",
 					"fcHighlight":"ffffff",
+					"borderColorError":"cd0a0a",
+					"bgColorError":"a32d00",
+					"fcError":"ffffff",
 					"bgColorOverlay":"aaaaaa",
-					"bgColorShadow":"aaaaaa"
+					"bgColorShadow":"aaaaaa",
+
+					"fcAnchorLink":"d9d9d9",
+					"fcAnchorVisited":"005eb5",
+					"fcAnchorHover":"75abff",
+
+					"bgColorContent2":"171717",
+					"fcContent2":"677387",
+					"fcTime":"00498f",
+					"fcQuote":"4077cf"
 				},
 
 				"Mint Choc": {
@@ -557,8 +821,20 @@ annuus.addModules(function(){ return {
 					"borderColorHighlight":"add978",
 					"bgColorHighlight":"619226",
 					"fcHighlight":"ffffff",
+					"borderColorError":"5f391b",
+					"bgColorError":"5f391b",
+					"fcError":"ffffff",
 					"bgColorOverlay":"aaaaaa",
-					"bgColorShadow":"aaaaaa"
+					"bgColorShadow":"aaaaaa",
+
+					"fcAnchorLink":"9bcc60",
+					"fcAnchorVisited":"6e9144",
+					"fcAnchorHover":"baec7e",
+
+					"bgColorContent2":"261e16",
+					"fcContent2":"79856a",
+					"fcTime":"9bcc60",
+					"fcQuote":"9bcc60"
 				},
 
 				"Black Tie": {
@@ -581,8 +857,20 @@ annuus.addModules(function(){ return {
 					"borderColorHighlight":"ffde2e",
 					"bgColorHighlight":"ffeb80",
 					"fcHighlight":"363636",
+					"borderColorError":"9e0505",
+					"bgColorError":"cd0a0a",
+					"fcError":"ffffff",
 					"bgColorOverlay":"aaaaaa",
-					"bgColorShadow":"aaaaaa"
+					"bgColorShadow":"aaaaaa",
+
+					"fcAnchorLink":"111111",
+					"fcAnchorVisited":"545454",
+					"fcAnchorHover":"999999",
+
+					"bgColorContent2":"f2f2f2",
+					"fcContent2":"a1a1a1",
+					"fcTime":"a19551",
+					"fcQuote":"363636"
 				},
 
 				"Trontastic": {
@@ -605,8 +893,20 @@ annuus.addModules(function(){ return {
 					"borderColorHighlight":"8cce3b",
 					"bgColorHighlight":"f1fbe5",
 					"fcHighlight":"030303",
+					"borderColorError":"f1ac88",
+					"bgColorError":"f6ecd5",
+					"fcError":"74736d",
 					"bgColorOverlay":"262626",
-					"bgColorShadow":"303030"
+					"bgColorShadow":"303030",
+
+					"fcAnchorLink":"b8ec79",
+					"fcAnchorVisited":"8cb35b",
+					"fcAnchorHover":"96f226",
+
+					"bgColorContent2":"1a1a1a",
+					"fcContent2":"69755a",
+					"fcTime":"b8ec79",
+					"fcQuote":"96f226"
 				},
 
 				"Swansky Purse": {
@@ -629,51 +929,21 @@ annuus.addModules(function(){ return {
 					"borderColorHighlight":"362917",
 					"bgColorHighlight":"d5ac5d",
 					"fcHighlight":"060200",
+					"borderColorError":"c26629",
+					"bgColorError":"fee4bd",
+					"fcError":"803f1e",
 					"bgColorOverlay":"372806",
-					"bgColorShadow":"ddd4b0"
-				}
-			}
-		}
-	}
-},
+					"bgColorShadow":"ddd4b0",
 
-'c878628c-8414-4d1e-9a20-717d1dd0517c': {
-	title: 'Theme data extractor',
-	pages: { on: [all] },
-	tasks: {
-		'46ffedd9': {
-			run_at: 'document_start',
-			ui: ['button'],
-			title: 'Theme data extractor',
-			css: '\
-				#an-extractor { position: fixed; top: 5%; left: 2%; width: 100%; height: 90%; } \
-				#an-extractor > textarea { box-sizing: border-box; width: 45%; height: 100%; } \
-				#an-extractor > button { width: 5%; height: 100%; vertical-align: bottom; } \
-			',
-			js: function()
-			{
-				$('\
-					<div id="an-extractor"> \
-						<textarea id="an-extractor-input"></textarea> \
-							<button>&gt;</button> \
-						<textarea id="an-extractor-output"></textarea> \
-					</div> \
-				')
-				.delegate('textarea', 'click', function()
-				{
-					this.select();
-				})
-				.appendTo('#an')
-				.find('button').click(function()
-				{
-					var input = $('#an-extractor-input').val();
-					var output = {};
-					$.each($.themes('HKGolden'), function(name)
-					{
-						output[name] = input.match($.format('{0}=([^&]+)', name))[1];
-					});
-					$('#an-extractor-output').val(JSON.stringify(output, null, '\t'));
-				});
+					"fcAnchorLink":"f8eec9",
+					"fcAnchorVisited":"ada68c",
+					"fcAnchorHover":"5e5a4c",
+
+					"bgColorContent2":"4a3615",
+					"fcContent2":"7d7452",
+					"fcTime":"f8eec9",
+					"fcQuote":"8c753b"
+				}
 			}
 		}
 	}

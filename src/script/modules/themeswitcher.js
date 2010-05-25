@@ -6,7 +6,7 @@ annuus.addModules({
 	pages: { comp: [all] },
 	tasks: {
 		'1697d048': {
-			ui: ['auto', 'button'],
+			ui: ['button'],
 			css: '\
 				#an-themeswitcher-button { position: absolute; top: 10px; left: 10px; } \
 				.an-themeswitcher { font-size: 62.5%; } \
@@ -14,7 +14,8 @@ annuus.addModules({
 			js: function(job, event)
 			{
 				var select = '<select id="an-themeswitcher" class="an-themeswitcher">';
-				$.each(job.resources('themes'), function(name, props)
+				select += '<option></option>';
+				$.each(job.resources('themes'), function(name)
 				{
 					select += $.format('<option>{0}</option>', name);
 				});
@@ -22,8 +23,12 @@ annuus.addModules({
 
 				select = $(select).appendTo('#an').selectmenu({ style: 'dropdown' }).change(function()
 				{
-					$(annuus).trigger('theme', $.extend({}, job.options(), job.resources('themes', $(this).val())));
-				}).change();
+					var name = $(this).val();
+					if(name) {
+						job.options(job.resources('themes', name));
+						$(annuus).trigger('theme', job.options());
+					}
+				});
 
 				if(event) {
 					$(window).scrollTop(0);

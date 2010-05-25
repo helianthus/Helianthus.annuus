@@ -110,7 +110,7 @@ annuus.addModules({
 				/* login box */ \
 				div[align="center"] > table[width="220"] { border-spacing: 5px; } \
 				/* gender text */ \
-				#ctl00_ContentPlaceHolder1_tc_Profile_tb0_lb_sex, .repliers_left > div > a { text-shadow: 0 0 1em #999; } \
+				#ctl00_ContentPlaceHolder1_tc_Profile_tb0_lb_sex, .repliers_left > div > a { text-shadow: 0 0 2em #999; } \
 			'
 		},
 

@@ -8,8 +8,11 @@ annuus.addModules({
 		'475b4b70': {
 			run_at: 'document_start',
 			css: '\
+				.repliers_right, \
+				.ListPMText > table > tbody > tr > td > table, \
+				#ctl00_ContentPlaceHolder1_SendPMform > .repliers > tbody > tr > td > table \
+					{ table-layout: fixed; } \
 				body { word-wrap: break-word; } \
-				.repliers_right { table-layout: fixed; } \
 			'
 		}
 	}

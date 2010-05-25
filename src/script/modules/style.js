@@ -10,7 +10,10 @@ annuus.addModules({
 	tasks: {
 		'e6d2ea58': {
 			run_at: 'document_start',
-			css: 'body, td, p, .DivResizableBoxContainer, .ui-widget { font-family: {0.options(ffDefault)}; }'
+			css: '\
+				body, td, p, .DivResizableBoxContainer, .ui-widget { font-family: {0.options(ffDefault)}; } \
+				td[style*="font-family:"] { font-family: {0.options(ffDefault)} !important; } \
+			'
 		}
 	}
 },
@@ -23,8 +26,7 @@ annuus.addModules({
 		fcAnchorLink: { title: '連結: 未訪問文字顏色', type: 'text', defaultValue: '0000ee', access: 'public' },
 		fcAnchorVisited: { title: '連結: 已訪問文字顏色', type: 'text', defaultValue: '551a8b', access: 'public' },
 		fcAnchorHover: { title: '連結: 懸浮文字顏色', type: 'text', defaultValue: '', access: 'public' },
-		showAnchorHover: { title: '顯示懸浮文字顏色', type: 'checkbox', defaultValue: false },
-		removeUnderline: { title: '移除連結底線', type: 'checkbox', defaultValue: true }
+		showAnchorHover: { title: '顯示懸浮文字顏色', type: 'checkbox', defaultValue: false }
 	},
 	tasks: {
 		'e6d2ea58': {
@@ -48,16 +50,21 @@ annuus.addModules({
 					$.rules({ id: 'link-style' }, css, options);
 				});
 			}
-		},
+		}
+	}
+},
 
+'68680179-e9f2-4472-9326-b0a25d0a5b2e':
+{
+	title: '移除連結底線',
+	pages: { on: [all] },
+	tasks: {
 		'bb09974e': {
-			requires: {
-				options: [{ id: 'removeUnderline', value: true }]
-			},
 			run_at: 'document_start',
 			css: '\
 				a { text-decoration: none; } \
 				#ctl00_ContentPlaceHolder1_lb_bloglink > a > span { text-decoration: none !important; } \
+				.repliers_right > tbody > tr:first-child a { text-decoration: underline; } \
 			'
 		}
 	}
@@ -79,29 +86,12 @@ annuus.addModules({
 	tasks: {
 		'5c6e7d7d': {
 			run_at: 'document_start',
-			css: '\
-				/* logo */ \
-				#ctl00_TopBarHomeLink { display: block; background-image: url("{0.resources(icons, logo)}"); } \
-				#ctl00_TopBarHomeImage { visibility: hidden; } \
-				/* top stuff */ \
-				.TopMenuPanel, .PageMiddleBox, .bg_top, .bg_main { background-image: none; } \
-				.TopMenuBox, .TopMenuPanel + div.PageWidthContainer, table[width="955"] > tbody > tr:first-child { display: none; } \
-				.bg_top { height: auto; } \
-				/* default page */ \
-				.SideBar_Container + div > img { padding: 0 16px 14px 0; width: 0; height: 0; } \
-				/* pm box */ \
-				#divPMMessageBody { padding: 0.5em; } \
-				/* msg box align icons */ \
-				img[alt^="Align "] { background-color: #fff; background-color: rgba(255, 255, 255, 0.3); } \
-				/* login box */ \
-				div[align="center"] > table[width="220"] { border-spacing: 5px; } \
-				/* gender text */ \
-				#ctl00_ContentPlaceHolder1_tc_Profile_tb0_lb_sex, .repliers_left > div > a { text-shadow: 0 0 2em #999; } \
-			',
+			css: '#ctl00_TopBarHomeImage { width: 0 !important; height: 0 !important; }',
 			js: function(job)
 			{
 				$.digEach({
 					'': [
+						['/images/index_images/logo.jpg', 220, 115, 'logo'],
 						['/images/left_menu/redhotp.jpg', 22, 21, 'redhotp'],
 						['/images/index_images/p2.jpg', 22, 21, 'p2'],
 						['images/bb_bookmarks/add.gif', 18, 18, 'plus-octagon'],
@@ -206,7 +196,8 @@ annuus.addModules({
 						td[style*="background-color: #F3F2F1"], /* view page replies */ \
 						tr[style*="background-color: #F3F2F1"] > td, /* reply preview */ \
 						td[style*="background-color: #EEEEEE"], /* login notice */ \
-						span[style*="background-color: #f6f6f6"], span[style*="background-color: rgb(246, 246, 246)"] /* profile info input */ \
+						span[id^="ctl00_ContentPlaceHolder1_tc_Profile_tb"][style*="background-color:"], /* profile info input */ \
+						.blogmain_window > table > tbody > tr[style] > td /* newblog page */ \
 							{ border-color: #{0[borderColorContent]} !important; background-color: #{0[bgColorContent]} !important; } \
 						.BlockedTR td, \
 						.repliers > tbody > tr > td[style*="background-color: #F3F2F1"] /* pm page */ \
@@ -297,31 +288,6 @@ annuus.addModules({
 						div[align="center"] > table[width="220"], /* login box */ \
 						[class^="hkg_"] \
 							{ border-radius: {0[cornerRadius]}; } \
-						/* border/corner fixes */ \
-						#ctl00_ContentPlaceHolder1_QuickReplyTable td[style*="background-color: #F3F2F1"], /* msg box */ \
-						#ctl00_ContentPlaceHolder1_PMMsgTable td[style*="background-color: #F3F2F1"] /* msg box */ \
-							{ border-top-left-radius: 0; border-top-right-radius: 0; border-bottom-left-radius: 0; border-bottom-right-radius: 0; } \
-						.ProfileBoxDetails, /* bookmark panel */ \
-						.hkg_bb_bookmark_TitleBox, .hkg_bb_bookmarkItem_AddNew \
-							{ border-bottom-left-radius: 0; border-bottom-right-radius: 0; } \
-						\
-						tr, \
-						#ctl00_ContentPlaceHolder1_QuickReplyTable, /* msg box */ \
-						td[bgcolor="#f8f8f8"] /* login page */ \
-							{ background-color: transparent !important; } \
-						\
-						#ctl00_ContentPlaceHolder1_ProfileForm .main_table1,  /* profilepage extra borders */ \
-						.hkg_bb_leftpanel > div > div, #btn_hkg_bb_bookmark_item2_AddNewLink \
-							{ border: 0; } \
-						\
-						.repliers { border: 0 !important; border-collapse: separate !important; border-spacing: 0; } \
-						\
-						br + .repliers tr[username] > td, \
-						#ctl00_ContentPlaceHolder1_ProfileForm .main_table1 > table, #ctl00_ContentPlaceHolder1_ProfileForm .main_table1 tr:first-child > td[style*="background-color:"] /* profilepage lists */ \
-							{ border-top-left-radius: 0; border-top-right-radius: 0; } \
-						\
-						div[id^="charttable"] > table > tbody > tr:last-child { display: none; } /* gift page */ \
-						\
 						/* hot people */ \
 						td.redhottitle { border-color: #{0[borderColorError]}; background-color: #{0[bgColorError]}; color: #{0[fcError]}; } \
 						table[style*="background-color: #ff5560"] { background-color: #{0[borderColorError]} !important; border-top-left-radius: 0; border-top-right-radius: 0; } \
@@ -354,7 +320,48 @@ annuus.addModules({
 					',
 					options);
 				});
-			}
+			},
+			css: '\
+				#ctl00_ContentPlaceHolder1_QuickReplyTable td[style*="background-color: #F3F2F1"], /* msg box */ \
+				#ctl00_ContentPlaceHolder1_PMMsgTable td[style*="background-color: #F3F2F1"] /* msg box */ \
+					{ border-top-left-radius: 0; border-top-right-radius: 0; border-bottom-left-radius: 0; border-bottom-right-radius: 0; } \
+				\
+				br + .repliers tr[username] > td, \
+				#ctl00_ContentPlaceHolder1_ProfileForm .main_table1 > table, #ctl00_ContentPlaceHolder1_ProfileForm .main_table1 tr:first-child > td[style*="background-color:"] /* profilepage lists */ \
+					{ border-top-left-radius: 0; border-top-right-radius: 0; } \
+				\
+				.ProfileBoxDetails, /* bookmark panel */ \
+				.hkg_bb_bookmark_TitleBox, .hkg_bb_bookmarkItem_AddNew \
+					{ border-bottom-left-radius: 0; border-bottom-right-radius: 0; } \
+				\
+				tr, \
+				#ctl00_ContentPlaceHolder1_QuickReplyTable, /* msg box */ \
+				td[bgcolor="#f8f8f8"] /* login page */ \
+					{ background-color: transparent !important; } \
+				\
+				#ctl00_ContentPlaceHolder1_ProfileForm .main_table1,  /* profilepage extra borders */ \
+				.hkg_bb_leftpanel > div > div, #btn_hkg_bb_bookmark_item2_AddNewLink \
+					{ border: 0; } \
+				\
+				/* top stuff */ \
+				.TopMenuPanel, .PageMiddleBox, .bg_top, .bg_main { background-image: none; } \
+				.TopMenuBox, .TopMenuPanel + div.PageWidthContainer, table[width="955"] > tbody > tr:first-child { display: none; } \
+				.bg_top { height: auto; } \
+				/* view page */ \
+				.repliers { border: 0 !important; border-collapse: separate !important; border-spacing: 0; } \
+				/* default page */ \
+				.SideBar_Container + div > img { padding: 0 16px 14px 0; width: 0; height: 0; } \
+				/* pm box */ \
+				#divPMMessageBody { padding: 0.5em; } \
+				/* msg box align icons */ \
+				img[alt^="Align "] { background-color: #fff; background-color: rgba(255, 255, 255, 0.3); } \
+				/* login box */ \
+				div[align="center"] > table[width="220"] { border-spacing: 5px; } \
+				/* gender text */ \
+				#ctl00_ContentPlaceHolder1_tc_Profile_tb0_lb_sex, .repliers_left > div > a { text-shadow: 0 0 2em #999; } \
+				/* gift page */ \
+				div[id^="charttable"] > table > tbody > tr:last-child { display: none; } \
+			'
 		}
 	}
 }

@@ -112,7 +112,7 @@ $.auto = wrapUI({
 	add: {
 		js: function(job, options)
 		{
-			options.js(options);
+			options.js && options.js(options);
 		}
 	}
 });

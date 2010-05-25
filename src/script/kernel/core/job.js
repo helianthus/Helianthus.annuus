@@ -10,16 +10,16 @@ $.each(['options', 'database'], function(i, dataType)
 {
 	Job.prototype[dataType] = function(id, value)
 	{
-		var profile = bolanderi.__storage.get({ savedOrDefault: typeof value === 'undefined' ? 'both' : 'saved' });
+		var isGet = typeof id in { string:1, undefined:1 } && typeof value === 'undefined';
+		var profile = bolanderi.__storage.get({ savedOrDefault: isGet ? 'both' : 'saved' });
 		var paths = {
 			'public': [profile, 'publicData', dataType],
 			'protected': [profile, 'privateData', this.module.id, dataType],
 			'private': [profile, 'privateData', this.module.id, this.module.__pageCode, dataType]
 		};
-		var data;
+		var data = {};
 
-		if(typeof value === 'undefined') {
-			data = {};
+		if(isGet) {
 			$.each(paths, function(modifier, path)
 			{
 				$.extend(data, $.dig(path));
@@ -27,21 +27,31 @@ $.each(['options', 'database'], function(i, dataType)
 			return typeof id === 'undefined' ? data : data[id];
 		}
 
-		var dataDef = $.dig(this.module, dataType, id);
-
-		if(!dataDef && !(id in profile.publicData[dataType])) {
-			$.log('warn', 'public {0} with id "{1}" does not exist.', dataType, id);
-			return;
-		}
-
-		data = $.make.apply(null, paths[dataDef ? dataDef.access || 'protected' : 'public']);
-
-		if(value === null) {
-			delete data[id];
-		}
-		else {
+		if(typeof id === 'string') {
 			data[id] = value;
 		}
+		else {
+			data = id;
+		}
+
+		$.each(data, function(id, value)
+		{
+			var dataDef = $.dig(this.module, dataType, id);
+
+			if(!dataDef && typeof $.dig(bolanderi.__storage.get(), 'publicData', dataType, id) === 'undefined') {
+				$.log('warn', 'public {0} with id "{1}" does not exist.', dataType, id);
+				return;
+			}
+
+			var container = $.make.apply(null, paths[dataDef ? dataDef.access || 'protected' : 'public']);
+
+			if(value === null) {
+				delete container[id];
+			}
+			else {
+				container[id] = value;
+			}
+		});
 
 		bolanderi.__storage.save();
 	};

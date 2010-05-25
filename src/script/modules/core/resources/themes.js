@@ -798,7 +798,7 @@ annuus.addModules({
 					"bgColorContent2":"171717",
 					"fcContent2":"677387",
 					"fcTime":"00498f",
-					"fcQuote":"4077cf"
+					"fcQuote":"85a5d9"
 				},
 
 				"Mint Choc": {
@@ -906,7 +906,7 @@ annuus.addModules({
 					"bgColorContent2":"1a1a1a",
 					"fcContent2":"69755a",
 					"fcTime":"b8ec79",
-					"fcQuote":"96f226"
+					"fcQuote":"5f9919"
 				},
 
 				"Swansky Purse": {

@@ -230,7 +230,7 @@ function compile(params)
 			return $0[1].toUpperCase();
 		});
 	};
-	var prefixes = ['', 'Khtml', 'Moz', 'O', 'Webkit'];
+	var prefixes = ['', 'Moz', 'O', 'Webkit', 'Khtml'];
 
 	$.each(['border-radius', 'box-shadow', 'box-sizing', 'text-overflow', 'transform', 'transition'], function(i, property)
 	{

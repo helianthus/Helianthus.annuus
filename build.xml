@@ -198,6 +198,11 @@
 			<fileset dir="${dir.build}" includes="**/bolanderi.*" />
 		</move>
 
+		<!-- doc -->
+		<copy todir="${dir.build}/doc">
+			<fileset dir="src/doc" />
+		</copy>
+
 		<!-- replace tokens -->
 		<replace dir="${dir.build}">
 			<patternset refid="pattern.text" />
@@ -265,6 +270,11 @@
 				<filter token="PROJECT_VERSION" value="${project.version}" />
 				<filter token="PROJECT_VERSION_STABLE" value="${project.version.stable}" />
 			</filterset>
+		</copy>
+
+		<!-- doc -->
+		<copy todir="${dir.dist}">
+			<fileset dir="${dir.build}/doc" />
 		</copy>
 	</target>
 

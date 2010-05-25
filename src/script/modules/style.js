@@ -185,7 +185,8 @@ annuus.addModules({
 						tr[style*="background-color: #F8F8F8"] > td, td[style*="background-color: #F8F8F8"], /* topic row */ \
 						[style*="background-color: #F7F3F7"], /* page box */ \
 						td[style*="background-color: #F3F2F1"], /* view page replies */ \
-						tr[style*="background-color: #F3F2F1"] > td /* reply preview */ \
+						tr[style*="background-color: #F3F2F1"] > td, /* reply preview */ \
+						td[style*="background-color: #EEEEEE"] /* login notice */ \
 							{ border-color: #{0[borderColorContent]} !important; background-color: #{0[bgColorContent]} !important; } \
 						.BlockedTR td, \
 						.repliers > tbody > tr > td[style*="background-color: #F3F2F1"] /* pm page */ \

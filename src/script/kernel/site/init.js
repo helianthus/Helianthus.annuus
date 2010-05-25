@@ -28,7 +28,7 @@ function init()
 	bolanderi.__storage.mode(mode);
 
 	// *** REMOVE ME *** //
-	bolanderi.__storage.clear();
+	//bolanderi.__storage.clear();
 
 	$(bolanderi).trigger('storageready');
 	$(document).work();

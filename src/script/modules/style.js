@@ -129,6 +129,7 @@ annuus.addModules({
 						div.hkg_bb_bookmarkItem, .hkg_bb_bookmarkItem a div \
 							{ color: #{0[fcAnchorLink]}; } \
 						a[class$="_link"]:hover, \
+						a.BoxLink2, /* default page */ \
 						.SideBar_Details_Box a:hover, \
 						.hkg_bb_bookmarkItem_Hover a div, .hkg_bb_bookmarkItem_Selected a div \
 							{ color: #{0[fcAnchorHover]}; } \
@@ -186,7 +187,8 @@ annuus.addModules({
 						[style*="background-color: #F7F3F7"], /* page box */ \
 						td[style*="background-color: #F3F2F1"], /* view page replies */ \
 						tr[style*="background-color: #F3F2F1"] > td, /* reply preview */ \
-						td[style*="background-color: #EEEEEE"] /* login notice */ \
+						td[style*="background-color: #EEEEEE"], /* login notice */ \
+						span[style*="background-color: #f6f6f6"], span[style*="background-color: rgb(246, 246, 246)"] /* profile info input */ \
 							{ border-color: #{0[borderColorContent]} !important; background-color: #{0[bgColorContent]} !important; } \
 						.BlockedTR td, \
 						.repliers > tbody > tr > td[style*="background-color: #F3F2F1"] /* pm page */ \

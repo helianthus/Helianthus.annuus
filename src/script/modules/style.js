@@ -110,7 +110,7 @@ annuus.addModules({
 				/* login box */ \
 				div[align="center"] > table[width="220"] { border-spacing: 5px; } \
 				/* gender text */ \
-				#ctl00_ContentPlaceHolder1_tc_Profile_tb0_lb_sex, .repliers_left > div > a { text-shadow: 0 0 1em #fff; } \
+				#ctl00_ContentPlaceHolder1_tc_Profile_tb0_lb_sex, .repliers_left > div > a { text-shadow: 0 0 1em #999; } \
 			'
 		},
 
@@ -321,9 +321,9 @@ annuus.addModules({
 						div[style="color: #0000A0;"] { color: #{0[fcQuote]} !important; } \
 						\
 						/* highlighted background */ \
-						td[style*="background-color: #E9EC6C"] { border-color: #{0[borderColorHighlight]}; background-color: #{0[bgColorHighlight]} !important; color: #{0[fcHighlight]}; } \
-						td[style*="background-color: #E9EC6C"] td { color: #{0[fcHighlight]}; } \
-						td[style*="background-color: #E9EC6C"] div[style="color: #0000A0;"] { text-shadow: #000 1px 1px 1px; } \
+						td[style*="background-color: #E9EC6C"] { border-color: #{0[borderColorHighlight]} !important; background-color: #{0[bgColorHighlight]} !important; } \
+						.repliers_left + td[style*="background-color: #E9EC6C"] td { color: #{0[fcHighlight]}; } \
+						td[style*="background-color: #E9EC6C"] > .repliers_right > tbody > tr:first-child a { text-shadow: 1px 1px 1px #000; } \
 						/* forum service channel */ \
 						td[style*="background-color: #FF0000"] { background-color: #{0[bgColorError]} !important; color: #{0[fcError]} !important; } \
 						/* overlay */ \

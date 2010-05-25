@@ -14,7 +14,7 @@ annuus.addModules({
 			js: function(job, event)
 			{
 				var select = '<select id="an-themeswitcher" class="an-themeswitcher">';
-				select += '<option></option>';
+				select += '<option>select theme...</option>';
 				$.each(job.resources('themes'), function(name)
 				{
 					select += $.format('<option>{0}</option>', name);
@@ -24,7 +24,7 @@ annuus.addModules({
 				select = $(select).appendTo('#an').selectmenu({ style: 'dropdown' }).change(function()
 				{
 					var name = $(this).val();
-					if(name) {
+					if(name !== 'select theme...') {
 						job.options(job.resources('themes', name));
 						$(annuus).trigger('theme', job.options());
 					}

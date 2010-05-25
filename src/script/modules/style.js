@@ -348,6 +348,7 @@ annuus.addModules({
 				.TopMenuBox, .TopMenuPanel + div.PageWidthContainer, table[width="955"] > tbody > tr:first-child { display: none; } \
 				.bg_top { height: auto; } \
 				/* view page */ \
+				.repliers_left > div > a { outline: 0; } \
 				.repliers { border: 0 !important; border-collapse: separate !important; border-spacing: 0; } \
 				/* default page */ \
 				.SideBar_Container + div > img { padding: 0 16px 14px 0; width: 0; height: 0; } \

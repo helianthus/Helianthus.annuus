@@ -80,20 +80,6 @@ annuus.addModules({
 		'5c6e7d7d': {
 			run_at: 'document_start',
 			css: '\
-				img[src="images/left_menu/p.jpg"], img[src="/images/left_menu/p.jpg"] { padding: 0 21px 22px 0; width: 0; height: 0; background: no-repeat url("{0.resources(icons, p)}"); } \
-				img[src="/images/left_menu/redhotp.jpg"] { padding: 0 21px 22px 0; width: 0; height: 0; background: no-repeat url("{0.resources(icons, redhotp)}"); } \
-				img[src="/images/index_images/p2.jpg"] { padding: 0 21px 22px 0; width: 0; height: 0; background: no-repeat url("{0.resources(icons, p2)}"); } \
-				img[src$="/faces/beer.gif"] { padding: 0 16px 16px 0; width: 0; height: 0; background: no-repeat url("{0.resources(icons, beer)}"); } \
-				img[src="images/bb_bookmarks/add.gif"] { padding: 0 18px 18px 0; width: 0; height: 0; background: center no-repeat url("{0.resources(icons, plus-octagon)}"); } \
-				img[src="images/bb_bookmarks/delete.gif"] { padding: 0 18px 18px 0; width: 0; height: 0; background: center no-repeat url("{0.resources(icons, cross-octagon)}"); } \
-				img[src="images/bb_bookmarks/add2.gif"] { padding: 0 18px 18px 0; width: 0; height: 0; background: center no-repeat url("{0.resources(icons, plus-small)}"); } \
-				img[src="images/bb_bookmarks/delete2.gif"] { padding: 0 18px 18px 0; width: 0; height: 0; background: center no-repeat url("{0.resources(icons, cross-small)}"); } \
-				img[src="images/bb_bookmarks/minimize.gif"] { padding: 0 18px 18px 0; width: 0; height: 0; background: center no-repeat url("{0.resources(icons, minus-small)}"); } \
-				img[src="/images/bb_bookmarks/bookmark.gif"] { padding: 0 18px 18px 0; width: 0; height: 0; background: center no-repeat url("{0.resources(icons, bookmark--plus)}"); } \
-				img[src="/images/bb_bookmarks/profile.gif"] { padding: 0 18px 18px 0; width: 0; height: 0; background: center no-repeat url("{0.resources(icons, user)}"); } \
-				img[src="/images/bb_bookmarks/blog.gif"] { padding: 0 18px 18px 0; width: 0; height: 0; background: center no-repeat url("{0.resources(icons, blog)}"); } \
-				img[src="/images/bb_bookmarks/bookmark_hot.gif"] { padding: 0 18px 18px 0; width: 0; height: 0; background: center no-repeat url("{0.resources(icons, bookmark--exclamation)}"); } \
-				img[src="/images/bb_bookmarks/block.gif"] { padding: 0 18px 18px 0; width: 0; height: 0; background: center no-repeat url("{0.resources(icons, cross-shield)}"); } \
 				/* logo */ \
 				#ctl00_TopBarHomeLink { display: block; background-image: url("{0.resources(icons, logo)}"); } \
 				#ctl00_TopBarHomeImage { visibility: hidden; } \
@@ -111,7 +97,39 @@ annuus.addModules({
 				div[align="center"] > table[width="220"] { border-spacing: 5px; } \
 				/* gender text */ \
 				#ctl00_ContentPlaceHolder1_tc_Profile_tb0_lb_sex, .repliers_left > div > a { text-shadow: 0 0 2em #999; } \
-			'
+			',
+			js: function(job)
+			{
+				$.digEach({
+					'': [
+						['/images/left_menu/redhotp.jpg', 22, 21, 'redhotp'],
+						['/images/index_images/p2.jpg', 22, 21, 'p2'],
+						['images/bb_bookmarks/add.gif', 18, 18, 'plus-octagon'],
+						['images/bb_bookmarks/delete.gif', 18, 18, 'cross-octagon'],
+						['images/bb_bookmarks/add2.gif', 18, 18, 'plus-small'],
+						['images/bb_bookmarks/delete2.gif', 18, 18, 'cross-small'],
+						['images/bb_bookmarks/minimize.gif', 18, 18, 'minus-small'],
+						['/images/bb_bookmarks/bookmark.gif', 18, 18, 'bookmark--plus'],
+						['/images/bb_bookmarks/profile.gif', 18, 18, 'user'],
+						['/images/bb_bookmarks/blog.gif', 18, 18, 'blog'],
+						['/images/bb_bookmarks/bookmark_hot.gif', 18, 18, 'bookmark--exclamation'],
+						['/images/bb_bookmarks/block.gif', 18, 18, 'cross-shield'],
+						['images/new.gif', 13, 16, 'new'],
+						['/images/bulbs/bluebulb.gif', 21, 30, 'bluebulb'],
+						['/images/bulbs/pinkbulb.gif', 21, 30, 'pinkbulb'],
+						['images/leftjust.gif', 18, 18, 'leftjust'],
+						['images/centered.gif', 18, 18, 'centered'],
+						['images/rightjust.gif', 18, 18, 'rightjust']
+					],
+					'$': [
+						['images/left_menu/p.jpg', 22, 21, 'p'],
+						['/faces/beer.gif', 16, 16, 'beer']
+					]
+				}, null, null, function(symbol, i, info)
+				{
+					$.rules('img[src{0}="{1[0]}"] { padding: 0 {1[1]}px {1[2]}px 0; width: 0; height: 0; background: url("{2.resources(icons, {1[3]})}") no-repeat center; }', symbol, info, job);
+				});
+			}
 		},
 
 		'd15b72b1': {

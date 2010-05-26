@@ -125,11 +125,15 @@ $(bolanderi).one('storageready', function()
 	{
 		return $.all(target.requires || {}, ['truthy', 'options'], function(type, requirement)
 		{
-			return (type === 'truthy' && requirement
+			return type === 'truthy' && requirement
+			|| type === 'modules' && $.all(requirement, function(i, moduleId)
+			{
+				return profile.privateData[module.id][pageCode].status >= 1;
+			})
 			|| type === 'options' && $.all(requirement, function(i, optionSet)
 			{
 				return Job.prototype.options.call({ module: target.module || target }, optionSet.id) === optionSet.value
-			}));
+			});
 		});
 	};
 

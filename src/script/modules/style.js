@@ -81,7 +81,8 @@ annuus.addModules({
 		bgColorContent2: { title: '內容背景顏色(二)', type: 'text', defaultValue: 'ffffff', access: 'public' },
 		fcContent2: { title: '內容文字顏色(二)', type: 'text', defaultValue: '999999', access: 'public' },
 		fcTime: { title: '時間文字顏色', type: 'text', defaultValue: '800000', access: 'public' },
-		fcQuote: { title: '引用文字顏色', type: 'text', defaultValue: '0000a0', access: 'public' }
+		fcQuote: { title: '引用文字顏色', type: 'text', defaultValue: '0000a0', access: 'public' },
+		styleFormElements: { title: '同時套用於表單元件', type: 'checkbox', defaultValue: true }
 	},
 	tasks: {
 		'5c6e7d7d': {
@@ -153,6 +154,7 @@ annuus.addModules({
 						a.terms_link, a.terms_link:hover, \
 						a.encode_link, a.encode_link:hover \
 							{ color: #{0[fcContent]}; } \
+						input[style*="background-color:"], /* post page */ \
 						a[style="color: black;"], /* topic opener */ \
 						td[style*="color: #333333"] /* blog page */ \
 							{ color: #{0[fcContent]} !important; } \
@@ -191,6 +193,9 @@ annuus.addModules({
 							{ background-color: #{0[borderColorContent]} !important; } \
 						\
 						/* content 1 */ \
+						[class^="blog"], \
+						div[class^="hkg_"], [class^="hkg_bb_bookmarkItem"] a div \
+							{ border-color: #{0[borderColorContent]}; background: #{0[bgColorContent]}; } \
 						tr[style*="background-color: #F8F8F8"] > td, td[style*="background-color: #F8F8F8"], /* topic row */ \
 						[style*="background-color: #F7F3F7"], /* page box */ \
 						td[style*="background-color: #F3F2F1"], /* view page replies */ \
@@ -202,9 +207,6 @@ annuus.addModules({
 						.BlockedTR td, \
 						.repliers > tbody > tr > td[style*="background-color: #F3F2F1"] /* pm page */ \
 							{ border: 1px solid #{0[borderColorContent]}; background-color: #{0[bgColorContent]}; } \
-						[class^="blog"], \
-						div[class^="hkg_"], [class^="hkg_bb_bookmarkItem"] a div \
-							{ border-color: #{0[borderColorContent]}; background: #{0[bgColorContent]}; } \
 						\
 						/* content 2 */ \
 						body, \
@@ -212,6 +214,7 @@ annuus.addModules({
 						td.bloghead, td.blogmain_window, \
 						[class^="hkg_bbItem_"][class$="_Hover"] \
 							{ border-color: #{0[borderColorContent]}; background-color: #{0[bgColorContent2]}; } \
+						input[style*="background-color:"], /* post page */ \
 						tr[style*="background-color: #FFFFFF"] > td, td[style*="background-color: #FFFFFF"], \
 						td[style="background-color: white;"] /* message page */ \
 							{ border-color: #{0[borderColorContent]} !important; background-color: #{0[bgColorContent2]} !important; } \
@@ -319,6 +322,23 @@ annuus.addModules({
 						.FooterPanel > div:first-child { background-color: #{0[borderColorHighlight} !important; } \
 					',
 					options);
+
+					if(job.options('styleFormElements')) {
+						$.rules({ id: 'form-style' }, '\
+							button, input, textarea, select \
+								{ border: 1px inset #{0[borderColorContent]}; background-color: #{0[bgColorContent2]}; color: #{0[fcContent]}; } \
+							button, input[type="button"], input[type="submit"], input[type="reset"] \
+								{ border-style: outset; } \
+							button, input:hover, textarea:hover, select:hover, \
+							button, input:focus, textarea:focus, select:focus \
+								{ border-style: solid; border-color: #3d7bad #a4c9e3 #b7d9ed #b5cfe7; } \
+							input[style]:hover, input[style]:focus \
+								{ border-color: #3d7bad #a4c9e3 #b7d9ed #b5cfe7 !important; } \
+							button, input, textarea \
+								{ border-radius: {0[cornerRadius]}; } \
+						',
+						options);
+					}
 				});
 			},
 			css: '\

@@ -93,7 +93,19 @@ annuus.addModules({
 
 				$(annuus).bind('theme', function(event, options)
 				{
-					$.rules('body { text-shadow: #{0[bgColorContent]} 1px 1px 1px; }', options);
+					$.rules('\
+						.PageMiddleFunctions, \
+						.bg_main > table > tbody > tr:first-child, /* old middle fns */ \
+						#MainPageAd2 + br + br + div, \
+						.HitSearchText, \
+						#ctl00_ContentPlaceHolder1_view_form > .FloatsClearing + div, #ctl00_ContentPlaceHolder1_view_form div[style="padding: 2px 0px 0px;"], /* view page breadcrumb */ \
+						#ctl00_ContentPlaceHolder1_topics_form td[width="50%"][align="left"], /* search page result count */ \
+						.repliers + table[width="99%"], /* view page reply count */ \
+						table[width="196"][cellspacing="3"], /* topc list legend */ \
+						.txt_11pt_1A3448 /* footer */ \
+							{ text-shadow: #{0[bgColorContent]} 1px 1px 1px; } \
+					',
+					options);
 				});
 			}
 		}
@@ -221,7 +233,7 @@ annuus.addModules({
 						/* content 1 */ \
 						[class^="blog"], \
 						div[class^="hkg_"], [class^="hkg_bb_bookmarkItem"] a div \
-							{ border-color: #{0[borderColorContent]}; background: #{0[bgColorContent]}; text-shadow: none; } \
+							{ border-color: #{0[borderColorContent]}; background: #{0[bgColorContent]}; } \
 						\
 						tr[style*="background-color: #F8F8F8"] > td, td[style*="background-color: #F8F8F8"], /* topic row */ \
 						[style*="background-color: #F7F3F7"], /* page box */ \
@@ -231,11 +243,11 @@ annuus.addModules({
 						td[style*="background-color: #EEEEEE"], /* login notice */ \
 						span[id^="ctl00_ContentPlaceHolder1_tc_Profile_tb"][style*="background-color:"], /* profile info input */ \
 						.blogmain_window > table > tbody > tr[style] > td /* newblog page */ \
-							{ border-color: #{0[borderColorContent]} !important; background-color: #{0[bgColorContent]} !important; text-shadow: none; } \
+							{ border-color: #{0[borderColorContent]} !important; background-color: #{0[bgColorContent]} !important; } \
 						\
 						.BlockedTR td, \
 						.repliers > tbody > tr > td[style*="background-color: #F3F2F1"] /* pm page */ \
-							{ border: 1px solid #{0[borderColorContent]}; background-color: #{0[bgColorContent]}; text-shadow: none; } \
+							{ border: 1px solid #{0[borderColorContent]}; background-color: #{0[bgColorContent]}; } \
 						\
 						/* content 2 */ \
 						body, \
@@ -243,13 +255,13 @@ annuus.addModules({
 						td.bloghead, td.blogmain_window, \
 						[class*="Details"], \
 						[class^="hkg_bbItem_"][class$="_Hover"] \
-							{ border-color: #{0[borderColorContent]}; background-color: #{0[bgColorContent2]}; text-shadow: none; } \
+							{ border-color: #{0[borderColorContent]}; background-color: #{0[bgColorContent2]}; } \
 						\
 						tr[style*="background-color: #FFFFFF"] > td, td[style*="background-color: #FFFFFF"], \
 						div[style*="border: solid 1px #CCCCCC"], /* default page search area */ \
 						input[style*="background-color:"], /* post page */ \
 						td[style="background-color: white;"] /* message page */ \
-							{ border-color: #{0[borderColorContent]} !important; background-color: #{0[bgColorContent2]} !important; text-shadow: none; } \
+							{ border-color: #{0[borderColorContent]} !important; background-color: #{0[bgColorContent2]} !important; } \
 						\
 						#ctl00_ContentPlaceHolder1_ProfileForm > table > tbody > tr > td > table:first-child .main_table1, /* profile info */ \
 						.ListPMText, /* pm box */ \
@@ -257,7 +269,7 @@ annuus.addModules({
 						#ctl00_ContentPlaceHolder1_GiftForm .main_table1, /* gift page */ \
 						.dialog_table1, /* new bookmark box */ \
 						.repliers_left_user_details \
-							{ border: 1px solid #{0[borderColorContent]}; background-color: #{0[bgColorContent2]}; text-shadow: none; } \
+							{ border: 1px solid #{0[borderColorContent]}; background-color: #{0[bgColorContent2]}; } \
 						\
 						/* header */ \
 						td[style*="color: white"] /* msg box */ \
@@ -270,11 +282,11 @@ annuus.addModules({
 						td[bgcolor="#808080"], /* login box */ \
 						div[class^="hkg_bb_bookmark_Title"], \
 						a.BoxTitleLink:link, a.BoxTitleLink:visited, a.BoxTitleLink:hover \
-							{ border-color: #{0[borderColorHeader]}; background-color: #{0[bgColorHeader]}; color: #{0[fcHeader]}; text-shadow: none; } \
+							{ border-color: #{0[borderColorHeader]}; background-color: #{0[bgColorHeader]}; color: #{0[fcHeader]}; } \
 						\
 						[style*="background-color: #336699"], /* typical header */ \
 						td[style*="background-color: #31659C"] /* message page */ \
-							{ border: #{0[borderColorHeader]}; background-color: #{0[bgColorHeader]} !important; color: #{0[fcHeader]}; text-shadow: none; } \
+							{ border: #{0[borderColorHeader]}; background-color: #{0[bgColorHeader]} !important; color: #{0[fcHeader]}; } \
 						\
 						.repliers > tbody > tr:nth-last-child(2) > td \
 							{ border-width: 1px; border-style: solid; } \
@@ -396,8 +408,6 @@ annuus.addModules({
 						#ctl00_ContentPlaceHolder1_tc_Profile_tb0_lb_sex, .repliers_left > div > a { text-shadow: #999 0 0 2em; } \
 						/* gift page */ \
 						div[id^="charttable"] > table > tbody > tr:last-child { display: none; } \
-						/* addThis */ \
-						#at20mc { text-shadow: none; } \
 					',
 					options);
 

@@ -320,6 +320,47 @@ annuus.addModules({
 						.TransparentGrayBackground { background-color: #{0[bgColorOverlay]}; } \
 						/* footer */ \
 						.FooterPanel > div:first-child { background-color: #{0[borderColorHighlight} !important; } \
+						\
+					#ctl00_ContentPlaceHolder1_QuickReplyTable td[style*="background-color: #F3F2F1"], /* msg box */ \
+					#ctl00_ContentPlaceHolder1_PMMsgTable td[style*="background-color: #F3F2F1"] /* msg box */ \
+						{ border-top-left-radius: 0; border-top-right-radius: 0; border-bottom-left-radius: 0; border-bottom-right-radius: 0; } \
+					\
+					br + .repliers tr[username] > td, \
+					#ctl00_ContentPlaceHolder1_ProfileForm .main_table1 > table, #ctl00_ContentPlaceHolder1_ProfileForm .main_table1 tr:first-child > td[style*="background-color:"] /* profilepage lists */ \
+						{ border-top-left-radius: 0; border-top-right-radius: 0; } \
+					\
+					.ProfileBoxDetails, /* bookmark panel */ \
+					.hkg_bb_bookmark_TitleBox, .hkg_bb_bookmarkItem_AddNew \
+						{ border-bottom-left-radius: 0; border-bottom-right-radius: 0; } \
+					\
+					tr, \
+					#ctl00_ContentPlaceHolder1_QuickReplyTable, /* msg box */ \
+					td[bgcolor="#f8f8f8"] /* login page */ \
+						{ background-color: transparent !important; } \
+					\
+					#ctl00_ContentPlaceHolder1_ProfileForm .main_table1,  /* profilepage extra borders */ \
+					.hkg_bb_leftpanel > div > div, #btn_hkg_bb_bookmark_item2_AddNewLink \
+						{ border: 0; } \
+					\
+					/* top stuff */ \
+					.TopMenuPanel, .PageMiddleBox, .bg_top, .bg_main { background-image: none; } \
+					.TopMenuBox, .TopMenuPanel + div.PageWidthContainer, table[width="955"] > tbody > tr:first-child { display: none; } \
+					.bg_top { height: auto; } \
+					/* view page */ \
+					.repliers_left > div > a { outline: 0; } \
+					.repliers { border: 0 !important; border-collapse: separate !important; border-spacing: 0; } \
+					/* default page */ \
+					.SideBar_Container + div > img { padding: 0 16px 14px 0; width: 0; height: 0; } \
+					/* pm box */ \
+					#divPMMessageBody { padding: 0.5em; } \
+					/* msg box align icons */ \
+					img[alt^="Align "] { background-color: #fff; background-color: rgba(255, 255, 255, 0.3); } \
+					/* login box */ \
+					div[align="center"] > table[width="220"] { border-spacing: 5px; } \
+					/* gender text */ \
+					#ctl00_ContentPlaceHolder1_tc_Profile_tb0_lb_sex, .repliers_left > div > a { text-shadow: 0 0 2em #999; } \
+					/* gift page */ \
+					div[id^="charttable"] > table > tbody > tr:last-child { display: none; } \
 					',
 					options);
 
@@ -340,49 +381,7 @@ annuus.addModules({
 						options);
 					}
 				});
-			},
-			css: '\
-				#ctl00_ContentPlaceHolder1_QuickReplyTable td[style*="background-color: #F3F2F1"], /* msg box */ \
-				#ctl00_ContentPlaceHolder1_PMMsgTable td[style*="background-color: #F3F2F1"] /* msg box */ \
-					{ border-top-left-radius: 0; border-top-right-radius: 0; border-bottom-left-radius: 0; border-bottom-right-radius: 0; } \
-				\
-				br + .repliers tr[username] > td, \
-				#ctl00_ContentPlaceHolder1_ProfileForm .main_table1 > table, #ctl00_ContentPlaceHolder1_ProfileForm .main_table1 tr:first-child > td[style*="background-color:"] /* profilepage lists */ \
-					{ border-top-left-radius: 0; border-top-right-radius: 0; } \
-				\
-				.ProfileBoxDetails, /* bookmark panel */ \
-				.hkg_bb_bookmark_TitleBox, .hkg_bb_bookmarkItem_AddNew \
-					{ border-bottom-left-radius: 0; border-bottom-right-radius: 0; } \
-				\
-				tr, \
-				#ctl00_ContentPlaceHolder1_QuickReplyTable, /* msg box */ \
-				td[bgcolor="#f8f8f8"] /* login page */ \
-					{ background-color: transparent !important; } \
-				\
-				#ctl00_ContentPlaceHolder1_ProfileForm .main_table1,  /* profilepage extra borders */ \
-				.hkg_bb_leftpanel > div > div, #btn_hkg_bb_bookmark_item2_AddNewLink \
-					{ border: 0; } \
-				\
-				/* top stuff */ \
-				.TopMenuPanel, .PageMiddleBox, .bg_top, .bg_main { background-image: none; } \
-				.TopMenuBox, .TopMenuPanel + div.PageWidthContainer, table[width="955"] > tbody > tr:first-child { display: none; } \
-				.bg_top { height: auto; } \
-				/* view page */ \
-				.repliers_left > div > a { outline: 0; } \
-				.repliers { border: 0 !important; border-collapse: separate !important; border-spacing: 0; } \
-				/* default page */ \
-				.SideBar_Container + div > img { padding: 0 16px 14px 0; width: 0; height: 0; } \
-				/* pm box */ \
-				#divPMMessageBody { padding: 0.5em; } \
-				/* msg box align icons */ \
-				img[alt^="Align "] { background-color: #fff; background-color: rgba(255, 255, 255, 0.3); } \
-				/* login box */ \
-				div[align="center"] > table[width="220"] { border-spacing: 5px; } \
-				/* gender text */ \
-				#ctl00_ContentPlaceHolder1_tc_Profile_tb0_lb_sex, .repliers_left > div > a { text-shadow: 0 0 2em #999; } \
-				/* gift page */ \
-				div[id^="charttable"] > table > tbody > tr:last-child { display: none; } \
-			'
+			}
 		}
 	}
 }

@@ -37,7 +37,7 @@ annuus.addModules({
 	tasks: {
 		'475b4b70': {
 			run_at: 'document_start',
-			css: '#st + div { padding-right: 0 !important; }'
+			css: '#st + div { padding-right: 0 !important; } .HitSearchText { float: right; }'
 		}
 	}
 }

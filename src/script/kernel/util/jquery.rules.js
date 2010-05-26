@@ -232,7 +232,7 @@ function compile(params)
 	};
 	var prefixes = ['', 'Moz', 'O', 'Webkit', 'Khtml'];
 
-	$.each(['border-radius', 'box-shadow', 'box-sizing', 'text-overflow', 'transform', 'transition'], function(i, property)
+	$.each(['background-size', 'border-radius', 'box-shadow', 'box-sizing', 'text-overflow', 'transform', 'transition'], function(i, property)
 	{
 		$.each(prefixes, function(j, prefix)
 		{

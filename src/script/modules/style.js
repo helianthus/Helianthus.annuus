@@ -100,7 +100,7 @@ annuus.addModules({
 						['images/bb_bookmarks/add2.gif', 18, 18, 'plus-small'],
 						['images/bb_bookmarks/delete2.gif', 18, 18, 'cross-small'],
 						['images/bb_bookmarks/minimize.gif', 18, 18, 'minus-small'],
-						['/images/bb_bookmarks/bookmark.gif', 18, 18, 'bookmark--plus'],
+						['/images/bb_bookmarks/bookmark.gif', 18, 18, 'bookmarks'],
 						['/images/bb_bookmarks/profile.gif', 18, 18, 'user'],
 						['/images/bb_bookmarks/blog.gif', 18, 18, 'blog'],
 						['/images/bb_bookmarks/bookmark_hot.gif', 18, 18, 'bookmark--exclamation'],

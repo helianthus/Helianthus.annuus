@@ -11,7 +11,7 @@ annuus.addModules({
 		'e6d2ea58': {
 			run_at: 'document_start',
 			css: '\
-				body, td, p, .DivResizableBoxContainer, .ui-widget { font-family: {0.options(ffDefault)}; } \
+				body, td, p, .ui-widget, [class][class] { font-family: {0.options(ffDefault)}; } \
 				td[style*="font-family:"] { font-family: {0.options(ffDefault)} !important; } \
 			'
 		}
@@ -66,6 +66,36 @@ annuus.addModules({
 				#ctl00_ContentPlaceHolder1_lb_bloglink > a > span { text-decoration: none !important; } \
 				.repliers_right > tbody > tr:first-child a { text-decoration: underline; } \
 			'
+		}
+	}
+},
+
+'91f24db0-1e4e-4aa3-80cd-ac50dfb41a86':
+{
+	title: '設定背景圖片',
+	pages: { on: [all] },
+	options: {
+		aeroBackground: { title: 'Aero背景', description: '暫時僅Opera支援', type: 'checkbox', defaultValue: true },
+		bodyBackgroundImage: { title: '圖片位置', type: 'text', defaultValue: 'http://i29.tinypic.com/kexdw2.jpg', requires: {
+			options: { id: 'aeroBackground', value: false }
+		}}
+	},
+	tasks: {
+		'bb09974e': {
+			run_at: 'document_start',
+			js: function(job)
+			{
+				$.rules('body { background: {0} fixed; background-size: 100% auto; }',
+					job.options('aeroBackground') && window.opera
+					? '-o-skin("Pagebar Skin")'
+					: $.format('url("{0}")', job.options('bodyBackgroundImage'))
+				);
+
+				$(annuus).bind('theme', function(event, options)
+				{
+					$.rules('body { text-shadow: #{0[bgColorContent]} 1px 1px 1px; }', options);
+				});
+			}
 		}
 	}
 },
@@ -134,6 +164,7 @@ annuus.addModules({
 					$.rules({ id: 'forum-style' }, '\
 						/* anchor */ \
 						a[class$="_link"], \
+						a.redhot_link[class]:hover, \
 						.SideBar_Details_Box a, \
 						div.hkg_bb_bookmarkItem, .hkg_bb_bookmarkItem a div \
 							{ color: #{0[fcAnchorLink]}; } \
@@ -149,13 +180,13 @@ annuus.addModules({
 						.ajax__tab_tab, /* profilepage tab */ \
 						.redhot_text, /* redhot topic panel */ \
 						.PageMiddleFunctions, /* trad-simp conversion */ \
-						.addthis_button_compact, .addthis_separator, /* addThis */ \
+						.addthis_toolbox addthis_default_style, a.addthis_button_compact, /* addThis */ \
 						a.hkg_bottombar_link, a.hkg_bottombar_link:hover, \
 						a.terms_link, a.terms_link:hover, \
 						a.encode_link, a.encode_link:hover \
 							{ color: #{0[fcContent]}; } \
-						input[style*="background-color:"], /* post page */ \
 						a[style="color: black;"], /* topic opener */ \
+						input[style*="background-color:"], /* post page */ \
 						td[style*="color: #333333"] /* blog page */ \
 							{ color: #{0[fcContent]} !important; } \
 						\
@@ -170,16 +201,11 @@ annuus.addModules({
 							{ color: #{0[fcContent2]} !important; } \
 						\
 						/* content border */ \
-						[class*="Details"] \
-							{ border-color: #{0[borderColorContent]}; } \
-						\
-						div[style*="border: solid 1px #CCCCCC"], /* default page search area */ \
 						div[style*="border: solid 1px #000000"], div[style="border: solid 1px #000000;"] > div, /* view page pagebox */ \
 						table[style="border: solid 1px #CCCCCC;"] /* profilepage avater */ \
 							{ border-color: #{0[borderColorContent]} !important; } \
 						\
 						#divPMMessageBody, \
-						#ctl00_ContentPlaceHolder1_ProfileForm > table > tbody > tr > td > table:first-child .main_table1, /* profile info */ \
 						div[align="center"] > table[width="220"] /* login box */ \
 							{ border: 1px solid #{0[borderColorContent]}; } \
 						\
@@ -195,39 +221,48 @@ annuus.addModules({
 						/* content 1 */ \
 						[class^="blog"], \
 						div[class^="hkg_"], [class^="hkg_bb_bookmarkItem"] a div \
-							{ border-color: #{0[borderColorContent]}; background: #{0[bgColorContent]}; } \
+							{ border-color: #{0[borderColorContent]}; background: #{0[bgColorContent]}; text-shadow: none; } \
+						\
 						tr[style*="background-color: #F8F8F8"] > td, td[style*="background-color: #F8F8F8"], /* topic row */ \
 						[style*="background-color: #F7F3F7"], /* page box */ \
 						td[style*="background-color: #F3F2F1"], /* view page replies */ \
 						tr[style*="background-color: #F3F2F1"] > td, /* reply preview */ \
+						option[style*="background-color: #F1F2F3"], /* msg box color select */ \
 						td[style*="background-color: #EEEEEE"], /* login notice */ \
 						span[id^="ctl00_ContentPlaceHolder1_tc_Profile_tb"][style*="background-color:"], /* profile info input */ \
 						.blogmain_window > table > tbody > tr[style] > td /* newblog page */ \
-							{ border-color: #{0[borderColorContent]} !important; background-color: #{0[bgColorContent]} !important; } \
+							{ border-color: #{0[borderColorContent]} !important; background-color: #{0[bgColorContent]} !important; text-shadow: none; } \
+						\
 						.BlockedTR td, \
 						.repliers > tbody > tr > td[style*="background-color: #F3F2F1"] /* pm page */ \
-							{ border: 1px solid #{0[borderColorContent]}; background-color: #{0[bgColorContent]}; } \
+							{ border: 1px solid #{0[borderColorContent]}; background-color: #{0[bgColorContent]}; text-shadow: none; } \
 						\
 						/* content 2 */ \
 						body, \
 						.DivMarkThread, \
 						td.bloghead, td.blogmain_window, \
+						[class*="Details"], \
 						[class^="hkg_bbItem_"][class$="_Hover"] \
-							{ border-color: #{0[borderColorContent]}; background-color: #{0[bgColorContent2]}; } \
-						input[style*="background-color:"], /* post page */ \
+							{ border-color: #{0[borderColorContent]}; background-color: #{0[bgColorContent2]}; text-shadow: none; } \
+						\
 						tr[style*="background-color: #FFFFFF"] > td, td[style*="background-color: #FFFFFF"], \
+						div[style*="border: solid 1px #CCCCCC"], /* default page search area */ \
+						input[style*="background-color:"], /* post page */ \
 						td[style="background-color: white;"] /* message page */ \
-							{ border-color: #{0[borderColorContent]} !important; background-color: #{0[bgColorContent2]} !important; } \
+							{ border-color: #{0[borderColorContent]} !important; background-color: #{0[bgColorContent2]} !important; text-shadow: none; } \
+						\
+						#ctl00_ContentPlaceHolder1_ProfileForm > table > tbody > tr > td > table:first-child .main_table1, /* profile info */ \
 						.ListPMText, /* pm box */ \
 						.ProfileGiftText, /* gift box */ \
 						#ctl00_ContentPlaceHolder1_GiftForm .main_table1, /* gift page */ \
 						.dialog_table1, /* new bookmark box */ \
 						.repliers_left_user_details \
-							{ border: 1px solid #{0[borderColorContent]}; background-color: #{0[bgColorContent2]}; } \
+							{ border: 1px solid #{0[borderColorContent]}; background-color: #{0[bgColorContent2]}; text-shadow: none; } \
 						\
 						/* header */ \
 						td[style*="color: white"] /* msg box */ \
 							{ color: #{0[fcHeader]} !important; } \
+						\
 						[class$="title"], [class$="Title"], \
 						#HotTopics th, \
 						.repliers_header, \
@@ -235,10 +270,12 @@ annuus.addModules({
 						td[bgcolor="#808080"], /* login box */ \
 						div[class^="hkg_bb_bookmark_Title"], \
 						a.BoxTitleLink:link, a.BoxTitleLink:visited, a.BoxTitleLink:hover \
-							{ border-color: #{0[borderColorHeader]}; background-color: #{0[bgColorHeader]}; color: #{0[fcHeader]}; } \
+							{ border-color: #{0[borderColorHeader]}; background-color: #{0[bgColorHeader]}; color: #{0[fcHeader]}; text-shadow: none; } \
+						\
 						[style*="background-color: #336699"], /* typical header */ \
 						td[style*="background-color: #31659C"] /* message page */ \
-							{ border: #{0[borderColorHeader]}; background-color: #{0[bgColorHeader]} !important; color: #{0[fcHeader]}; } \
+							{ border: #{0[borderColorHeader]}; background-color: #{0[bgColorHeader]} !important; color: #{0[fcHeader]}; text-shadow: none; } \
+						\
 						.repliers > tbody > tr:nth-last-child(2) > td \
 							{ border-width: 1px; border-style: solid; } \
 						\
@@ -313,7 +350,7 @@ annuus.addModules({
 						/* highlighted background */ \
 						td[style*="background-color: #E9EC6C"] { border-color: #{0[borderColorHighlight]} !important; background-color: #{0[bgColorHighlight]} !important; } \
 						.repliers_left + td[style*="background-color: #E9EC6C"] td { color: #{0[fcHighlight]}; } \
-						td[style*="background-color: #E9EC6C"] > .repliers_right > tbody > tr:first-child a { text-shadow: 1px 1px 1px #000; } \
+						td[style*="background-color: #E9EC6C"] > .repliers_right > tbody > tr:first-child a { text-shadow: #000 1px 1px 1px; } \
 						/* forum service channel */ \
 						td[style*="background-color: #FF0000"] { background-color: #{0[bgColorError]} !important; color: #{0[fcError]} !important; } \
 						/* overlay */ \
@@ -321,46 +358,46 @@ annuus.addModules({
 						/* footer */ \
 						.FooterPanel > div:first-child { background-color: #{0[borderColorHighlight} !important; } \
 						\
-					#ctl00_ContentPlaceHolder1_QuickReplyTable td[style*="background-color: #F3F2F1"], /* msg box */ \
-					#ctl00_ContentPlaceHolder1_PMMsgTable td[style*="background-color: #F3F2F1"] /* msg box */ \
-						{ border-top-left-radius: 0; border-top-right-radius: 0; border-bottom-left-radius: 0; border-bottom-right-radius: 0; } \
-					\
-					br + .repliers tr[username] > td, \
-					#ctl00_ContentPlaceHolder1_ProfileForm .main_table1 > table, #ctl00_ContentPlaceHolder1_ProfileForm .main_table1 tr:first-child > td[style*="background-color:"] /* profilepage lists */ \
-						{ border-top-left-radius: 0; border-top-right-radius: 0; } \
-					\
-					.ProfileBoxDetails, /* bookmark panel */ \
-					.hkg_bb_bookmark_TitleBox, .hkg_bb_bookmarkItem_AddNew \
-						{ border-bottom-left-radius: 0; border-bottom-right-radius: 0; } \
-					\
-					tr, \
-					#ctl00_ContentPlaceHolder1_QuickReplyTable, /* msg box */ \
-					td[bgcolor="#f8f8f8"] /* login page */ \
-						{ background-color: transparent !important; } \
-					\
-					#ctl00_ContentPlaceHolder1_ProfileForm .main_table1,  /* profilepage extra borders */ \
-					.hkg_bb_leftpanel > div > div, #btn_hkg_bb_bookmark_item2_AddNewLink \
-						{ border: 0; } \
-					\
-					/* top stuff */ \
-					.TopMenuPanel, .PageMiddleBox, .bg_top, .bg_main { background-image: none; } \
-					.TopMenuBox, .TopMenuPanel + div.PageWidthContainer, table[width="955"] > tbody > tr:first-child { display: none; } \
-					.bg_top { height: auto; } \
-					/* view page */ \
-					.repliers_left > div > a { outline: 0; } \
-					.repliers { border: 0 !important; border-collapse: separate !important; border-spacing: 0; } \
-					/* default page */ \
-					.SideBar_Container + div > img { padding: 0 16px 14px 0; width: 0; height: 0; } \
-					/* pm box */ \
-					#divPMMessageBody { padding: 0.5em; } \
-					/* msg box align icons */ \
-					img[alt^="Align "] { background-color: #fff; background-color: rgba(255, 255, 255, 0.3); } \
-					/* login box */ \
-					div[align="center"] > table[width="220"] { border-spacing: 5px; } \
-					/* gender text */ \
-					#ctl00_ContentPlaceHolder1_tc_Profile_tb0_lb_sex, .repliers_left > div > a { text-shadow: 0 0 2em #999; } \
-					/* gift page */ \
-					div[id^="charttable"] > table > tbody > tr:last-child { display: none; } \
+						#ctl00_ContentPlaceHolder1_QuickReplyTable td[style*="background-color: #F3F2F1"], /* msg box */ \
+						#ctl00_ContentPlaceHolder1_PMMsgTable td[style*="background-color: #F3F2F1"] /* msg box */ \
+							{ border-top-left-radius: 0; border-top-right-radius: 0; border-bottom-left-radius: 0; border-bottom-right-radius: 0; } \
+						\
+						br + .repliers tr[username] > td, \
+						#ctl00_ContentPlaceHolder1_ProfileForm .main_table1 > table, #ctl00_ContentPlaceHolder1_ProfileForm .main_table1 tr:first-child > td[style*="background-color:"] /* profilepage lists */ \
+							{ border-top-left-radius: 0; border-top-right-radius: 0; } \
+						\
+						.ProfileBoxDetails, /* bookmark panel */ \
+						.hkg_bb_bookmark_TitleBox, .hkg_bb_bookmarkItem_AddNew \
+							{ border-bottom-left-radius: 0; border-bottom-right-radius: 0; } \
+						\
+						tr, \
+						#ctl00_ContentPlaceHolder1_QuickReplyTable, /* msg box */ \
+						td[bgcolor="#f8f8f8"] /* login page */ \
+							{ background-color: transparent !important; } \
+						\
+						#ctl00_ContentPlaceHolder1_ProfileForm .main_table1,  /* profilepage extra borders */ \
+						.hkg_bb_leftpanel > div > div, #btn_hkg_bb_bookmark_item2_AddNewLink \
+							{ border: 0; } \
+						\
+						/* top stuff */ \
+						.TopMenuPanel, .PageMiddleBox, .bg_top, .bg_main { background-image: none; } \
+						.TopMenuBox, .TopMenuPanel + div.PageWidthContainer, table[width="955"] > tbody > tr:first-child { display: none; } \
+						.bg_top { height: auto; } \
+						/* view page */ \
+						.repliers_left > div > a { outline: 0; } \
+						.repliers { border: 0 !important; border-collapse: separate !important; border-spacing: 0; } \
+						/* default page */ \
+						.SideBar_Container + div > img { padding: 0 16px 14px 0; width: 0; height: 0; } \
+						/* pm box */ \
+						#divPMMessageBody { padding: 0.5em; } \
+						/* login box */ \
+						div[align="center"] > table[width="220"] { border-spacing: 5px; } \
+						/* gender text */ \
+						#ctl00_ContentPlaceHolder1_tc_Profile_tb0_lb_sex, .repliers_left > div > a { text-shadow: #999 0 0 2em; } \
+						/* gift page */ \
+						div[id^="charttable"] > table > tbody > tr:last-child { display: none; } \
+						/* addThis */ \
+						#at20mc { text-shadow: none; } \
 					',
 					options);
 

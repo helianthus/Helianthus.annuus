@@ -35,7 +35,6 @@ annuus.addModules({
 			run_at: 'document_start',
 			js: function(job)
 			{
-
 				$(annuus).bind('theme', function(event, options)
 				{
 					$.rules({ id: 'main-style' }, '\

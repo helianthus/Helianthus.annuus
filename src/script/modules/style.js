@@ -70,10 +70,66 @@ annuus.addModules({
 	}
 },
 
+'8e08db0d-3c7b-418d-a873-6901f37c497f':
+{
+	title: '論壇樣式改動基礎',
+	pages: { on: [all] },
+	tasks: {
+		'bb09974e': {
+			run_at: 'document_start',
+			css: '\
+				.TopMenuPanel, .PageMiddleBox, .bg_top, .bg_main { background-image: none; } \
+				.TopMenuBox, .TopMenuPanel + div.PageWidthContainer, table[width="955"] > tbody > tr:first-child { display: none; } \
+				.bg_top { height: auto; } \
+			'
+		},
+		'5c6e7d7d': {
+			run_at: 'document_start',
+			css: '#ctl00_TopBarHomeImage { width: 0 !important; height: 0 !important; }',
+			js: function(job)
+			{
+				$.digEach({
+					'': [
+						['/images/index_images/logo.jpg', 220, 115, 'logo'],
+						['/images/left_menu/redhotp.jpg', 22, 21, 'redhotp'],
+						['/images/index_images/p2.jpg', 22, 21, 'p2'],
+						['images/bb_bookmarks/add.gif', 18, 18, 'plus-octagon'],
+						['images/bb_bookmarks/delete.gif', 18, 18, 'cross-octagon'],
+						['images/bb_bookmarks/add2.gif', 18, 18, 'plus-small'],
+						['images/bb_bookmarks/delete2.gif', 18, 18, 'cross-small'],
+						['images/bb_bookmarks/minimize.gif', 18, 18, 'minus-small'],
+						['/images/bb_bookmarks/bookmark.gif', 18, 18, 'bookmarks'],
+						['/images/bb_bookmarks/profile.gif', 18, 18, 'user'],
+						['/images/bb_bookmarks/blog.gif', 18, 18, 'blog'],
+						['/images/bb_bookmarks/bookmark_hot.gif', 18, 18, 'bookmark--exclamation'],
+						['/images/bb_bookmarks/block.gif', 18, 18, 'cross-shield'],
+						['images/new.gif', 13, 16, 'new'],
+						['/images/bulbs/bluebulb.gif', 21, 30, 'bluebulb'],
+						['/images/bulbs/pinkbulb.gif', 21, 30, 'pinkbulb'],
+						['images/leftjust.gif', 18, 18, 'leftjust'],
+						['images/centered.gif', 18, 18, 'centered'],
+						['images/rightjust.gif', 18, 18, 'rightjust']
+					],
+					'$': [
+						['images/left_menu/p.jpg', 22, 21, 'p'],
+						['/faces/beer.gif', 16, 16, 'beer']
+					]
+				}, null, null, function(symbol, i, info)
+				{
+					$.rules('img[src{0}="{1[0]}"] { padding: 0 {1[1]}px {1[2]}px 0; width: 0; height: 0; background: url("{2.resources(icons, {1[3]})}") no-repeat center; }', symbol, info, job);
+				});
+			}
+		}
+	}
+},
+
 '91f24db0-1e4e-4aa3-80cd-ac50dfb41a86':
 {
 	title: '設定背景圖片',
 	pages: { on: [all] },
+	requires: {
+		module: ['8e08db0d-3c7b-418d-a873-6901f37c497f']
+	},
 	options: {
 		aeroBackground: { title: 'Aero背景', description: '暫時僅Opera支援', type: 'checkbox', defaultValue: true },
 		bodyBackgroundImage: { title: '圖片位置', type: 'text', defaultValue: 'http://i29.tinypic.com/kexdw2.jpg', requires: {
@@ -117,7 +173,8 @@ annuus.addModules({
 	title: '論壇樣式設定',
 	pages: { on: [all] },
 	requires: {
-		module: ['edd5174c-b7a4-48f1-8612-3f03c9adf05a']
+		// link style, base style
+		module: ['8e08db0d-3c7b-418d-a873-6901f37c497f', 'edd5174c-b7a4-48f1-8612-3f03c9adf05a']
 	},
 	options: {
 		bgColorContent2: { title: '內容背景顏色(二)', type: 'text', defaultValue: 'ffffff', access: 'public' },
@@ -127,44 +184,6 @@ annuus.addModules({
 		styleFormElements: { title: '同時套用於表單元件', type: 'checkbox', defaultValue: true }
 	},
 	tasks: {
-		'5c6e7d7d': {
-			run_at: 'document_start',
-			css: '#ctl00_TopBarHomeImage { width: 0 !important; height: 0 !important; }',
-			js: function(job)
-			{
-				$.digEach({
-					'': [
-						['/images/index_images/logo.jpg', 220, 115, 'logo'],
-						['/images/left_menu/redhotp.jpg', 22, 21, 'redhotp'],
-						['/images/index_images/p2.jpg', 22, 21, 'p2'],
-						['images/bb_bookmarks/add.gif', 18, 18, 'plus-octagon'],
-						['images/bb_bookmarks/delete.gif', 18, 18, 'cross-octagon'],
-						['images/bb_bookmarks/add2.gif', 18, 18, 'plus-small'],
-						['images/bb_bookmarks/delete2.gif', 18, 18, 'cross-small'],
-						['images/bb_bookmarks/minimize.gif', 18, 18, 'minus-small'],
-						['/images/bb_bookmarks/bookmark.gif', 18, 18, 'bookmarks'],
-						['/images/bb_bookmarks/profile.gif', 18, 18, 'user'],
-						['/images/bb_bookmarks/blog.gif', 18, 18, 'blog'],
-						['/images/bb_bookmarks/bookmark_hot.gif', 18, 18, 'bookmark--exclamation'],
-						['/images/bb_bookmarks/block.gif', 18, 18, 'cross-shield'],
-						['images/new.gif', 13, 16, 'new'],
-						['/images/bulbs/bluebulb.gif', 21, 30, 'bluebulb'],
-						['/images/bulbs/pinkbulb.gif', 21, 30, 'pinkbulb'],
-						['images/leftjust.gif', 18, 18, 'leftjust'],
-						['images/centered.gif', 18, 18, 'centered'],
-						['images/rightjust.gif', 18, 18, 'rightjust']
-					],
-					'$': [
-						['images/left_menu/p.jpg', 22, 21, 'p'],
-						['/faces/beer.gif', 16, 16, 'beer']
-					]
-				}, null, null, function(symbol, i, info)
-				{
-					$.rules('img[src{0}="{1[0]}"] { padding: 0 {1[1]}px {1[2]}px 0; width: 0; height: 0; background: url("{2.resources(icons, {1[3]})}") no-repeat center; }', symbol, info, job);
-				});
-			}
-		},
-
 		'd15b72b1': {
 			run_at: 'document_start',
 			priority: 'high',
@@ -391,10 +410,6 @@ annuus.addModules({
 						.hkg_bb_leftpanel > div > div, #btn_hkg_bb_bookmark_item2_AddNewLink \
 							{ border: 0; } \
 						\
-						/* top stuff */ \
-						.TopMenuPanel, .PageMiddleBox, .bg_top, .bg_main { background-image: none; } \
-						.TopMenuBox, .TopMenuPanel + div.PageWidthContainer, table[width="955"] > tbody > tr:first-child { display: none; } \
-						.bg_top { height: auto; } \
 						/* view page */ \
 						.repliers_left > div > a { outline: 0; } \
 						.repliers { border: 0 !important; border-collapse: separate !important; border-spacing: 0; } \

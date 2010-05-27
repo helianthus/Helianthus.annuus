@@ -154,19 +154,10 @@
 
 	<target name="_build_cont">
 		<!-- user.js -->
-		<java classpath="lib/base64" classname="Base64">
-			<arg line="-e ${dir.build}/${project.name.short}.js ${file.temp}" />
-		</java>
-
-		<loadfile property="ENCODED_CONTENT" srcfile="${file.temp}" />
-
 		<copy file="src/user/bolanderi.user.js" todir="${dir.build}/user">
 			<filterchain>
 				<concatfilter prepend="src/header.js" />
 			</filterchain>
-			<filterset>
-				<filter token="ENCODED_CONTENT" value="${ENCODED_CONTENT}" />
-			</filterset>
 		</copy>
 
 		<!-- xpi -->
@@ -189,14 +180,6 @@
 		<copy todir="${dir.build}/privoxy">
 			<fileset dir="src/privoxy" />
 		</copy>
-
-		<!-- rename files -->
-		<move todir="${dir.build}">
-			<filtermapper>
-				<replacestring from="bolanderi" to="${project.name.short}" />
-			</filtermapper>
-			<fileset dir="${dir.build}" includes="**/bolanderi.*" />
-		</move>
 
 		<!-- doc -->
 		<copy todir="${dir.build}/doc">
@@ -225,6 +208,25 @@
 			<replacefilter token="@PROJECT_VERSION@" value="${project.version}" />
 			<replacefilter token="@PROJECT_VERSION_CHANNEL@" value="${project.version.channel}" />
 		</replace>
+
+		<!-- user.js (cont.) -->
+		<java classpath="lib/base64" classname="Base64">
+			<arg line="-e ${dir.build}/${project.name.short}.js ${file.temp}" />
+		</java>
+
+		<loadfile property="ENCODED_CONTENT" srcfile="${file.temp}" />
+
+		<replace file="${dir.build}/user/bolanderi.user.js">
+			<replacefilter token="@ENCODED_CONTENT@" value="${ENCODED_CONTENT}" />
+		</replace>
+
+		<!-- rename files -->
+		<move todir="${dir.build}">
+			<filtermapper>
+				<replacestring from="bolanderi" to="${project.name.short}" />
+			</filtermapper>
+			<fileset dir="${dir.build}" includes="**/bolanderi.*" />
+		</move>
 	</target>
 
 	<target name="_dist">

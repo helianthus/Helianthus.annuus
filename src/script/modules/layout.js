@@ -37,7 +37,13 @@ annuus.addModules({
 	tasks: {
 		'475b4b70': {
 			run_at: 'document_start',
-			css: '#st + div { padding-right: 0 !important; } .HitSearchText { float: right; }'
+			css: '#st + div { padding-right: 0 !important; }'
+		},
+
+		'cbe665ce': {
+			page: search | tags,
+			run_at: 'document_start',
+			css: '.HitSearchText { float: right; }'
 		}
 	}
 }

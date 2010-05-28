@@ -433,15 +433,22 @@ annuus.addModules({
 
 					if(job.options('styleFormElements')) {
 						$.rules({ id: 'form-style' }, '\
-							button, input, textarea, select \
+							input, textarea, select \
 								{ border: 1px inset #{0[borderColorContent]}; background-color: #{0[bgColorContent2]}; color: #{0[fcContent]}; } \
-							button, input[type="button"], input[type="submit"], input[type="reset"] \
-								{ border-style: outset; } \
-							button, input:hover, textarea:hover, select:hover, \
-							button, input:focus, textarea:focus, select:focus \
+							input:hover, textarea:hover, select:hover, \
+							input:focus, textarea:focus, select:focus \
 								{ border-style: solid; border-color: #3d7bad #a4c9e3 #b7d9ed #b5cfe7; } \
-							input[style]:hover, input[style]:focus \
+							\
+							#txt_newtag:hover, #txt_newtag:focus /* post page */ \
 								{ border-color: #3d7bad #a4c9e3 #b7d9ed #b5cfe7 !important; } \
+							\
+							button, input[type="button"], input[type="submit"], input[type="reset"] \
+								{ border: 1px solid #{0[borderColorDefault]}; background-color: #{0[bgColorDefault]}; color: #{0[fcDefault]}; margin: 2px; cursor: pointer; } \
+							button:hover, input[type="button"]:hover, input[type="submit"]:hover, input[type="reset"]:hover \
+								{ border: 1px solid #{0[borderColorHover]}; background-color: #{0[bgColorHover]}; color: #{0[fcHover]}; } \
+							button:focus, input[type="button"]:focus, input[type="submit"]:focus, input[type="reset"]:focus, \
+							button:active, input[type="button"]:active, input[type="submit"]:active, input[type="reset"]:active \
+								{ border: 1px solid #{0[borderColorActive]}; background-color: #{0[bgColorActive]}; color: #{0[fcActive]}; } \
 							button, input, textarea \
 								{ border-radius: {0[cornerRadius]}; } \
 						',

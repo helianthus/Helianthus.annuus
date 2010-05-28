@@ -287,6 +287,7 @@ annuus.addModules({
 							{ border-color: #{0[borderColorContent]} !important; background-color: #{0[bgColorContent2]} !important; } \
 						\
 						#ctl00_ContentPlaceHolder1_ProfileForm > table > tbody > tr > td > table:first-child .main_table1, /* profile info */ \
+						#ctl00_ContentPlaceHolder1_PMTable > tbody > tr > .main_table1, /* send pm table */ \
 						.ListPMText, /* pm box */ \
 						.ProfileGiftText, /* gift box */ \
 						#ctl00_ContentPlaceHolder1_GiftForm .main_table1, /* gift page */ \

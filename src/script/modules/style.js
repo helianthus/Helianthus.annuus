@@ -426,8 +426,6 @@ annuus.addModules({
 						div[align="center"] > table[width="220"] { border-spacing: 5px; } \
 						/* gender text */ \
 						#ctl00_ContentPlaceHolder1_tc_Profile_tb0_lb_sex, .repliers_left > div > a { text-shadow: #fff 0 0 2em; } \
-						/* gift page */ \
-						div[id^="charttable"] > table > tbody > tr:last-child { display: none; } \
 					',
 					options);
 

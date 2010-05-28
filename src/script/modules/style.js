@@ -26,7 +26,7 @@ annuus.addModules({
 		fcAnchorLink: { title: '連結: 未訪問文字顏色', type: 'text', defaultValue: '0000ee', access: 'public' },
 		fcAnchorVisited: { title: '連結: 已訪問文字顏色', type: 'text', defaultValue: '551a8b', access: 'public' },
 		fcAnchorHover: { title: '連結: 懸浮文字顏色', type: 'text', defaultValue: '', access: 'public' },
-		showAnchorHover: { title: '顯示懸浮文字顏色', type: 'checkbox', defaultValue: false }
+		styleHoverState: { title: '顯示懸浮文字顏色', type: 'checkbox', defaultValue: false }
 	},
 	tasks: {
 		'e6d2ea58': {
@@ -41,7 +41,7 @@ annuus.addModules({
 						a:visited { color: #{0[fcAnchorVisited]}; } \
 					';
 
-					if(job.options('showAnchorHover')) {
+					if(job.options('styleHoverState')) {
 						css += '\
 							a:hover { color: #{0[fcAnchorLink]}; } \
 						';
@@ -161,7 +161,7 @@ annuus.addModules({
 						.HitSearchText, \
 						#ctl00_ContentPlaceHolder1_topics_form td[width="50%"][align="left"], /* search page result count */ \
 						#ctl00_ContentPlaceHolder1_view_form > .FloatsClearing + div, #ctl00_ContentPlaceHolder1_view_form div[style="padding: 2px 0px 0px;"], /* view page breadcrumb */ \
-						#ctl00_ContentPlaceHolder1_view_form > div[style="width: 100%;"] > table[width="99%"], /* view page reply count */ \
+						#ctl00_ContentPlaceHolder1_view_form > div[style="width: 100%"] > table[width="99%"], /* view page reply count */ \
 						table[width="196"][cellspacing="3"], /* topc list legend */ \
 						.txt_11pt_1A3448 /* footer */ \
 							{ text-shadow: #{0[bgColorContent]} 1px 1px 1px; } \
@@ -221,8 +221,8 @@ annuus.addModules({
 						a.encode_link, a.encode_link:hover \
 							{ color: #{0[fcContent]}; } \
 						a[style="color: black;"], /* topic opener */ \
-						input[style*="background-color:"], /* post page */ \
-						td[style*="color: #333333"] /* blog page */ \
+						#txt_newtag, /* post page */ \
+						td[style*="color: #333333"] /* blog page page fns */ \
 							{ color: #{0[fcContent]} !important; } \
 						\
 						/* content color 2 */ \
@@ -236,7 +236,7 @@ annuus.addModules({
 							{ color: #{0[fcContent2]} !important; } \
 						\
 						/* content border */ \
-						div[style*="border: solid 1px #000000"], div[style="border: solid 1px #000000;"] > div, /* view page pagebox */ \
+						div[style="border: solid 1px #000000;"], div[style="border: solid 1px #000000;"] > div, /* view page pagebox */ \
 						table[style="border: solid 1px #CCCCCC;"] /* profilepage avater */ \
 							{ border-color: #{0[borderColorContent]} !important; } \
 						\
@@ -424,7 +424,7 @@ annuus.addModules({
 						/* login box */ \
 						div[align="center"] > table[width="220"] { border-spacing: 5px; } \
 						/* gender text */ \
-						#ctl00_ContentPlaceHolder1_tc_Profile_tb0_lb_sex, .repliers_left > div > a { text-shadow: #999 0 0 2em; } \
+						#ctl00_ContentPlaceHolder1_tc_Profile_tb0_lb_sex, .repliers_left > div > a { text-shadow: #fff 0 0 2em; } \
 						/* gift page */ \
 						div[id^="charttable"] > table > tbody > tr:last-child { display: none; } \
 					',

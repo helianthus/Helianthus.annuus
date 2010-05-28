@@ -211,7 +211,9 @@ function compile(params)
 			return $0.toLowerCase();
 		}],
 		// endSemiColonRemoved: IE
-		[csstext.slice(-1) !== ';', /;\"/, '"']
+		[csstext.slice(-1) !== ';', /;\"/, '"'],
+		// endSemiColonAdded: FF
+		[$('<div style="color: #000"/>')[0].style.cssText.slice(-1) === ';', /(style=\"[^\"]+[^;])\"/, '$1;"']
 	], function(i, set)
 	{
 		if(set.shift()) {

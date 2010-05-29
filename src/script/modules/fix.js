@@ -54,6 +54,18 @@ annuus.addModules({
 			css: 'div[style*="padding: 18px 5px"] > div[style="text-align: center;"] { margin: 0 100px; }'
 		}
 	}
+},
+
+'06e59d06-5a10-4c3d-ab85-0c66a729208c':
+{
+	title: '修正搜尋按扭位置',
+	pages: { on: [index] },
+	tasks: {
+		'd661e32f': {
+			run_at: 'document_start',
+			css: '#searchstring { width: 50%; }'
+		}
+	}
 }
 
 });

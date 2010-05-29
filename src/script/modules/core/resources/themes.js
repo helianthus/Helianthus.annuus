@@ -7,7 +7,7 @@ annuus.addModules({
 	tasks: {
 		'd15b72b1': {
 			type: 'resource',
-			title: 'themes',
+			name: 'themes',
 			resource: {
 				"HKGolden": {
 					"cornerRadius":"0px",

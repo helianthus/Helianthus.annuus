@@ -127,9 +127,9 @@ annuus.addModules({
 {
 	title: '設定背景',
 	pages: { on: [all] },
-	requires: {
-		module: ['8e08db0d-3c7b-418d-a873-6901f37c497f']
-	},
+	requires: [
+		{ type: 'module', params: '8e08db0d-3c7b-418d-a873-6901f37c497f' }
+	],
 	options: {
 		bgAero: { title: 'Aero Glass背景', description: '暫時僅Opera支援', type: 'checkbox', defaultValue: true },
 		bgUrl: { title: '圖片位置', type: 'text', defaultValue: 'http://i29.tinypic.com/kexdw2.jpg', requires: {
@@ -137,7 +137,7 @@ annuus.addModules({
 		}},
 		autoFit: { title: '自動縮放', description: '可降低效能', type: 'checkbox', defaultValue: false, requires: {
 			options: { id: 'bgAero', value: false }
-		}},
+		}}
 	},
 	tasks: {
 		'bb09974e': {
@@ -177,10 +177,10 @@ annuus.addModules({
 {
 	title: '論壇樣式設定',
 	pages: { on: [all] },
-	requires: {
-		// link style, base style
-		module: ['8e08db0d-3c7b-418d-a873-6901f37c497f', 'edd5174c-b7a4-48f1-8612-3f03c9adf05a']
-	},
+	requires: [
+		{ type: 'module', params: '8e08db0d-3c7b-418d-a873-6901f37c497f' },
+		{ type: 'module', params: 'edd5174c-b7a4-48f1-8612-3f03c9adf05a' }
+	],
 	options: {
 		bgColorContent2: { title: '內容背景顏色(二)', type: 'text', defaultValue: 'ffffff', access: 'public' },
 		fcContent2: { title: '內容文字顏色(二)', type: 'text', defaultValue: '999999', access: 'public' },

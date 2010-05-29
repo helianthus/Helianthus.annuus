@@ -7,7 +7,7 @@ annuus.addModules({
 	tasks: {
 		'e823fa56': {
 			type: 'resource',
-			title: 'icons',
+			name: 'icons',
 			resource: {
 				//'': 'data:image/png;base64,',
 

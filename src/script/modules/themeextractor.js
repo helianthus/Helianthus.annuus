@@ -3,9 +3,9 @@ annuus.addModules({
 'c878628c-8414-4d1e-9a20-717d1dd0517c': {
 	title: '主題轉換工具',
 	pages: { on: [all] },
-	requires: {
-		truthy: annuus.get('DEBUG_MODE')
-	},
+	requires: [
+		{ type: 'truthy', params: annuus.get('DEBUG_MODE') }
+	],
 	tasks: {
 		'46ffedd9': {
 			run_at: 'document_start',

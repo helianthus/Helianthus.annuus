@@ -7,7 +7,7 @@ annuus.addModules({
 	tasks: {
 		'99da408d': {
 			type: 'resource',
-			title: 'credits',
+			name: 'credits',
 			resource: [
 				{
 					name: 'jQuery',

@@ -56,9 +56,9 @@ annuus.addModules({
 		},
 		'defe6bdf': {
 			page: topics,
-			requires: {
-				truthy: $.browser.msie && $.browser.version <= 8
-			},
+			requires: [
+				{ type: 'truthy', params: $.browser.msie && $.browser.version <= 8 }
+			],
 			run_at: 'document_end',
 			frequency: 'always',
 			js: function(job)

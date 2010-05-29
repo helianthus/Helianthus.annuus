@@ -7,7 +7,7 @@ annuus.addModules({
 	tasks: {
 		'3f6e1cd6': {
 			type: 'resource',
-			title: 'smileys',
+			name: 'smileys',
 			resource: [
 				{
 					desc: '經典表情圖示',

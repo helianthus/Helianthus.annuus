@@ -121,24 +121,41 @@ $(bolanderi).one('storageready', function()
 {
 	var docPageCode = $(document).pageCode();
 	var profile = bolanderi.__storage.get();
-	var passBasicRequirements = function(target)
+	var isModuleOn = function(module)
 	{
-		return $.all(target.requires || {}, ['truthy', 'options'], function(type, requirement)
+		return !!module && profile.privateData[module.id][module.__pageCode].status >= 1;
+	};
+	var passRequirements = function(target)
+	{
+		var module = target.module || target;
+		return $.all(target.requires || {}, function(i, requirement)
 		{
-			return type === 'truthy' && requirement
-			|| type === 'modules' && $.all(requirement, function(i, moduleId)
-			{
-				return profile.privateData[module.id][pageCode].status >= 1;
-			})
-			|| type === 'options' && $.all(requirement, function(i, optionSet)
-			{
-				return Job.prototype.options.call({ module: target.module || target }, optionSet.id) === optionSet.value
-			});
+			var ret;
+			var params = [].concat(requirement.params);
+			switch(requirement.type) {
+				case 'api':
+					ret = !!$.dig([$].concat(params[0].split('.')));
+					break;
+				case 'module':
+					ret = isModuleOn(bolanderi.get('MODULES')[params[0]]);
+					break;
+				case 'option':
+					ret = Job.prototype.options.call({ module: module }, params[0]) === params[1];
+					break;
+				case 'truthy':
+					ret = !!params[0];
+					break;
+				default:
+					$.log('warn', 'unknown requirement type "{0}" encountered. [{1}]', requirement.type, module.title);
+					return true;
+			}
+			return requirement.revert ? !ret : ret;
 		});
 	};
 
-	var apiTasks = [];
-	var actionTasks = [];
+	var pendingModules = [];
+	var pendingTasks = [];
+	var passedActions = [];
 
 	$.each(bolanderi.get('MODULES'), function(moduleId, module)
 	{
@@ -147,29 +164,8 @@ $(bolanderi).one('storageready', function()
 			if(pageCode & docPageCode) {
 				module.__pageCode = pageCode;
 
-				if(profile.privateData[module.id][pageCode].status >= 1 && passBasicRequirements(module)) {
-					$.each(module.tasks || {}, function(j, task)
-					{
-						task.module = module;
-
-						if((!('page' in task) || (task.page & docPageCode)) && passBasicRequirements(task)) {
-							switch(task.type) {
-								case 'action':
-								case undefined:
-									actionTasks.push(task);
-									return;
-								case 'ui':
-								case 'utility':
-									apiTasks.push(task);
-									return;
-								case 'resource':
-									resources[task.title] = task.resource;
-									return;
-							}
-
-							$.log('warn', 'unknown task type "{0}" encountered. [{1}, {2}]', task.type, module.title, task.id);
-						}
-					});
+				if(isModuleOn(module)) {
+					pendingModules.push(module);
 				}
 
 				return false;
@@ -177,54 +173,58 @@ $(bolanderi).one('storageready', function()
 		});
 	});
 
-	var passApiRequirements = function(task)
-	{
-		return $.all([].concat($.dig(task.module.requires, 'api'), $.dig(task.requires, 'api')), function(i, api)
-		{
-			return !api || $.dig([$].concat(requirements[i].split('.')));
-		});
-	};
-
-	var passedUI = ['auto'];
-
 	do {
-		var oldLength = apiTasks.length;
+		var modLen = pendingModules.length;
+		var taskLen = pendingTasks.length;
 
-		for(var i=0; i<apiTasks.length; ++i) {
-			var task = apiTasks[i];
-
-			if(!passApiRequirements(task)) {
-				continue;
+		for(var i=0; i<pendingModules.length; ++i) {
+			if(passRequirements(pendingModules[i])) {
+				var module = pendingModules.splice(i--, 1)[0];
+				$.each(module.tasks, function(id, task)
+				{
+					if(!task.page || task.page & docPageCode) {
+						task.module = module;
+						pendingTasks.push(task);
+					}
+				});
 			}
+		}
 
-			if(task.type === 'ui') {
-				passedUI.push(task.name);
-				$[task.name] = wrapUI(task);
-			}
-			else if(task.type === 'utility') {
-				if(task.css) {
-					$.log('warn', '"css" property for task type "utility" has no effect. [{0}, {1}]', task.module.title, task.id);
+		for(var i=0; i<pendingTasks.length; ++i) {
+			if(passRequirements(pendingTasks[i])) {
+				var task = pendingTasks.splice(i--, 1)[0];
+				switch(task.type) {
+					case 'action':
+					case undefined:
+						passedActions.push(task);
+						break;
+					case 'resource':
+						resources[task.name] = task.resource;
+						break;
+					case 'ui':
+						$[task.name] = wrapUI(task);
+						break;
+					case 'utility':
+						if(task.css) {
+							$.log('warn', '"css" property for task type "utility" has no effect. [{0}, {1}]', task.module.title, task.id);
+						}
+						task.js(new Job(task));
+						break;
+					default:
+						$.log('warn', 'unknown task type "{0}" encountered. [{1}, {2}]', task.type, module.title, task.id);
 				}
-				task.js(new Job(task));
 			}
-
-			apiTasks.splice(i--, 1);
 		}
 	}
-	while(oldLength !== apiTasks.length);
+	while(modLen !== pendingModules.length || taskLen !== pendingTasks.length);
 
-	$.each(actionTasks, function(i, task)
+	$.each(passedActions, function(i, task)
 	{
-		if(!passApiRequirements(task)) {
-			return;
-		}
-
 		var taskData = profile.privateData[task.module.id].tasks[task.id];
-		var ui;
 
 		$.each(taskData.ui || ['auto'], function(i, name)
 		{
-			if($.inArray(name, passedUI) !== -1) {
+			if(name in $) {
 				task.__ui = name;
 				return false;
 			}

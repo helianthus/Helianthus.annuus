@@ -67,7 +67,7 @@ annuus.addModules({
 				js: function(job, options)
 				{
 					var button = $('<a />', {
-						html: options.title,
+						text: options.title,
 						href: options.href || $.browser.opera && 'javascript:window.close()' || 'javascript:'
 					})
 					.button()

@@ -9,7 +9,7 @@ var map = {
 
 $.rules = function()
 {
-	var args = $.slice(arguments);
+	var args = [].slice.call(arguments);
 
 	if(typeof args[0] !== 'string') {
 		var options = args.shift();

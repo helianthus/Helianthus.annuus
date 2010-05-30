@@ -5,7 +5,7 @@
 	$.timeout = function()
 	{
 		var id;
-		var args = $.slice(arguments);
+		var args = [].slice.call(arguments);
 
 		if(typeof args[0] === 'string') {
 			id = args.shift();

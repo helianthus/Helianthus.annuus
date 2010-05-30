@@ -30,7 +30,7 @@ $.extend({
 				console[console.debug ? 'debug' : 'log'](arguments.length === 1 ? arguments[0] : arguments);
 			}
 			else {
-				alert($.slice(arguments).join(' '));
+				alert([].slice.call(arguments).join(' '));
 			}
 		}
 	},
@@ -51,7 +51,7 @@ $.extend({
 		}
 
 		msg = '[@PROJECT_NAME_SHORT@] ' + msg;
-		msg = $.format.apply(null, $.slice(arguments, 1));
+		msg = $.format.apply(null, [].slice.call(arguments, 1));
 
 		if(window.console) {
 			if(!console[type]) {

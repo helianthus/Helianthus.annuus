@@ -125,7 +125,7 @@
 	{
 		if(arguments.length === 1) return target;
 
-		var args = $.slice(arguments, 1);
+		var args = [].slice.call(arguments, 1);
 
 		return target.replace(/{(\d+)((?:[^{}]|(?:{\d[^{}]*}))*)}/g, function(field, index, mods)
 		{

@@ -3,7 +3,7 @@ annuus.addModules({
 '86bf4af6-0be0-44e5-a02e-6373776b6982':
 {
 	title: '鎖定表格闊度',
-	pages: { on: [all] },
+	pages: { comp: [all] },
 	tasks: {
 		'475b4b70': {
 			run_at: 'document_start',

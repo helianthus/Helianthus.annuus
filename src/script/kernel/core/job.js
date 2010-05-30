@@ -78,7 +78,7 @@ Job.prototype.data = function(name, value)
 var resources = {};
 Job.prototype.resources = function()
 {
-	return $.dig([resources].concat($.slice(arguments)));
+	return $.dig([resources].concat([].slice.call(arguments)));
 };
 
 $(bolanderi).one('kernelready', function()
@@ -117,6 +117,8 @@ $.auto = wrapUI({
 	}
 });
 
+bolanderi.__components = {};
+
 $(bolanderi).one('storageready', function()
 {
 	var docPageCode = $(document).pageCode();
@@ -125,7 +127,7 @@ $(bolanderi).one('storageready', function()
 	{
 		return !!module && profile.privateData[module.id][module.__pageCode].status >= 1;
 	};
-	var passRequirements = function(target)
+	var isRequiremenetsMet = function(target)
 	{
 		var module = target.module || target;
 		return $.all(target.requires || {}, function(i, requirement)
@@ -178,12 +180,11 @@ $(bolanderi).one('storageready', function()
 		var taskLen = pendingTasks.length;
 
 		for(var i=0; i<pendingModules.length; ++i) {
-			if(passRequirements(pendingModules[i])) {
+			if(isRequiremenetsMet(pendingModules[i])) {
 				var module = pendingModules.splice(i--, 1)[0];
 				$.each(module.tasks, function(id, task)
 				{
-					if(!task.page || task.page & docPageCode) {
-						task.module = module;
+					if(task.page === undefined || task.page & docPageCode) {
 						pendingTasks.push(task);
 					}
 				});
@@ -191,15 +192,19 @@ $(bolanderi).one('storageready', function()
 		}
 
 		for(var i=0; i<pendingTasks.length; ++i) {
-			if(passRequirements(pendingTasks[i])) {
+			if(isRequiremenetsMet(pendingTasks[i])) {
 				var task = pendingTasks.splice(i--, 1)[0];
 				switch(task.type) {
-					case 'action':
 					case undefined:
+					case 'action':
 						passedActions.push(task);
 						break;
+					case 'component':
+						task.__ui = 'auto';
+						bolanderi.__components[task.name] = new Job(task);
+						break;
 					case 'resource':
-						resources[task.name] = task.resource;
+						resources[task.name] = task.json;
 						break;
 					case 'ui':
 						$[task.name] = wrapUI(task);
@@ -220,9 +225,7 @@ $(bolanderi).one('storageready', function()
 
 	$.each(passedActions, function(i, task)
 	{
-		var taskData = profile.privateData[task.module.id].tasks[task.id];
-
-		$.each(taskData.ui || ['auto'], function(i, name)
+		$.each([].concat(profile.privateData[task.module.id].tasks[task.id].ui || 'auto'), function(i, name)
 		{
 			if(name in $) {
 				task.__ui = name;
@@ -232,6 +235,14 @@ $(bolanderi).one('storageready', function()
 
 		if(!task.__ui) {
 			$.log('log', 'no registered ui found, task dropped. [{0}, {1}]', task.module.title, task.id);
+			return;
+		}
+
+		if(!$.all(task.include || {}, function(i, name)
+		{
+			return name in bolanderi.__components;
+		})) {
+			$.log('log', 'not all required components are found, task dropped. [{0}, {1}]', task.module.title, task.id);
 			return;
 		}
 

@@ -3,6 +3,27 @@
 
 function execGroups(eventType)
 {
+	var execJob = function(job, groupNo)
+	{
+		$(bolanderi).trigger('jobstart', [job, groupNo]);
+
+		try {
+			job.css && $.rules(job.css, job);
+			$[job.__ui](job);
+		}
+		catch(e) {
+			$.log('error', 'An error occurred: {0}. [{1}]', e.message, job.module.title);
+			$.debug({
+				module: job.module.title,
+				error: e,
+				job: job,
+				context: job.context()
+			});
+		}
+
+		$(bolanderi).trigger('jobend', [job, groupNo]);
+	};
+
 	for(var groupNo = bolanderi.get('RUN_AT')[eventType], until = groupNo + $.size(bolanderi.get('PRIORITY')) - 1; groupNo <= until; ++groupNo) {
 		var group = bolanderi.__jobGroups[groupNo];
 
@@ -15,23 +36,15 @@ function execGroups(eventType)
 				group.splice(i--, 1);
 			}
 
-			$(bolanderi).trigger('jobstart', [job, groupNo]);
+			$.each(job.include || {}, function(i, name)
+			{
+				if(name in bolanderi.__components) {
+					execJob(bolanderi.__components[name], groupNo);
+					delete bolanderi.__components[name];
+				}
+			});
 
-			try {
-				job.css && $.rules(job.css, job);
-				$[job.__ui](job);
-			}
-			catch(e) {
-				$.log('error', 'An error occurred: {0}. [{1}]', e.message, job.module.title);
-				$.debug({
-					module: job.module.title,
-					error: e,
-					job: job,
-					context: job.context()
-				});
-			}
-
-			$(bolanderi).trigger('jobend', [job, groupNo]);
+			execJob(job, groupNo);
 		}
 
 		$(bolanderi).trigger('groupend', [groupNo]);

@@ -64,7 +64,7 @@ annuus.addModules({
 			css: '\
 				a { text-decoration: none; } \
 				#ctl00_ContentPlaceHolder1_lb_bloglink > a > span { text-decoration: none !important; } \
-				.repliers_right > tbody > tr:first-child a { text-decoration: underline; } \
+				.repliers_right > tbody > tr:first-child a, #previewArea a { text-decoration: underline; } \
 			'
 		}
 	}

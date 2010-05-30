@@ -39,6 +39,13 @@ annuus.addModules({
 					var css = '\
 						a { color: #{0[fcAnchorLink]}; } \
 						a:visited { color: #{0[fcAnchorVisited]}; } \
+						\
+						a[href^="default.aspx"], a[href^="topics.aspx"], a[href^="search.aspx"], a[href^="ProfilePage.aspx"], \
+						a[href^="/tags.aspx"], /* default page */ \
+						.addthis_button_compact:visited, \
+						#ctl00_ContentPlaceHolder1_lb_bloglink > a, \
+						div[style="padding: 10px 0px 5px 0px; font-weight: bold;"] a \
+							{ color: #{0[fcAnchorLink]}; } \
 					';
 
 					if(job.options('styleHoverState')) {
@@ -47,7 +54,7 @@ annuus.addModules({
 						';
 					}
 
-					$.rules({ id: 'link-style' }, css, options);
+					$.rules({ id: 'link-style', position: 'pre' }, css, options);
 				});
 			}
 		}
@@ -62,9 +69,9 @@ annuus.addModules({
 		'bb09974e': {
 			run_at: 'document_start',
 			css: '\
-				a { text-decoration: none; } \
+				a, div[style*="padding: 10px 0px 5px 0px; font-weight: bold;"] a, a[href].addthis_button_compact { text-decoration: none; } \
+				a[href^="http:"] { text-decoration: underline; } \
 				#ctl00_ContentPlaceHolder1_lb_bloglink > a > span { text-decoration: none !important; } \
-				.repliers_right > tbody > tr:first-child a, #previewArea a { text-decoration: underline; } \
 			'
 		}
 	}
@@ -125,7 +132,7 @@ annuus.addModules({
 '91f24db0-1e4e-4aa3-80cd-ac50dfb41a86':
 {
 	title: '設定背景',
-	pages: { on: [all] },
+	pages: { off: [all] },
 	options: {
 		bgAero: { title: 'Aero Glass背景', description: '暫時僅Opera支援', type: 'checkbox', defaultValue: true },
 		bgUrl: { title: '圖片位置', type: 'text', defaultValue: 'http://i29.tinypic.com/kexdw2.jpg', requires: {
@@ -195,13 +202,13 @@ annuus.addModules({
 					//----- Welcome to HELL! -----//
 					$.rules({ id: 'forum-style' }, '\
 						/* anchor */ \
-						a[class$="_link"], \
-						a.redhot_link[class]:hover, \
+						a.hitsearch_link, \
+						a[class^="blog"][class$="_link"], \
 						.SideBar_Details_Box a, \
 						div.hkg_bb_bookmarkItem, .hkg_bb_bookmarkItem a div \
 							{ color: #{0[fcAnchorLink]}; } \
-						a[class$="_link"]:hover, \
-						a.BoxLink2, /* default page */ \
+						a.hitsearch_link:hover, \
+						a[class^="blog"][class$="_link"]:hover, \
 						.SideBar_Details_Box a:hover, \
 						.hkg_bb_bookmarkItem_Hover a div, .hkg_bb_bookmarkItem_Selected a div \
 							{ color: #{0[fcAnchorHover]}; } \
@@ -213,9 +220,11 @@ annuus.addModules({
 						.redhot_text, /* redhot topic panel */ \
 						.PageMiddleFunctions, /* trad-simp conversion */ \
 						.addthis_toolbox addthis_default_style, a.addthis_button_compact, /* addThis */ \
+						a.BoxLink2, /* default page */ \
 						a.hkg_bottombar_link, a.hkg_bottombar_link:hover, \
 						a.terms_link, a.terms_link:hover, \
-						a.encode_link, a.encode_link:hover \
+						a.encode_link, a.encode_link:hover, \
+						a.redhot_link, a.redhot_link:hover \
 							{ color: #{0[fcContent]}; } \
 						a[style="color: black;"], /* topic opener */ \
 						#txt_newtag, /* post page */ \
@@ -225,7 +234,7 @@ annuus.addModules({
 						/* content color 2 */ \
 						a.BlockedLink, a.BlockLink:link, a.BlockLink:hover, /* block msg */ \
 						.forum_taglabel, .forum_taglabel a, .forum_taglabel a:hover, \
-						.bloglabel, a.bloglabel_link, a.bloglabel_link:hover, \
+						.bloglabel, a[class].bloglabel_link, a[class].bloglabel_link:hover, \
 						.hkg_bb_bookmarkItem_AddNew \
 							{ color: #{0[fcContent2]}; } \
 						span[style*="color:gray"], /* reply datetime */ \
@@ -302,7 +311,7 @@ annuus.addModules({
 						a.blogmaintitle_link, \
 						td[bgcolor="#808080"], /* login box */ \
 						div[class^="hkg_bb_bookmark_Title"], \
-						a.BoxTitleLink:link, a.BoxTitleLink:visited, a.BoxTitleLink:hover \
+						a.BoxTitleLink, a.BoxTitleLink:visited, a.BoxTitleLink:hover \
 							{ border-color: #{0[borderColorHeader]}; background-color: #{0[bgColorHeader]}; color: #{0[fcHeader]}; } \
 						\
 						[style*="background-color: #336699"], /* typical header */ \

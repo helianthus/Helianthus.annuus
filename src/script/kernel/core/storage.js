@@ -19,28 +19,29 @@ $.each(bolanderi.get('MODULES'), function(moduleId, module)
 	{
 		$.each(module[dataType] || {}, function(dataId, dataSet)
 		{
-			if((dataSet.access || 'private') === 'private') {
+			if(dataSet.access === 'private') {
 				$.each(defaultData.privateData[moduleId], function(pageCode, pageSet)
 				{
 					$.make(pageSet, dataType)[dataId] = dataSet.defaultValue;
 				});
 			}
 			else {
-				if(dataSet.access === 'public' && $.dig(defaultData.publicData, dataType, dataId)) {
+				if(dataSet.access === 'public' && $.dig(defaultData.publicData, dataType, dataId) !== undefined) {
 					$.error('public {0} id "{0}" already exists. [{0}]', dataType, dataId, module.title);
 				}
 
-				$.make(dataSet.access === 'protected' ? defaultData.privateData[moduleId] : defaultData.publicData, dataType)[dataId] = dataSet.defaultValue;
+				$.make(dataSet.access === 'public' ? defaultData.publicData : defaultData.privateData[moduleId], dataType)[dataId] = dataSet.defaultValue;
 			}
 		});
 	});
 
 	$.each(module.tasks || {}, function(taskId, task)
 	{
+		task.module = module;
 		task.id = taskId;
 		task.title = task.title || module.title;
 
-		if((task.type || 'job') === 'job') {
+		if(!task.type || task.type === 'action') {
 			if(task.frequency === 'always' && task.css) {
 				$.log('warn', '"css" property found in task with frequency "always", make sure this is intended. [{0}, {1}]', module.title, taskId);
 			}

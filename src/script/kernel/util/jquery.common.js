@@ -1,7 +1,7 @@
 $.extend({
 	all: function()
 	{
-		var args = $.slice(arguments);
+		var args = [].slice.call(arguments);
 		var callback = args.pop();
 		var pass = true;
 		$.digEach.apply(null, args.concat(function()
@@ -16,7 +16,7 @@ $.extend({
 
 	any: function()
 	{
-		var args = $.slice(arguments);
+		var args = [].slice.call(arguments);
 		args.push((function(callback)
 		{
 			return function()
@@ -27,7 +27,7 @@ $.extend({
 		return !$.all.apply(null, args);
 
 		/* this one is faster, but less interesting
-		var args = $.slice(arguments);
+		var args = [].slice.call(arguments);
 		var callback = args.pop();
 		var pass = false;
 		$.digEach.apply(null, args.concat(function()
@@ -43,7 +43,7 @@ $.extend({
 
 	compile: function()
 	{
-		var args = $.slice(arguments);
+		var args = [].slice.call(arguments);
 		var callback = args.pop();
 		var ret = [];
 
@@ -62,7 +62,7 @@ $.extend({
 
 		return ret;
 	},
-
+/*
 	bitmasks: function(flag, masks)
 	{
 		if($.isArray(masks)) {
@@ -77,7 +77,7 @@ $.extend({
 		}
 		return null;
 	},
-
+*/
 	cookie: function(name, val, topLevel)
 	{
 		if(!name) {
@@ -125,7 +125,7 @@ $.extend({
 	copy: function(target)
 	{
 		var name, src, copy;
-		$.each($.slice(arguments, 1), function(i, options)
+		$.each([].slice.call(arguments, 1), function(i, options)
 		{
 			for(name in options) {
 				src = target[name];
@@ -165,7 +165,7 @@ $.extend({
 
 	digEach: function(target)
 	{
-		var args = $.slice(arguments, 1);
+		var args = [].slice.call(arguments, 1);
 		var callback = args.pop();
 		var len = args.length;
 		if(len === 0) {
@@ -195,7 +195,38 @@ $.extend({
 
 		return target;
 	},
+/*
+	first: function(target, collection, checkTVal, checkCVal, valResult)
+	{
+		if(checkCVal === undefined) checkCVal = 1;
+		var ret = $.time() + '__first';
+		var control = ret;
 
+		$.each(collection, function(cId, cVal)
+		{
+			var object = checkCVal ? cVal : cId;
+			if(checkTVal) {
+				$.each(target, function(tId, tVal)
+				{
+					if(tVal === object) {
+						ret = valResult ? tVal : tId;
+						return false;
+					}
+				});
+				if(ret !== control) {
+					return false;
+				}
+			}
+			else {
+				if(object in target) {
+					ret = valResult ? target[object] : object;
+					return false;
+				}
+			}
+		});
+		return ret;
+	},
+*/
 	isNumber: function(target)
 	{
 		return !isNaN(+target);
@@ -238,35 +269,14 @@ $.extend({
 		return ret;
 	},
 
-	run: function(name)
-	{
-		return $[name] && $[name].apply($, $.slice(arguments, 1));
-	},
-
-	slice: function(target, start, end)
-	{
-		return Array.prototype.slice.apply(target, Array.prototype.slice.call(arguments, 1));
-	},
-
 	time: function(start)
 	{
 		return start ? new Date - start : +new Date;
-	},
-
-	//--- Deprecated --//
-
-	winWidth: function(nMutiply)
-	{
-		return Math.round($(window).width() * (nMutiply || 1));
-	},
-
-	winHeight: function(nMutiply)
-	{
-		return Math.round($(window).height() * (nMutiply || 1));
 	}
 });
 
 $.fn.extend({
+/*
 	attrFilter: function(name, is, not)
 	{
 		var jThis = this;
@@ -294,7 +304,7 @@ $.fn.extend({
 			});
 		}
 	},
-
+*/
 	toFlash: function(url, attrSet, paramSet)
 	{
 		attrSet = $.extend({ width: 0, height: 0, id: this[0].id || 'jquery-flash-' + $.time() }, attrSet);
@@ -331,18 +341,12 @@ $.fn.extend({
 			return $(html).replaceAll(this);
 		}
 	},
-
+/*
 	outerhtml: function()
 	{
-		return this[0] && (this[0].outerHTML ? this[0].outerHTML : $('<div />').append(this.eq(0).clone()).html());
+		return this[0].outerHTML || $('<div />').append(this.eq(0).clone()).html());
 	},
-
-	fadeToggle: function(sSpeed)
-	{
-		if(!sSpeed) sSpeed = 'normal';
-		return this.is(':hidden') ? this.fadeIn(sSpeed) : this.fadeOut(sSpeed);
-	},
-
+*/
 	up: function(selector, th)
 	{
 		if(!th) th = 1;
@@ -359,7 +363,7 @@ $.fn.extend({
 
 	root: function()
 	{
-		return this.__root || (this.__root = $(document).own(this) ? $(document) : this.up());
+		return $(document).own(this) ? $(document) : this.up();
 	},
 
 	own: function(target)

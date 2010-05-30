@@ -8,7 +8,7 @@ annuus.addModules({
 		'e823fa56': {
 			type: 'resource',
 			name: 'icons',
-			resource: {
+			json: {
 				//'': 'data:image/png;base64,',
 
 				// HKG gif

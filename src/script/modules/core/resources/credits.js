@@ -8,7 +8,7 @@ annuus.addModules({
 		'99da408d': {
 			type: 'resource',
 			name: 'credits',
-			resource: [
+			json: [
 				{
 					name: 'jQuery',
 					url: 'http://jquery.com',

@@ -8,7 +8,7 @@ annuus.addModules({
 		'3f6e1cd6': {
 			type: 'resource',
 			name: 'smileys',
-			resource: [
+			json: [
 				{
 					desc: '經典表情圖示',
 					path: '/faces/',

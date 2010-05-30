@@ -8,7 +8,7 @@ annuus.addModules({
 		'd15b72b1': {
 			type: 'resource',
 			name: 'themes',
-			resource: {
+			json: {
 				"HKGolden": {
 					"cornerRadius":"0px",
 					"borderColorHeader":"6ea0c4",

@@ -73,19 +73,18 @@ annuus.addModules({
 '8e08db0d-3c7b-418d-a873-6901f37c497f':
 {
 	title: '論壇樣式改動基礎',
-	pages: { on: [all] },
+	pages: { comp: [all] },
 	tasks: {
-		'bb09974e': {
-			run_at: 'document_start',
+		'5c6e7d7d': {
+			type: 'component',
+			name: 'style-base',
 			css: '\
 				.TopMenuPanel, .PageMiddleBox, .bg_top, .bg_main { background-image: none; } \
 				.TopMenuBox, .TopMenuPanel + div.PageWidthContainer, table[width="955"] > tbody > tr:first-child { display: none; } \
 				.bg_top { height: auto; } \
-			'
-		},
-		'5c6e7d7d': {
-			run_at: 'document_start',
-			css: '#ctl00_TopBarHomeImage { width: 0 !important; height: 0 !important; }',
+				\
+				#ctl00_TopBarHomeImage { width: 0 !important; height: 0 !important; } \
+			',
 			js: function(job)
 			{
 				$.digEach({
@@ -127,9 +126,6 @@ annuus.addModules({
 {
 	title: '設定背景',
 	pages: { on: [all] },
-	requires: [
-		{ type: 'module', params: '8e08db0d-3c7b-418d-a873-6901f37c497f' }
-	],
 	options: {
 		bgAero: { title: 'Aero Glass背景', description: '暫時僅Opera支援', type: 'checkbox', defaultValue: true },
 		bgUrl: { title: '圖片位置', type: 'text', defaultValue: 'http://i29.tinypic.com/kexdw2.jpg', requires: {
@@ -141,6 +137,7 @@ annuus.addModules({
 	},
 	tasks: {
 		'bb09974e': {
+			include: ['style-base'],
 			run_at: 'document_start',
 			js: function(job)
 			{
@@ -178,7 +175,6 @@ annuus.addModules({
 	title: '論壇樣式設定',
 	pages: { on: [all] },
 	requires: [
-		{ type: 'module', params: '8e08db0d-3c7b-418d-a873-6901f37c497f' },
 		{ type: 'module', params: 'edd5174c-b7a4-48f1-8612-3f03c9adf05a' }
 	],
 	options: {
@@ -190,6 +186,7 @@ annuus.addModules({
 	},
 	tasks: {
 		'd15b72b1': {
+			include: ['style-base'],
 			run_at: 'document_start',
 			js: function(job)
 			{

@@ -2,32 +2,41 @@
 {
 
 var cache = true;
-var cssSet = [''];
-var map = {
-	__anonymous: 0
+var cssData = {
+	pre: {
+		map: { __anonymous: 0 },
+		stack: ['']
+	},
+	post: {
+		map: { __anonymous: 0 },
+		stack: ['']
+	}
 };
 
 $.rules = function()
 {
 	var args = [].slice.call(arguments);
-
+	var options = { position: 'post' };
 	if(typeof args[0] !== 'string') {
-		var options = args.shift();
+		$.extend(options, args.shift());
 	}
 
+	var data = cssData[options.position];
+	var map = data.map;
+	var stack = data.stack;
 	var css = compile(args);
 
-	if(options && options.id) {
+	if(options.id) {
 		if(options.id in map) {
-			cssSet[map[options.id]] = css;
+			stack[map[options.id]] = css;
 		}
 		else {
-			map[options.id] = cssSet.push(css) - 1;
-			map.__anonymous = cssSet.push('') - 1;
+			map[options.id] = stack.push(css) - 1;
+			map.__anonymous = stack.push('') - 1;
 		}
 	}
 	else {
-		cssSet[map.__anonymous] += css;
+		stack[map.__anonymous] += css;
 	}
 
 	if(!cache) {
@@ -44,22 +53,24 @@ $(bolanderi).bind('groupend', function(event, groupNo)
 	}
 });
 
-var jStyle;
+var styles = {
+	pre: $('<style/>').prependTo('head'),
+	post: $('<style/>').appendTo('head')
+}
 
 function write()
 {
-	if(!jStyle) {
-		jStyle = $('<style />').appendTo('#an');
-	}
+	$.each(styles, function(pos, style)
+	{
+		var css = cssData[pos].stack.join('');
 
-	var css = cssSet.join('');
-
-	if(jStyle[0].styleSheet) {
-		jStyle[0].styleSheet.cssText = css;
-	}
-	else {
-		jStyle.html(document.createTextNode(css));
-	}
+		if(style[0].styleSheet) {
+			style[0].styleSheet.cssText = css;
+		}
+		else {
+			style.html(document.createTextNode(css));
+		}
+	});
 }
 
 var inconsistencies = [];

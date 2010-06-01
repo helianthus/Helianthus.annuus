@@ -25,7 +25,7 @@ annuus.addModules({
 	options: {
 		fcAnchorLink: { title: '連結: 未訪問文字顏色', type: 'text', defaultValue: '0000ee', access: 'public' },
 		fcAnchorVisited: { title: '連結: 已訪問文字顏色', type: 'text', defaultValue: '551a8b', access: 'public' },
-		fcAnchorHover: { title: '連結: 懸浮文字顏色', type: 'text', defaultValue: '', access: 'public' },
+		fcAnchorHover: { title: '連結: 懸浮文字顏色', type: 'text', defaultValue: '0000ee', access: 'public' },
 		styleHoverState: { title: '顯示懸浮文字顏色', type: 'checkbox', defaultValue: false }
 	},
 	tasks: {
@@ -210,7 +210,7 @@ annuus.addModules({
 						a.hitsearch_link:hover, \
 						a[class^="blog"][class$="_link"]:hover, \
 						.SideBar_Details_Box a:hover, \
-						.hkg_bb_bookmarkItem_Hover a div, .hkg_bb_bookmarkItem_Selected a div \
+						.hkg_bb_bookmarkItem_Hover, .hkg_bb_bookmarkItem_Hover a div, .hkg_bb_bookmarkItem_Selected a div \
 							{ color: #{0[fcAnchorHover]}; } \
 						/* content color */ \
 						body, p, td, \

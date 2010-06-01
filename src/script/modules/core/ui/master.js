@@ -18,7 +18,7 @@ annuus.addModules({
 				#an-master-container { display: none; width: 100%; height: 100%; } \
 				#an-master-container > * { position: absolute; } \
 				#an-master-switch { top: 10px; left: 10px; cursor: pointer; transition: transform 60s linear; } \
-				#an-master-switch:hover { transform: rotate(360deg); } \
+				#an-master-switch:hover { transform: rotate(3600deg); } \
 			',
 			js: function(job)
 			{

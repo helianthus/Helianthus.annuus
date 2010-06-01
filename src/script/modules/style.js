@@ -460,6 +460,21 @@ annuus.addModules({
 					}
 				});
 			}
+		},
+
+		'16fc2c9f': {
+			page: profilepage,
+			requires: [
+				{ type: 'truthy', params: !$.browser.mozilla }
+			],
+			css: '\
+				td[style*="color: #003366"] { padding: 4px; } \
+				td[style*="color: #003366"][style*="width: 70%"] { padding: 0; } \
+			',
+			js: function()
+			{
+				$('#ctl00_ContentPlaceHolder1_HotPeoples table[cellspacing="1"][cellpadding="4"]').attr('cellpadding', 0);
+			}
 		}
 	}
 }

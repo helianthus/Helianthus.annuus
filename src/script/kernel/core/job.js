@@ -90,6 +90,16 @@ $(bolanderi).one('kernelready', function()
 	});
 });
 
+function wrapListener(task)
+{
+	$(bolanderi)[task.frequency === 'always' ? 'bind' : 'one'](task.name, function()
+	{
+		var job = new Job(task);
+		task.css && $.rules(task.css, job);
+		task.js && task.js.apply(task, [job].concat([].slice.call(arguments, 1)));
+	});
+}
+
 function wrapUI(task)
 {
 	var job = new Job(task);
@@ -125,7 +135,7 @@ $(bolanderi).one('storageready', function()
 	var profile = bolanderi.__storage.get();
 	var isModuleOn = function(module)
 	{
-		return !!module && profile.privateData[module.id][module.__pageCode].status >= 1;
+		return !!module && profile.privateData[module.id][module.__pageCode].status >= (profile.status ? 1 : 3);
 	};
 	var isRequiremenetsMet = function(target)
 	{
@@ -161,15 +171,13 @@ $(bolanderi).one('storageready', function()
 
 	$.each(bolanderi.get('MODULES'), function(moduleId, module)
 	{
-		$.digEach(module.pages, ['comp', 'on', 'off'], null, function(status, i, pageCode)
+		$.digEach(module.pages, ['core', 'comp', 'on', 'off'], null, function(status, i, pageCode)
 		{
 			if(pageCode & docPageCode) {
 				module.__pageCode = pageCode;
-
 				if(isModuleOn(module)) {
 					pendingModules.push(module);
 				}
-
 				return false;
 			}
 		});
@@ -200,10 +208,19 @@ $(bolanderi).one('storageready', function()
 						passedActions.push(task);
 						break;
 					case 'component':
+						if(task.name in bolanderi.__components) {
+							$.log('error', 'component name "{0}" already exists.', task.name);
+						}
 						task.__ui = 'auto';
 						bolanderi.__components[task.name] = new Job(task);
 						break;
+					case 'listener':
+						wrapListener(task);
+						break;
 					case 'resource':
+						if(task.name in resources) {
+							$.log('error', 'resource name "{0}" already exists.', task.name);
+						}
 						resources[task.name] = task.json;
 						break;
 					case 'ui':

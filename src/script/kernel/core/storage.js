@@ -2,6 +2,7 @@ $(bolanderi).one('kernelready', function()
 {
 
 var defaultData = {
+	status: 1,
 	publicData: {},
 	privateData: {}
 };
@@ -12,7 +13,7 @@ $.each(bolanderi.get('MODULES'), function(moduleId, module)
 
 	$.digEach(module.pages, null, null, function(status, i, pageCode)
 	{
-		defaultData.privateData[moduleId][pageCode] = { status: { disabled: -1, off: 0, on: 1, comp: 2 }[status] };
+		defaultData.privateData[moduleId][pageCode] = { status: { disabled: -1, off: 0, on: 1, comp: 2, core: 3 }[status] };
 	});
 
 	$.each(['options', 'database'], function(i, dataType)
@@ -116,23 +117,26 @@ bolanderi.__storage = {
 	get: function(options)
 	{
 		options = $.extend({ curProfileOnly: true, savedOrDefault: 'both', noCache: false }, options);
+		var data = cache[options.savedOrDefault];
 
-		if(options.noCache || !cache[options.savedOrDefault]) {
-			cache[options.savedOrDefault] = options.savedOrDefault !== 'default' && storage.get() && JSON.parse(storage.get()) || {
+		if(options.noCache || !data) {
+			data = cache[options.savedOrDefault] = options.savedOrDefault !== 'default' && storage.get() && JSON.parse(storage.get()) || {
 				curProfile: 'default',
 				profiles: {
-					'default': {}
+					'default': {
+						status: 1
+					}
 				}
 			};
 
 			if(options.savedOrDefault !== 'saved') {
-				for(var profileId in cache[options.savedOrDefault].profiles) {
-					cache[options.savedOrDefault].profiles[profileId] = $.copy({}, defaultData, cache[options.savedOrDefault].profiles[profileId]);
+				for(var profileId in data.profiles) {
+					data.profiles[profileId] = $.copy({}, defaultData, data.profiles[profileId]);
 				}
 			}
 		}
 
-		return options.curProfileOnly ? cache[options.savedOrDefault].profiles[cache[options.savedOrDefault].curProfile] : cache[options.savedOrDefault];
+		return options.curProfileOnly ? data.profiles[data.curProfile] : data;
 	},
 
 	save: function()

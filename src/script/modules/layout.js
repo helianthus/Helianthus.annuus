@@ -7,10 +7,11 @@ annuus.addModules({
 	tasks: {
 		'475b4b70': {
 			run_at: 'document_start',
+			// Opera needs every table within the stack to be fixed
 			css: '\
-				.repliers_right, \
-				.ListPMText > table > tbody > tr > td > table, \
-				#ctl00_ContentPlaceHolder1_SendPMform > .repliers > tbody > tr > td > table \
+				#ctl00_ContentPlaceHolder1_view_form > div > table, \
+				.repliers, .repliers > tbody > tr > td > table, \
+				.ListPMText > table, .ListPMText > table > tbody > tr > td > table \
 					{ table-layout: fixed; } \
 				body { word-wrap: break-word; } \
 			'

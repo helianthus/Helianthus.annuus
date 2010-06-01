@@ -185,8 +185,8 @@ annuus.addModules({
 
 					"bgColorContent2":"eeeeee",
 					"fcContent2":"999999",
-					"fcTime":"212121",
-					"fcQuote":"212121"
+					"fcTime":"404040",
+					"fcQuote":"404040"
 				},
 
 				"Start": {

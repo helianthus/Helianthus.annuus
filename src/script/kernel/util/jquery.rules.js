@@ -269,7 +269,7 @@ function compile(params)
 		}
 	});
 
-	$.support.filter = typeof testStyle.filter !== 'undefined';
+	$.support.filter = typeof document.createElement('div').filters !== 'undefined';
 
 	if($.support.filter) {
 		$.each([

@@ -43,6 +43,7 @@ annuus.addModules({
 						a[href^="default.aspx"], a[href^="topics.aspx"], a[href^="search.aspx"], a[href^="ProfilePage.aspx"], \
 						a[href^="/tags.aspx"], /* default page */ \
 						.addthis_button_compact:visited, \
+						#ctl00_ContentPlaceHolder1_MiddleAdSpace1 > div > div > a, /* link to vote page */ \
 						#ctl00_ContentPlaceHolder1_lb_bloglink > a, \
 						div[style="padding: 10px 0px 5px 0px; font-weight: bold;"] a \
 							{ color: #{0[fcAnchorLink]}; } \
@@ -133,13 +134,39 @@ annuus.addModules({
 	}
 },
 
+'2f8ce225-424a-4846-b8ea-59ebaa3fe649': {
+	title: '設定高登Logo',
+	pages: { on: [all] },
+	options: {
+		uriHKGLogo: { title: 'Logo位置', type: 'text', defaultValue: '/images/index_images/logo.jpg', access: 'public' },
+	},
+	tasks: {
+		'07e7e30d': {
+			type: 'listener',
+			name: 'theme',
+			frequency: 'always',
+			js: function(job, options, manual)
+			{
+				manual && job.status(options.uriHKGLogo);
+
+				$.rules({ id: 'hkg-logo' }, options.uriHKGLogo
+				?	'\
+					#ctl00_TopBarHomeLink { display: block; background-image: url("{0}") } \
+					#ctl00_TopBarHomeImage { visibility: hidden; } \
+				'
+				: '', options.uriHKGLogo);
+			}
+		}
+	}
+},
+
 '91f24db0-1e4e-4aa3-80cd-ac50dfb41a86':
 {
 	title: '設定背景',
 	pages: { off: [all] },
 	options: {
 		bgAero: { title: 'Aero Glass背景', description: '暫時僅Opera支援', type: 'checkbox', defaultValue: true },
-		bgUrl: { title: '圖片位置', type: 'text', defaultValue: 'http://i29.tinypic.com/kexdw2.jpg', requires: {
+		bgImageBody: { title: '圖片位置', type: 'text', defaultValue: 'http://i29.tinypic.com/kexdw2.jpg', access: 'public', requires: {
 			options: { id: 'bgAero', value: false }
 		}},
 		autoFit: { title: '自動縮放', description: '可降低效能', type: 'checkbox', defaultValue: false, requires: {
@@ -152,17 +179,17 @@ annuus.addModules({
 			run_at: 'document_start',
 			js: function(job)
 			{
-				$.rules('body { background: {0} fixed; background-size: {1} auto; }',
-					job.options('bgAero') && window.opera
-					? '-o-skin("Pagebar Skin")'
-					: $.format('url("{0}")', job.options('bgUrl')),
-
-					job.options('autoFit') && !job.options('bgAero') ? '100%' : 'auto'
-				);
-
-				$(annuus).bind('theme', function(event, options)
+				$(annuus).bind('theme', function(event, options, manual)
 				{
-					$.rules('\
+					var bg = window.opera && job.options('bgAero')
+					? '-o-skin("Pagebar Skin")'
+					: options.bgImageBody && $.format('url("{0}")', options.bgImageBody);
+
+					manual && job.status(bg);
+
+					$.rules({ id: 'style-bg' }, bg ? '\
+						body { background: {0} fixed; background-size: {1} auto; } \
+						\
 						.PageMiddleFunctions, \
 						.bg_main > table > tbody > tr:first-child, /* old middle fns */ \
 						#MainPageAd2 + br + br + div, \
@@ -172,9 +199,9 @@ annuus.addModules({
 						#ctl00_ContentPlaceHolder1_view_form > div[style="width: 100%"] > table[width="99%"], /* view page reply count */ \
 						table[width="196"][cellspacing="3"], /* topc list legend */ \
 						.txt_11pt_1A3448 /* footer */ \
-							{ text-shadow: #{0[bgColorContent]} 1px 1px 1px; } \
-					',
-					options);
+							{ text-shadow: #{2[bgColorContent]} 1px 1px 1px; } \
+					'
+					: '', bg, job.options('autoFit') && !job.options('bgAero') ? '100%' : 'auto', options);
 				});
 			}
 		}
@@ -250,8 +277,10 @@ annuus.addModules({
 						table[style="border: solid 1px #CCCCCC;"] /* profilepage avater */ \
 							{ border-color: #{0[borderColorContent]} !important; } \
 						\
+						table[border="1"] > tbody > tr > td, /* vote table */ \
 						#divPMMessageBody, \
-						div[align="center"] > table[width="220"] /* login box */ \
+						div[align="center"] > table[width="220"], /* login box */ \
+						.repliers > tbody > tr > td[style*="background-color: #F3F2F1"] /* sendpm page */ \
 							{ border: 1px solid #{0[borderColorContent]}; } \
 						\
 						/* special backgrounds */ \
@@ -278,8 +307,7 @@ annuus.addModules({
 						.blogmain_window > table > tbody > tr[style] > td /* newblog page */ \
 							{ border-color: #{0[borderColorContent]} !important; background-color: #{0[bgColorContent]} !important; } \
 						\
-						.BlockedTR td, \
-						.repliers > tbody > tr > td[style*="background-color: #F3F2F1"] /* pm page */ \
+						.BlockedTR td \
 							{ border: 1px solid #{0[borderColorContent]}; background-color: #{0[bgColorContent]}; } \
 						\
 						/* content 2 */ \
@@ -425,9 +453,13 @@ annuus.addModules({
 						.hkg_bb_leftpanel > div > div, #btn_hkg_bb_bookmark_item2_AddNewLink \
 							{ border: 0; } \
 						\
-						/* view page */ \
-						.repliers_left > div > a { outline: 0; } \
+						/* vote table */ \
+						table[border="1"] { border-collapse: collapse; border: 0; } \
+						/* sendpm page */ \
 						.repliers { border: 0 !important; border-collapse: separate !important; border-spacing: 0; } \
+						/* view page */ \
+						.repliers_left, .repliers > tbody > tr > td[style*="border-right:"] { border-right: 0 !important; } \
+						.repliers_left > div > a { outline: 0; } \
 						/* default page */ \
 						.SideBar_Container + div > img { padding: 0 16px 14px 0; width: 0; height: 0; } \
 						/* pm box */ \

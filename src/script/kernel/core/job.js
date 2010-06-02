@@ -54,8 +54,17 @@ $.each(['options', 'database'], function(i, dataType)
 		});
 
 		bolanderi.__storage.save();
+
+		return this;
 	};
 });
+
+Job.prototype.status = function(status)
+{
+	$.make(bolanderi.__storage.get({ savedOrDefault: 'saved' }), 'privateData', this.module.id, this.module.__pageCode).status = status ? 1 : 0;
+	bolanderi.__storage.save();
+	return this;
+};
 
 Job.prototype.context = function()
 {
@@ -135,7 +144,10 @@ $(bolanderi).one('storageready', function()
 	var profile = bolanderi.__storage.get();
 	var isModuleOn = function(module)
 	{
-		return !!module && profile.privateData[module.id][module.__pageCode].status >= (profile.status ? 1 : 3);
+		return !!module && (
+		$.inArray(module.__pageCode, [].concat(module.pages.core || [], profile.status && module.pages.comp || [])) !== -1
+		|| profile.privateData[module.id][module.__pageCode].status >= (profile.status ? 1 : 3)
+		);
 	};
 	var isRequiremenetsMet = function(target)
 	{

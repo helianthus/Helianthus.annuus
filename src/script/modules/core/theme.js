@@ -92,6 +92,8 @@ annuus.addModules({
 						.an-hover-background { background-color: #{0[bgColorHover]}; } \
 						.an-hover-color { color: #{0[fcHover]}; } \
 						\
+						.an-header-bgborder { border: 0 solid #{0[bgColorHeader]}; } \
+						\
 						a.ui-state-default { color: #{0[fcDefault]}; } \
 						a.ui-state-hover { color: #{0[fcHover]}; } \
 						a.ui-state-active { color: #{0[fcActive]}; } \

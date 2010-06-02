@@ -9,6 +9,44 @@ annuus.addModules({
 			type: 'resource',
 			name: 'themes',
 			json: {
+				"VIIV": {
+					"cornerRadius":"0px",
+					"borderColorHeader":"fff",
+					"bgColorHeader":"000",
+					"fcHeader":"fff",
+					"borderColorContent":"000",
+					"bgColorContent":"fff",
+					"fcContent":"000",
+					"borderColorDefault":"000",
+					"bgColorDefault":"fff",
+					"fcDefault":"000",
+					"borderColorHover":"000",
+					"bgColorHover":"fff",
+					"fcHover":"555",
+					"borderColorActive":"000",
+					"bgColorActive":"fff",
+					"fcActive":"555",
+					"borderColorHighlight":"000",
+					"bgColorHighlight":"eee",
+					"fcHighlight":"000",
+					"borderColorError":"000",
+					"bgColorError":"555",
+					"fcError":"fff",
+					"bgColorOverlay":"fff",
+					"bgColorShadow":"fff",
+
+					"fcAnchorLink":"000",
+					"fcAnchorVisited":"555",
+					"fcAnchorHover":"555",
+
+					"bgColorContent2":"fff",
+					"fcContent2":"000",
+					"fcTime":"000",
+					"fcQuote":"000",
+
+					"uriHKGLogo":"/images/index_images/blacklogo.jpg"
+				},
+
 				"HKGolden": {
 					"cornerRadius":"0px",
 					"borderColorHeader":"6ea0c4",

@@ -48,7 +48,7 @@ annuus.addModules({
 			{
 				job.context().find('a:visible').filter(function()
 				{
-					return $(this).width() === 0 && /userid=|st=A|ToggleUserDetail/.test(this.href);
+					return $(this).width() === 0 && /userid=|st=A|ToggleUserDetail/.test($(this).attr('href'));
 				})
 				.addClass('an-blankname');
 			}

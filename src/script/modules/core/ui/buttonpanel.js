@@ -10,18 +10,22 @@ annuus.addModules({
 			name: 'button',
 			setup: {
 				css: '\
-					#an-buttonpanel { position: fixed; top: 10%; height: 80%; min-width: 10px; } \
-					#an-buttonpanel-ui { display: none; box-sizing: border-box; height: 100%; border-width: 0.5em 0; padding: 0.2em 0; } \
-					#an-buttonpanel-container { overflow: hidden; box-sizing: border-box; height: 100%; min-width: 100px; border-left-width: 5px; font-size: 75%; } \
-					#an-buttonpanel-container > .ui-button { display: block; margin: 0 0 3px 0; border-left: 0; border-top-left-radius: 0; border-bottom-left-radius: 0; text-align: left; } \
+					#an-buttonpanel { display: table; position: fixed; height: 100%; min-width: 10px; } \
+					#an-buttonpanel-positioner { display: table-cell; height: 100%; vertical-align: middle; } \
+					#an-buttonpanel-ui { display: none; box-sizing: border-box; border-width: 0.5em 0; padding: 0.2em 0; } \
+					#an-buttonpanel-container { box-sizing: border-box; height: 100%; min-width: 100px; border-left-width: 5px; overflow: hidden; font-size: 75%; } \
+					#an-buttonpanel-container > .ui-button { display: block; margin: 3px 0 0 0; border-left: 0; border-top-left-radius: 0; border-bottom-left-radius: 0; text-align: left; } \
+					#an-buttonpanel-container > .ui-button:first-child { margin: 0; } \
 					#an-buttonpanel-container > .ui-button > span { padding: 0.1em 1em; white-space: nowrap; } \
 				',
 				js: function(job)
 				{
 					$('\
 						<div id="an-buttonpanel"> \
-							<div id="an-buttonpanel-ui" class="an-header-border ui-corner-right"> \
-								<div id="an-buttonpanel-container" class="an-default-border"></div> \
+							<div id="an-buttonpanel-positioner"> \
+								<div id="an-buttonpanel-ui" class="an-header-border ui-corner-right"> \
+									<div id="an-buttonpanel-container" class="an-default-border"></div> \
+								</div> \
 							</div> \
 						</div> \
 					')
@@ -31,7 +35,7 @@ annuus.addModules({
 						var queue = ui.queue('fx');
 
 						if(enter) {
-							$('#an-buttonpanel-container').find('.ui-state-focus,.ui-state-hover').removeClass('ui-state-focus ui-state-hover');
+							container.find('.ui-state-focus,.ui-state-hover').removeClass('ui-state-focus ui-state-hover');
 						}
 
 						if(typeof queue[0] === 'string') {
@@ -55,12 +59,18 @@ annuus.addModules({
 					.mousewheel(function(event, delta)
 					{
 						event.preventDefault();
-						$('#an-buttonpanel-container').clearQueue().animate({ scrollTop: $.format('{0}={1}', delta < 0 ? '+' : '-', Math.abs(delta) * 100) }, 'fast', 'linear');
+						container.stop(true).animate({ scrollTop: $.format('{0}={1}', delta < 0 ? '+' : '-', Math.abs(delta) * 100) }, 'fast', 'linear');
 					})
 					.appendTo('#an');
 
 					var showing = false;
 					var ui = $('#an-buttonpanel-ui');
+					var container = $('#an-buttonpanel-container');
+
+					$(window).resize(function()
+					{
+						container.css('max-height', $(window).height() * 0.6);
+					}).resize();
 				}
 			},
 			add: {

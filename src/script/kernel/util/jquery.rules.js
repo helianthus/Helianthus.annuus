@@ -13,8 +13,21 @@ var cssData = {
 	}
 };
 
-$.rules = function()
+$.rules = function(callback)
 {
+	if($.isFunction(callback)) {
+		if(cache) {
+			callback();
+		}
+		else {
+			cache = true;
+			callback();
+			write();
+			cache = false;
+		}
+		return;
+	}
+
 	var args = [].slice.call(arguments);
 	var options = { position: 'post' };
 	if(typeof args[0] !== 'string') {

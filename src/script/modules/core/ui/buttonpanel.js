@@ -23,7 +23,7 @@ annuus.addModules({
 					$('\
 						<div id="an-buttonpanel"> \
 							<div id="an-buttonpanel-positioner"> \
-								<div id="an-buttonpanel-ui" class="an-header-border ui-corner-right"> \
+								<div id="an-buttonpanel-ui" class="an-header-bgborder ui-corner-right"> \
 									<div id="an-buttonpanel-container" class="an-default-border"></div> \
 								</div> \
 							</div> \
@@ -42,6 +42,11 @@ annuus.addModules({
 							}
 						}
 					})
+					.click(function()
+					{
+						entered = false;
+						toggleCheck(true);
+					})
 					.mousewheel(function(event, delta)
 					{
 						event.preventDefault();
@@ -53,12 +58,12 @@ annuus.addModules({
 					var container = $('#an-buttonpanel-container');
 
 					var entered = false;
-					var toggleCheck = function()
+					var toggleCheck = function(forceClose)
 					{
-						$.timeout('buttonpanel-toggleCheck', entered ? false : 500, function()
+						$.timeout('buttonpanel-toggleCheck', forceClose || entered ? false : 500, function()
 						{
 							if(entered !== ui.is(':visible')) {
-								ui[entered ? 'show' : 'hide']('fold', function()
+								ui.toggle('fold', { size: 5 }, function()
 								{
 									toggleCheck();
 								});

@@ -10,8 +10,8 @@ annuus.addModules({
 			name: 'button',
 			setup: {
 				css: '\
-					#an-buttonpanel { display: table; position: fixed; height: 100%; min-width: 10px; } \
-					#an-buttonpanel-positioner { display: table-cell; height: 100%; vertical-align: middle; } \
+					#an-buttonpanel { display: table; position: fixed; height: 100%; } \
+					#an-buttonpanel-positioner { display: table-cell; height: 100%; min-width: 10px; vertical-align: middle; } \
 					#an-buttonpanel-ui { display: none; box-sizing: border-box; border-width: 0.5em 0; padding: 0.2em 0; } \
 					#an-buttonpanel-container { box-sizing: border-box; height: 100%; min-width: 100px; border-left-width: 5px; overflow: hidden; font-size: 75%; } \
 					#an-buttonpanel-container > .ui-button { display: block; margin: 3px 0 0 0; border-left: 0; border-top-left-radius: 0; border-bottom-left-radius: 0; text-align: left; } \
@@ -31,29 +31,15 @@ annuus.addModules({
 					')
 					.hover(function(event)
 					{
-						var enter = event.type === 'mouseenter';
-						var queue = ui.queue('fx');
+						if(entered !== (event.type === 'mouseenter')) {
+							entered = !entered;
 
-						if(enter) {
-							container.find('.ui-state-focus,.ui-state-hover').removeClass('ui-state-focus ui-state-hover');
-						}
-
-						if(typeof queue[0] === 'string') {
-							if(queue.length > 1) {
-								queue.pop();
+							if(!ui.queue().length) {
+								if(entered) {
+									container.children().removeClass('ui-state-focus');
+								}
+								toggleCheck();
 							}
-							if(showing !== enter) {
-								queue.push(function(next)
-								{
-									showing = !showing;
-									ui.toggle('fold');
-									next();
-								});
-							}
-						}
-						else if(showing !== enter) {
-							showing = !showing;
-							ui.toggle('fold');
 						}
 					})
 					.mousewheel(function(event, delta)
@@ -63,9 +49,22 @@ annuus.addModules({
 					})
 					.appendTo('#an');
 
-					var showing = false;
 					var ui = $('#an-buttonpanel-ui');
 					var container = $('#an-buttonpanel-container');
+
+					var entered = false;
+					var toggleCheck = function()
+					{
+						$.timeout('buttonpanel-toggleCheck', entered ? false : 500, function()
+						{
+							if(entered !== ui.is(':visible')) {
+								ui[entered ? 'show' : 'hide']('fold', function()
+								{
+									toggleCheck();
+								});
+							}
+						});
+					};
 
 					$(window).resize(function()
 					{
@@ -91,23 +90,6 @@ annuus.addModules({
 						});
 					}
 				}
-			}
-		},
-
-		'49ca8ab8': {
-			priority: 'low',
-			js: function()
-			{
-				$.each($.range(1, 40), function(i, val)
-				{
-					$.button({
-						title: '測試按扭' + val,
-						js: function(options)
-						{
-							alert(options.title);
-						}
-					});
-				});
 			}
 		}
 	}

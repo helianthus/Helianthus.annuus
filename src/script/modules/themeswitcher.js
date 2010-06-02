@@ -8,7 +8,7 @@ annuus.addModules({
 		'1697d048': {
 			ui: ['button'],
 			css: '\
-				#an-themeswitcher-button { position: absolute; top: 10px; left: 10px; } \
+				#an-themeswitcher-button { position: absolute; top: 10px; right: 10px; } \
 				.an-themeswitcher { font-size: 62.5%; } \
 			',
 			js: function(job, event)
@@ -23,10 +23,13 @@ annuus.addModules({
 
 				select = $(select).appendTo('#an').selectmenu({ style: 'dropdown' }).change(function()
 				{
-					var name = $(this).val();
-					if(name !== 'select theme...') {
-						job.options(job.resources('themes', name));
-						$(annuus).trigger('theme', job.options());
+					if(this.selectedIndex !== 0) {
+						var theme = job.resources('themes', $(this).val());
+						job.options(theme);
+						$.rules(function()
+						{
+							$(annuus).trigger('theme', [theme, true]);
+						});
 					}
 				});
 

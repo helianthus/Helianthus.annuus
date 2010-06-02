@@ -37,7 +37,7 @@ annuus.addModules({
 	}
 },
 
-'7e43a229-aa4a-456c-becc-65e69a8873b9':
+'51ac61dd-9f7a-493e-804a-99acf6b741e4':
 {
 	title: '強制顯示空白會員名稱',
 	pages: { on: [all] },

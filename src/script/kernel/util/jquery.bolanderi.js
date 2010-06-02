@@ -30,7 +30,8 @@ $.extend({
 				console[console.debug ? 'debug' : 'log'](arguments.length === 1 ? arguments[0] : arguments);
 			}
 			else {
-				alert([].slice.call(arguments).join(' '));
+				$.timeout(100, [].slice.call(arguments), $.debug);
+				//alert([].slice.call(arguments).join(' '));
 			}
 		}
 	},

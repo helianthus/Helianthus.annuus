@@ -20,7 +20,7 @@
 			}
 		}
 
-		var delay = typeof args[0] === 'number' ? args.shift() : id && cache[id] && cache[id].delay;
+		var delay = typeof args[0] === 'number' || args[0] === false ? args.shift() : id && cache[id] && cache[id].delay;
 		var params = $.isArray(args[0]) ? args.shift() : [];
 		var callback = args[0] || cache[id].callback;
 

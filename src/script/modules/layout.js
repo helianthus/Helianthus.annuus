@@ -15,6 +15,16 @@ annuus.addModules({
 					{ table-layout: fixed; } \
 				body { word-wrap: break-word; } \
 			'
+		},
+
+		// fix vote page
+		'd594b10a': {
+			page: view,
+			frequency: 'always',
+			js: function(job)
+			{
+				job.context().find('.repliers > tbody > tr > td[colspan="100%"]').attr('colspan', '2');
+			}
 		}
 	}
 },

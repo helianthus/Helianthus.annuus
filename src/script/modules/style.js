@@ -138,7 +138,7 @@ annuus.addModules({
 	title: '設定高登Logo',
 	pages: { on: [all] },
 	options: {
-		uriHKGLogo: { title: 'Logo位置', type: 'text', defaultValue: '/images/index_images/logo.jpg', access: 'public' },
+		uriHKGLogo: { title: 'Logo位置', type: 'text', defaultValue: '/images/index_images/logo.jpg', access: 'public' }
 	},
 	tasks: {
 		'07e7e30d': {

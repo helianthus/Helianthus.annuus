@@ -35,6 +35,25 @@ annuus.addModules({
 			css: 'blockquote { opacity: 1; }'
 		}
 	}
+},
+
+'7e43a229-aa4a-456c-becc-65e69a8873b9':
+{
+	title: '強制顯示空白會員名稱',
+	pages: { on: [all] },
+	tasks: {
+		'475b4b70': {
+			css: '.an-blankname:before { content: "空白名稱"; font-style: italic; }',
+			js: function(job)
+			{
+				job.context().find('a:visible').filter(function()
+				{
+					return $(this).width() === 0 && /userid=|st=A|ToggleUserDetail/.test(this.href);
+				})
+				.addClass('an-blankname');
+			}
+		}
+	}
 }
 
 });

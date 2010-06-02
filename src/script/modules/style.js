@@ -69,7 +69,11 @@ annuus.addModules({
 		'bb09974e': {
 			run_at: 'document_start',
 			css: '\
-				a, div[style*="padding: 10px 0px 5px 0px; font-weight: bold;"] a, a[href].addthis_button_compact { text-decoration: none; } \
+				a, \
+				div[style*="padding: 10px 0px 5px 0px; font-weight: bold;"] a, \
+				a[href].addthis_button_compact, \
+				a[target][target="_new"] /* vote links */ \
+					{ text-decoration: none; } \
 				a[href^="http:"] { text-decoration: underline; } \
 				#ctl00_ContentPlaceHolder1_lb_bloglink > a > span { text-decoration: none !important; } \
 			'

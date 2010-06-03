@@ -19,6 +19,7 @@
 
 	<patternset id="pattern.text">
 		<include name="**/*.action" />
+		<include name="**/*.atom" />
 		<include name="**/*.css" />
 		<include name="**/*.filter" />
 		<include name="**/*.html" />

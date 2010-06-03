@@ -12,6 +12,7 @@
 	<tstamp>
 		<format property="project.build.year" pattern="yyyy" />
 		<format property="project.build.time" pattern="yyyy-MM-dd HH:mm:ss" />
+		<format property="project.build.timestamp" pattern="yyyy-MM-dd'T'HH:mm:ss'Z'" timezone="GMT+0" />
 	</tstamp>
 
 	<echoproperties prefix="project" />
@@ -192,6 +193,7 @@
 
 			<replacefilter token="@PROJECT_AUTHOR@" value="${project.author}" />
 			<replacefilter token="@PROJECT_BUILD_TIME@" value="${project.build.time}" />
+			<replacefilter token="@PROJECT_BUILD_TIMESTAMP@" value="${project.build.timestamp}" />
 			<replacefilter token="@PROJECT_BUILD_YEAR@" value="${project.build.year}" />
 			<replacefilter token="@PROJECT_DEBUG@" value="${project.debug}" />
 			<replacefilter token="@PROJECT_DESCRIPTION@" value="${project.description}" />

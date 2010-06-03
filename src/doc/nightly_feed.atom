@@ -14,7 +14,7 @@
 		<title>Lastest builds</title>
 		<updated>@PROJECT_BUILD_TIMESTAMP@</updated>
 		<content type="xhtml">
-			<div xmlns="http://www.w3.org/1999/xhtml">>
+			<div xmlns="http://www.w3.org/1999/xhtml">
 				<h1>Helianthus.annuus nightly builds</h1>
 				<ul>
 					<li>version: @PROJECT_VERSION@</li>

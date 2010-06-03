@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:base="http://helianthus-annuus.appspot.com/">
+	<author>
+		<name>@PROJECT_AUTHOR@</name>
+	</author>
+	<id>urn:uuid:682c4b7b-0b3e-4d1f-8b69-d34098dba696</id>
+	<link rel="self" href="nightly_feed.atom" />
+	<title>Helianthus.annuus nightly builds</title>
+	<updated>@PROJECT_BUILD_TIMESTAMP@</updated>
+
+	<entry>
+		<id>urn:uuid:41bd8dc1-26ac-43a5-a7c0-7d6f6c5959f9</id>
+		<link rel="alternate" href="nightly.html" />
+		<title>Lastest builds</title>
+		<updated>@PROJECT_BUILD_TIMESTAMP@</updated>
+		<content type="xhtml">
+			<div xmlns="http://www.w3.org/1999/xhtml">>
+				<h1>Helianthus.annuus nightly builds</h1>
+				<ul>
+					<li>version: @PROJECT_VERSION@</li>
+					<li>build time: @PROJECT_BUILD_TIME@</li>
+				</ul>
+				<ul>
+					<li><a href="beta/annuus.js">annuus.js</a></li>
+					<li><a href="beta/annuus.xpi">annuus.xpi</a></li>
+					<li><a href="beta/annuus.crx">annuus.crx</a></li>
+					<li><a href="beta/annuus.m2f">annuus.m2f</a></li>
+					<li><a href="beta/annuus.user.js">annuus.user.js</a></li>
+					<li><a href="beta/annuus.privoxy.zip">annuus.privoxy.zip</a></li>
+				</ul>
+			</div>
+		</content>
+	</entry>
+
+</feed>

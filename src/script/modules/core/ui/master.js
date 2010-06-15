@@ -36,7 +36,7 @@ annuus.addModules({
 				.appendTo('#an');
 
 				var overlays = $('#an-master-overlays > div');
-				var animating;
+				var show;
 				$('<img/>', {
 					id: 'an-master-switch',
 					title: '左鍵設換面板 | 中鍵設換開關',
@@ -47,29 +47,23 @@ annuus.addModules({
 
 						switch(event.which) {
 						case 1:
-							if(animating || !profile.status) return;
-							animating = true;
+							if(!profile.status) return;
 
-							var shown = overlays.height();
+							show = !show;
 							$.each([3,2,1,0], function(i, j)
 							{
-								var index = shown ? j : i;
+								var index = show ? i : j;
 								var props = {};
-								var side = index % 2 === 0 ? 'height' : 'width';
-								props[side] = shown ? 0 : '100%';
-								$.timeout(i * 200, function()
+								props[index % 2 === 0 ? 'height' : 'width'] = show ? '100%' : 0;
+								$.timeout('master-overlay-' + i, i * 200, function()
 								{
-									overlays.eq(index).animate(props, { duration: 500, easing: 'easeOutSine', complete: function()
+									overlays.eq(index).stop(true).animate(props, { duration: 500, easing: 'easeOutSine', complete: i === 3 && function()
 									{
-										if(index === 3) {
-											$(annuus).trigger('master-toggle', $('#an-master-container').toggle('fade'));
-										}
-										if(i === 3) {
-											animating = false;
-										}
+										$('#an-master-container').stop(true)[show ? 'show' : 'hide']('fade');
 									}});
 								});
 							});
+
 							break;
 						case 2:
 							event.preventDefault();
@@ -81,14 +75,6 @@ annuus.addModules({
 						}
 					}
 				}).appendTo('#an-master');
-			}
-		},
-
-		'8740e9a0': {
-			type: 'listener',
-			name: 'master-toggle',
-			js: function(job, container)
-			{
 			}
 		}
 	}

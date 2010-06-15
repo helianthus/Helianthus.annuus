@@ -18,7 +18,7 @@ if(mode === 'localStorage' && !window.localStorage || mode === 'sessionStorage' 
 }
 
 if(mode === 'flash') {
-	bolanderi.get('FLASH_API', $('<div />', { id: 'bolanderi-lso' }).appendTo('#an').toFlash('http://helianthus-annuus.googlecode.com/svn/other/lso.swf' + ($.browser.msie ? '?' + $.time() : ''))[0]);
+	bolanderi.get('FLASH_API', $('<div />', { id: 'bolanderi-lso' }).appendTo('#an').toFlash('http://helianthus-annuus.googlecode.com/svn/other/lso.swf' + ($.browser.msie ? '?' + $.now() : ''))[0]);
 }
 
 $(bolanderi).trigger('kernelready');

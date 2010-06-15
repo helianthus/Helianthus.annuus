@@ -199,7 +199,7 @@ $.extend({
 	first: function(target, collection, checkTVal, checkCVal, valResult)
 	{
 		if(checkCVal === undefined) checkCVal = 1;
-		var ret = $.time() + '__first';
+		var ret = $.now() + '__first';
 		var control = ret;
 
 		$.each(collection, function(cId, cVal)
@@ -267,11 +267,6 @@ $.extend({
 			ret.push(i);
 		}
 		return ret;
-	},
-
-	time: function(start)
-	{
-		return start ? new Date - start : +new Date;
 	}
 });
 

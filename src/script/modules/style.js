@@ -115,19 +115,19 @@ annuus.addModules({
 						['/images/bb_bookmarks/bookmark_hot.gif', 18, 18, 'bookmark--exclamation'],
 						['/images/bb_bookmarks/block.gif', 18, 18, 'cross-shield'],
 						['images/new.gif', 13, 16, 'new'],
-						['/images/bulbs/bluebulb.gif', 21, 30, 'bluebulb'],
-						['/images/bulbs/pinkbulb.gif', 21, 30, 'pinkbulb'],
 						['images/leftjust.gif', 18, 18, 'leftjust'],
 						['images/centered.gif', 18, 18, 'centered'],
 						['images/rightjust.gif', 18, 18, 'rightjust']
 					],
 					'$': [
+						['/images/bulbs/bluebulb.gif', 21, 30, 'bluebulb'],
+						['/images/bulbs/pinkbulb.gif', 21, 30, 'pinkbulb'],
 						['images/left_menu/p.jpg', 22, 21, 'p'],
 						['/faces/beer.gif', 16, 16, 'beer']
 					]
 				}, null, null, function(symbol, i, info)
 				{
-					$.rules('img[src{0}="{1[0]}"] { padding: 0 {1[1]}px {1[2]}px 0; width: 0; height: 0; background: url("{2.resources(images, {1[3]})}") no-repeat center; }', symbol, info, job);
+					$.rules('img[src][src{0}="{1[0]}"] { padding: 0 {1[1]}px {1[2]}px 0; width: 0; height: 0; background: url("{2.resources(images, {1[3]})}") no-repeat center; }', symbol, info, job);
 				});
 			}
 		}
@@ -163,7 +163,7 @@ annuus.addModules({
 '91f24db0-1e4e-4aa3-80cd-ac50dfb41a86':
 {
 	title: '設定背景',
-	pages: { off: [all] },
+	pages: { on: [all] },
 	options: {
 		bgAero: { title: 'Aero Glass背景', description: '暫時僅Opera支援', type: 'checkbox', defaultValue: true },
 		bgImageBody: { title: '圖片位置', type: 'text', defaultValue: 'http://i29.tinypic.com/kexdw2.jpg', access: 'public', requires: {
@@ -491,6 +491,8 @@ annuus.addModules({
 								{ border: 1px solid #{0[borderColorActive]}; background-color: #{0[bgColorActive]}; color: #{0[fcActive]}; } \
 							button, input, textarea \
 								{ border-radius: {0[cornerRadius]}; } \
+							input[type="image"] \
+								{ border-radius: 0; } \
 						',
 						options);
 					}

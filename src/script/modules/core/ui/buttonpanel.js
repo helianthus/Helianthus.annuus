@@ -91,7 +91,7 @@ annuus.addModules({
 						button.click(function(event)
 						{
 							event.preventDefault();
-							options.js.call(button, options, event);
+							options.js.call(button[0], options, event);
 						});
 					}
 				}

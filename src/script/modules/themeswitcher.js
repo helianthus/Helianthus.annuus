@@ -24,11 +24,18 @@ annuus.addModules({
 				select = $(select).appendTo('#an').selectmenu({ style: 'dropdown' }).change(function()
 				{
 					if(this.selectedIndex !== 0) {
-						var theme = job.resources('themes', $(this).val());
+						var theme = $.extend({
+							uriHKGLogo: '',
+							bgImageBody: ''
+						},
+						job.resources('themes', $(this).val())
+						);
+
 						job.options(theme);
+
 						$.rules(function()
 						{
-							$(annuus).trigger('theme', [theme, true]);
+							job.hooks('theme', null, theme);
 						});
 					}
 				});

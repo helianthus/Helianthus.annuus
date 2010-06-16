@@ -1,71 +1,20 @@
-(function()
-{
-
-function execGroups(eventType)
-{
-	var execJob = function(job, groupNo)
-	{
-		$(bolanderi).trigger('jobstart', [job, groupNo]);
-
-		try {
-			job.css && $.rules(job.css, job);
-			$[job.__ui](job);
-		}
-		catch(e) {
-			$.log('error', 'An error occurred: {0}. [{1}]', e.message, job.module.title);
-			$.debug({
-				module: job.module.title,
-				error: e,
-				job: job,
-				context: job.context()
-			});
-		}
-
-		$(bolanderi).trigger('jobend', [job, groupNo]);
-	};
-
-	for(var groupNo = bolanderi.get('RUN_AT')[eventType], until = groupNo + $.size(bolanderi.get('PRIORITY')) - 1; groupNo <= until; ++groupNo) {
-		var group = bolanderi.__jobGroups[groupNo];
-
-		$(bolanderi).trigger('groupstart', [groupNo]);
-
-		for(var i=0; i<group.length; ++i) {
-			var job = group[i];
-
-			if((job.frequency || 'once') === 'once') {
-				group.splice(i--, 1);
-			}
-
-			$.each(job.include || {}, function(i, name)
-			{
-				if(name in bolanderi.__components) {
-					execJob(bolanderi.__components[name], groupNo);
-					delete bolanderi.__components[name];
-				}
-			});
-
-			execJob(job, groupNo);
-		}
-
-		$(bolanderi).trigger('groupend', [groupNo]);
-	}
-}
-
 $.fn.work = function()
 {
 	bolanderi.__context = $(this[0]);
 
+	bolanderi.__execGroups(0);
+
 	$(bolanderi).trigger('document_start');
 
-	execGroups('document_start');
+	bolanderi.__execGroups('document_start');
 
 	$(bolanderi).one('document_end', function()
 	{
-		execGroups('document_end');
+		bolanderi.__execGroups('document_end');
 
 		$(bolanderi).one('window_loaded', function()
 		{
-			execGroups('window_loaded');
+			bolanderi.__execGroups('window_loaded');
 
 			$.log('info', 'bolanderi() completed successfully.');
 		});
@@ -106,5 +55,3 @@ $(window).one('load', function()
 		}
 	}, 10);
 });
-
-})();

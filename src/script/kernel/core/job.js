@@ -37,12 +37,12 @@ bolanderi.Job.prototype = {
 		{
 			var dataDef = $.dig(this.module, dataType, id);
 
-			if(!dataDef && typeof $.dig(bolanderi.__storage.get(), 'publicData', dataType, id) === 'undefined') {
+			/*if(!dataDef && typeof $.dig(bolanderi.__storage.get(), 'publicData', dataType, id) === 'undefined') {
 				$.log('warn', 'public {0} with id "{1}" does not exist.', dataType, id);
 				return;
-			}
+			}*/
 
-			var container = $.make.apply(null, paths[dataDef ? dataDef.access || 'protected' : 'public']);
+			var container = $.make.apply(null, paths[dataDef ? dataDef.access || 'protected' : 'public'].concat({}));
 
 			if(value === null) {
 				delete container[id];
@@ -76,8 +76,30 @@ bolanderi.Job.prototype = {
 		}
 		else {
 			data[name] = value;
-			return this;
 		}
+		return this;
+	},
+
+	hooks: function(target, name)
+	{
+		if(name === undefined) {
+			return bolanderi.__hooks[target];
+		}
+		else {
+			var params = [].slice.call(arguments, 2);
+			$.digEach(bolanderi.__hooks, target, name, null, function(target, name, i, job)
+			{
+				if(job) {
+					job.css && $.rules(job.css, job);
+					job.js && job.js.apply(bolanderi.__context, [job].concat(params));
+
+					if(job.frequency !== 'always') {
+						bolanderi.__hooks[target][name][i] = null;
+					}
+				}
+			});
+		}
+		return this;
 	},
 
 	options: function(id, value)
@@ -88,12 +110,5 @@ bolanderi.Job.prototype = {
 	resources: function()
 	{
 		return $.dig([bolanderi.__resources].concat([].slice.call(arguments)));
-	},
-
-	status: function(status)
-	{
-		$.make(bolanderi.__storage.get({ savedOrDefault: 'saved' }), 'privateData', this.module.id, this.module.__pageCode).status = status ? 1 : 0;
-		bolanderi.__storage.save();
-		return this;
 	}
 };

@@ -1,15 +1,6 @@
 (function()
 {
 
-function wrapListener(job)
-{
-	$(bolanderi)[job.frequency === 'always' ? 'bind' : 'one'](job.name, function(event)
-	{
-		job.css && $.rules(job.css, job);
-		job.js && job.js.apply(bolanderi.__context[0], [job].concat([].slice.call(arguments, 1)));
-	});
-}
-
 function wrapUI(job)
 {
 	return function(options)
@@ -56,9 +47,6 @@ $(bolanderi).one('storageready', function()
 			var ret;
 			var params = [].concat(requirement.params);
 			switch(requirement.type) {
-				case 'api':
-					ret = !!$.dig([$].concat(params[0].split('.')));
-					break;
 				case 'module':
 					ret = isModuleOn(bolanderi.get('MODULES')[params[0]]);
 					break;
@@ -76,11 +64,11 @@ $(bolanderi).one('storageready', function()
 		});
 	};
 
-	bolanderi.__components = {};
-	bolanderi.__resources = {};
-	var pendingModules = [];
-	var pendingTasks = [];
-	var passedActions = [];
+	var jobGroups = {};
+	$.each($.range(0, $.size(bolanderi.get('RUN_AT')) * $.size(bolanderi.get('PRIORITY'))), function(i, groupNo)
+	{
+		jobGroups[groupNo] = [];
+	});
 
 	$.each(bolanderi.get('MODULES'), function(moduleId, module)
 	{
@@ -88,55 +76,94 @@ $(bolanderi).one('storageready', function()
 		{
 			if(pageCode & docPageCode) {
 				module.__pageCode = pageCode;
-				if(isModuleOn(module)) {
-					pendingModules.push(module);
+				if(isModuleOn(module) && isRequirementsMet(module)) {
+					$.each(module.tasks, function(id, task)
+					{
+						if((task.page === undefined || task.page & docPageCode) && isRequirementsMet(task)) {
+							jobGroups[
+								task.type in { undefined:1, action:1 } || task.run_at || task.priority
+								? bolanderi.get('RUN_AT')[task.run_at || 'document_end'] + bolanderi.get('PRIORITY')[task.priority || 'normal']
+								: 0
+							].push(new bolanderi.Job(task));
+						}
+					});
 				}
 				return false;
 			}
 		});
 	});
 
-	do {
-		var modLen = pendingModules.length;
-		var taskLen = pendingTasks.length;
+	var components = {};
+	bolanderi.__hooks = {};
+	bolanderi.__resources = {};
 
-		for(var i = pendingModules.length; i--;) {
-			if(isRequirementsMet(pendingModules[i])) {
-				$.each(pendingModules.splice(i, 1)[0].tasks, function(id, task)
-				{
-					if(task.page === undefined || task.page & docPageCode) {
-						pendingTasks.push(task);
-					}
-				});
-			}
+	bolanderi.__execGroups = function(eventType)
+	{
+		if(eventType === 0) {
+			var groupNo = 0;
+			var until = 0;
+		}
+		else {
+			var groupNo = bolanderi.get('RUN_AT')[eventType];
+			var until = groupNo + $.size(bolanderi.get('PRIORITY')) - 1;
 		}
 
-		for(var i = pendingTasks.length; i--;) {
-			if(isRequirementsMet(pendingTasks[i])) {
-				var job = new bolanderi.Job(pendingTasks.splice(i, 1)[0]);
+		for(; groupNo <= until; ++groupNo) {
+			var group = jobGroups[groupNo];
+
+			$(bolanderi).trigger('groupstart', [groupNo]);
+
+			for(var i=0; i<group.length; ++i) {
+				var job = group[i];
+
+				if(!(job.type in { undefined:1, action:1 }) || job.frequency !== 'always') {
+					group.splice(i--, 1);
+				}
+
+				if(job.include) {
+					if($.all(job.include, function(i, name)
+					{
+						return name in components;
+					})) {
+						$.digEach(components, job.include, function(name, component)
+						{
+							if(!component.__loaded) {
+								component.__loaded = true;
+								execJob(component, groupNo);
+							}
+						});
+						delete job.include;
+					}
+					else {
+						$.log('log', 'not all required components are found, task dropped. [{0}, {1}]', job.module.title, job.id);
+						continue;
+					}
+				}
 
 				switch(job.type) {
 					case undefined:
 					case 'action':
-						passedActions.push(job);
+						execJob(job, groupNo);
 						break;
 					case 'component':
-						if(job.name in bolanderi.__components) {
-							$.log('error', 'component name "{0}" already exists.', job.name);
+						if(job.name in components) {
+							$.log('error', 'component name "{0}" already exists. [{1}, {2}]', job.name, job.module.title, job.id);
 						}
-						job.__ui = 'auto';
-						bolanderi.__components[job.name] = job;
+						components[job.name] = job;
 						break;
-					case 'listener':
-						wrapListener(job);
+					case 'hook':
+						$.make(bolanderi.__hooks, job.target, job.name || '__default', []).push(job);
 						break;
 					case 'resource':
 						if(job.name in bolanderi.__resources) {
-							$.log('error', 'resource name "{0}" already exists.', job.name);
+							$.log('error', 'resource name "{0}" already exists. [{1}, {2}]', job.name, job.module.title, job.id);
 						}
 						bolanderi.__resources[job.name] = job.json;
 						break;
 					case 'ui':
+						if(job.name in $) {
+							$.log('error', 'ui name "{0}" already exists. [{1}, {2}]', job.name, job.module.title, job.id);
+						}
 						$[job.name] = wrapUI(job);
 						break;
 					case 'utility':
@@ -146,44 +173,45 @@ $(bolanderi).one('storageready', function()
 						job.js(job);
 						break;
 					default:
-						$.log('warn', 'unknown task type "{0}" encountered. [{1}, {2}]', job.type, module.title, job.id);
+						$.log('warn', 'unknown task type "{0}" encountered, task dropped. [{1}, {2}]', job.type, job.module.title, job.id);
 				}
 			}
+
+			$(bolanderi).trigger('groupend', [groupNo]);
 		}
 	}
-	while(modLen !== pendingModules.length || taskLen !== pendingTasks.length);
 
-	bolanderi.__jobGroups = {};
-	$.each($.range(1, $.size(bolanderi.get('RUN_AT')) * $.size(bolanderi.get('PRIORITY'))), function(i, groupNo)
+	var execJob = function(job, groupNo)
 	{
-		bolanderi.__jobGroups[groupNo] = [];
-	});
-
-	$.each(passedActions, function(i, job)
-	{
-		$.each([].concat(profile.privateData[job.module.id].tasks[job.id].ui || 'auto'), function(i, name)
+		if(!job.__ui && !$.any([].concat(profile.privateData[job.module.id].tasks[job.id].ui || 'auto'), function(i, name)
 		{
 			if(name in $) {
 				job.__ui = name;
-				return false;
+				return true;
 			}
-		});
-
-		if(!job.__ui) {
+		})) {
 			$.log('log', 'no registered ui found, task dropped. [{0}, {1}]', job.module.title, job.id);
 			return;
 		}
 
-		if(!$.all(job.include || {}, function(i, name)
-		{
-			return name in bolanderi.__components;
-		})) {
-			$.log('log', 'not all required components are found, task dropped. [{0}, {1}]', job.module.title, job.id);
-			return;
+		$(bolanderi).trigger('jobstart', [job, groupNo]);
+
+		try {
+			job.css && $.rules(job.css, job);
+			$[job.__ui](job);
+		}
+		catch(e) {
+			$.log('error', 'An error occurred: {0}. [{1}]', e.message, job.module.title);
+			$.debug({
+				module: job.module.title,
+				error: e,
+				job: job,
+				context: job.context()
+			});
 		}
 
-		bolanderi.__jobGroups[bolanderi.get('RUN_AT')[job.run_at || 'document_end'] + bolanderi.get('PRIORITY')[job.priority || 'normal']].push(job);
-	});
+		$(bolanderi).trigger('jobend', [job, groupNo]);
+	};
 });
 
 })();

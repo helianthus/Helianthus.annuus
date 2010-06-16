@@ -15,7 +15,7 @@ annuus.addModules({
 					"bgColorHeader":"000",
 					"fcHeader":"fff",
 					"borderColorContent":"000",
-					"bgColorContent":"fff",
+					"bgColorContent":"fafafa",
 					"fcContent":"000",
 					"borderColorDefault":"000",
 					"bgColorDefault":"fff",

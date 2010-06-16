@@ -23,7 +23,7 @@ $.each(bolanderi.get('MODULES'), function(moduleId, module)
 			if(dataSet.access === 'private') {
 				$.each(defaultData.privateData[moduleId], function(pageCode, pageSet)
 				{
-					$.make(pageSet, dataType)[dataId] = dataSet.defaultValue;
+					$.make(pageSet, dataType, dataId, dataSet.defaultValue);
 				});
 			}
 			else {
@@ -31,26 +31,26 @@ $.each(bolanderi.get('MODULES'), function(moduleId, module)
 					$.error('public {0} id "{0}" already exists. [{0}]', dataType, dataId, module.title);
 				}
 
-				$.make(dataSet.access === 'public' ? defaultData.publicData : defaultData.privateData[moduleId], dataType)[dataId] = dataSet.defaultValue;
+				$.make(dataSet.access === 'public' ? defaultData.publicData : defaultData.privateData[moduleId], dataType, dataId, dataSet.defaultValue);
 			}
 		});
 	});
 
-	$.each(module.tasks || {}, function(taskId, task)
+	$.each(module.tasks, function(taskId, task)
 	{
 		task.module = module;
 		task.id = taskId;
 		task.title = task.title || module.title;
 
-		if(!task.type || task.type === 'action') {
+		if(task.type in { undefined:1, action:1, component:1 }) {
 			if(task.frequency === 'always' && task.css) {
 				$.log('warn', '"css" property found in task with frequency "always", make sure this is intended. [{0}, {1}]', module.title, taskId);
 			}
 
-			$.make(defaultData.privateData[moduleId], 'tasks')[taskId] = {
+			$.make(defaultData.privateData[moduleId], 'tasks', taskId, {
 				ui: task.ui,
 				hotkey: task.default_hotkey
-			};
+			});
 		}
 	});
 });

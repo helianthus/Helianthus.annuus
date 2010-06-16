@@ -253,8 +253,8 @@ $.extend({
 
 	make: function(obj)
 	{
-		for(var i=1; i<arguments.length; ++i) {
-			obj = obj[arguments[i]] || (obj[arguments[i]] = {});
+		for(var i=1; i<arguments.length-1; ++i) {
+			obj = obj[arguments[i]] || (obj[arguments[i]] = i === arguments.length - 2 ? arguments[i+1] : {});
 		}
 		return obj;
 	},

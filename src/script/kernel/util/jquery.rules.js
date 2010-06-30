@@ -253,7 +253,7 @@ function compile(params)
 	{
 		return target.replace(/-\w/g, function($0)
 		{
-			return $0[1].toUpperCase();
+			return $0.toUpperCase();
 		});
 	};
 	var prefixes = ['', 'Moz', 'O', 'Webkit', 'Khtml'];

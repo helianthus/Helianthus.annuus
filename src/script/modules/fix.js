@@ -22,7 +22,7 @@ annuus.addModules({
 			js: function(job)
 			{
 				if($.uriSet().querySet.type === 'MB') {
-					job.context().find('td[colspan="5"]').attr('colspan', '100%');
+					job.context().find('td[colspan="5"]').attr('colspan', '6');
 				}
 			}
 		}

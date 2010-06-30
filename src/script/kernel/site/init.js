@@ -4,12 +4,11 @@ $(bolanderi).one('init', function()
 $.timeout('checkbody', function()
 {
 
-// Opera has a bug which breaks innerHTML when the node is not inside body
-if(window.opera && !document.body) {
+if(!document.body) {
 	return $.timeout('checkbody', 50);
 }
 
-$('<div />', { id: 'an' })[document.body ? 'prependTo' : 'appendTo'](document.body || document.documentElement);
+$('<div />', { id: 'an' }).prependTo(document.body);
 
 var mode = $.cookie('an_storagemode') || 'localStorage';
 

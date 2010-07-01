@@ -5,7 +5,7 @@ annuus.addModules({
 	title: 'Master UI',
 	pages: { core: [all] },
 	tasks: {
-		'4ea1dd56': {
+		'f869f121': {
 			run_at: 'document_start',
 			css: '\
 				#an-master { position: fixed; z-index: 20; } \
@@ -15,10 +15,16 @@ annuus.addModules({
 				.an-master-overlay-vertical { height: 0; } \
 				.an-master-overlay-right { left: auto; right: 0; } \
 				.an-master-overlay-bottom { top: auto; bottom: 0; } \
-				#an-master-container { display: none; width: 100%; height: 100%; } \
-				#an-master-container > * { position: absolute; } \
-				#an-master-switch { top: 10px; left: 10px; cursor: pointer; transition: transform 60s linear; } \
-				#an-master-switch:hover { transform: rotate(3600deg); } \
+				#an-master-switch { top: 10px; left: 10px; cursor: pointer; } \
+				\
+				#an-master-container { display: none; position: fixed; top: 5%; right: 5%; bottom: 5%; left: 200px; } \
+				#an-master-container > * { height: 100%; box-sizing: border-box; } \
+				#an-master-nav { float: right; width: 150px; text-align: center; } \
+				#an-master-nav a:focus { outline: 0; } \
+				#an-master-panels { margin-right: 160px; } \
+				#an-master-panels > div { display: none; height: 100%; position: relative; } \
+				#an-master-panels > div > h3 { box-sizing: border-box; height: 2em; line-height: 2em; text-indent: 0.5em; } \
+				#an-master-panels > div > div { box-sizing: border-box; position: absolute; top: 2em; bottom: 0; left: 0; right: 0; overflow: auto; } \
 			',
 			js: function(job)
 			{
@@ -30,7 +36,10 @@ annuus.addModules({
 							<div class="ui-widget-overlay an-master-overlay-vertical an-master-overlay-bottom"></div> \
 							<div class="ui-widget-overlay an-master-overlay-horizontal"></div> \
 						</div> \
-						<div id="an-master-container"></div> \
+						<div id="an-master-container"> \
+							<ul id="an-master-nav"></ul> \
+							<div id="an-master-panels" class="ui-widget ui-widget-content ui-corner-all"></div> \
+						</div> \
 					</div> \
 				')
 				.appendTo('#an');
@@ -50,16 +59,24 @@ annuus.addModules({
 							if(!profile.status) return;
 
 							show = !show;
+
+							if(show) {
+							}
+							else {
+								$('#an-master-container').stop(true).fadeOut();
+							}
+
 							$.each([3,2,1,0], function(i, j)
 							{
 								var index = show ? i : j;
 								var props = {};
 								props[index % 2 === 0 ? 'height' : 'width'] = show ? '100%' : 0;
+
 								$.timeout('master-overlay-' + i, i * 200, function()
 								{
-									overlays.eq(index).stop(true).animate(props, { duration: 500, easing: 'easeOutSine', complete: i === 3 && function()
+									overlays.eq(index).stop(true).animate(props, { duration: 500, easing: 'easeOutSine', complete: i === 3 && show && function()
 									{
-										$('#an-master-container').stop(true)[show ? 'show' : 'hide']('fade');
+										show && $('#an-master-container').stop(true).fadeTo(600, 1);
 									}});
 								});
 							});
@@ -75,6 +92,34 @@ annuus.addModules({
 						}
 					}
 				}).appendTo('#an-master');
+
+				$('#an-master-nav').menu({
+					select: function(event, ui)
+					{
+						$('#an-master-panels > div').hide().eq(ui.item.index()).show();
+					}
+				});
+
+				$('#an-master-panels').fixScroll('h3+div');
+			}
+		},
+
+		'4ea1dd56': {
+			type: 'ui',
+			name: 'master',
+			add: {
+				js: function(job, options)
+				{
+					$('#an-master-nav')
+					.append($.format('<li><a href="{0}">{1}</a></li>', annuus.get('DUMMY_HREF'), options.title))
+					.menu('refresh');
+
+					options.primary.css && $.rules(options.primary.css, options);
+
+					$($.format('<div><h3 class="ui-helper-reset ui-widget-header ui-corner-top">{0}</h3></div>', options.title))
+					.append($('<div/>').append(options.primary.js()))
+					.appendTo('#an-master-panels');
+				}
 			}
 		}
 	}

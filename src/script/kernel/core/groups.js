@@ -22,6 +22,7 @@ $.auto = wrapUI({
 	add: {
 		js: function(job, options)
 		{
+			options.css && $.rules(options.css, options);
 			options.js && options.js.call(bolanderi.__context[0], options);
 		}
 	}
@@ -80,6 +81,16 @@ $(bolanderi).one('storageready', function()
 					$.each(module.tasks, function(id, task)
 					{
 						if((task.page === undefined || task.page & docPageCode) && isRequirementsMet(task)) {
+							if($.any(['run_at', 'priority'], function(i, prop)
+							{
+								if(prop in task && !(task[prop] in bolanderi.get(prop.toUpperCase()))) {
+									$.log('warn', 'unknown {0} type "{1}" encountered, task dropped. [{2}, {3}]', prop, task[prop], module.title, task.id);
+									return true;
+								}
+							})) {
+								return;
+							}
+
 							jobGroups[
 								task.type in { undefined:1, action:1 } || task.run_at || task.priority
 								? bolanderi.get('RUN_AT')[task.run_at || 'document_end'] + bolanderi.get('PRIORITY')[task.priority || 'normal']
@@ -197,7 +208,6 @@ $(bolanderi).one('storageready', function()
 		$(bolanderi).trigger('jobstart', [job, groupNo]);
 
 		try {
-			job.css && $.rules(job.css, job);
 			$[job.__ui](job);
 		}
 		catch(e) {

@@ -35,6 +35,9 @@ $.event.special.click = {
 	}
 };
 
+// the best href I have found so far to avoid middle click to open a new tab
+annuus.get('DUMMY_HREF', $.browser.opera && 'javascript:window.close()' || 'javascript:');
+
 // clear all script tags to prevent js re-execution
 $(function()
 {

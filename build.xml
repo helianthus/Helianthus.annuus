@@ -26,6 +26,7 @@
 		<include name="**/*.js" />
 		<include name="**/*.json" />
 		<include name="**/*.manifest" />
+		<include name="**/*.plist" />
 		<include name="**/*.rdf" />
 		<include name="**/*.xml" />
 		<include name="**/*.xul" />
@@ -77,7 +78,8 @@
 				<stripjavacomments />
 				<striplinebreaks />
 				<tokenfilter>
-					<replacestring from="&apos;" to="&quot;" />
+					<replaceregex pattern="url([^)]+)" replace="none" flags="g" />
+					<replacestring from="&apos;" to="\&apos;" />
 				</tokenfilter>
 			</filterchain>
 
@@ -178,6 +180,12 @@
 			<fileset file="${dir.build}/${project.name.short}.js" />
 		</copy>
 
+		<!-- safariextension -->
+		<copy todir="${dir.build}/annuus.safariextension">
+			<fileset dir="src/safariextz" />
+			<fileset file="${dir.build}/${project.name.short}.js" />
+		</copy>
+
 		<!-- privoxy -->
 		<copy todir="${dir.build}/privoxy">
 			<fileset dir="src/privoxy" />
@@ -199,6 +207,7 @@
 			<replacefilter token="@PROJECT_DEBUG@" value="${project.debug}" />
 			<replacefilter token="@PROJECT_DESCRIPTION@" value="${project.description}" />
 			<replacefilter token="@PROJECT_FILE_URL@" value="${project.file.url}" />
+			<replacefilter token="@PROJECT_IDENTIFIER@" value="${project.identifier}" />
 			<replacefilter token="@PROJECT_LICENSE@" value="${project.license}" />
 			<replacefilter token="@PROJECT_LICENSE_URL@" value="${project.license.url}" />
 			<replacefilter token="@PROJECT_NAME@" value="${project.name}" />

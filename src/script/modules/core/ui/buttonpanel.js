@@ -12,7 +12,7 @@ annuus.addModules({
 				css: '\
 					#an-buttonpanel { display: table; position: fixed; height: 100%; } \
 					#an-buttonpanel-positioner { display: table-cell; height: 100%; min-width: 10px; vertical-align: middle; } \
-					#an-buttonpanel-ui { display: none; box-sizing: border-box; border-width: 0.5em 0; padding: 0.2em 0; } \
+					#an-buttonpanel-ui { display: none; border-width: 0.5em 0; padding: 0.2em 0; } \
 					#an-buttonpanel-container { box-sizing: border-box; height: 100%; min-width: 100px; border-left-width: 5px; overflow: hidden; font-size: 75%; } \
 					#an-buttonpanel-container > .ui-button { display: block; margin: 3px 0 0 0; border-left: 0; border-top-left-radius: 0; border-bottom-left-radius: 0; text-align: left; } \
 					#an-buttonpanel-container > .ui-button:first-child { margin: 0; } \
@@ -42,7 +42,7 @@ annuus.addModules({
 							}
 						}
 					})
-					.click(function()
+					.delegate('.ui-button', 'click', function()
 					{
 						entered = false;
 						toggleCheck(true);
@@ -82,7 +82,7 @@ annuus.addModules({
 				{
 					var button = $('<a />', {
 						text: options.title,
-						href: options.href || $.browser.opera && 'javascript:window.close()' || 'javascript:'
+						href: options.href || annuus.get('DUMMY_HREF')
 					})
 					.button()
 					.appendTo('#an-buttonpanel-container');
@@ -91,6 +91,7 @@ annuus.addModules({
 						button.click(function(event)
 						{
 							event.preventDefault();
+							options.css && $.rules(options.css, options);
 							options.js.call(button[0], options, event);
 						});
 					}

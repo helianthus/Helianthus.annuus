@@ -251,11 +251,17 @@ $.extend({
 		return size;
 	},
 
-	make: function(obj)
+	make: function()
 	{
-		for(var i=1; i<arguments.length-1; ++i) {
-			obj = obj[arguments[i]] || (obj[arguments[i]] = i === arguments.length - 2 ? arguments[i+1] : {});
+		var args = [].slice.call(arguments);
+		var overwrite = typeof args === 'boolean' ? args.shift() : false;
+		var obj = args.shift();
+
+		while(args.length > 1) {
+			var name = args.shift();
+			obj = !(args.length === 1 && overwrite) && obj[name] || (obj[name] = args.length === 1 || overwrite ? args[0] : {});
 		}
+
 		return obj;
 	},
 
@@ -300,6 +306,17 @@ $.fn.extend({
 		}
 	},
 */
+	fixScroll: function(selector)
+	{
+		return this.mousewheel(function(event, delta)
+		{
+			var target = (selector ? $(event.target).closest(selector) : this)[0];
+			if(delta > 0 ? target.scrollTop === 0 : target.scrollTop >= target.scrollHeight - target.clientHeight) {
+				event.preventDefault();
+			}
+		});
+	},
+
 	toFlash: function(url, attrSet, paramSet)
 	{
 		attrSet = $.extend({ width: 0, height: 0, id: this[0].id || 'jquery-flash-' + $.time() }, attrSet);

@@ -28,6 +28,11 @@
 			var undefined;
 			var addSignAtLast = 0;
 
+			if(_0) {
+				fill = '0';
+				align = '=';
+			}
+
 			if(!type) {
 				type = !$.isNumber(target) ? 's' : 'g';
 			}
@@ -79,10 +84,7 @@
 				}
 
 				if(sign) {
-					if(_0 || align === '=') {
-						if(_0) {
-							fill = '0';
-						}
+					if(align === '=') {
 						align = '>';
 						addSignAtLast = 1;
 					}
@@ -149,7 +151,7 @@
 					$.each(props.replace(/(?:^[.[]|[\]\) ])/g, '').split(/[.[]/), function(i, prop)
 					{
 						prop = prop.split('(');
-						if(prop[1]) {
+						if(prop.length === 2) {
 							replacement = replacement[prop[0]].apply(replacement, prop[1].split(','));
 						}
 						else {

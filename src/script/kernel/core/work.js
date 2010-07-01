@@ -16,7 +16,7 @@ $.fn.work = function()
 		{
 			bolanderi.__execGroups('window_loaded');
 
-			$.log('info', 'bolanderi() completed successfully.');
+			$.log('log', 'work() completed successfully.');
 		});
 
 		if(bolanderi.get('WINDOW_IS_LOADED')) {

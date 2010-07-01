@@ -11,7 +11,7 @@ annuus.addModules({
 		'e6d2ea58': {
 			run_at: 'document_start',
 			css: '\
-				body, td, p, .ui-widget, [class][class] { font-family: {0.options(ffDefault)}; } \
+				body, td, p, textarea, .ui-widget, #aspnetForm [class] { font-family: {0.options(ffDefault)}; } \
 				td[style*="font-family:"] { font-family: {0.options(ffDefault)} !important; } \
 			'
 		}

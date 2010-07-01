@@ -27,20 +27,20 @@ $.extend({
 	{
 		if(bolanderi.get('DEBUG_MODE')) {
 			if(window.console) {
+				// webkit throws error with this
+				// (console.debug || console.log)(...)
 				console[console.debug ? 'debug' : 'log'](arguments.length === 1 ? arguments[0] : arguments);
 			}
 			else {
 				$.timeout(100, [].slice.call(arguments), $.debug);
-				//alert([].slice.call(arguments).join(' '));
 			}
 		}
 	},
-	error: function(msg)
+	error: function()
 	{
-		msg = '[@PROJECT_NAME_SHORT@] ' + msg;
-		throw new Error($.format.apply(null, arguments));
+		$.log.apply($, ['error'].concat([].slice.call(arguments)));
 	},
-	log: function(type, msg)
+	log: function(type)
 	{
 		if(!/debug|error|info|log|warn/.test(type)) {
 			$.log('warn', 'unknown notification type "{0}" encountered, falls back to "log".', type);
@@ -51,11 +51,22 @@ $.extend({
 			return;
 		}
 
-		msg = '[@PROJECT_NAME_SHORT@] ' + msg;
-		msg = $.format.apply(null, [].slice.call(arguments, 1));
+		var msg = $.format.apply(null, [].slice.call(arguments, 1));
 
-		if(window.console) {
-			if(!console[type]) {
+		$.make($.log, 'archives', []).push([type, msg]);
+		$(bolanderi).trigger('log', [type, msg]);
+
+		if(type === 'log') {
+			return;
+		}
+
+		msg = '[@PROJECT_NAME_SHORT@] ' + msg;
+
+		if(type === 'error') {
+			throw new Error(msg);
+		}
+		else if(window.console) {
+			if(console[type]) {
 				type = 'log';
 			}
 			console[type](msg);

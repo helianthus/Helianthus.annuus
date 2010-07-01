@@ -1,18 +1,11 @@
-if(window.opera && window.opera.addEventListener) {
-	(function()
-	{
-		var blockScripts = function(event)
-		{
-			if(event.element.src
-			? /pagead|imrworldwide/.test(event.element.src)
-			: /pixelinteractivemedia|imrworldwide|google-analytics|_getTracker|\(ads|InlineAd|PageAd|GoogleAd|google_ad/.test(event.element.text)
-			) event.preventDefault();
-		};
+document.addEventListener && (function()
+{
+	var keywords = /pixel-?hk|imrworldwide|google-analytics|googlesyndication|_getTracker|(?:Page|Inline|Google|\b)[Aa]ds?\b/;
 
-		window.opera.addEventListener('BeforeScript', blockScripts, false);
-		window.addEventListener('DOMContentLoaded', function()
-		{
-			window.opera.removeEventListener('BeforeScript', blockScripts, false);
-		}, false);
-	})();
-}
+	(window.opera || document).addEventListener(window.opera ? 'BeforeScript' : 'beforeload', function(event)
+	{
+		if(keywords.test(event.url || event.element.src || event.element.text)) {
+			event.preventDefault();
+		}
+	}, true);
+})();

@@ -60,11 +60,7 @@ annuus.addModules({
 
 							show = !show;
 
-							if(show) {
-							}
-							else {
-								$('#an-master-container').stop(true).fadeOut();
-							}
+							$('#an-master-container').stop(true)[show ? 'fadeTo' : 'fadeOut'](1000, show && 1);
 
 							$.each([3,2,1,0], function(i, j)
 							{
@@ -72,12 +68,9 @@ annuus.addModules({
 								var props = {};
 								props[index % 2 === 0 ? 'height' : 'width'] = show ? '100%' : 0;
 
-								$.timeout('master-overlay-' + i, i * 200, function()
+								$.timeout('master-overlay-' + i, i * 100, function()
 								{
-									overlays.eq(index).stop(true).animate(props, { duration: 500, easing: 'easeOutSine', complete: i === 3 && show && function()
-									{
-										show && $('#an-master-container').stop(true).fadeTo(600, 1);
-									}});
+									overlays.eq(index).stop(true).animate(props, 400, 'easeOutSine');
 								});
 							});
 

@@ -1,6 +1,6 @@
 document.addEventListener && (function()
 {
-	var keywords = /pixel-?hk|imrworldwide|google-analytics|googlesyndication|_getTracker|(?:Page|Inline|Google|\b)[Aa]ds?\b/;
+	var keywords = /pixel-?hk|imrworldwide|googlesyndication|_getTracker|(?:Page|Inline|Google|\b)[Aa]ds?\b/;
 
 	(window.opera || document).addEventListener(window.opera ? 'BeforeScript' : 'beforeload', function(event)
 	{

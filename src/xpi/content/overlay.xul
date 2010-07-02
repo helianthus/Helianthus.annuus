@@ -3,6 +3,7 @@
 
 <overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 	<script type="application/x-javascript" src="overlay.js" />
+	<script type="application/x-javascript" src="adblock.js" />
 	<statusbar id="status-bar">
 		<statusbarpanel id="@PROJECT_NAME_SHORT@-overlay" class="statusbarpanel-iconic" tooltiptext="@PROJECT_NAME@" />
 	</statusbar>

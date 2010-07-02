@@ -5,18 +5,22 @@ window.addEventListener('load', function()
 	var overlay = document.getElementById('@PROJECT_NAME_SHORT@-overlay');
 	var rTarget = /@PROJECT_TARGET_REGEX@/i;
 	var noop = function(){};
+	var event = document.createEvent('Event');
+	event.initEvent('AnnuusStatusChange', false, false);
 
 	function setStatus()
 	{
 		overlay.src = status ? 'chrome://@PROJECT_NAME_SHORT@/skin/status-on.png' : 'chrome://@PROJECT_NAME_SHORT@/skin/status-off.png';
+		event.status = status;
+		document.dispatchEvent(event);
 	}
 	setStatus();
 
 	overlay.addEventListener('command', function()
 	{
 		status = !status;
-		setStatus();
 		pref.setBoolPref('status', status);
+		setStatus();
 	}, false);
 
 	gBrowser.addProgressListener({

@@ -62,22 +62,7 @@ $.extend({
 
 		return ret;
 	},
-/*
-	bitmasks: function(flag, masks)
-	{
-		if($.isArray(masks)) {
-			for(var i=0; i<masks.length; ++i) {
-				if(flag & masks[i]) return masks[i];
-			}
-		}
-		else {
-			for(var mask in masks) {
-				if(flag & mask) return mask;
-			}
-		}
-		return null;
-	},
-*/
+
 	cookie: function(name, val, topLevel)
 	{
 		if(!name) {
@@ -138,16 +123,6 @@ $.extend({
 		return target;
 	},
 
-	correct: function(target)
-	{
-		if($.isNumber(target)) {
-			return +target;
-		}
-		else {
-			return target;
-		}
-	},
-
 	dig: function(obj)
 	{
 		if(arguments.length === 1 && $.isArray(obj)) {
@@ -195,38 +170,7 @@ $.extend({
 
 		return target;
 	},
-/*
-	first: function(target, collection, checkTVal, checkCVal, valResult)
-	{
-		if(checkCVal === undefined) checkCVal = 1;
-		var ret = $.now() + '__first';
-		var control = ret;
 
-		$.each(collection, function(cId, cVal)
-		{
-			var object = checkCVal ? cVal : cId;
-			if(checkTVal) {
-				$.each(target, function(tId, tVal)
-				{
-					if(tVal === object) {
-						ret = valResult ? tVal : tId;
-						return false;
-					}
-				});
-				if(ret !== control) {
-					return false;
-				}
-			}
-			else {
-				if(object in target) {
-					ret = valResult ? target[object] : object;
-					return false;
-				}
-			}
-		});
-		return ret;
-	},
-*/
 	isNumber: function(target)
 	{
 		return !isNaN(+target);
@@ -239,7 +183,7 @@ $.extend({
 
 	isGarbage: function(target)
 	{
-		return target == null || target === NaN;
+		return target == null || isNaN(target);
 	},
 
 	size: function(target)
@@ -277,35 +221,6 @@ $.extend({
 });
 
 $.fn.extend({
-/*
-	attrFilter: function(name, is, not)
-	{
-		var jThis = this;
-
-		if($.isPlainObject(name)) {
-			$.each(name, function(name, filter)
-			{
-				jThis = jThis.attrFilter.apply(jThis, [name].concat(filter));
-			});
-
-			return jThis;
-		}
-		else {
-			return jThis.filter(function()
-			{
-				var val = $(this).attr(name), stay = true;
-				$.each([is, not], function(i, regex)
-				{
-					if(stay && regex) {
-						stay = (typeof regex === 'string' ? new RegExp(regex) : regex).test(val);
-						if(i === 1) stay = !stay;
-					}
-				});
-				return stay;
-			});
-		}
-	},
-*/
 	fixScroll: function(selector)
 	{
 		return this.mousewheel(function(event, delta)
@@ -353,12 +268,7 @@ $.fn.extend({
 			return $(html).replaceAll(this);
 		}
 	},
-/*
-	outerhtml: function()
-	{
-		return this[0].outerHTML || $('<div />').append(this.eq(0).clone()).html());
-	},
-*/
+
 	up: function(selector, th)
 	{
 		if(!th) th = 1;

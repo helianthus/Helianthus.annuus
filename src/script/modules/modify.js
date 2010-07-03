@@ -27,7 +27,7 @@ annuus.addModules({
 	title: '移除引用半透明',
 	pages: { on: [view] },
 	requires: [
-		{ type: 'truthy', params: document.createElement('div').style.opacity !== undefined }
+		{ type: 'truthy', params: document.createElement('div').style.opacity != null }
 	],
 	tasks: {
 		'475b4b70': {

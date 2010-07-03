@@ -27,7 +27,7 @@ $.each(bolanderi.get('MODULES'), function(moduleId, module)
 				});
 			}
 			else {
-				if(dataSet.access === 'public' && $.dig(defaultData.publicData, dataType, dataId) !== undefined) {
+				if(dataSet.access === 'public' && $.dig(defaultData.publicData, dataType, dataId) != null) {
 					$.error('public {0} id "{0}" already exists. [{0}]', dataType, dataId, module.title);
 				}
 

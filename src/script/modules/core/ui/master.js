@@ -17,7 +17,7 @@ annuus.addModules({
 				.an-master-overlay-bottom { top: auto; bottom: 0; } \
 				#an-master-switch { top: 10px; left: 10px; cursor: pointer; } \
 				\
-				#an-master-container { display: none; position: fixed; top: 5%; right: 5%; bottom: 5%; left: 200px; } \
+				#an-master-container { display: none; position: fixed; top: 2%; right: 2%; bottom: 2%; left: 200px; } \
 				#an-master-container > * { height: 100%; box-sizing: border-box; } \
 				#an-master-nav { float: right; width: 150px; text-align: center; } \
 				#an-master-nav a:focus { outline: 0; } \

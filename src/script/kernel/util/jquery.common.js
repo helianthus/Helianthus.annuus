@@ -41,7 +41,7 @@ $.extend({
 		*/
 	},
 
-	compile: function()
+	permute: function()
 	{
 		var args = [].slice.call(arguments);
 		var callback = args.pop();

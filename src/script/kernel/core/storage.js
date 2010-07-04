@@ -13,7 +13,7 @@ $.each(bolanderi.get('MODULES'), function(moduleId, module)
 
 	$.digEach(module.pages, null, null, function(status, i, pageCode)
 	{
-		defaultData.privateData[moduleId][pageCode] = { status: { disabled: -1, off: 0, on: 1, comp: 2, core: 3 }[status] };
+		defaultData.privateData[moduleId][pageCode] = { status: { disabled: -1, off: 0, on: 1, comp: 2, debug: 3, core: 4 }[status] };
 	});
 
 	$.each(['options', 'database'], function(i, dataType)

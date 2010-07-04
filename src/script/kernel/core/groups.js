@@ -36,8 +36,8 @@ $(bolanderi).one('storageready', function()
 	var isModuleOn = function(module)
 	{
 		return !!module && (
-		$.inArray(module.__pageCode, [].concat(module.pages.core || [], profile.status && module.pages.comp || [])) !== -1
-		|| profile.privateData[module.id][module.__pageCode].status >= (profile.status ? 1 : 3)
+		$.inArray(module.__pageCode, [].concat(module.pages.core || [], profile.status && module.pages.comp || [], profile.status && bolanderi.get('DEBUG_MODE') && module.pages.debug || [])) !== -1
+		|| profile.privateData[module.id][module.__pageCode].status === 1
 		);
 	};
 	var isRequirementsMet = function(target)
@@ -73,7 +73,7 @@ $(bolanderi).one('storageready', function()
 
 	$.each(bolanderi.get('MODULES'), function(moduleId, module)
 	{
-		$.digEach(module.pages, ['core', 'comp', 'on', 'off'], null, function(status, i, pageCode)
+		$.digEach(module.pages, ['core', 'debug', 'comp', 'on', 'off'], null, function(status, i, pageCode)
 		{
 			if(pageCode & docPageCode) {
 				module.__pageCode = pageCode;

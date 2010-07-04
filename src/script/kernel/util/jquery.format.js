@@ -23,10 +23,12 @@
 
 	var formatters = function(target, format)
 	{
-		format.replace(/^(?:\*(\d+))?(?:(.)?([<>=^]))?([ +-])?(#)?(0)?(\d+)?(,)?(?:.(\d+))?([bcdeEfgGFosxX%])?$/, function($0, repeat, fill, align, sign, _sharp, _0, width, _comma, precision, type)
+		format.replace(/^(?:\*(\d+))?(?:(.)?([<>=^]))?([ +-])?(#)?(0)?(\d+)?(,)?(?:\.(\d+))?([bcdeEfgGFosxX%])?$/, function($0, repeat, fill, align, sign, _sharp, _0, width, _comma, precision, type)
 		{
-			var undefined;
 			var addSignAtLast = 0;
+
+			var undefined;
+			precision = precision === '' ? undefined : precision;
 
 			if(_0) {
 				fill = '0';
@@ -64,13 +66,13 @@
 				}
 				else {
 					if(/e/i.test(type)) {
-						target = target.toExponential(precision || undefined);
+						target = target.toExponential(precision);
 					}
 					else {
 						if(type === '%') {
 							target = target * 100;
 						}
-						target = target[/g/i.test(type) ? 'toPrecision' : 'toFixed'](precision || undefined);
+						target = target[/g/i.test(type) ? 'toPrecision' : 'toFixed'](precision);
 					}
 				}
 

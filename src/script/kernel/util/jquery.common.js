@@ -183,7 +183,7 @@ $.extend({
 
 	isGarbage: function(target)
 	{
-		return target == null || isNaN(target);
+		return target == null || typeof target === 'number' && isNaN(target);
 	},
 
 	size: function(target)

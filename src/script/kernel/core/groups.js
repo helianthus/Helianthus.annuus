@@ -211,13 +211,7 @@ $(bolanderi).one('storageready', function()
 			$[job.__ui](job);
 		}
 		catch(e) {
-			$.log('error', 'An error occurred: {0}. [{1}]', e.message, job.module.title);
-			$.debug({
-				module: job.module.title,
-				error: e,
-				job: job,
-				context: job.context()
-			});
+			$.log('error', '{0} [{1}, {2}]', e.message, job.module.title, job.id);
 		}
 
 		$(bolanderi).trigger('jobend', [job, groupNo]);

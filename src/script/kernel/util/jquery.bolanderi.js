@@ -62,11 +62,8 @@ $.extend({
 
 		msg = '[@PROJECT_NAME_SHORT@] ' + msg;
 
-		if(type === 'error') {
-			throw new Error(msg);
-		}
-		else if(window.console) {
-			if(console[type]) {
+		if(window.console) {
+			if(!console[type]) {
 				type = 'log';
 			}
 			console[type](msg);

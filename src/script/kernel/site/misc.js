@@ -1,7 +1,5 @@
 document.domain = 'hkgolden.com';
 
-$.ajaxSetup({ cache: false });
-
 // jQuery's event.which normalization is flawed
 // fortunately event.button is always 0 for left click
 

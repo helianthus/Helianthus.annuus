@@ -1,6 +1,6 @@
 # Scripts
 FILTER: @PROJECT_NAME_SHORT@.js
-s`</head>`<script src="@PROJECT_FILE_URL@"></script>\n</head>`is
+s`</head>`<script id="@PROJECT_NAME_SHORT@-script" src="@PROJECT_FILE_URL@"></script>\n</head>`is
 
 # IE8 Re-enabler
 FILTER: annuus.ForceIE8

@@ -43,6 +43,7 @@ window.addEventListener('load', function()
 				var head = doc.getElementsByTagName('head');
 				var script = doc.createElement('script');
 
+				script.id = '@PROJOECT_NAME_SHORT@-script';
 				script.src = 'resource://@PROJECT_NAME_SHORT@/@PROJECT_NAME_SHORT@.js';
 
 				(function inject()

@@ -66,14 +66,14 @@ $(bolanderi).bind('groupend', function(event, groupNo)
 	}
 });
 
-var styles = {
-	pre: $('<style/>').prependTo('head'),
-	post: $('<style/>').appendTo('head')
-}
+var styles;
 
 function write()
 {
-	$.each(styles, function(pos, style)
+	$.each(styles || (styles = {
+		pre: $('<style id="annuus-style-pre" />').prependTo('head'),
+		post: $('<style id="annuus-style-post" />').appendTo('head')
+	}), function(pos, style)
 	{
 		var css = cssData[pos].stack.join('');
 

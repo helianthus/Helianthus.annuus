@@ -2,7 +2,7 @@
 	<package author="@PROJECT_AUTHOR@" description="@PROJECT_DESCRIPTION@" title="@PROJECT_NAME@" support_url="@PROJECT_URL@" version="@PROJECT_VERSION@"/>
 	<filterlist>
 		<group name="Scripts" enable="1">
-			<filter enable="1" name="@PROJECT_NAME_SHORT@.js" author="@PROJECT_AUTHOR@" type="text" comment="" action="3" priority="5" match="^" match_count="1" replace="&lt;script src=&quot;file:///$MAXPATH()/Filter/@PROJECT_NAME_SHORT@/scripts/@PROJECT_NAME_SHORT@.js&quot;&gt;&lt;/script&gt;" match_url="@PROJECT_TARGET_REGEX@" exclude_url="" bound="&lt;/(?:head|body)&gt;" max_bound_size="0" exclude="" keywords=""/>
+			<filter enable="1" name="@PROJECT_NAME_SHORT@.js" author="@PROJECT_AUTHOR@" type="text" comment="" action="3" priority="5" match="^" match_count="1" replace="&lt;script id=&quot;@PROJECT_NAME_SHORT@-script&quot; src=&quot;file:///$MAXPATH()/Filter/@PROJECT_NAME_SHORT@/scripts/@PROJECT_NAME_SHORT@.js&quot;&gt;&lt;/script&gt;" match_url="@PROJECT_TARGET_REGEX@" exclude_url="" bound="&lt;/(?:head|body)&gt;" max_bound_size="0" exclude="" keywords=""/>
 		</group>
 		<group name="IE8 Re-enabler" enable="1">
 			<filter enable="1" name="ForceIE8" author="@PROJECT_AUTHOR@" type="text" comment="" action="3" priority="5" match="$" match_count="1" replace="&lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=Edge&quot; /&gt;" match_url="@PROJECT_TARGET_REGEX@" exclude_url="" bound="&lt;head&gt;" max_bound_size="0" exclude="" keywords=""/>

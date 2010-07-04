@@ -4,6 +4,7 @@ if(/@PROJECT_TARGET_REGEX@/i.test(location.href))
 	{
 		if(status) {
 			var script = document.createElement('script');
+			script.id = '@PROJECT_NAME_SHORT@-script';
 			script.src = chrome.extension.getURL('@PROJECT_NAME_SHORT@.js');
 			document.getElementsByTagName('head')[0].appendChild(script);
 		}

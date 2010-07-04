@@ -23,7 +23,7 @@ annuus.addModules({
 					{
 						panel.prepend($.format(
 							'<li><pre>{1.getHours():02}:{1.getMinutes():02}:{1.getSeconds():02} <span class="an-log-{0}">[{0}] {2}</span></pre></li>',
-							type, new Date(), $.format.apply(null, [msg].concat([].slice.call(arguments, 2))).toString().replace(/</g, '&lt;')
+							type, new Date(), $.format([msg].concat([].slice.call(arguments, 2))).toString().replace(/</g, '&lt;')
 						));
 					}
 

@@ -127,7 +127,9 @@
 
 	$.format = function(target)
 	{
-		if(arguments.length === 1) return target;
+		if(arguments.length === 1) {
+			return typeof target === 'string' ? target : $.format.apply($, arguments);
+		}
 
 		var args = [].slice.call(arguments, 1);
 
@@ -136,7 +138,7 @@
 			var count = 0;
 			do {
 				var temp = mods;
-				mods = $.format.apply(null, [mods].concat(args));
+				mods = $.format([mods].concat(args));
 
 				if(++count === 10) {
 					$.debug(target, mods);

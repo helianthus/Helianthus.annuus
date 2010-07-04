@@ -91,7 +91,7 @@ var alternatives = [];
 
 function compile(params)
 {
-	return $.format.apply(null, params)
+	return $.format(params)
 	.replace(/\t+/g, '\n')
 	.replace(/\[style.?="[^"]*"\]/g, function(styleSelector)
 	{

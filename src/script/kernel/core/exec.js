@@ -8,16 +8,15 @@ function wrapService(service)
 {
 	var wrapper = function(job)
 	{
-		$.digEach(service, ['setup', 'add'], function(type, subTask)
-		{
-			if(type === 'setup' ? service.__created : job === null) {
-				return;
-			}
+		if((service.css || service.setup) && !service.__created) {
 			service.__created = true;
+			service.css && $.rules(service.css, service);
+			service.setup && service.setup(service);
+		}
 
-			subTask.css && $.rules(subTask.css, service);
-			subTask.js && subTask.js(service, job);
-		});
+		if(job !== null) {
+			service.add(service, job);
+		}
 	};
 
 	if(service.autorun) {
@@ -122,6 +121,10 @@ bolanderi.__execGroups = function(eventType)
 				case 'service':
 					if(job.name in $) {
 						$.log('error', 'service name "{0}" already exists. {1}', job.name, job.info());
+						break;
+					}
+					if(!job.add) {
+						$.log('error', 'service is missing "add" property. {0}', job.info());
 						break;
 					}
 					$[job.name] = wrapService(job);

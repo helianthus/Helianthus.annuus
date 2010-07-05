@@ -38,7 +38,7 @@ $.extend({
 	},
 	error: function()
 	{
-		$.log.apply($, ['error'].concat([].slice.call(arguments)));
+		throw new Error($.format(arguments));
 	},
 	log: function(type)
 	{
@@ -51,7 +51,7 @@ $.extend({
 			return;
 		}
 
-		var msg = $.format.apply(null, [].slice.call(arguments, 1));
+		var msg = $.format([].slice.call(arguments, 1));
 
 		$.make($.log, 'archives', []).push([type, msg]);
 		$(bolanderi).trigger('log', [type, msg]);

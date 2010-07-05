@@ -28,7 +28,7 @@
 			var addSignAtLast = 0;
 
 			var undefined;
-			precision = precision === '' ? undefined : precision;
+			precision = precision === '' ? null : precision;
 
 			if(_0) {
 				fill = '0';
@@ -66,13 +66,18 @@
 				}
 				else {
 					if(/e/i.test(type)) {
-						target = target.toExponential(precision);
+						target = precision === null ? target.toExponential() : target.toExponential(precision);
 					}
 					else {
 						if(type === '%') {
 							target = target * 100;
 						}
-						target = target[/g/i.test(type) ? 'toPrecision' : 'toFixed'](precision);
+						if(precision !== null) {
+							target = target.toFixed(precision);
+						}
+						if(type === '%') {
+							target += '%';
+						}
 					}
 				}
 
@@ -149,7 +154,7 @@
 
 			return mods.replace(/((?:[[.][^[.|!:]+)*)(?:\|([^:!]+))?(?:!([^:]+))?(?::(.+))?/, function($0, props, alt, convert, format)
 			{
-				var replacement = args[index];
+				var replacement = /{\d/.test(args[index]) ? $.format([args[index]].concat(args)) : args[index];
 
 				if(props) {
 					$.each(props.replace(/(?:^[.[]|[\]\) ])/g, '').split(/[.[]/), function(i, prop)

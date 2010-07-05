@@ -213,7 +213,6 @@ annuus.addModules({
 				/* highlighted background */ \
 				td[style*="background-color: #E9EC6C"] { border-color: #{0[borderColorHighlight]} !important; background-color: #{0[bgColorHighlight]} !important; } \
 				.repliers_left + td[style*="background-color: #E9EC6C"] td { color: #{0[fcHighlight]}; } \
-				td[style*="background-color: #E9EC6C"] > .repliers_right > tbody > tr:first-child a { text-shadow: #000 1px 1px 1px; } \
 				/* forum service channel */ \
 				td[style*="background-color: #FF0000"] { background-color: #{0[bgColorError]} !important; color: #{0[fcError]} !important; } \
 				/* overlay */ \

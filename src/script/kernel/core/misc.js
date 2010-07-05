@@ -27,6 +27,11 @@
 				if(module.include || task.include) {
 					task.include = [].concat(module.include || [], task.include || []);
 				}
+
+				if(task.option) {
+					$.make(module, 'options', taskId, { title: task.option[0], type: 'boolean', defaultValue: task.option[1] });
+					$.make(task, 'requires', []).push({ type: 'option', params: [taskId, true] });
+				}
 			});
 
 			modules[moduleId] = module;

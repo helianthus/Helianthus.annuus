@@ -38,9 +38,6 @@ $.each(bolanderi.get('MODULES'), function(moduleId, module)
 
 	$.each(module.tasks, function(taskId, task)
 	{
-		if(task.option) {
-			$.make(defaultData.privateData[moduleId], 'options', task.option[0], task.option[1]);
-		}
 		if(task.type in { action:1, component:1 }) {
 			$.make(defaultData.privateData[moduleId], 'tasks', taskId, {
 				hotkey: task.default_hotkey

@@ -30,7 +30,7 @@ $(bolanderi).one('storageready', function()
 					ret = isModuleOn(bolanderi.get('MODULES')[params[0]]);
 					break;
 				case 'option':
-					ret = bolanderi.Job.prototype.options.call({ module: module }, params[0]) === params[1];
+					ret = bolanderi.__moduleData(module, 'options', params[0]) === params[1];
 					break;
 				case 'truthy':
 					ret = !!params[0];

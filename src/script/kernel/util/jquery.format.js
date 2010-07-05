@@ -28,7 +28,6 @@
 			var addSignAtLast = 0;
 
 			var undefined;
-			precision = precision === '' ? null : precision;
 
 			if(_0) {
 				fill = '0';
@@ -66,15 +65,15 @@
 				}
 				else {
 					if(/e/i.test(type)) {
-						target = precision === null ? target.toExponential() : target.toExponential(precision);
+						target = precision === '' ? target.toExponential() : target.toExponential(precision);
 					}
 					else {
 						if(type === '%') {
 							target = target * 100;
 						}
-						if(precision !== null) {
-							target = target.toFixed(precision);
-						}
+
+						target = precision !== '' ? target.toFixed(precision) : target + '';
+
 						if(type === '%') {
 							target += '%';
 						}
@@ -109,7 +108,7 @@
 			}
 
 			if(width && align) {
-				var padding = (type === 's' ? Math.max(width, precision) : width) - target.length - addSignAtLast;
+				var padding = (type === 's' && precision ? Math.min(width, precision) : width) - target.length - addSignAtLast;
 				fill = fill || ' ';
 
 				while(padding-- > 0) {

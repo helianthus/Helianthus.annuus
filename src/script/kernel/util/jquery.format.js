@@ -128,7 +128,7 @@
 	$.format = function(target)
 	{
 		if(arguments.length === 1) {
-			return typeof target === 'string' ? target : $.format.apply($, arguments);
+			return typeof target === 'string' ? target : $.format.apply($, target);
 		}
 
 		var args = [].slice.call(arguments, 1);

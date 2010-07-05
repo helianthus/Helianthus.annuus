@@ -6,7 +6,7 @@ annuus.addModules({
 	pages: { on: [all] },
 	tasks: {
 		'e6d2ea58': {
-			ui: 'master',
+			service: 'master',
 			run_at: 'document_start',
 			title: '記錄',
 			primary: {

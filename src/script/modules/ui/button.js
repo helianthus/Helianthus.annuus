@@ -6,7 +6,7 @@ annuus.addModules({
 	pages: { comp: [all] },
 	tasks: {
 		'4ea1dd56': {
-			type: 'ui',
+			type: 'service',
 			name: 'button',
 			setup: {
 				css: '\

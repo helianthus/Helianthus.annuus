@@ -43,7 +43,7 @@ annuus.addModules({
 	pages: { on: [view | topics | search | tags | profilepage] },
 	tasks: {
 		'475b4b70': {
-			run_at: 'window_load',
+			run_at: 'document_end',
 			css: '.an-blankname:before { content: "空白名稱"; font-style: italic; }',
 			js: function(job)
 			{

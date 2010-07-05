@@ -6,7 +6,7 @@ annuus.addModules({
 	tasks: {
 		'46ffedd9': {
 			run_at: 'document_start',
-			ui: ['button'],
+			service: 'button',
 			css: '\
 				#an-themeextractor { position: fixed; top: 5%; left: 2%; width: 100%; height: 90%; } \
 				#an-themeextractor > textarea { box-sizing: border-box; width: 45%; height: 100%; } \

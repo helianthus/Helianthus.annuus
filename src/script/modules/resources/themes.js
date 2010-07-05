@@ -6,7 +6,7 @@ annuus.addModules({
 	pages: { comp: [all] },
 	tasks: {
 		'd15b72b1': {
-			type: 'resource',
+			type: 'data',
 			name: 'themes',
 			json: {
 				"VIIV": {

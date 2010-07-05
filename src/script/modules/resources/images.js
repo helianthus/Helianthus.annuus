@@ -6,7 +6,7 @@ annuus.addModules({
 	pages: { core: [all] },
 	tasks: {
 		'e823fa56': {
-			type: 'resource',
+			type: 'data',
 			name: 'images',
 			json: {
 				//'': 'data:image/png;base64,',

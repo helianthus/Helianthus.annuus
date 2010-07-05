@@ -6,7 +6,7 @@ annuus.addModules({
 	pages: { comp: [all] },
 	tasks: {
 		'1697d048': {
-			ui: ['button'],
+			service: 'button',
 			css: '\
 				#an-themeswitcher-button { position: absolute; top: 10px; right: 10px; } \
 				.an-themeswitcher { font-size: 62.5%; } \
@@ -15,7 +15,7 @@ annuus.addModules({
 			{
 				var select = '<select id="an-themeswitcher" class="an-themeswitcher">';
 				select += '<option>select theme...</option>';
-				$.each(job.resources('themes'), function(name)
+				$.each(job.data('themes'), function(name)
 				{
 					select += $.format('<option>{0}</option>', name);
 				});
@@ -28,14 +28,14 @@ annuus.addModules({
 							uriHKGLogo: '',
 							bgImageBody: ''
 						},
-						job.resources('themes', $(this).val())
+						job.data('themes')[$(this).val()]
 						);
 
 						job.options(theme);
 
 						$.rules(function()
 						{
-							job.hooks('theme', null, theme);
+							$.theme(theme);
 						});
 					}
 				});

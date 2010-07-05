@@ -11,7 +11,7 @@ annuus.addModules({
 			{
 				$.fn.nameLinks = function()
 				{
-					return $.make(this, '__nameLinks', $(document).pageName === 'view' ? this.find('.repliers_left > div > a') : this.topics().find('a[href^="search"]'));
+					return $.make(this, '__nameLinks', $(document).pageName() === 'view' ? this.find('.repliers_left > div > a') : this.topics().find('a[href^="search"]'));
 				};
 			}
 		},

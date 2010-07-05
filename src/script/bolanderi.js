@@ -5,16 +5,13 @@ if(window['@PROJECT_NAME_SHORT@'] && typeof window['@PROJECT_NAME_SHORT@'].get =
 	return alert('@PROJECT_NAME@ has already loaded!');
 }
 
-var bolanderi = {
+var bolanderi = window['@PROJECT_NAME_SHORT@'] = {
 	get: (function()
 	{
 		var data = {};
 		return function(name, value)
 		{
-			if(typeof value !== 'undefined' && !(name in data)) {
-				data[name] = value;
-			}
-			return data[name];
+			return name in data || arguments.length === 1 ? data[name] : (data[name] = value);
 		};
 	})()
 };
@@ -27,7 +24,6 @@ bolanderi.get('DEBUG_MODE', eval('@PROJECT_DEBUG@'));
 (function(jQuery, $)
 {
 
-window['@PROJECT_NAME_SHORT@'] = bolanderi;
 bolanderi.$ = $;
 
 /*@CONTENT@*/

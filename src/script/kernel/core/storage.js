@@ -38,17 +38,11 @@ $.each(bolanderi.get('MODULES'), function(moduleId, module)
 
 	$.each(module.tasks, function(taskId, task)
 	{
-		task.module = module;
-		task.id = taskId;
-		task.title = task.title || module.title;
-
-		if(task.type in { undefined:1, action:1, component:1 }) {
-			if(task.frequency === 'always' && task.css) {
-				$.log('warn', '"css" property found in task with frequency "always", make sure this is intended. [{0}, {1}]', module.title, taskId);
-			}
-
+		if(task.option) {
+			$.make(defaultData.privateData[moduleId], 'options', task.option[0], task.option[1]);
+		}
+		if(task.type in { action:1, component:1 }) {
 			$.make(defaultData.privateData[moduleId], 'tasks', taskId, {
-				ui: task.ui,
 				hotkey: task.default_hotkey
 			});
 		}
@@ -141,7 +135,7 @@ bolanderi.__storage = {
 
 	save: function()
 	{
-		cache.saved ? storage.set(JSON.stringify(cache.saved)) : $.log('warn', 'storage cache is not found, save failed.');
+		cache.saved ? storage.set(JSON.stringify(cache.saved)) : $.log('error', 'storage cache not found, save failed.');
 		cache.both = null;
 	},
 

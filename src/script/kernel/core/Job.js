@@ -37,10 +37,10 @@ bolanderi.Job.prototype = {
 		{
 			var dataDef = $.dig(this.module, dataType, id);
 
-			/*if(!dataDef && typeof $.dig(bolanderi.__storage.get(), 'publicData', dataType, id) === 'undefined') {
-				$.log('warn', 'public {0} with id "{1}" does not exist.', dataType, id);
+			if(dataType === 'options' && !dataDef && typeof $.dig(bolanderi.__storage.get(), 'publicData', dataType, id) === 'undefined') {
+				$.log('error', 'public option with id "{0}" does not exist. {1}', id, job.info());
 				return;
-			}*/
+			}
 
 			var container = $.make.apply(null, paths[dataDef ? dataDef.access || 'protected' : 'public'].concat({}));
 
@@ -62,16 +62,12 @@ bolanderi.Job.prototype = {
 		return bolanderi.__context;
 	},
 
-	database: function(id, value)
-	{
-		return this._moduleData('database', id, value);
-	},
-
 	data: function(name, value)
 	{
 		var data = this.module.data = this.module.data || {};
 
 		if(typeof value === 'undefined') {
+			data = $.extend({}, bolanderi.get('DATA'), data);
 			return name ? data[name] : data;
 		}
 		else {
@@ -80,26 +76,14 @@ bolanderi.Job.prototype = {
 		return this;
 	},
 
-	hooks: function(target, name)
+	database: function(id, value)
 	{
-		if(name === undefined) {
-			return bolanderi.__hooks[target];
-		}
-		else {
-			var params = [].slice.call(arguments, 2);
-			$.digEach(bolanderi.__hooks, target, name, null, function(target, name, i, job)
-			{
-				if(job) {
-					job.css && $.rules(job.css, job);
-					job.js && job.js.apply(bolanderi.__context, [job].concat(params));
+		return this._moduleData('database', id, value);
+	},
 
-					if(job.frequency !== 'always') {
-						bolanderi.__hooks[target][name][i] = null;
-					}
-				}
-			});
-		}
-		return this;
+	info: function()
+	{
+		return $.format('[{0}, {1}, {2}]', this.module.title, this.id, this.type);
 	},
 
 	options: function(id, value)
@@ -107,8 +91,9 @@ bolanderi.Job.prototype = {
 		return this._moduleData('options', id, value);
 	},
 
-	resources: function()
+	remove: function()
 	{
-		return $.dig([bolanderi.__resources].concat([].slice.call(arguments)));
+		this.__remove = true;
+		return this;
 	}
 };

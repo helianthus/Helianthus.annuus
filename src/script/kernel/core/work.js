@@ -1,22 +1,24 @@
-$.fn.work = function()
+bolanderi.work = function(context)
 {
-	bolanderi.__context = $(this[0]);
+	$(bolanderi).trigger('workstart', context);
+	bolanderi.__context = $(context);
 
-	bolanderi.__execGroups(0);
+	var groups = bolanderi.__execGroups;
+
+	groups(0);
 
 	$(bolanderi).trigger('document_start');
 
-	bolanderi.__execGroups('document_start');
+	groups('document_start');
 
 	$(bolanderi).one('document_end', function()
 	{
-		bolanderi.__execGroups('document_end');
+		groups('document_end');
 
 		$(bolanderi).one('window_loaded', function()
 		{
-			bolanderi.__execGroups('window_loaded');
-
-			$.log('log', 'work() completed successfully.');
+			groups('window_loaded');
+			$(bolanderi).trigger('workend', context);
 		});
 
 		if(bolanderi.get('WINDOW_IS_LOADED')) {
@@ -27,8 +29,6 @@ $.fn.work = function()
 	if(bolanderi.get('DOM_IS_READY')) {
 		$(bolanderi).trigger('document_end');
 	}
-
-	return this;
 };
 
 $(bolanderi).one('kernelready', function()

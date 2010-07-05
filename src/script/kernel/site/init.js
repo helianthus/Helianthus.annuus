@@ -26,7 +26,7 @@ function init()
 {
 	bolanderi.__storage.mode(mode);
 	$(bolanderi).trigger('storageready');
-	$(document).work();
+	bolanderi.work(document);
 }
 
 $.timeout('checkStorage', [100], function(countdown)

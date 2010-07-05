@@ -2,7 +2,7 @@ annuus.addModules({
 
 '34c76972-813a-4145-b3d3-bf83d89723d7':
 {
-	title: 'Button Panel',
+	title: 'Button UI',
 	pages: { comp: [all] },
 	tasks: {
 		'4ea1dd56': {
@@ -12,7 +12,7 @@ annuus.addModules({
 				#an-buttonpanel { display: table; position: fixed; height: 100%; } \
 				#an-buttonpanel-positioner { display: table-cell; height: 100%; min-width: 10px; vertical-align: middle; } \
 				#an-buttonpanel-ui { display: none; border-width: 0.5em 0; padding: 0.2em 0; } \
-				#an-buttonpanel-container { box-sizing: border-box; height: 100%; min-width: 100px; border-left-width: 5px; overflow: hidden; font-size: 75%; } \
+				#an-buttonpanel-container { box-sizing: border-box; min-width: 100px; border-left-width: 5px; overflow: hidden; font-size: 75%; } \
 				#an-buttonpanel-container > .ui-button { display: block; margin: 3px 0 0 0; border-left: 0; border-top-left-radius: 0; border-bottom-left-radius: 0; text-align: left; } \
 				#an-buttonpanel-container > .ui-button:first-child { margin: 0; } \
 				#an-buttonpanel-container > .ui-button > span { padding: 0.1em 1em; white-space: nowrap; } \

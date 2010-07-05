@@ -492,9 +492,7 @@ annuus.addModules({
 
 		'16fc2c9f': {
 			page: profilepage,
-			requires: [
-				{ type: 'truthy', params: !$.browser.mozilla }
-			],
+			requires: [!$.browser.mozilla],
 			css: '\
 				td[style*="color: #003366"] { padding: 4px; } \
 				td[style*="color: #003366"][style*="width: 70%"] { padding: 0; } \

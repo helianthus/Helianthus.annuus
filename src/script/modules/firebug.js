@@ -4,9 +4,7 @@ annuus.addModules({
 {
 	title: 'Firebug Lite',
 	pages: { debug: [all] },
-	requires: [
-		{ type: 'truthy', params: !$.browser.mozilla }
-	],
+	requires: [!$.browser.mozilla],
 	tasks: {
 		'e6d2ea58': {
 			run_at: 'document_start',

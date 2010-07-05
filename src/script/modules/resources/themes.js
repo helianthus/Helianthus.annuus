@@ -830,7 +830,7 @@ annuus.addModules({
 					"bgColorShadow":"aaaaaa",
 
 					"fcAnchorLink":"d9d9d9",
-					"fcAnchorVisited":"005eb5",
+					"fcAnchorVisited":"6f789d",
 					"fcAnchorHover":"75abff",
 
 					"bgColorContent2":"171717",

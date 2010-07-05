@@ -19,13 +19,13 @@ annuus.addModules({
 			run_at: 'document_start',
 			service: 'theme',
 			name: 'style-bg',
-			js: function(job, options)
+			js: function(self, options)
 			{
-				var bg = window.opera && job.options('bgAero')
+				var bg = window.opera && self.options('bgAero')
 				? '-o-skin("Pagebar Skin")'
 				: options.bgImageBody && $.format('url("{0}")', options.bgImageBody);
 
-				$.rules({ id: job.name }, bg ? '\
+				$.rules({ id: self.name }, bg ? '\
 					body { background: {0} fixed; background-size: {1} auto; } \
 					\
 					.PageMiddleFunctions, \
@@ -39,7 +39,7 @@ annuus.addModules({
 					.txt_11pt_1A3448 /* footer */ \
 						{ text-shadow: #{2[bgColorContent]} 1px 1px 1px; } \
 				'
-				: '', bg, job.options('autoFit') && !job.options('bgAero') ? '100%' : 'auto', options);
+				: '', bg, self.options('autoFit') && !self.options('bgAero') ? '100%' : 'auto', options);
 			}
 		}
 	}

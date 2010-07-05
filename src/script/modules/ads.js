@@ -57,11 +57,10 @@ annuus.addModules({
 		'defe6bdf': {
 			page: topics,
 			requires: [$.browser.msie && $.browser.version <= 8],
-			run_at: 'document_end',
 			frequency: 'always',
-			js: function(job)
+			js: function(self)
 			{
-				job.context().find('td[colspan][height=52]').up('tr').hide();
+				self.context().find('td[colspan][height=52]').up('tr').hide();
 			}
 		},
 		'10053965': {
@@ -76,11 +75,10 @@ annuus.addModules({
 		},
 		'18f3515f': {
 			page: search | tags,
-			run_at: 'document_end',
 			frequency: 'always',
-			js: function(job)
+			js: function(self)
 			{
-				job.context().find('td[colspan][height=52]').up('tr').hide();
+				self.context().find('td[colspan][height=52]').up('tr').hide();
 			}
 		},
 		'9b8cfb9a': {

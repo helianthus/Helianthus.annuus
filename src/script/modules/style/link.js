@@ -15,7 +15,7 @@ annuus.addModules({
 			run_at: 'document_start',
 			service: 'theme',
 			name: 'link-style',
-			js: function(job, options)
+			js: function(self, options)
 			{
 				var css = '\
 					a { color: #{0[fcAnchorLink]}; } \
@@ -30,13 +30,13 @@ annuus.addModules({
 						{ color: #{0[fcAnchorLink]}; } \
 				';
 
-				if(job.options('styleHoverState')) {
+				if(self.options('styleHoverState')) {
 					css += '\
 						a:hover { color: #{0[fcAnchorLink]}; } \
 					';
 				}
 
-				$.rules({ id: job.name, position: 'pre' }, css, options);
+				$.rules({ id: self.name, position: 'pre' }, css, options);
 			}
 		}
 	}

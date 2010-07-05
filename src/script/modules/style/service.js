@@ -4,32 +4,33 @@ annuus.addModules({
 {
 	title: 'Theme Service',
 	pages: { comp: [all] },
+	data: {
+		hooks: []
+	},
 	tasks: {
 		'475b4b70': {
 			type: 'service',
 			name: 'theme',
-			add: function(self, job)
+			add: function(self, param)
 			{
-				function execJob(job)
-				{
-					job.css && $.rules({ id: job.name || job.module.id + job.id }, job.css, options);
-					job.js && job.js(job, options);
-				}
+				var hooks = self.data('hooks');
+				var theme = param instanceof annuus.Job ? self.options() : param;
 
-				var jobs = $.make(self.data(), 'themeJobs', []);
-				var options;
-
-				if(job instanceof annuus.Job) {
-					jobs.push(job);
-					options = job.options();
-					execJob(job);
+				if(param instanceof annuus.Job) {
+					hooks.push(param);
+					sendTheme(param);
 				}
 				else {
-					options = job;
-					$.each(jobs, function(i, job)
+					$.each(hooks, function(i, hook)
 					{
-						execJob(job, job);
+						sendTheme(hook);
 					});
+				}
+
+				function sendTheme(hook)
+				{
+					hook.css && $.rules({ id: hook.name || hook.module.id + hook.id }, hook.css, theme);
+					hook.js && hook.js(hook, theme);
 				}
 			}
 		}

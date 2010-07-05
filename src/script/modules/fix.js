@@ -19,10 +19,10 @@ annuus.addModules({
 	tasks: {
 		'd661e32f': {
 			frequency: 'always',
-			js: function(job)
+			js: function(self)
 			{
 				if($.uriSet().querySet.type === 'MB') {
-					job.context().find('td[colspan="5"]').attr('colspan', '6');
+					self.context().find('td[colspan="5"]').attr('colspan', '6');
 				}
 			}
 		}

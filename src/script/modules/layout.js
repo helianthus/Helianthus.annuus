@@ -21,9 +21,9 @@ annuus.addModules({
 		'd594b10a': {
 			page: view,
 			frequency: 'always',
-			js: function(job)
+			js: function(self)
 			{
-				job.context().find('.repliers > tbody > tr > td[colspan="100%"]').attr('colspan', '2');
+				self.context().find('.repliers > tbody > tr > td[colspan="100%"]').attr('colspan', '2');
 			}
 		}
 	}

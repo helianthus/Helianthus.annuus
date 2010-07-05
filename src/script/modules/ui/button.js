@@ -17,7 +17,7 @@ annuus.addModules({
 				#an-buttonpanel-container > .ui-button:first-child { margin: 0; } \
 				#an-buttonpanel-container > .ui-button > span { padding: 0.1em 1em; white-space: nowrap; } \
 			',
-			setup: function(job)
+			setup: function(self)
 			{
 				$('\
 					<div id="an-buttonpanel"> \
@@ -75,9 +75,9 @@ annuus.addModules({
 					container.css('max-height', $(window).height() * 0.6);
 				}).resize();
 			},
-			add: function(job, options)
+			add: function(self, options)
 			{
-				var button = $('<a />', {
+				var button = $('<a/>', {
 					text: options.title,
 					href: options.href || annuus.get('DUMMY_HREF')
 				})

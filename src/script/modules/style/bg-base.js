@@ -15,7 +15,7 @@ annuus.addModules({
 				\
 				#ctl00_TopBarHomeImage { width: 0 !important; height: 0 !important; } \
 			',
-			js: function(job)
+			js: function(self)
 			{
 				$.digEach({
 					'': [
@@ -45,7 +45,7 @@ annuus.addModules({
 					]
 				}, null, null, function(symbol, i, info)
 				{
-					$.rules('img[src][src][src{0}="{1[0]}"] { padding: 0 {1[1]}px {1[2]}px 0; width: 0; height: 0; background: url("{2.data(images)[{1[3]}]}") no-repeat center; }', symbol, info, job);
+					$.rules('img[src][src][src{0}="{1[0]}"] { padding: 0 {1[1]}px {1[2]}px 0; width: 0; height: 0; background: url("{2.data(images)[{1[3]}]}") no-repeat center; }', symbol, info, self);
 				});
 			}
 		}

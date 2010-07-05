@@ -7,13 +7,13 @@ annuus.addModules({
 	tasks: {
 		'1697d048': {
 			type: 'utility',
-			js: function(job)
+			js: function(self)
 			{
 				var HASH = '074d0ef7-b75b-4c06-aba4-6799c3b9cf02';
-				if(job.database('release_hash') !== HASH)
+				if(self.database('release_hash') !== HASH)
 				{
 					annuus.__storage.clear();
-					job.database('release_hash', HASH);
+					self.database('release_hash', HASH);
 				}
 			}
 		}

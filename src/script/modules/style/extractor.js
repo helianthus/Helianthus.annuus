@@ -12,7 +12,7 @@ annuus.addModules({
 				#an-themeextractor > textarea { box-sizing: border-box; width: 45%; height: 100%; } \
 				#an-themeextractor > button { width: 5%; height: 100%; vertical-align: bottom; } \
 			',
-			js: function(job)
+			js: function(self)
 			{
 				$('\
 					<div id="an-themeextractor"> \

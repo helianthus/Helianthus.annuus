@@ -11,9 +11,9 @@ annuus.addModules({
 			run_at: 'document_start',
 			service: 'theme',
 			name: 'hkg-logo',
-			js: function(job, options)
+			js: function(self, options)
 			{
-				$.rules({ id: job.name }, options.uriHKGLogo
+				$.rules({ id: self.name }, options.uriHKGLogo
 				?	'\
 					#ctl00_TopBarHomeLink { display: block; background-image: url("{0}"); } \
 					#ctl00_TopBarHomeImage { visibility: hidden; } \

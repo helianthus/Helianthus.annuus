@@ -28,7 +28,7 @@ annuus.addModules({
 				#an-master-panels > div > h3 { box-sizing: border-box; height: 2em; line-height: 2em; text-indent: 0.5em; } \
 				#an-master-panels > div > div { box-sizing: border-box; position: absolute; top: 2em; bottom: 0; left: 0; right: 0; overflow: auto; } \
 			',
-			setup: function(job)
+			setup: function(self)
 			{
 				$('\
 					<div id="an-master"> \
@@ -51,7 +51,7 @@ annuus.addModules({
 				$('<img/>', {
 					id: 'an-master-switch',
 					title: '左鍵設換面板 | 中鍵設換開關',
-					src: job.data('images')[annuus.__storage.get().status ? 'master-switch' : 'master-switch-grayscale'],
+					src: self.data('images')[annuus.__storage.get().status ? 'master-switch' : 'master-switch-grayscale'],
 					mousedown: function(event)
 					{
 						var profile = annuus.__storage.get({ savedOrDefault: 'saved' });
@@ -97,7 +97,7 @@ annuus.addModules({
 
 				$('#an-master-panels').fixScroll('h3+div');
 			},
-			add: function(job, options)
+			add: function(self, options)
 			{
 				$('#an-master-nav')
 				.append($.format('<li><a href="{0}">{1}</a></li>', annuus.get('DUMMY_HREF'), options.title))

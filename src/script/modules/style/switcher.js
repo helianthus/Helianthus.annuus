@@ -11,11 +11,11 @@ annuus.addModules({
 				#an-themeswitcher-button { position: absolute; top: 10px; right: 10px; } \
 				.an-themeswitcher { font-size: 62.5%; } \
 			',
-			js: function(job, event)
+			js: function(self, event)
 			{
 				var select = '<select id="an-themeswitcher" class="an-themeswitcher">';
 				select += '<option>select theme...</option>';
-				$.each(job.data('themes'), function(name)
+				$.each(self.data('themes'), function(name)
 				{
 					select += $.format('<option>{0}</option>', name);
 				});
@@ -28,10 +28,10 @@ annuus.addModules({
 							uriHKGLogo: '',
 							bgImageBody: ''
 						},
-						job.data('themes')[$(this).val()]
+						self.data('themes')[$(this).val()]
 						);
 
-						job.options(theme);
+						self.options(theme);
 
 						$.rules(function()
 						{

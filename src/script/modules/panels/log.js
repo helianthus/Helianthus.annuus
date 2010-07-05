@@ -15,7 +15,7 @@ annuus.addModules({
 					#an-master-log > li { display: block; font-size: 80%; } \
 					#an-master-log > li > pre { margin: 0; } \
 				',
-				js: function(job)
+				js: function(self)
 				{
 					var panel = $('<ul id="an-master-log" class="ui-helper-reset" />');
 

@@ -209,9 +209,12 @@ $.extend({
 		return obj;
 	},
 
-	range: function(start, end, step)
+	range: function()
 	{
-		step = step || 1;
+		var args = [].slice.call(arguments);
+		var start = args.length === 1 ? 0 : args.shift();
+		var end = args.shift();
+		var step = args[0] || 1;
 		var ret = [];
 		for(var i=start; i<=end; i+=step) {
 			ret.push(i);

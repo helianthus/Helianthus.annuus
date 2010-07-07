@@ -16,10 +16,6 @@ annuus.addModules({
 			{
 				$.each(jobs, function(i, job)
 				{
-					if(job.css) {
-						$.log('warn', '"css" property for task type "utility" has no effect. {0}', job.info());
-					}
-
 					job.run(function()
 					{
 						job.js(job);

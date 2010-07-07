@@ -35,7 +35,7 @@ annuus.addModules({
 
 						$.rules(function()
 						{
-							$.theme(theme);
+							$.services.theme(theme);
 						});
 					}
 				});

@@ -95,8 +95,13 @@ annuus.addModules({
 				a.ui-state-default { color: #{0[fcDefault]}; } \
 				a.ui-state-hover { color: #{0[fcHover]}; } \
 				a.ui-state-active { color: #{0[fcActive]}; } \
-				\
-				#an { position: relative; z-index: 10; } \
+			'
+		},
+
+		'090ffa76': {
+			run_at: 'document_start',
+			css: '\
+				.hkg_bottombar, .hkg_bbmenu { z-index: 100; } \
 			'
 		}
 	}

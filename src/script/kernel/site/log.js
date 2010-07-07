@@ -1,21 +1,20 @@
-$(bolanderi)
-.bind('init kernelready storageready workstart workend document_end window_loaded', function(event)
+$(document)
+.bind('init kernelready storageready work document_end window_end', function(event)
 {
 	$.log('log', {
-		init: 'initalizing...',
+		init: 'initalizing kernel...',
 		kernelready: 'kernel is ready.',
 		storageready: 'storage is ready.',
-		workstart: 'work() begins.',
-		workend: 'work() completed sucessfully.',
+		work: 'work() triggered.',
 		document_end: 'DOM is ready.',
-		window_loaded: 'window is loaded.'
+		window_end: 'window is loaded.'
 	}[event.type]);
 })
-.bind('groupstart groupend', function(event, groupNo)
+.bind('servicestart serviceend jobstart', function(event, job)
 {
-	$.log('log', 'group {0} {1}.', groupNo, event.type === 'groupstart' ? 'begins' : 'ends');
-})
-.bind('jobstart', function(event, job, groupNo)
-{
-	$.log('log', 'executing job: {0}', job.info());
+	$.log('log', {
+		servicestart: 'initializing service: {0}',
+		serviceend: 'initialization complete: {0}',
+		jobstart: 'executing job: {0}'
+	}[event.type], job.info());
 });

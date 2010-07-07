@@ -19,27 +19,29 @@ annuus.addModules({
 			run_at: 'document_start',
 			service: 'theme',
 			name: 'style-bg',
-			js: function(self, options)
+			js: function(self, theme)
 			{
 				var bg = window.opera && self.options('bgAero')
 				? '-o-skin("Pagebar Skin")'
-				: options.bgImageBody && $.format('url("{0}")', options.bgImageBody);
+				: theme.bgImageBody && $.format('url("{0}")', theme.bgImageBody);
 
-				$.rules({ id: self.name }, bg ? '\
-					body { background: {0} fixed; background-size: {1} auto; } \
-					\
-					.PageMiddleFunctions, \
-					.bg_main > table > tbody > tr:first-child, /* old middle fns */ \
-					#MainPageAd2 + br + br + div, \
-					.HitSearchText, \
-					#ctl00_ContentPlaceHolder1_topics_form td[width="50%"][align="left"], /* search page result count */ \
-					#ctl00_ContentPlaceHolder1_view_form > .FloatsClearing + div, #ctl00_ContentPlaceHolder1_view_form div[style="padding: 2px 0px 0px;"], /* view page breadcrumb */ \
-					#ctl00_ContentPlaceHolder1_view_form > div[style="width: 100%"] > table[width="99%"], /* view page reply count */ \
-					table[width="196"][cellspacing="3"], /* topc list legend */ \
-					.txt_11pt_1A3448 /* footer */ \
-						{ text-shadow: #{2[bgColorContent]} 1px 1px 1px; } \
-				'
-				: '', bg, self.options('autoFit') && !self.options('bgAero') ? '100%' : 'auto', options);
+				return bg
+				? $.format('\
+						body { background: {0} fixed; background-size: {1} auto; } \
+						\
+						.PageMiddleFunctions, \
+						.bg_main > table > tbody > tr:first-child, /* old middle fns */ \
+						#MainPageAd2 + br + br + div, \
+						.HitSearchText, \
+						#ctl00_ContentPlaceHolder1_topics_form td[width="50%"][align="left"], /* search page result count */ \
+						#ctl00_ContentPlaceHolder1_view_form > .FloatsClearing + div, #ctl00_ContentPlaceHolder1_view_form div[style="padding: 2px 0px 0px;"], /* view page breadcrumb */ \
+						#ctl00_ContentPlaceHolder1_view_form > div[style="width: 100%"] > table[width="99%"], /* view page reply count */ \
+						table[width="196"][cellspacing="3"], /* topc list legend */ \
+						.txt_11pt_1A3448 /* footer */ \
+							{ text-shadow: #{2[bgColorContent]} 1px 1px 1px; } \
+					',
+					bg, self.options('autoFit') && !self.options('bgAero') ? '100%' : 'auto', theme)
+				: '';
 			}
 		}
 	}

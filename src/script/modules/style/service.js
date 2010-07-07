@@ -11,26 +11,38 @@ annuus.addModules({
 		'475b4b70': {
 			type: 'service',
 			name: 'theme',
-			add: function(self, param)
+			run_at: 'document_start',
+			params: {
+				name: { paramType: 'optional', dataType: 'string', description: 'unique id for $.rules()' },
+				position: { paramType: 'optional', dataType: 'string', values: ['pre', 'post'], defaultValue: 'post' },
+				css: { paramType: 'optional', dataType: 'string', description: 'css statements, cannot use together with parameter "js"', params: ['theme'] },
+				js: { paramType: 'optional', dataType: 'function', description: 'return css statements, cannot use together with parameter "css"', params: ['self', 'theme'] }
+			},
+			hooks: [],
+			init: function(self, jobs)
 			{
-				var hooks = self.data('hooks');
-				var theme = param instanceof annuus.Job ? self.options() : param;
-
-				if(param instanceof annuus.Job) {
-					hooks.push(param);
-					sendTheme(param);
-				}
-				else {
-					$.each(hooks, function(i, hook)
-					{
-						sendTheme(hook);
-					});
-				}
-
-				function sendTheme(hook)
+				$.each(jobs, function(i, job)
 				{
-					hook.css && $.rules({ id: hook.name || hook.module.id + hook.id }, hook.css, theme);
-					hook.js && hook.js(hook, theme);
+					if('css' in job === 'js' in job) {
+						$.log('error', 'either parameter "css" or "js" must exclusively exist, task dropped. [{0}]', params.info());
+						return;
+					}
+
+					self.hooks.push(job);
+				});
+
+				$.service.theme.refresh(self.options());
+			},
+			api: {
+				refresh: function(self, theme)
+				{
+					$.each(self.hooks, function(i, job)
+					{
+						job.run(function()
+						{
+							$.rules({ id: job.name, position: job.position }, 'css' in job ? job.css : job.js(job, theme), self.options());
+						});
+					});
 				}
 			}
 		}

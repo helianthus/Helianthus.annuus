@@ -6,7 +6,7 @@ annuus.addModules({
 	pages: { comp: [all] },
 	tasks: {
 		'1697d048': {
-			type: 'utility',
+			service: 'utility',
 			js: function(self)
 			{
 				var HASH = '074d0ef7-b75b-4c06-aba4-6799c3b9cf02';

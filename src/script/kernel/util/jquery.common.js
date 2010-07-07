@@ -1,5 +1,35 @@
+$.each(['all', 'any', 'first'], function(i, name)
+{
+	$[name] = function()
+	{
+		var args = [].slice.call(arguments);
+		if($.isFunction(args[args.length - 2])) {
+			var callback = args.pop();
+		}
+		var checker = args.pop();
+		var ret = { all: true, any: false, first: null }[name];
+		var props;
+
+		$.digEach.apply(null, args.concat(function()
+		{
+			var result = checker.apply(this, arguments);
+			if(name === 'all' ? !result : result) {
+				props = name !== 'all' && [].slice.call(arguments);
+				ret = name === 'first' ? props[props.length - 1] : !ret;
+				return false;
+			}
+		}));
+
+		if(ret && callback) {
+			name === 'all' ? $.digEach.apply(null, args.concat(callback)) : callback(props);
+		}
+
+		return ret;
+	};
+});
+
 $.extend({
-	all: function()
+	_all: function()
 	{
 		var args = [].slice.call(arguments);
 		var callback = args.pop();
@@ -14,7 +44,7 @@ $.extend({
 		return pass;
 	},
 
-	any: function()
+	_any: function()
 	{
 		var args = [].slice.call(arguments);
 		args.push((function(callback)
@@ -140,6 +170,10 @@ $.extend({
 
 	digEach: function(target)
 	{
+		if(!target) {
+			return null;
+		}
+
 		var args = [].slice.call(arguments, 1);
 		var callback = args.pop();
 		var len = args.length;
@@ -178,7 +212,7 @@ $.extend({
 
 	isWord: function(target)
 	{
-		return typeof target === 'string' || typeof target === 'number';
+		return typeof target === 'string' || typeof target === 'number' && !isNaN(target);
 	},
 
 	isGarbage: function(target)

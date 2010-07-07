@@ -81,7 +81,8 @@ bolanderi.Job.prototype = {
 
 	info: function()
 	{
-		return $.format('[{0}, {1}, {2}]', this.module.title, this.id, this.type);
+		return $.format('{0}, {1}, {2}{3}',
+			this.module.title, this.id, this.type, this.type === 'action' ? $.format('({0})', this.service || 'unknown') : '');
 	},
 
 	options: function(id, value)
@@ -89,9 +90,17 @@ bolanderi.Job.prototype = {
 		return bolanderi.__moduleData(this.module, 'options', id, value);
 	},
 
-	remove: function()
+	run: function(fn)
 	{
-		this.__remove = true;
-		return this;
+		$.event.trigger('jobstart', this);
+
+		try {
+			fn();
+		}
+		catch(e) {
+			$.log('error', '{0} [{1}]', e.message, this.info());
+		}
+
+		$.event.trigger('jobend', this);
 	}
 };

@@ -8,6 +8,7 @@ annuus.addModules({
 		'5c6e7d7d': {
 			type: 'component',
 			name: 'style-base',
+			run_at: 'document_start',
 			css: '\
 				.TopMenuPanel, .PageMiddleBox, .bg_top, .bg_main { background-image: none; } \
 				.TopMenuBox, .TopMenuPanel + div.PageWidthContainer, table[width="955"] > tbody > tr:first-child { display: none; } \

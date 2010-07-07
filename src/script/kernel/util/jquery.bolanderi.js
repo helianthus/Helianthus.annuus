@@ -1,3 +1,63 @@
+$.each({
+	missing: {
+		message: 'property "{0}" not found.',
+		method: 'any',
+		filter: function(target, name)
+		{
+			return !(name in target);
+		}
+	},
+	exist: {
+		message: 'property "{0}" already exists.',
+		method: 'any',
+		filter: function(target, name)
+		{
+			return name in target;
+		}
+	},
+	unknown: {
+		message: 'unknown value "{0}" encountered.',
+		method: 'all',
+		filter: function(target, value)
+		{
+			return target !== value;
+		}
+	},
+	wrongType: {
+		message: 'unsupported type "{0}" encountered.',
+		method: 'all',
+		filter: function(target, value)
+		{
+			if(value !== 'mixed') {
+				switch(value) {
+					case 'array': return !$.isArray(target);
+					case 'function': return !$.isFunction(target);
+					default: return typeof target !== value;
+				}
+			}
+		}
+	}
+}, function(name, data)
+{
+	($.checkIf || ($.checkIf = {}))[name] = function(target, refs, info)
+	{
+		var val;
+		var result = $[data.method]([].concat(refs), function(i, value)
+		{
+			val = value;
+			return data.filter(target, value);
+		});
+
+		if(result) {
+			$.log('error', '{0}{1|} [{2}]', $.format(data.message, val), info instanceof bolanderi.Job && ' task dropped.',
+				info instanceof bolanderi.Job && info.info() || info || target && (target instanceof bolanderi.Job && target.info || target.title || target.id) || 'unknown'
+			);
+		}
+
+		return result;
+	};
+});
+
 $.extend({
 	doc: function(html)
 	{
@@ -21,7 +81,6 @@ $.extend({
 			}
 		}));
 	},
-
 
 	debug: function()
 	{
@@ -54,7 +113,7 @@ $.extend({
 		var msg = $.format([].slice.call(arguments, 1));
 
 		$.make($.log, 'archives', []).push([type, msg]);
-		$(bolanderi).trigger('log', [type, msg]);
+		$.event.trigger('log', [type, msg]);
 
 		if(type === 'log') {
 			return;

@@ -8,8 +8,27 @@ annuus.addModules({
 		'4ea1dd56': {
 			type: 'service',
 			name: 'button',
+			run_at: 'document_start',
+			params: {
+				title: { paramType: 'required', dataType: 'string', description: 'button text' },
+				href: { paramType: 'optional', dataType: 'string', description: 'button href' },
+				css: { paramType: 'optional', dataType: 'string', description: 'css statements', params: ['self'] },
+				js: { paramType: 'optional', dataType: 'function', description: 'click handler for the button', params: ['self', 'event'] }
+			},
+			init: function(self, jobs)
+			{
+				$.rules(self.css);
+				self.create(self);
+				$.each(jobs, function(i, job)
+				{
+					job.run(function()
+					{
+						$.service.button.add(job);
+					});
+				});
+			},
 			css: '\
-				#an-buttonpanel { display: table; position: fixed; height: 100%; } \
+				#an-buttonpanel { display: table; position: fixed; z-index: 50; height: 100%; } \
 				#an-buttonpanel-positioner { display: table-cell; height: 100%; min-width: 10px; vertical-align: middle; } \
 				#an-buttonpanel-ui { display: none; border-width: 0.5em 0; padding: 0.2em 0; } \
 				#an-buttonpanel-container { box-sizing: border-box; min-width: 100px; border-left-width: 5px; overflow: hidden; font-size: 75%; } \
@@ -17,7 +36,7 @@ annuus.addModules({
 				#an-buttonpanel-container > .ui-button:first-child { margin: 0; } \
 				#an-buttonpanel-container > .ui-button > span { padding: 0.1em 1em; white-space: nowrap; } \
 			',
-			setup: function(self)
+			create: function(self)
 			{
 				$('\
 					<div id="an-buttonpanel"> \
@@ -75,22 +94,24 @@ annuus.addModules({
 					container.css('max-height', $(window).height() * 0.6);
 				}).resize();
 			},
-			add: function(self, options)
-			{
-				var button = $('<a/>', {
-					text: options.title,
-					href: options.href || annuus.get('DUMMY_HREF')
-				})
-				.button()
-				.appendTo('#an-buttonpanel-container');
+			api: {
+				add: function(self, options)
+				{
+					var button = $('<a/>', {
+						text: options.title,
+						href: options.href || annuus.get('DUMMY_HREF')
+					})
+					.button()
+					.appendTo('#an-buttonpanel-container');
 
-				if(options.js) {
-					button.click(function(event)
-					{
-						event.preventDefault();
-						options.css && $.rules(options.css, options);
-						options.js.call(button[0], options, event);
-					});
+					if(options.js) {
+						button.click(function(event)
+						{
+							event.preventDefault();
+							options.css && $.rules(options.css, options);
+							options.js.call(button[0], options, event);
+						});
+					}
 				}
 			}
 		}

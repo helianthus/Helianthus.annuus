@@ -1,57 +1,72 @@
+bolanderi.get('RUN_AT_TYPES', ['window_start', 'document_start', 'document_end', 'window_end']);
+
 bolanderi.work = function(context)
 {
-	$(bolanderi).trigger('workstart', context);
 	bolanderi.__context = $(context);
 
-	var groups = bolanderi.__execGroups;
+	$.event.trigger('work', context);
 
-	groups(0);
-
-	$(bolanderi).trigger('document_start');
-
-	groups('document_start');
-
-	$(bolanderi).one('document_end', function()
-	{
-		groups('document_end');
-
-		$(bolanderi).one('window_loaded', function()
+	if(!bolanderi.get('DOCUMENT_STARTED')) {
+		bolanderi.get('WINDOW_STARTED', true);
+		bolanderi.get('DOCUMENT_STARTED', true);
+		$.each(bolanderi.get('RUN_AT_TYPES'), function(i, type)
 		{
-			groups('window_loaded');
-			$(bolanderi).trigger('workend', context);
+			bolanderi.ready(type, function()
+			{
+				$.event.trigger('work_' + type);
+			});
 		});
-
-		if(bolanderi.get('WINDOW_IS_LOADED')) {
-			$(bolanderi).trigger('window_loaded');
-		}
-	});
-
-	if(bolanderi.get('DOM_IS_READY')) {
-		$(bolanderi).trigger('document_end');
 	}
 };
 
-$(bolanderi).one('kernelready', function()
+bolanderi.ready = function(type, callback)
 {
-	$.timeout('checkDOM', function()
-	{
-		if($.isReady || $('#Side_GoogleAd').length) {
-			bolanderi.get('DOM_IS_READY', true);
-			$(bolanderi).trigger('document_end');
-		}
-		else {
-			$.timeout('checkDOM', 50);
-		}
-	});
-});
+	if($.checkIf.unknown(type, bolanderi.get('RUN_AT_TYPES'), 'bolanderi.ready()')) {
+		return;
+	}
 
-$(window).one('load', function()
+	if(bolanderi.get(type.concat('ed').toUpperCase())) {
+		callback(type);
+	}
+	else {
+		$(document).one(type, function()
+		{
+			callback(type);
+		});
+	}
+};
+
+(function()
 {
-	setTimeout(function()
+	var documentEnd = function()
 	{
-		bolanderi.get('WINDOW_IS_LOADED', true);
-		if(bolanderi.get('DOM_IS_READY')) {
-			$(bolanderi).trigger('window_loaded');
+		$.timeout('checkDOM', null);
+		bolanderi.get('DOCUMENT_ENDED', true);
+		$.event.trigger('document_end');
+	};
+
+	$(document).one('kernelready', function()
+	{
+		$.timeout('checkDOM', function()
+		{
+			if($.isReady || $('#Side_GoogleAd').length) {
+				documentEnd();
+			}
+			else {
+				$.timeout('checkDOM', 50);
+			}
+		});
+	});
+
+	$(window).one('load', function()
+	{
+		if(!bolanderi.get('DOCUMENT_ENDED')) {
+			documentEnd();
 		}
-	}, 10);
-});
+		setTimeout(function()
+		{
+			bolanderi.get('WINDOW_ENDED', true);
+			$.event.trigger('window_end');
+		}, 0);
+	});
+})();

@@ -28,7 +28,7 @@ bolanderi.$ = $;
 
 /*@CONTENT@*/
 
-$(bolanderi).trigger('init');
+bolanderi.init();
 
 })(jQuery, jQuery.noConflict(true));
 

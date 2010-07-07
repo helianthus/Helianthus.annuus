@@ -6,7 +6,7 @@ annuus.addModules({
 	pages: { comp: [all] },
 	tasks: {
 		'4ea1dd56': {
-			type: 'utility',
+			service: 'utility',
 			js: function()
 			{
 				$.isLoggedIn = function()
@@ -18,7 +18,7 @@ annuus.addModules({
 
 		'54b6b897': {
 			page: view,
-			type: 'utility',
+			service: 'utility',
 			js: function() // need fix
 			{
 				var info = { readyState: 'uninitialized', callbacks: [] };
@@ -57,7 +57,7 @@ annuus.addModules({
 
 		'2181d0a6': {
 			page: view,
-			type: 'utility',
+			service: 'utility',
 			js: function()
 			{
 				$.fn.isReplyContent = function()

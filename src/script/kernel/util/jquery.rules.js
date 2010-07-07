@@ -1,7 +1,7 @@
 (function($)
 {
 
-var cache = true;
+var cache = false;
 var cssData = {
 	pre: {
 		map: { __anonymous: 0 },
@@ -34,6 +34,10 @@ $.rules = function(callback)
 		$.extend(options, args.shift());
 	}
 
+	if(!(options.position in cssData)) {
+		$.error('unknown position "{0}" found.', options.position);
+	}
+
 	var data = cssData[options.position];
 	var map = data.map;
 	var stack = data.stack;
@@ -57,7 +61,7 @@ $.rules = function(callback)
 	}
 };
 
-$(bolanderi).bind('groupend', function(event, groupNo)
+$(document).bind('groupend', function(event, groupNo)
 {
 	if(groupNo === 3) {
 		write();

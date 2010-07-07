@@ -15,6 +15,7 @@ annuus.addModules({
 			run_at: 'document_start',
 			service: 'theme',
 			name: 'link-style',
+			position: 'pre',
 			js: function(self, options)
 			{
 				var css = '\
@@ -36,7 +37,7 @@ annuus.addModules({
 					';
 				}
 
-				$.rules({ id: self.name, position: 'pre' }, css, options);
+				return css;
 			}
 		}
 	}

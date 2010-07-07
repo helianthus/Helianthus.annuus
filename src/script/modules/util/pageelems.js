@@ -6,7 +6,7 @@ annuus.addModules({
 	pages: { comp: [view | topics | search | tags | profilepage] },
 	tasks: {
 		'3adeef77': {
-			type: 'utility',
+			service: 'utility',
 			js: function()
 			{
 				$.fn.nameLinks = function()
@@ -17,7 +17,7 @@ annuus.addModules({
 		},
 
 		'29952b6e': {
-			type: 'utility',
+			service: 'utility',
 			page: topics | search | tags | profilepage,
 			js: function()
 			{
@@ -41,7 +41,7 @@ annuus.addModules({
 		},
 
 		'2d8c04f8': {
-			type: 'utility',
+			service: 'utility',
 			page: view,
 			js: function()
 			{

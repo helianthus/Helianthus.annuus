@@ -1,4 +1,4 @@
-$(bolanderi).one('kernelready', function()
+$(document).one('kernelready', function()
 {
 
 var defaultData = {

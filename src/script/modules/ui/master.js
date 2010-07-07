@@ -8,9 +8,26 @@ annuus.addModules({
 		'4ea1dd56': {
 			type: 'service',
 			name: 'master',
-			autorun: true,
+			run_at: 'document_start',
+			params: {
+				css: { paramType: 'optional', dataType: 'string', description: 'css statements' },
+				primary: { paramType: 'required', dataType: 'function', description: 'return a HTML element or jQuery object as main panel content', params: ['self'] },
+				secondary: { paramType: 'optional', dataType: 'function', description: 'return a HTML element or jQuery object as sidebar content', params: ['self'] }
+			},
+			init: function(self, jobs)
+			{
+				$.rules(self.css);
+				self.create(self);
+				$.each(jobs, function(i, job)
+				{
+					job.run(function()
+					{
+						$.service.master.add(job);
+					});
+				});
+			},
 			css: '\
-				#an-master { position: fixed; z-index: 20; } \
+				#an-master { position: fixed; z-index: 150; } \
 				#an-master > * { position: fixed; } \
 				#an-master-overlays > div { position: fixed; opacity: 0.2; } \
 				.an-master-overlay-horizontal { width: 0; } \
@@ -28,7 +45,7 @@ annuus.addModules({
 				#an-master-panels > div > h3 { box-sizing: border-box; height: 2em; line-height: 2em; text-indent: 0.5em; } \
 				#an-master-panels > div > div { box-sizing: border-box; position: absolute; top: 2em; bottom: 0; left: 0; right: 0; overflow: auto; } \
 			',
-			setup: function(self)
+			create: function(self)
 			{
 				$('\
 					<div id="an-master"> \
@@ -57,7 +74,7 @@ annuus.addModules({
 						var profile = annuus.__storage.get({ savedOrDefault: 'saved' });
 
 						switch(event.which) {
-						case 1:
+							case 1:
 							if(!profile.status) return;
 
 							show = !show;
@@ -77,7 +94,7 @@ annuus.addModules({
 							});
 
 							break;
-						case 2:
+							case 2:
 							event.preventDefault();
 
 							profile.status = 1 - profile.status;
@@ -97,17 +114,19 @@ annuus.addModules({
 
 				$('#an-master-panels').fixScroll('h3+div');
 			},
-			add: function(self, options)
-			{
-				$('#an-master-nav')
-				.append($.format('<li><a href="{0}">{1}</a></li>', annuus.get('DUMMY_HREF'), options.title))
-				.menu('refresh');
+			api: {
+				add: function(self, options)
+				{
+					$('#an-master-nav')
+					.append($.format('<li><a href="{0}">{1}</a></li>', annuus.get('DUMMY_HREF'), options.title))
+					.menu('refresh');
 
-				options.primary.css && $.rules(options.primary.css, options);
+					options.css && $.rules(options.css, options);
 
-				$($.format('<div><h3 class="ui-helper-reset ui-widget-header ui-corner-top">{0}</h3></div>', options.title))
-				.append($('<div/>').append(options.primary.js()))
-				.appendTo('#an-master-panels');
+					$($.format('<div><h3 class="ui-helper-reset ui-widget-header ui-corner-top">{0}</h3></div>', options.title))
+					.append($('<div/>').append(options.primary(options)))
+					.appendTo('#an-master-panels');
+				}
 			}
 		}
 	}

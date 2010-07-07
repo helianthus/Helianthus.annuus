@@ -13,12 +13,12 @@ annuus.addModules({
 			name: 'hkg-logo',
 			js: function(self, options)
 			{
-				$.rules({ id: self.name }, options.uriHKGLogo
+				return options.uriHKGLogo
 				?	'\
-					#ctl00_TopBarHomeLink { display: block; background-image: url("{0}"); } \
-					#ctl00_TopBarHomeImage { visibility: hidden; } \
-				'
-				: '', options.uriHKGLogo);
+						#ctl00_TopBarHomeLink { display: block; background-image: url("{0[uriHKGLogo]}"); } \
+						#ctl00_TopBarHomeImage { visibility: hidden; } \
+					'
+				: '';
 			}
 		}
 	}

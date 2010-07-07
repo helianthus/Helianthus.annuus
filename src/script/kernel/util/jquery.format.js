@@ -151,7 +151,7 @@
 			}
 			while(mods !== temp);
 
-			return mods.replace(/((?:[[.][^[.|!:]+)*)(?:\|([^:!]+))?(?:!([^:]+))?(?::(.+))?/, function($0, props, alt, convert, format)
+			return mods.replace(/((?:[[.][^[.|!:]+)*)(\|[^:!]*)?(?:!([^:]+))?(?::(.+))?/, function($0, props, alt, convert, format)
 			{
 				var replacement = /{\d/.test(args[index]) ? $.format([args[index]].concat(args)) : args[index];
 
@@ -168,7 +168,7 @@
 					});
 				}
 				if(alt && !replacement) {
-					replacement = alt;
+					replacement = alt.slice(1);
 				}
 				if(convert) {
 					$.each(convert.split(''), function(i, converter)

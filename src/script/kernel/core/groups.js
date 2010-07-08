@@ -61,12 +61,14 @@ $.each(bolanderi.get('MODULES'), function(moduleId, module)
 						$(document).one('work_' + job.run_at, function()
 						{
 							$.event.trigger('service_start', job);
-							$.each(job.api || {}, function(name, fn)
+							$.each(job.api || {}, function(name, details)
 							{
-								$.make($, 'service', job.name, name, function()
-								{
-									fn.apply(job, [job].concat([].slice.call(arguments)));
-								});
+								if(!$.checkIf.missing(job, name, job.info())) {
+									$.make($, 'service', job.name, name, function()
+									{
+										job[name].apply(job, [job].concat([].slice.call(arguments)));
+									});
+								}
 							});
 							$.rules(function()
 							{

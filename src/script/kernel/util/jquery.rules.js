@@ -1,6 +1,7 @@
 (function($)
 {
 
+var modified;
 var cache = false;
 var cssData = {
 	pre: {
@@ -18,13 +19,17 @@ $.rules = function(callback)
 	if($.isFunction(callback)) {
 		$.event.trigger('cache_on');
 		cache = true;
+		modified = false;
 		callback();
-		write();
+		if(modified) {
+			write();
+		}
 		cache = false;
 		$.event.trigger('cache_off');
 		return;
 	}
 
+	modified = true;
 	var args = [].slice.call(arguments);
 	var options = { position: 'post' };
 	if(typeof args[0] !== 'string') {

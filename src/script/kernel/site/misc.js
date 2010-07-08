@@ -7,6 +7,10 @@ document.domain = 'hkgolden.com';
 // fortunately event.button is always 0 for left click
 function checkForDummyHref(event)
 {
+	if(event.isDefaultPrevented()) {
+		return;
+	}
+
 	var href = $(event.target).closest('a').attr('href');
 
 	if(href in { '#':1, 'javascript:':1, 'javascript:window.close()':1 }

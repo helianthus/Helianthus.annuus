@@ -6,7 +6,6 @@ annuus.addModules({
 	pages: { on: [all] },
 	tasks: {
 		'e6d2ea58': {
-			run_at: 'document_start',
 			service: 'button',
 			title: '吹水台',
 			href: '/topics.aspx?type=BW'

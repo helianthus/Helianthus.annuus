@@ -50,7 +50,7 @@ $.each({
 
 		if(result) {
 			$.log('error', '{0}{1|} [{2}]', $.format(data.message, val), info instanceof bolanderi.Job && ' task dropped.',
-				info instanceof bolanderi.Job && info.info() || info || target && (target instanceof bolanderi.Job && target.info || target.title || target.id) || 'unknown'
+				info instanceof bolanderi.Job && info.info() || info || target && (target instanceof bolanderi.Job && target.info() || target.title || target.id) || 'unknown'
 			);
 		}
 
@@ -91,7 +91,7 @@ $.extend({
 				console[console.debug ? 'debug' : 'log'](arguments.length === 1 ? arguments[0] : arguments);
 			}
 			else {
-				$.timeout(100, [].slice.call(arguments), $.debug);
+				$.timeout(100, arguments, $.debug);
 			}
 		}
 	},

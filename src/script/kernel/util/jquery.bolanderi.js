@@ -49,7 +49,8 @@ $.each({
 		});
 
 		if(result) {
-			$.log('error', '{0}{1|} [{2}]', $.format(data.message, val), info instanceof bolanderi.Job && ' task dropped.', bolanderi.info(info, target));
+			info = info || target;
+			$.log('error', '{0}{1|} [{2}]', $.format(data.message, val), info instanceof bolanderi.Job && ' task dropped.', bolanderi.info(info));
 		}
 
 		return result;

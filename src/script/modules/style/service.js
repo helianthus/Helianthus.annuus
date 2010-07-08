@@ -18,6 +18,9 @@ annuus.addModules({
 				css: { paramType: 'optional', dataType: 'string', description: 'css statements, cannot use together with parameter "js"', params: ['theme'] },
 				js: { paramType: 'optional', dataType: 'function', description: 'return css statements, cannot use together with parameter "css"', params: ['self', 'theme'] }
 			},
+			api: {
+				refresh: { description: 'change theme, based on the theme options passed.', param: ['theme'] }
+			},
 			init: function(self, jobs)
 			{
 				for(var i=0; i<jobs.length; ++i) {
@@ -27,19 +30,18 @@ annuus.addModules({
 					}
 				}
 
-				$.service.theme.refresh(self.options());
+				self.refresh(self, self.options());
 			},
-			api: {
-				refresh: function(self, theme)
+
+			refresh: function(self, theme)
+			{
+				$.each(self.jobs, function(i, job)
 				{
-					$.each(self.jobs, function(i, job)
+					self.run(job, function()
 					{
-						self.run(job, function()
-						{
-							$.rules({ id: job.name, position: job.position }, 'css' in job ? job.css : job.js(job, theme), self.options());
-						});
+						$.rules({ id: job.name, position: job.position }, 'css' in job ? job.css : job.js(job, theme), self.options());
 					});
-				}
+				});
 			}
 		}
 	}

@@ -17,6 +17,9 @@ annuus.addModules({
 				widget: { paramType: 'optional', dataType: 'function', description: 'return a widget which is shown when the button is clicked', params: ['self'] },
 				click: { paramType: 'optional', dataType: 'function', description: 'click handler', params: ['self', 'event'] }
 			},
+			api: {
+				add: { description: 'add a new button', params: ['job'] }
+			},
 			init: function(self, jobs)
 			{
 				$.each(jobs || {}, function(i, job)
@@ -140,13 +143,6 @@ annuus.addModules({
 						});
 					}
 				});
-			},
-
-			api: {
-				add: function(self, options)
-				{
-					self.add(self, options);
-				}
 			}
 		},
 

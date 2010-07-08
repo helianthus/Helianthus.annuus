@@ -35,7 +35,7 @@ bolanderi.__moduleData = function(module, dataType, id, value)
 		var dataDef = $.dig(this.module, dataType, id);
 
 		if(dataType === 'options' && !dataDef && typeof $.dig(bolanderi.__storage.get(), 'publicData', dataType, id) === 'undefined') {
-			$.log('error', 'public option with id "{0}" does not exist. {1}', id, job.info());
+			$.log('error', 'public option with id "{0}" does not exist. {1}', id, module.title);
 			return;
 		}
 
@@ -90,17 +90,21 @@ bolanderi.Job.prototype = {
 		return bolanderi.__moduleData(this.module, 'options', id, value);
 	},
 
-	run: function(fn)
+	run: function(job, fn)
 	{
-		$.event.trigger('job_start', this);
+		if(this.type !== 'service') {
+			$.error('run() is for services only. [{0}]', this.info());
+		}
+
+		$.event.trigger('job_start', [job, this]);
 
 		try {
 			fn();
 		}
 		catch(e) {
-			$.log('error', '{0} [{1}]', e.message, this.info());
+			$.log('error', '{0} [{1}]', e.message, bolanderi.info(job));
 		}
 
-		$.event.trigger('job_end', this);
+		$.event.trigger('job_end', [job, this]);
 	}
 };

@@ -15,12 +15,12 @@ $.each(['all', 'any', 'first'], function(i, name)
 			var result = checker.apply(this, arguments);
 			if(name === 'all' ? !result : result) {
 				props = arguments;
-				ret = name === 'first' ? props[props.length - 1] : !ret;
+				ret = name === 'first' ? result : !ret;
 				return false;
 			}
 		}));
 
-		if(ret && callback) {
+		if(!$.isGarbage(ret) && callback) {
 			name === 'all' ? $.digEach.apply(null, args.concat(callback)) : callback.apply(null, props);
 		}
 

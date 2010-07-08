@@ -29,48 +29,6 @@ $.each(['all', 'any', 'first'], function(i, name)
 });
 
 $.extend({
-	_all: function()
-	{
-		var args = [].slice.call(arguments);
-		var callback = args.pop();
-		var pass = true;
-		$.digEach.apply(null, args.concat(function()
-		{
-			if(!callback.apply(this, arguments)) {
-				pass = false;
-				return false;
-			}
-		}));
-		return pass;
-	},
-
-	_any: function()
-	{
-		var args = [].slice.call(arguments);
-		args.push((function(callback)
-		{
-			return function()
-			{
-				return !callback.apply(this, arguments);
-			};
-		})(args.pop()));
-		return !$.all.apply(null, args);
-
-		/* this one is faster, but less interesting
-		var args = [].slice.call(arguments);
-		var callback = args.pop();
-		var pass = false;
-		$.digEach.apply(null, args.concat(function()
-		{
-			if(callback.apply(this, arguments)) {
-				pass = true;
-				return false;
-			}
-		}));
-		return pass;
-		*/
-	},
-
 	permute: function()
 	{
 		var args = [].slice.call(arguments);

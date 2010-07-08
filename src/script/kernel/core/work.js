@@ -19,6 +19,14 @@ bolanderi.work = function(context)
 	}
 };
 
+bolanderi.info = function()
+{
+	return $.first(arguments, function(i, obj)
+	{
+		return obj == null || typeof obj === 'string' ? obj : obj instanceof bolanderi.Job ? obj.info() : obj.title || obj.id;
+	}) || 'unknown';
+};
+
 bolanderi.ready = function(type, callback)
 {
 	if($.checkIf.unknown(type, bolanderi.get('RUN_AT_TYPES'), 'bolanderi.ready()')) {

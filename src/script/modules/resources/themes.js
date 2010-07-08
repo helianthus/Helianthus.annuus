@@ -11,7 +11,7 @@ annuus.addModules({
 			json: {
 				"VIIV": {
 					"cornerRadius":"0px",
-					"borderColorHeader":"fff",
+					"borderColorHeader":"000",
 					"bgColorHeader":"000",
 					"fcHeader":"fff",
 					"borderColorContent":"000",

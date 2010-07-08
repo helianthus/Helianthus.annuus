@@ -12,6 +12,7 @@ annuus.addModules({
 				#an-master-log { padding: 1em; } \
 				#an-master-log > li { display: block; font-size: 80%; } \
 				#an-master-log > li > pre { margin: 0; } \
+				.an-log-error { color: red; } \
 			',
 			primary: function(self)
 			{

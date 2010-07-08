@@ -45,7 +45,7 @@ bolanderi.ready = function(type, callback)
 		$.event.trigger('document_end');
 	};
 
-	$(document).one('kernelready', function()
+	$(document).one('kernel_ready', function()
 	{
 		$.timeout('checkDOM', function()
 		{

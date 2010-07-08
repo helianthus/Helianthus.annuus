@@ -92,7 +92,7 @@ bolanderi.Job.prototype = {
 
 	run: function(fn)
 	{
-		$.event.trigger('jobstart', this);
+		$.event.trigger('job_start', this);
 
 		try {
 			fn();
@@ -101,6 +101,6 @@ bolanderi.Job.prototype = {
 			$.log('error', '{0} [{1}]', e.message, this.info());
 		}
 
-		$.event.trigger('jobend', this);
+		$.event.trigger('job_end', this);
 	}
 };

@@ -1,7 +1,7 @@
 bolanderi.init = function()
 {
 
-$.event.trigger('init');
+$.event.trigger('kernel_init');
 
 $.timeout('checkbody', function()
 {
@@ -22,12 +22,12 @@ if(mode === 'flash') {
 	bolanderi.get('FLASH_API', $('<div/>', { id: 'bolanderi-lso' }).appendTo('#an').toFlash('http://helianthus-annuus.googlecode.com/svn/other/lso.swf' + ($.browser.msie ? '?' + $.now() : ''))[0]);
 }
 
-$.event.trigger('kernelready');
+$.event.trigger('kernel_ready');
 
 function init()
 {
 	bolanderi.__storage.mode(mode);
-	$.event.trigger('storageready');
+	$.event.trigger('storage_ready');
 	bolanderi.work(document);
 }
 

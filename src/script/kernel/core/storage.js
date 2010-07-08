@@ -1,4 +1,4 @@
-$(document).one('kernelready', function()
+$(document).one('kernel_ready', function()
 {
 
 var defaultData = {

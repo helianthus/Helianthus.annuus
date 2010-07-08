@@ -1,4 +1,4 @@
-$(document).one('storageready', function()
+$(document).one('storage_ready', function()
 {
 
 var docPageCode = $(document).pageCode();
@@ -60,7 +60,7 @@ $.each(bolanderi.get('MODULES'), function(moduleId, module)
 						services[job.name] = job;
 						$(document).one('work_' + job.run_at, function()
 						{
-							$.event.trigger('servicestart', job);
+							$.event.trigger('service_start', job);
 							$.each(job.api || {}, function(name, fn)
 							{
 								$.make($, 'service', job.name, name, function()
@@ -68,8 +68,11 @@ $.each(bolanderi.get('MODULES'), function(moduleId, module)
 									fn.apply(job, [job].concat([].slice.call(arguments)));
 								});
 							});
-							job.init(job, services[job.name].jobs);
-							$.event.trigger('serviceend', job);
+							$.rules(function()
+							{
+								job.init(job, services[job.name].jobs);
+							});
+							$.event.trigger('service_end', job);
 						});
 						break;
 						case 'component':

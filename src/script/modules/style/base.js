@@ -93,7 +93,7 @@ annuus.addModules({
 				.an-header-bgborder { border: 0 solid #{0[bgColorHeader]}; } \
 				\
 				a.ui-state-default { color: #{0[fcDefault]}; } \
-				a.ui-state-hover { color: #{0[fcHover]}; } \
+				a.ui-state-hover, a.ui-state-focus { color: #{0[fcHover]}; } \
 				a.ui-state-active { color: #{0[fcActive]}; } \
 			'
 		},
@@ -101,6 +101,7 @@ annuus.addModules({
 		'090ffa76': {
 			run_at: 'document_start',
 			css: '\
+				.ui-button:focus { outline: 0; } \
 				.hkg_bottombar, .hkg_bbmenu { z-index: 100; } \
 			'
 		}

@@ -11,9 +11,9 @@ annuus.addModules({
 		'475b4b70': {
 			type: 'service',
 			name: 'theme',
-			run_at: 'document_start',
+			run_at: 'window_start',
 			params: {
-				name: { paramType: 'optional', dataType: 'string', description: 'unique id for $.rules()' },
+				name: { paramType: 'required', dataType: 'string', description: 'unique id for $.rules()' },
 				position: { paramType: 'optional', dataType: 'string', values: ['pre', 'post'], defaultValue: 'post' },
 				css: { paramType: 'optional', dataType: 'string', description: 'css statements, cannot use together with parameter "js"', params: ['theme'] },
 				js: { paramType: 'optional', dataType: 'function', description: 'return css statements, cannot use together with parameter "css"', params: ['self', 'theme'] }
@@ -24,7 +24,7 @@ annuus.addModules({
 				$.each(jobs, function(i, job)
 				{
 					if('css' in job === 'js' in job) {
-						$.log('error', 'either parameter "css" or "js" must exclusively exist, task dropped. [{0}]', params.info());
+						$.log('error', 'either parameter "css" or "js" must exclusively exist, task dropped. [{0}]', job.info());
 						return;
 					}
 

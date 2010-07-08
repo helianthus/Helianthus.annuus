@@ -65,14 +65,14 @@
 				}
 				else {
 					if(/e/i.test(type)) {
-						target = precision === '' ? target.toExponential() : target.toExponential(precision);
+						target = $.isNumber(precision) ? target.toExponential() : target.toExponential(precision);
 					}
 					else {
 						if(type === '%') {
 							target = target * 100;
 						}
 
-						target = precision !== '' ? target.toFixed(precision) : target + '';
+						target = $.isNumber(precision) ? target.toFixed(precision) : target + '';
 
 						if(type === '%') {
 							target += '%';

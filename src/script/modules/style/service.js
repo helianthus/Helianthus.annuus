@@ -18,27 +18,23 @@ annuus.addModules({
 				css: { paramType: 'optional', dataType: 'string', description: 'css statements, cannot use together with parameter "js"', params: ['theme'] },
 				js: { paramType: 'optional', dataType: 'function', description: 'return css statements, cannot use together with parameter "css"', params: ['self', 'theme'] }
 			},
-			hooks: [],
 			init: function(self, jobs)
 			{
-				$.each(jobs, function(i, job)
-				{
-					if('css' in job === 'js' in job) {
-						$.log('error', 'either parameter "css" or "js" must exclusively exist, task dropped. [{0}]', job.info());
-						return;
+				for(var i=0; i<jobs.length; ++i) {
+					if('css' in jobs[i] === 'js' in jobs[i]) {
+						$.log('error', 'either parameter "css" or "js" must exclusively exist, task dropped. [{0}]', jobs[i].info());
+						jobs.splice(i--, 1);
 					}
-
-					self.hooks.push(job);
-				});
+				}
 
 				$.service.theme.refresh(self.options());
 			},
 			api: {
 				refresh: function(self, theme)
 				{
-					$.each(self.hooks, function(i, job)
+					$.each(self.jobs, function(i, job)
 					{
-						job.run(function()
+						self.run(job, function()
 						{
 							$.rules({ id: job.name, position: job.position }, 'css' in job ? job.css : job.js(job, theme), self.options());
 						});

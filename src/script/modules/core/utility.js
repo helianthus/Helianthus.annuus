@@ -16,7 +16,7 @@ annuus.addModules({
 			{
 				$.each(jobs, function(i, job)
 				{
-					job.run(function()
+					self.run(job, function()
 					{
 						job.js(job);
 					});

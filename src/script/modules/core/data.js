@@ -17,7 +17,7 @@ annuus.addModules({
 			{
 				$.each(jobs, function(i, job)
 				{
-					job.run(function()
+					self.run(job, function()
 					{
 						if($.checkIf.exist(bolanderi.get('DATA', {}), job.name, job)) {
 							return;

@@ -36,7 +36,7 @@ annuus.addModules({
 					$.log('warn', '"css" property found in task with frequency "always", make sure this is intended. [{0}]', job.info());
 				}
 
-				job.run(function()
+				self.run(job, function()
 				{
 					job.css && $.rules(job.css, job);
 					job.js && job.js.call(job.context(), job);

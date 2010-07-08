@@ -24,7 +24,10 @@ annuus.addModules({
 			{
 				$.each(jobs || {}, function(i, job)
 				{
-					self.add(self, job);
+					bolanderi.ready(self.run_at, function()
+					{
+						self.add(self, job);
+					});
 				});
 			},
 

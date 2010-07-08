@@ -14,14 +14,14 @@ $.each(['all', 'any', 'first'], function(i, name)
 		{
 			var result = checker.apply(this, arguments);
 			if(name === 'all' ? !result : result) {
-				props = name !== 'all' && [].slice.call(arguments);
+				props = arguments;
 				ret = name === 'first' ? props[props.length - 1] : !ret;
 				return false;
 			}
 		}));
 
 		if(ret && callback) {
-			name === 'all' ? $.digEach.apply(null, args.concat(callback)) : callback(props);
+			name === 'all' ? $.digEach.apply(null, args.concat(callback)) : callback.apply(null, props);
 		}
 
 		return ret;
@@ -155,7 +155,7 @@ $.extend({
 
 	dig: function(obj)
 	{
-		if(arguments.length === 1 && $.isArray(obj)) {
+		if(arguments.length === 1 && $.isArrayLike(obj)) {
 			return $.dig.apply(null, obj);
 		}
 
@@ -203,6 +203,11 @@ $.extend({
 		})(target, 0, []);
 
 		return target;
+	},
+
+	isArrayLike: function(target)
+	{
+		return !!target && ($.isArray(target) || typeof target.callee === 'function' && typeof target.length === 'number' && $.size(target) === 0);
 	},
 
 	isNumber: function(target)

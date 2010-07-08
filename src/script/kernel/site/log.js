@@ -5,7 +5,7 @@ var messages = {
 	cache_off: '$.rules: cache off.',
 	cache_on: '$.rules: cache on.',
 	document_end: 'DOM is ready.',
-	job_start: 'executing job: {0}',
+	job_start: '{1.title}: {0}',
 	kernel_init: 'initalizing kernel...',
 	kernel_ready: 'kernel is ready.',
 	service_start: 'initializing service: {0}',
@@ -25,9 +25,10 @@ $.each(messages, function(type)
 	types.push(type);
 });
 
-$(document).bind(types.join(' '), function(event, job)
+$(document)
+.bind(types.join(' '), function(event, job)
 {
-	$.log('log', messages[event.type], job && job.info && job.info());
+	$.log.apply(null, ['log', messages[event.type], bolanderi.info(job)].concat([].slice.call(arguments, 2)));
 });
 
 })();

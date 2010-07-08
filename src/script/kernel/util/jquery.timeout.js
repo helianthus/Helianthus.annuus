@@ -13,15 +13,15 @@
 			if(cache[id]) {
 				clearTimeout(cache[id].timer);
 
-				if(args[0] === null) {
+				if(args[0] === null && args.length === 1) {
 					delete cache[id];
 					return;
 				}
 			}
 		}
 
-		var delay = typeof args[0] === 'number' || args[0] === false ? args.shift() : id && cache[id] && cache[id].delay;
-		var params = $.isArray(args[0]) ? args.shift() : [];
+		var delay = typeof args[0] === 'number' || args[0] === null ? args.shift() : id && cache[id] && cache[id].delay;
+		var params = $.isArrayLike(args[0]) ? args.shift() : [];
 		var callback = args[0] || cache[id].callback;
 
 		if(id) {

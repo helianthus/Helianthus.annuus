@@ -8,7 +8,7 @@ var isModuleOn = function(module)
 {
 	return !!module && (
 	$.inArray(module.__pageCode, [].concat(module.pages.core || [], profile.status && module.pages.comp || [], profile.status && bolanderi.get('DEBUG_MODE') && module.pages.debug || [])) !== -1
-	|| profile.privateData[module.id][module.__pageCode].status === 1
+	|| profile.privateData[module.id][module.__pageCode].status >= (profile.status ? 1 : 4)
 	);
 };
 var isRequirementsMet = function(target)
@@ -72,7 +72,7 @@ $.each(bolanderi.get('MODULES'), function(moduleId, module)
 							});
 							$.rules(function()
 							{
-								job.init(job, services[job.name].jobs);
+								job.init(job, services[job.name].jobs || []);
 							});
 							$.event.trigger('service_end', job);
 						});

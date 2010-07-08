@@ -16,15 +16,12 @@ var cssData = {
 $.rules = function(callback)
 {
 	if($.isFunction(callback)) {
-		if(cache) {
-			callback();
-		}
-		else {
-			cache = true;
-			callback();
-			write();
-			cache = false;
-		}
+		$.event.trigger('cache_on');
+		cache = true;
+		callback();
+		write();
+		cache = false;
+		$.event.trigger('cache_off');
 		return;
 	}
 
@@ -60,15 +57,6 @@ $.rules = function(callback)
 		write();
 	}
 };
-
-$(document).bind('groupend', function(event, groupNo)
-{
-	if(groupNo === 3) {
-		write();
-		$(bolanderi).unbind(event);
-		cache = false;
-	}
-});
 
 var styles;
 

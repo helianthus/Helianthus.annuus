@@ -7,43 +7,36 @@ annuus.addModules({
 	tasks: {
 		'1697d048': {
 			service: 'button',
-			css: '\
-				#an-themeswitcher-button { position: absolute; top: 10px; right: 10px; } \
-				.an-themeswitcher { font-size: 62.5%; } \
-			',
-			js: function(self, event)
+			title: '轉換主題',
+			widget: function(self)
 			{
-				var select = '<select id="an-themeswitcher" class="an-themeswitcher">';
-				select += '<option>select theme...</option>';
+				var widget = $('<div/>').delegate('.ui-button', 'click', function(event)
+				{
+					event.stopPropagation();
+
+					var theme = $.extend({
+						uriHKGLogo: '',
+						bgImageBody: ''
+					}, self.data('themes')[$(this).text()]);
+
+					self.options(theme);
+
+					$.rules(function()
+					{
+						$.service.theme.refresh(theme);
+					});
+				});
+
 				$.each(self.data('themes'), function(name)
 				{
-					select += $.format('<option>{0}</option>', name);
-				});
-				select += '</select>';
-
-				select = $(select).appendTo('#an').selectmenu({ style: 'dropdown' }).change(function()
-				{
-					if(this.selectedIndex !== 0) {
-						var theme = $.extend({
-							uriHKGLogo: '',
-							bgImageBody: ''
-						},
-						self.data('themes')[$(this).val()]
-						);
-
-						self.options(theme);
-
-						$.rules(function()
-						{
-							$.services.theme(theme);
-						});
-					}
+					$('<a/>', {
+						text: name,
+						href: annuus.get('DUMMY_HREF')
+					})
+					.button().appendTo(widget);
 				});
 
-				if(event) {
-					$(window).scrollTop(0);
-					$(this).fadeOut();
-				}
+				return widget;
 			}
 		}
 	}

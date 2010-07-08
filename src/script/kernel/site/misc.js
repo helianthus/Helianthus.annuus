@@ -1,18 +1,25 @@
+(function()
+{
+
 document.domain = 'hkgolden.com';
 
 // jQuery's event.which normalization is flawed
 // fortunately event.button is always 0 for left click
-
-$(document).click(function(event)
+function checkForDummyHref(event)
 {
 	var href = $(event.target).closest('a').attr('href');
 
-	if(href in { '#':1, 'javascript:':1 }
+	if(href in { '#':1, 'javascript:':1, 'javascript:window.close()':1 }
 	// this works for gecko and webkit only
 	|| event.button !== 0 && /^javascript:/.test(href)
 	) {
 		event.preventDefault();
 	}
+}
+
+$(document).click(function(event)
+{
+	checkForDummyHref(event);
 });
 
 // interestingly Gecko only fires click event for middle click when target is document
@@ -26,6 +33,8 @@ $.event.special.click = {
 		var handler = details.handler;
 		details.handler = function(event)
 		{
+			checkForDummyHref(event);
+
 			if(event.button === 0) {
 				handler.apply(this, arguments);
 			}
@@ -45,3 +54,5 @@ $(function()
 		this.removeAttribute('src');
 	});
 });
+
+})();

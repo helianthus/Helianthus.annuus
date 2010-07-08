@@ -49,9 +49,7 @@ $.each({
 		});
 
 		if(result) {
-			$.log('error', '{0}{1|} [{2}]', $.format(data.message, val), info instanceof bolanderi.Job && ' task dropped.',
-				info instanceof bolanderi.Job && info.info() || info || target && (target instanceof bolanderi.Job && target.info() || target.title || target.id) || 'unknown'
-			);
+			$.log('error', '{0}{1|} [{2}]', $.format(data.message, val), info instanceof bolanderi.Job && ' task dropped.', bolanderi.info(info, target));
 		}
 
 		return result;
@@ -84,6 +82,8 @@ $.extend({
 
 	debug: function()
 	{
+		$.log('debug', '$.debug: ' + [].slice.call(arguments).join(', '));
+
 		if(bolanderi.get('DEBUG_MODE')) {
 			if(window.console) {
 				// webkit throws error with this
@@ -106,16 +106,12 @@ $.extend({
 			type = 'log';
 		}
 
-		if(type === 'debug' && !bolanderi.get('DEBUG_MODE')) {
-			return;
-		}
-
 		var msg = $.format([].slice.call(arguments, 1));
 
 		$.make($.log, 'archives', []).push([type, msg]);
 		$.event.trigger('log', [type, msg]);
 
-		if(type === 'log') {
+		if(type === 'log' || type === 'debug') {
 			return;
 		}
 

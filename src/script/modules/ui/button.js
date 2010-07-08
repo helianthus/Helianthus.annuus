@@ -8,111 +8,157 @@ annuus.addModules({
 		'4ea1dd56': {
 			type: 'service',
 			name: 'button',
-			run_at: 'document_start',
+			run_at: 'window_start',
 			params: {
-				title: { paramType: 'required', dataType: 'string', description: 'button text' },
-				href: { paramType: 'optional', dataType: 'string', description: 'button href' },
-				css: { paramType: 'optional', dataType: 'string', description: 'css statements', params: ['self'] },
-				js: { paramType: 'optional', dataType: 'function', description: 'click handler for the button', params: ['self', 'event'] }
+				title: { paramType: 'required', dataType: 'string' },
+				run_at: { paramType: 'optional', dataType: 'string', values: annuus.get('RUN_AT_TYPES').slice(0), defaultValue: 'document_start' },
+				href: { paramType: 'optional', dataType: 'string' },
+				css: { paramType: 'optional', dataType: 'string', description: 'injected when button is clicked', params: ['self'] },
+				widget: { paramType: 'optional', dataType: 'function', description: 'return a widget which is shown when the button is clicked', params: ['self'] },
+				click: { paramType: 'optional', dataType: 'function', description: 'click handler', params: ['self', 'event'] }
 			},
 			init: function(self, jobs)
 			{
-				$.rules(self.css);
-				self.create(self);
-				$.each(jobs, function(i, job)
+				$.each(jobs || {}, function(i, job)
 				{
-					job.run(function()
-					{
-						$.service.button.add(job);
-					});
+					self.add(self, job);
 				});
 			},
-			css: '\
-				#an-buttonpanel { display: table; position: fixed; z-index: 50; height: 100%; } \
-				#an-buttonpanel-positioner { display: table-cell; height: 100%; min-width: 10px; vertical-align: middle; } \
-				#an-buttonpanel-ui { display: none; border-width: 0.5em 0; padding: 0.2em 0; } \
-				#an-buttonpanel-container { box-sizing: border-box; min-width: 100px; border-left-width: 5px; overflow: hidden; font-size: 75%; } \
-				#an-buttonpanel-container > .ui-button { display: block; margin: 3px 0 0 0; border-left: 0; border-top-left-radius: 0; border-bottom-left-radius: 0; text-align: left; } \
-				#an-buttonpanel-container > .ui-button:first-child { margin: 0; } \
-				#an-buttonpanel-container > .ui-button > span { padding: 0.1em 1em; white-space: nowrap; } \
-			',
+
 			create: function(self)
 			{
+				$.rules('\
+					#an-button { display: table; position: fixed; z-index: 50; height: 100%; } \
+					#an-button-positioner { display: table-cell; height: 100%; min-width: 10px; vertical-align: middle; } \
+					#an-button-ui { display: none; border-width: 0.5em 0; padding: 0.2em 0; } \
+					#an-button-container { min-width: 100px; overflow: hidden; font-size: 75%; } \
+					#an-button-container > * { display: none; } \
+					#an-button-container .ui-button { display: block; margin: 3px 0 0 0; border-left: 0; border-top-left-radius: 0; border-bottom-left-radius: 0; text-align: left; } \
+					#an-button-container .ui-button:first-child { margin: 0; } \
+					#an-button-container .ui-button > span { padding: 0.1em 1em; white-space: nowrap; } \
+				');
+
 				$('\
-					<div id="an-buttonpanel"> \
-						<div id="an-buttonpanel-positioner"> \
-							<div id="an-buttonpanel-ui" class="an-header-bgborder ui-corner-right"> \
-								<div id="an-buttonpanel-container" class="an-default-border"></div> \
+					<div id="an-button"> \
+						<div id="an-button-positioner"> \
+							<div id="an-button-ui" class="an-header-bgborder ui-corner-right"> \
+								<div id="an-button-container"> \
+									<div/> \
+								</div> \
 							</div> \
 						</div> \
 					</div> \
 				')
 				.hover(function(event)
 				{
-					if(entered !== (event.type === 'mouseenter')) {
-						entered = !entered;
+					if(self.opened !== (event.type === 'mouseenter')) {
+						self.opened = !self.opened;
 
-						if(!ui.queue().length) {
-							if(entered) {
-								container.children().removeClass('ui-state-focus');
-							}
-							toggleCheck();
+						if(!self.ui.queue().length) {
+							self.toggle(self);
 						}
 					}
 				})
 				.delegate('.ui-button', 'click', function()
 				{
-					entered = false;
-					toggleCheck(true);
+					self.opened = false;
+					self.toggle(self, true);
 				})
 				.mousewheel(function(event, delta)
 				{
 					event.preventDefault();
-					container.stop(true).animate({ scrollTop: $.format('{0}={1}', delta < 0 ? '+' : '-', Math.abs(delta) * 100) }, 'fast', 'linear');
+					self.container.stop(true).animate({ scrollTop: $.format('{0}={1}', delta < 0 ? '+' : '-', Math.abs(delta) * 100) }, 'fast', 'linear');
 				})
 				.appendTo('#an');
 
-				var ui = $('#an-buttonpanel-ui');
-				var container = $('#an-buttonpanel-container');
-
-				var entered = false;
-				var toggleCheck = function(forceClose)
-				{
-					$.timeout('buttonpanel-toggleCheck', forceClose || entered ? false : 500, function()
-					{
-						if(entered !== ui.is(':visible')) {
-							ui.toggle('fold', { size: 5 }, function()
-							{
-								toggleCheck();
-							});
-						}
-					});
-				};
+				self.ui = $('#an-button-ui');
+				self.container = self.ui.children();
+				self.indexList = self.container.children();
+				self.opened = false;
 
 				$(window).resize(function()
 				{
-					container.css('max-height', $(window).height() * 0.6);
+					self.container.css('max-height', $(window).height() * 0.6);
 				}).resize();
 			},
-			api: {
-				add: function(self, options)
+
+			toggle: function(self, force)
+			{
+				$.timeout('button-service-toggle', force || self.opened ? null : 500, function()
 				{
+					if(self.opened !== self.ui.is(':visible')) {
+						if(self.opened) {
+							self.container.children().hide().find('.ui-state-focus').removeClass('ui-state-focus');
+							self.indexList.show();
+						}
+						self.ui.toggle('fold', { size: 5 }, 300, function()
+						{
+							self.toggle(self);
+						});
+					}
+				});
+			},
+
+			add: function(self, options)
+			{
+				self.run(options, function()
+				{
+					if(!self.ui) {
+						self.create(self);
+					}
+
 					var button = $('<a/>', {
 						text: options.title,
 						href: options.href || annuus.get('DUMMY_HREF')
 					})
 					.button()
-					.appendTo('#an-buttonpanel-container');
+					.appendTo(self.indexList);
 
-					if(options.js) {
+					if(options.css) {
+						button.one('click', function()
+						{
+							$.rules(options.css, options);
+						});
+					}
+
+					if(options.widget) {
+						button.click(function(event)
+						{
+							event.stopPropagation();
+							self.indexList.slideUp(300, function()
+							{
+								$.make(options, '__widget', options.widget(options)).appendTo(self.container).slideDown(300);
+							});
+						});
+					}
+
+					if(options.click) {
 						button.click(function(event)
 						{
 							event.preventDefault();
-							options.css && $.rules(options.css, options);
-							options.js.call(button[0], options, event);
+							options.click.call(button[0], options, event);
 						});
 					}
+				});
+			},
+
+			api: {
+				add: function(self, options)
+				{
+					self.add(self, options);
 				}
+			}
+		},
+
+		'adwaofaowfa': {
+			js: function()
+			{
+				$.each($.range(1,30), function(i,n)
+				{
+					$.service.button.add({
+						title: '測試按扭' + n
+					});
+				});
 			}
 		}
 	}

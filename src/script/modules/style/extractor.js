@@ -5,39 +5,53 @@ annuus.addModules({
 	pages: { debug: [all] },
 	tasks: {
 		'46ffedd9': {
-			run_at: 'document_start',
-			service: 'button',
+			service: 'master',
 			css: '\
-				#an-themeextractor { position: fixed; top: 5%; left: 2%; width: 100%; height: 90%; } \
-				#an-themeextractor > textarea { box-sizing: border-box; width: 45%; height: 100%; } \
-				#an-themeextractor > button { width: 5%; height: 100%; vertical-align: bottom; } \
+				#an-themeextractor { height: 100%; } \
+				#an-themeextractor > div { float: left; box-sizing: border-box; width: 50%; height: 100%; padding: 10px; } \
+				#an-themeextractor > div > div { margin-top: -1.3em; box-sizing: border-box; height: 100%; padding-top: 1.3em; } \
+				#an-themeextractor > div > div > textarea { float: left; margin: 0; box-sizing: border-box; width: 100%; height: 100%; } \
 			',
-			js: function(self)
+			panel: function(self)
 			{
-				$('\
+				return $('\
 					<div id="an-themeextractor"> \
-						<textarea id="an-themeextractor-input"></textarea> \
-							<button>&gt;</button> \
-						<textarea id="an-themeextractor-output"></textarea> \
+						<div> \
+							<h2 class="ui-helper-reset">輸入:</h2> \
+							<div> \
+								<textarea id="an-themeextractor-input"></textarea> \
+							</div> \
+						</div> \
+						<div> \
+							<h2 class="ui-helper-reset">輸出:</h2> \
+							<div> \
+								<textarea id="an-themeextractor-output"></textarea> \
+							</div> \
+						</div> \
 					</div> \
 				')
-				.delegate('textarea', 'click', function()
+				.click(function(event)
 				{
-					this.select();
-				})
-				.appendTo('#an')
-				.find('button').click(function()
-				{
-					var input = $('#an-themeextractor-input').val();
-					var output = {};
-					$.each(['cornerRadius','borderColorHeader','bgColorHeader','fcHeader','borderColorContent','bgColorContent','fcContent',
-					'borderColorDefault','bgColorDefault','fcDefault','borderColorHover','bgColorHover','fcHover','borderColorActive','bgColorActive','fcActive',
-					'borderColorHighlight','bgColorHighlight','fcHighlight','borderColorError','bgColorError','fcError','bgColorOverlay','bgColorShadow'], function(i, name)
-					{
-						output[name] = input.match($.format('{0}=([^&]+)', name))[1];
-					});
-					$('#an-themeextractor-output').val(JSON.stringify(output, null, '\t'));
+					switch(event.target.nodeName) {
+						case 'textarea':
+						event.target.select();
+						break;
+						case 'button':
+						var input = $('#an-themeextractor-input').val();
+						var output = {};
+						$.each(['cornerRadius','borderColorHeader','bgColorHeader','fcHeader','borderColorContent','bgColorContent','fcContent',
+						'borderColorDefault','bgColorDefault','fcDefault','borderColorHover','bgColorHover','fcHover','borderColorActive','bgColorActive','fcActive',
+						'borderColorHighlight','bgColorHighlight','fcHighlight','borderColorError','bgColorError','fcError','bgColorOverlay','bgColorShadow'], function(i, name)
+						{
+							output[name] = input.match($.format('{0}=([^&]+)', name))[1];
+						});
+						$('#an-themeextractor-output').val(JSON.stringify(output, null, '\t'));
+					}
 				});
+			},
+			sidebar: function(self)
+			{
+				return $('<button/>', { text: '轉換', css: { width: '100%', margin: 0 } });
 			}
 		}
 	}

@@ -7,25 +7,26 @@ annuus.addModules({
 		'46ffedd9': {
 			service: 'master',
 			css: '\
-				#an-themeextractor { height: 100%; } \
-				#an-themeextractor > div { float: left; box-sizing: border-box; width: 50%; height: 100%; padding: 10px; } \
-				#an-themeextractor > div > div { margin-top: -1.3em; box-sizing: border-box; height: 100%; padding-top: 1.3em; } \
-				#an-themeextractor > div > div > textarea { float: left; margin: 0; box-sizing: border-box; width: 100%; height: 100%; } \
+				#an-master-extractor { height: 100%; } \
+				#an-master-extractor > div { float: left; box-sizing: border-box; width: 50%; height: 100%; padding: 10px; } \
+				#an-master-extractor > div > div { margin-top: -1.3em; box-sizing: border-box; height: 100%; padding-top: 1.3em; } \
+				#an-master-extractor > div > div > textarea { float: left; margin: 0; box-sizing: border-box; width: 100%; height: 100%; } \
+				#an-master-extractor-button { margin: 0; border: 0; width: 100%; border-top-left-radius: 0; border-bottom-left-radius: 0; } \
 			',
 			panel: function(self)
 			{
 				return $('\
-					<div id="an-themeextractor"> \
+					<div id="an-master-extractor"> \
 						<div> \
-							<h2 class="ui-helper-reset">輸入:</h2> \
+							<h2 class="ui-widget ui-helper-reset">輸入:</h2> \
 							<div> \
-								<textarea id="an-themeextractor-input"></textarea> \
+								<textarea id="an-master-extractor-input"></textarea> \
 							</div> \
 						</div> \
 						<div> \
-							<h2 class="ui-helper-reset">輸出:</h2> \
+							<h2 class="ui-widget ui-helper-reset">輸出:</h2> \
 							<div> \
-								<textarea id="an-themeextractor-output"></textarea> \
+								<textarea id="an-master-extractor-output"></textarea> \
 							</div> \
 						</div> \
 					</div> \
@@ -37,7 +38,7 @@ annuus.addModules({
 						event.target.select();
 						break;
 						case 'button':
-						var input = $('#an-themeextractor-input').val();
+						var input = $('#an-master-extractor-input').val();
 						var output = {};
 						$.each(['cornerRadius','borderColorHeader','bgColorHeader','fcHeader','borderColorContent','bgColorContent','fcContent',
 						'borderColorDefault','bgColorDefault','fcDefault','borderColorHover','bgColorHover','fcHover','borderColorActive','bgColorActive','fcActive',
@@ -45,13 +46,13 @@ annuus.addModules({
 						{
 							output[name] = input.match($.format('{0}=([^&]+)', name))[1];
 						});
-						$('#an-themeextractor-output').val(JSON.stringify(output, null, '\t'));
+						$('#an-master-extractor-output').val(JSON.stringify(output, null, '\t'));
 					}
 				});
 			},
 			sidebar: function(self)
 			{
-				return $('<button/>', { text: '轉換', css: { width: '100%', margin: 0 } });
+				return $('<button/>', { id: 'an-master-extractor-button', text: '轉換' }).button();
 			}
 		}
 	}

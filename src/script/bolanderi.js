@@ -5,7 +5,7 @@ if(window['@PROJECT_NAME_SHORT@'] && typeof window['@PROJECT_NAME_SHORT@'].get =
 	return alert('@PROJECT_NAME@ has already loaded!');
 }
 
-var bolanderi = window['@PROJECT_NAME_SHORT@'] = {
+var bolanderi = {
 	get: (function()
 	{
 		var data = {};
@@ -25,6 +25,8 @@ bolanderi.get('DEBUG_MODE', eval('@PROJECT_DEBUG@'));
 {
 
 bolanderi.$ = $;
+// until now for opera 9
+window['@PROJECT_NAME_SHORT@'] = bolanderi;
 
 /*@CONTENT@*/
 

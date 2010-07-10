@@ -23,25 +23,27 @@ annuus.addModules({
 			create: function(self)
 			{
 				$.rules('\
-					#an-master { position: fixed; z-index: 150; } \
 					#an-master > * { position: fixed; } \
-					#an-master-overlays > div { position: fixed; opacity: 0.2; } \
+					#an-master-overlays > div { position: fixed; z-index: 120; opacity: 0.2; } \
 					.an-master-overlay-horizontal { width: 0; } \
 					.an-master-overlay-vertical { height: 0; } \
 					.an-master-overlay-right { left: auto; right: 0; } \
 					.an-master-overlay-bottom { top: auto; bottom: 0; } \
-					#an-master-switch { top: 10px; left: 10px; cursor: pointer; } \
 					\
-					#an-master-container { display: none; position: fixed; top: 2%; right: 2%; bottom: 2%; left: 0; } \
-					#an-master-container > * { height: 100%; box-sizing: border-box; } \
-					#an-master-sidebars { float: left; width: 150px; padding-top: 70px; border-left: 0; } \
+					#an-master-switch { z-index: 300; top: 10px; left: 10px; cursor: pointer; } \
+					\
+					#an-master-sidebars { display: none; position: fixed; z-index: 130; left: 0; top: 70px; width: 150px; border-left: 0; } \
 					#an-master-sidebars > div { display: none; max-height: 100%; } \
+					\
+					#an-master-container { display: none; position: fixed; z-index: 150; top: 2%; right: 2%; bottom: 2%; left: 160px; } \
+					#an-master-container > * { height: 100%; box-sizing: border-box; } \
 					#an-master-nav { float: right; width: 150px; text-align: center; } \
 					#an-master-nav a:focus { outline: 0; } \
-					#an-master-panels { margin: 0 160px; } \
-					#an-master-panels > div { display: none; height: 100%; position: relative; } \
-					#an-master-panels > div > h1 { height: 2em; line-height: 2em; text-indent: 0.5em; } \
+					#an-master-panels { margin-right: 160px; } \
+					#an-master-panels > div { display: none; height: 100%; position: relative; font-size: 110%; } \
+					#an-master-panels > div > h1 { box-sizing: border-box; height: 2em; line-height: 2em; text-indent: 0.5em; } \
 					#an-master-panels > div > div { position: absolute; top: 2em; bottom: 0; left: 0; right: 0; overflow: auto; } \
+					#an-master-panels > div > div > * { font-size: 90%; } \
 				');
 
 				$('\
@@ -52,10 +54,10 @@ annuus.addModules({
 							<div class="ui-widget-overlay an-master-overlay-vertical an-master-overlay-bottom"></div> \
 							<div class="ui-widget-overlay an-master-overlay-horizontal"></div> \
 						</div> \
+						<div id="an-master-sidebars"></div> \
 						<div id="an-master-container"> \
-							<div id="an-master-sidebars"></div> \
 							<ul id="an-master-nav"></ul> \
-							<div id="an-master-panels" class="ui-widget ui-widget-content ui-corner-all"></div> \
+							<div id="an-master-panels" class="ui-widget-content ui-corner-all"></div> \
 						</div> \
 					</div> \
 				')
@@ -69,20 +71,22 @@ annuus.addModules({
 					src: self.data('images')[annuus.__storage.get().status ? 'master-switch' : 'master-switch-grayscale'],
 					mousedown: function(event)
 					{
-						var profile = annuus.__storage.get({ savedOrDefault: 'saved' });
+						var profile = annuus.__storage.get({ mode: 'saved' });
 
 						switch(event.which) {
 							case 1:
 							if(!profile.status) return;
+
+							show = !show;
 
 							var job;
 							while(job = self.jobs.shift()) {
 								self.build(self, job);
 							}
 
-							show = !show;
+							self.togglePage(self, self.active, show);
 
-							$('#an-master-container').stop(true)[show ? 'fadeTo' : 'fadeOut'](1000, show && 1);
+							$('#an-master-container, #an-master-sidebars').stop(true)[show ? 'fadeTo' : 'fadeOut'](400, show && 1);
 
 							$.each([3,2,1,0], function(i, j)
 							{
@@ -111,18 +115,48 @@ annuus.addModules({
 				$('#an-master-nav').menu({
 					select: function(event, ui)
 					{
-						$('#an-master-container > div > div').hide();
-						$.each(self.items[ui.item.index()], function(type, j)
-						{
-							j.show();
-						});
+						self.switchTo(self, self.pages[ui.item.index()]);
 					}
 				});
 
 				$('#an-master-panels').fixScroll('h1+div');
 			},
 
-			items: [],
+			switchTo: function(self, page)
+			{
+				if(page === self.active) {
+					return;
+				}
+				self.togglePage(self, self.active, false);
+				self.togglePage(self, page, true);
+			},
+
+			togglePage: function(self, page, show)
+			{
+				if(!page) {
+					return;
+				}
+
+				if(show) {
+					self.active = page;
+				}
+
+				page.controls.each(function(i)
+				{
+					var val = show ? 'show' : 'hide';
+					if(i === 0) {
+						$(this).stop(true, true).animate({ height: val }, 400);
+					}
+					else {
+						$(this).stop(true, true).toggle('drop', { direction: 'left' }, 400);
+					}
+				});
+
+				var type = show ? 'select' : 'unselect';
+				type in page.self && page.self[type](page.self, page);
+			},
+
+			pages: [],
 
 			build: function(self, options)
 			{
@@ -134,23 +168,27 @@ annuus.addModules({
 
 					options.css && $.rules(options.css, options);
 
-					var item = {};
+					var page = {
+						self: options
+					};
 
-					item.panel = $($.format('<div><h1 class="ui-helper-reset ui-widget-header ui-corner-top">{0}</h1></div>', options.title))
-					.append($('<div/>').append(options.panel(options)))
-					.appendTo('#an-master-panels');
+					page.controls = $($.format('<div><h1 class="ui-helper-reset ui-widget-header ui-corner-top">{0}</h1></div>', options.title))
+						.append($('<div/>').append(page.panel = options.panel(options)))
+						.appendTo('#an-master-panels');
 
 					if(options.sidebar) {
-						item.sidebar = $('<div class="ui-widget ui-widget-content ui-corner-right"></div>')
-						.append(options.sidebar(options))
-						.appendTo('#an-master-sidebars');
+						page.controls.push(
+							$('<div class="ui-widget-content ui-corner-right"></div>')
+							.append(page.sidebar = options.sidebar(options))
+							.appendTo('#an-master-sidebars')
+						);
 					}
 
-					if(self.items.length === 0) {
-						item.panel.add(item.sidebar).show();
+					if(self.pages.length === 0) {
+						self.active = page;
 					}
 
-					self.items.push(item);
+					self.pages.push(page);
 				});
 			}
 		}

@@ -107,11 +107,11 @@ bolanderi.__storage = {
 
 	get: function(options)
 	{
-		options = $.extend({ curProfileOnly: true, savedOrDefault: 'both', noCache: false }, options);
-		var data = cache[options.savedOrDefault];
+		options = $.extend({ curProfileOnly: true, mode: 'both', noCache: false }, options);
+		var data = cache[options.mode];
 
 		if(options.noCache || !data) {
-			data = cache[options.savedOrDefault] = options.savedOrDefault !== 'default' && storage.get() && JSON.parse(storage.get()) || {
+			data = cache[options.mode] = options.mode !== 'default' && storage.get() && JSON.parse(storage.get()) || {
 				curProfile: 'default',
 				profiles: {
 					'default': {
@@ -120,7 +120,7 @@ bolanderi.__storage = {
 				}
 			};
 
-			if(options.savedOrDefault !== 'saved') {
+			if(options.mode !== 'saved') {
 				for(var profileId in data.profiles) {
 					data.profiles[profileId] = $.copy({}, defaultData, data.profiles[profileId]);
 				}

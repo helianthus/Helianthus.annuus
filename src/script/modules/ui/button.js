@@ -52,8 +52,8 @@ annuus.addModules({
 				$.rules('\
 					#an-button { display: table; position: fixed; z-index: 50; height: 100%; } \
 					#an-button-positioner { display: table-cell; height: 100%; min-width: 10px; vertical-align: middle; } \
-					#an-button-ui { display: none; border-width: 0.5em 0; padding: 0.2em 0; } \
-					#an-button-container { min-width: 100px; overflow: hidden; font-size: 75%; } \
+					#an-button-ui { display: none; min-width: 100px; border-width: 0.5em 0; padding: 0.2em 0; } \
+					#an-button-container { overflow: hidden; font-size: 75%; } \
 					#an-button-container > * { display: none; } \
 					#an-button-container .ui-button { display: block; margin: 3px 0 0 0; border-left: 0; border-top-left-radius: 0; border-bottom-left-radius: 0; } \
 					#an-button-container .ui-button:first-child { margin: 0; } \
@@ -162,9 +162,10 @@ annuus.addModules({
 					button.click(function(event)
 					{
 						event.stopPropagation();
+						var widget = $.make(options, '__widget', options.widget(options));
 						self.mainList.slideUp(200, function()
 						{
-							$.make(options, '__widget', options.widget(options)).appendTo(self.container).slideDown(200);
+							widget.appendTo(self.container).slideDown(200);
 						});
 					});
 				}

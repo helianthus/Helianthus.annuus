@@ -12,12 +12,13 @@
 
 			if(cache[id]) {
 				clearTimeout(cache[id].timer);
-
-				if(args[0] === null && args.length === 1) {
-					delete cache[id];
-					return;
-				}
 			}
+
+			if(args[0] === null && args.length === 1) {
+				delete cache[id];
+				return;
+			}
+
 		}
 
 		var delay = typeof args[0] === 'number' || args[0] === null ? args.shift() : id && cache[id] && cache[id].delay;

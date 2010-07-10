@@ -18,11 +18,11 @@ annuus.addModules({
 			{
 				var panel = $('<ul id="an-master-log" class="ui-helper-reset" />');
 
-				function writeLog(event, type, msg)
+				function writeLog(event, type, msg, date)
 				{
 					panel.prepend($.format(
 						'<li><pre>{1.getHours():02}:{1.getMinutes():02}:{1.getSeconds():02}.{1.getMilliseconds():03} <span class="an-log-{0}">[{0}] {2}</span></pre></li>',
-						type, new Date(), $.format([msg].concat([].slice.call(arguments, 2))).toString().replace(/</g, '&lt;')
+						type, date || new Date(), $.format([msg].concat([].slice.call(arguments, 2))).toString().replace(/</g, '&lt;')
 					));
 				}
 

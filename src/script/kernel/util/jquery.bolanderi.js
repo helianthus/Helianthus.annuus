@@ -109,7 +109,7 @@ $.extend({
 
 		var msg = $.format([].slice.call(arguments, 1));
 
-		$.make($.log, 'archives', []).push([type, msg]);
+		$.make($.log, 'archives', []).push([type, msg, new Date()]);
 		$.event.trigger('log', [type, msg]);
 
 		if(type === 'log' || type === 'debug') {

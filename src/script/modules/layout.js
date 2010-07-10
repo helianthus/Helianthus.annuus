@@ -7,14 +7,20 @@ annuus.addModules({
 	tasks: {
 		'475b4b70': {
 			run_at: 'document_start',
-			// Opera needs every table within the stack to be fixed
 			css: '\
-				#ctl00_ContentPlaceHolder1_view_form > div > table, \
-				.repliers, .repliers > tbody > tr > td + td > table, \
+				.repliers > tbody > tr > td + td > table, \
 				.ListPMText > table, .ListPMText > table > tbody > tr > td > table \
 					{ table-layout: fixed; } \
+				.repliers_right td { overflow: hidden; } \
 				body { word-wrap: break-word; } \
 			'
+		},
+
+		'844954b0-d8f3-435d-990b-b6df6460f01e': {
+			run_at: 'document_start',
+			page: view,
+			requires: [!!window.opera],
+			css: '#ctl00_ContentPlaceHolder1_view_form > div > table, .repliers { table-layout: fixed; }'
 		},
 
 		// fix vote page

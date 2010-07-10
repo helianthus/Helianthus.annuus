@@ -101,21 +101,7 @@ $.each(bolanderi.get('MODULES'), function(moduleId, module)
 $.each(actions, function(i, action)
 {
 	if(!(action.service in services)
-	|| 'params' in services[action.service] && $.any(services[action.service].params, function(name, details)
-	{
-		if('defaultValue' in details && !(name in action)) {
-			action[name] = details.defaultValue;
-		}
-
-		if($.checkIf.missing(details, ['paramType', 'dataType'], action)
-		|| $.checkIf.unknown(details.paramType, ['required', 'optional'], action)
-		|| details.paramType === 'required' && $.checkIf.missing(action, name)
-		|| name in action && $.checkIf.wrongType(action[name], details.dataType, action)
-		|| 'values' in details && $.checkIf.unknown(action[name], details.values, action)
-		) {
-			return true;
-		}
-	})
+	|| !services[action.service].process(action)
 	|| action.include && !$.all(action.include, function(i, name)
 		{
 			return name in components;

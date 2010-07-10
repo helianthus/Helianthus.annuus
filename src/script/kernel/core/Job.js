@@ -7,7 +7,7 @@ bolanderi.Job = function(task)
 bolanderi.__moduleData = function(module, dataType, id, value)
 {
 	var isGet = typeof id in { string:1, undefined:1 } && typeof value === 'undefined';
-	var profile = bolanderi.__storage.get({ savedOrDefault: isGet ? 'both' : 'saved' });
+	var profile = bolanderi.__storage.get({ mode: isGet ? 'both' : 'saved' });
 	var paths = {
 		'public': [profile, 'publicData', dataType],
 		'protected': [profile, 'privateData', module.id, dataType],
@@ -32,7 +32,7 @@ bolanderi.__moduleData = function(module, dataType, id, value)
 
 	$.each(data, function(id, value)
 	{
-		var dataDef = $.dig(this.module, dataType, id);
+		var dataDef = $.dig(module, dataType, id);
 
 		if(dataType === 'options' && !dataDef && typeof $.dig(bolanderi.__storage.get(), 'publicData', dataType, id) === 'undefined') {
 			$.log('error', 'public option with id "{0}" does not exist. {1}', id, module.title);
@@ -90,10 +90,33 @@ bolanderi.Job.prototype = {
 		return bolanderi.__moduleData(this.module, 'options', id, value);
 	},
 
-	run: function(job, fn)
+	process: function(options)
 	{
 		if(this.type !== 'service') {
-			$.error('run() is for services only. [{0}]', this.info());
+			$.error('scan()/run() is for services only. [{0}]', this.info());
+		}
+
+		return !$.any(this.params, function(name, details)
+		{
+			if('defaultValue' in details && !(name in options)) {
+				options[name] = details.defaultValue;
+			}
+
+			if($.checkIf.missing(details, ['paramType', 'dataType'], options)
+			|| $.checkIf.unknown(details.paramType, ['required', 'optional'], options)
+			|| details.paramType === 'required' && $.checkIf.missing(options, name)
+			|| name in options && $.checkIf.wrongType(options[name], details.dataType, options)
+			|| 'values' in details && $.checkIf.unknown(options[name], details.values, options)
+			) {
+				return true;
+			}
+		})
+	},
+
+	run: function(job, fn)
+	{
+		if(!this.process(job)) {
+			return;
 		}
 
 		$.event.trigger('job_start', [job, this]);

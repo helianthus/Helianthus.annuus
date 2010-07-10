@@ -2,11 +2,12 @@ annuus.addModules({
 
 '4a263d1b-4c3d-48a0-afc9-a63f13381aa3':
 {
-	title: '加入前往吹水台之按扭',
+	title: '加入吹水台按扭',
 	pages: { on: [all] },
 	tasks: {
 		'e6d2ea58': {
 			service: 'button',
+			uuid: 'ed7a9b3c-f63b-44c1-a942-ac2b8355e207',
 			title: '吹水台',
 			href: '/topics.aspx?type=BW'
 		}
@@ -15,12 +16,13 @@ annuus.addModules({
 
 '29aeaf94-db3a-4b88-8c5a-cbd2113beba6':
 {
-	title: '加入前往最頂/底之按扭',
+	title: '加入最頂/最底按扭',
 	pages: { on: [all] },
 	tasks: {
 		'e6d2ea58': {
 			service: 'button',
-			title: '最頂/底',
+			uuid: '47396980-091c-4a69-b69d-e5e0edc9910e',
+			title: '最頂／最底',
 			widget: function()
 			{
 				return $('<div/>')
@@ -37,11 +39,13 @@ annuus.addModules({
 
 'de06fe96-6073-44e7-bf53-c14a51bdf58f':
 {
-	title: '轉台連結',
+	title: '加入轉台按扭',
 	pages: { on: [all] },
 	tasks: {
 		'e6d2ea58': {
 			service: 'button',
+			uuid: 'c2a14609-7b55-4a71-9c06-ecc23eaba1ac',
+			title: '轉台',
 			widget: function(self)
 			{
 				var widget = $('<div/>');

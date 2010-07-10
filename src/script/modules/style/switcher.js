@@ -7,6 +7,7 @@ annuus.addModules({
 	tasks: {
 		'1697d048': {
 			service: 'button',
+			uuid: 'adbe91b5-163f-4bf4-9a02-178a665297a4',
 			title: '轉換主題',
 			widget: function(self)
 			{

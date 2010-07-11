@@ -5,7 +5,7 @@ annuus.addModules({
 	title: 'Button UI',
 	pages: { comp: [all] },
 	database: {
-		buttonOrder: { defaultValue: [] },
+		buttonOrder: { defaultValue: [] }
 	},
 	tasks: {
 		'4ea1dd56': {

@@ -149,6 +149,6 @@
 		if(name) param[name] = val;
 		hash = $.hash(param);
 
-		if(location.hash || hash !== '#') location.hash = hash === '#' ? '#poweredBy=annuus' : hash;
+		if(location.hash || hash !== '#') location.hash = hash === '#' ? '#poweredby=Project.Helianthus' : hash;
 	};
 })(jQuery);

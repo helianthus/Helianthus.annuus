@@ -24,17 +24,10 @@ annuus.addModules({
 			{
 				$.rules('\
 					#an-master > * { position: fixed; } \
-					#an-master-overlays > div { position: fixed; z-index: 120; opacity: 0.2; } \
-					.an-master-overlay-horizontal { width: 0; } \
-					.an-master-overlay-vertical { height: 0; } \
-					.an-master-overlay-right { left: auto; right: 0; } \
-					.an-master-overlay-bottom { top: auto; bottom: 0; } \
-					\
+					#an-master-overlay { z-index: 120; height: 0; } \
 					#an-master-switch { z-index: 300; top: 10px; left: 10px; cursor: pointer; } \
-					\
 					#an-master-sidebars { display: none; position: fixed; z-index: 130; left: 0; top: 70px; width: 150px; border-left: 0; } \
 					#an-master-sidebars > div { display: none; max-height: 100%; } \
-					\
 					#an-master-container { display: none; position: fixed; z-index: 150; top: 2%; right: 2%; bottom: 2%; left: 160px; } \
 					#an-master-container > * { height: 100%; box-sizing: border-box; } \
 					#an-master-nav { float: right; width: 150px; text-align: center; } \
@@ -48,12 +41,7 @@ annuus.addModules({
 
 				$('\
 					<div id="an-master"> \
-						<div id="an-master-overlays"> \
-							<div class="ui-widget-overlay an-master-overlay-vertical"></div> \
-							<div class="ui-widget-overlay an-master-overlay-horizontal an-master-overlay-right"></div> \
-							<div class="ui-widget-overlay an-master-overlay-vertical an-master-overlay-bottom"></div> \
-							<div class="ui-widget-overlay an-master-overlay-horizontal"></div> \
-						</div> \
+						<div id="an-master-overlay" class="ui-widget-overlay"></div> \
 						<div id="an-master-sidebars"></div> \
 						<div id="an-master-container"> \
 							<ul id="an-master-nav"></ul> \
@@ -63,8 +51,11 @@ annuus.addModules({
 				')
 				.appendTo('#an');
 
-				var overlays = $('#an-master-overlays > div');
+				self.overlay = $('#an-master-overlay');
+				self.sidebars = $('#an-master-sidebars');
+				var controls = self.sidebars.add('#an-master-container');
 				var show;
+
 				$('<img/>', {
 					id: 'an-master-switch',
 					title: '左鍵設換面板 | 中鍵設換開關',
@@ -84,21 +75,22 @@ annuus.addModules({
 								self.build(self, job);
 							}
 
-							self.togglePage(self, self.active, show);
+							self.togglePage(self, self.active, show, true);
 
-							$('#an-master-container, #an-master-sidebars').stop(true)[show ? 'fadeTo' : 'fadeOut'](400, show && 1);
-
-							$.each([3,2,1,0], function(i, j)
-							{
-								var index = show ? i : j;
-								var props = {};
-								props[index % 2 === 0 ? 'height' : 'width'] = show ? '100%' : 0;
-
-								$.timeout('master-overlay-' + i, i * 100, function()
+							if(show) {
+								self.overlay.animate({ height: '100%' }, 800, 'easeOutBounce', function()
 								{
-									overlays.eq(index).stop(true).animate(props, 400, 'easeOutSine');
+									controls.fadeIn(400);
+									// on IE the sidebars element just wont fade back in
+									//$.browser.msie ? controls.toggle(show) : controls.stop(true)[show ? 'fadeTo' : 'fadeOut'](400, show && 1);
 								});
-							});
+							}
+							else {
+								controls.fadeOut(300, function()
+								{
+									self.overlay.animate({ height: '0%' }, 200);
+								});
+							}
 
 							break;
 							case 2:
@@ -111,15 +103,53 @@ annuus.addModules({
 						}
 					}
 				}).appendTo('#an-master');
+			},
 
-				$('#an-master-nav').menu({
-					select: function(event, ui)
-					{
-						self.switchTo(self, self.pages[ui.item.index()]);
+			pages: [],
+
+			build: function(self, options)
+			{
+				if(!self.nav) {
+					self.nav = $('#an-master-nav').menu({
+						select: function(event, ui)
+						{
+							self.switchTo(self, self.pages[ui.item.index()]);
+						}
+					});
+
+					self.panels = $('#an-master-panels').fixScroll('h1+div');
+				}
+
+				self.run(options, function()
+				{
+					self.nav
+					.append($.format('<li><a href="{0}">{1}</a></li>', annuus.get('DUMMY_HREF'), options.title))
+					.menu('refresh');
+
+					options.css && $.rules(options.css, options);
+
+					var page = {
+						self: options
+					};
+
+					page.controls = $($.format('<div><h1 class="ui-helper-reset ui-widget-header ui-corner-top">{0}</h1></div>', options.title))
+						.append($('<div/>').append(page.panel = options.panel(options)))
+						.appendTo(self.panels);
+
+					if(options.sidebar) {
+						page.controls.push(
+							$('<div class="ui-widget-content ui-corner-right"></div>')
+							.append(page.sidebar = options.sidebar(options))
+							.appendTo(self.sidebars)
+						);
 					}
-				});
 
-				$('#an-master-panels').fixScroll('h1+div');
+					if(self.pages.length === 0) {
+						self.active = page;
+					}
+
+					self.pages.push(page);
+				});
 			},
 
 			switchTo: function(self, page)
@@ -131,7 +161,7 @@ annuus.addModules({
 				self.togglePage(self, page, true);
 			},
 
-			togglePage: function(self, page, show)
+			togglePage: function(self, page, show, atOnce)
 			{
 				if(!page) {
 					return;
@@ -145,51 +175,15 @@ annuus.addModules({
 				{
 					var val = show ? 'show' : 'hide';
 					if(i === 0) {
-						$(this).stop(true, true).animate({ height: val }, 400);
+						$(this).stop(true, true).animate({ height: val }, atOnce ? 0 : 400);
 					}
 					else {
-						$(this).stop(true, true).toggle('drop', { direction: 'left' }, 400);
+						$(this).stop(true, true).toggle('drop', { direction: 'left' }, atOnce ? 0 : 400);
 					}
 				});
 
 				var type = show ? 'select' : 'unselect';
 				type in page.self && page.self[type](page.self, page);
-			},
-
-			pages: [],
-
-			build: function(self, options)
-			{
-				self.run(options, function()
-				{
-					$('#an-master-nav')
-					.append($.format('<li><a href="{0}">{1}</a></li>', annuus.get('DUMMY_HREF'), options.title))
-					.menu('refresh');
-
-					options.css && $.rules(options.css, options);
-
-					var page = {
-						self: options
-					};
-
-					page.controls = $($.format('<div><h1 class="ui-helper-reset ui-widget-header ui-corner-top">{0}</h1></div>', options.title))
-						.append($('<div/>').append(page.panel = options.panel(options)))
-						.appendTo('#an-master-panels');
-
-					if(options.sidebar) {
-						page.controls.push(
-							$('<div class="ui-widget-content ui-corner-right"></div>')
-							.append(page.sidebar = options.sidebar(options))
-							.appendTo('#an-master-sidebars')
-						);
-					}
-
-					if(self.pages.length === 0) {
-						self.active = page;
-					}
-
-					self.pages.push(page);
-				});
 			}
 		}
 	}

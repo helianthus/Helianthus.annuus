@@ -55,6 +55,14 @@ annuus.addModules({
 				self.sidebars = $('#an-master-sidebars');
 				var controls = self.sidebars.add('#an-master-container');
 				var show;
+				var overlayFx = function()
+				{
+					self.overlay.animate({ height: show ? '100%' : '0%' }, show ? { duration: 800, easing: 'easeOutBounce', complete: controlsFx } : 200);
+				};
+				var controlsFx = function()
+				{
+					show ? controls.fadeIn(200) : controls.fadeOut(400, overlayFx);
+				};
 
 				$('<img/>', {
 					id: 'an-master-switch',
@@ -66,31 +74,16 @@ annuus.addModules({
 
 						switch(event.which) {
 							case 1:
-							if(!profile.status) return;
-
-							show = !show;
+							if(!profile.status || controls.queue().length || self.overlay.queue().length) return;
 
 							var job;
 							while(job = self.jobs.shift()) {
 								self.build(self, job);
 							}
 
+							show = !show;
 							self.togglePage(self, self.active, show, true);
-
-							if(show) {
-								self.overlay.animate({ height: '100%' }, 800, 'easeOutBounce', function()
-								{
-									controls.fadeIn(400);
-									// on IE the sidebars element just wont fade back in
-									//$.browser.msie ? controls.toggle(show) : controls.stop(true)[show ? 'fadeTo' : 'fadeOut'](400, show && 1);
-								});
-							}
-							else {
-								controls.fadeOut(300, function()
-								{
-									self.overlay.animate({ height: '0%' }, 200);
-								});
-							}
+							show ? overlayFx() : controlsFx();
 
 							break;
 							case 2:

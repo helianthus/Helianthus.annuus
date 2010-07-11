@@ -1,4 +1,6 @@
 <project name="Helianthus.bolanderi" default="beta">
+	<property name="bolanderi.version" value="0.1.0" />
+
 	<propertyfile file="version.properties">
 		<entry key="project.version.main" default="0.0" />
 		<entry key="project.version.release" default="0" />
@@ -201,6 +203,7 @@
 		<replace dir="${dir.build}">
 			<patternset refid="pattern.text" />
 
+			<replacefilter token="@BOLANDERI_VERSION@" value="${bolanderi.version}" />
 			<replacefilter token="@PROJECT_AUTHOR@" value="${project.author}" />
 			<replacefilter token="@PROJECT_BUILD_TIME@" value="${project.build.time}" />
 			<replacefilter token="@PROJECT_BUILD_TIMESTAMP@" value="${project.build.timestamp}" />

@@ -16,7 +16,8 @@ var bolanderi = {
 	})()
 };
 
-bolanderi.get('VERSION', '@PROJECT_VERSION@');
+bolanderi.get('BOLANDERI_VERSION', '@BOLANDERI_VERSION@');
+bolanderi.get('PROJECT_VERSION', '@PROJECT_VERSION@');
 bolanderi.get('DEBUG_MODE', eval('@PROJECT_DEBUG@'));
 
 /*@PRE_CONTENT@*/

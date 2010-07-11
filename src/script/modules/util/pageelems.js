@@ -11,7 +11,7 @@ annuus.addModules({
 			{
 				$.fn.nameLinks = function()
 				{
-					return $.make(this, '__nameLinks', $(document).pageName() === 'view' ? this.find('.repliers_left > div > a') : this.topics().find('a[href^="search"]'));
+					return this.__nameLinks || (this.__nameLinks = $(document).pageName() === 'view' ? this.find('.repliers_left > div > a') : this.topics().find('a[href^="search"]'));
 				};
 			}
 		},
@@ -24,12 +24,12 @@ annuus.addModules({
 				$.fn.extend({
 					topics: function()
 					{
-						return $.make(this, '__topics', this.topicTable().find('tr').has('td > a'));
+						return this.__topics || (this.__topics = this.topicTable().find('tr').has('td > a'));
 					},
 
 					topicTable: function()
 					{
-						return $.make(this, '__topicTable', this.find({
+						return this.__topicTable || (this.__topicTable = this.find({
 							topics: '#HotTopics > div > table',
 							search: '#ctl00_ContentPlaceHolder1_topics_form > table + table > tbody > tr > td > table',
 							tags: '#ctl00_ContentPlaceHolder1_topics_form > table + table > tbody > tr > td > table',
@@ -47,7 +47,7 @@ annuus.addModules({
 			{
 				$.fn.replies = function()
 				{
-					return $.make(this, '__replies', this.find('.repliers'));
+					return this.__replies || (this.__replies = this.find('.repliers'));
 				};
 			}
 		}

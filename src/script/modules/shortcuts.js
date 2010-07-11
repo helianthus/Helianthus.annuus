@@ -8,7 +8,6 @@ annuus.addModules({
 		'e6d2ea58': {
 			service: 'button',
 			uuid: 'ed7a9b3c-f63b-44c1-a942-ac2b8355e207',
-			insert: true,
 			title: '吹水台',
 			href: '/topics.aspx?type=BW'
 		}

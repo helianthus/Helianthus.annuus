@@ -5,7 +5,7 @@ annuus.addModules({
 	title: 'Button UI',
 	pages: { comp: [all] },
 	database: {
-		indexMap: { defaultValue: {} },
+		buttonOrder: { defaultValue: [] },
 	},
 	tasks: {
 		'4ea1dd56': {
@@ -16,7 +16,6 @@ annuus.addModules({
 				uuid: { paramType: 'required', dataType: 'string', description: 'universally unique id for the button' },
 				title: { paramType: 'required', dataType: 'string' },
 				run_at: { paramType: 'optional', dataType: 'string', values: annuus.get('RUN_AT_TYPES').slice(0), defaultValue: 'document_start' },
-				insert: { paramType: 'optional', dataType: 'boolean', defaultValue: false, description: 'insert to the list by default or not' },
 				href: { paramType: 'optional', dataType: 'string' },
 				css: { paramType: 'optional', dataType: 'string', description: 'injected when button is clicked.', params: ['self'] },
 				widget: { paramType: 'optional', dataType: 'function', description: 'return a widget which is shown when the button is clicked.', params: ['self'] },
@@ -29,15 +28,6 @@ annuus.addModules({
 			},
 			init: function(self, jobs)
 			{
-				self.indexMap = self.database('indexMap');
-				self.lastIndex = -1;
-				$.each(self.indexMap, function(uuid, index)
-				{
-					if(index > self.lastIndex) {
-						self.lastIndex = index;
-					}
-				});
-
 				$.each(jobs || {}, function(i, job)
 				{
 					bolanderi.ready(self.run_at, function()
@@ -122,10 +112,11 @@ annuus.addModules({
 				}
 				$.timeout('button-service-toggle', force || self.opened ? null : 500, function()
 				{
-					if(self.opened !== self.ui.is(':visible')) {
+					if(force || self.opened !== self.ui.is(':visible')) {
 						if(self.opened) {
+							self.more(self);
 							self.container.children().hide().find('.ui-state-focus').removeClass('ui-state-focus');
-							self.mainList.show();
+							self.active = self.mainList.show();
 						}
 						self.ui.stop(true).toggle('fold', { size: 5 }, 300, function()
 						{
@@ -162,10 +153,12 @@ annuus.addModules({
 					button.click(function(event)
 					{
 						event.stopPropagation();
-						var widget = $.make(options, '__widget', options.widget(options));
-						self.mainList.slideUp(200, function()
+
+						var old = self.active;
+						self.active = (options.__widget || (options.__widget = options.widget(options))).appendTo(self.container);
+						old.slideUp(200, function()
 						{
-							widget.appendTo(self.container).slideDown(200);
+							self.active.slideDown(200);
 						});
 					});
 				}
@@ -173,7 +166,6 @@ annuus.addModules({
 				if(options.click) {
 					button.click(function(event)
 					{
-						event.preventDefault();
 						options.click.call(button[0], options, event);
 					});
 				}
@@ -181,34 +173,67 @@ annuus.addModules({
 				return button;
 			},
 
-			currents: [],
-			pendings: [],
+			moreButton: $(),
+
+			more: function(self)
+			{
+				if(!self.frozen && self.hiddenButtons.length) {
+					if(!self.moreButton.length) {
+						self.moreButton = self.make(self, {
+							uuid: null,
+							title: '更多...',
+							click: function(s)
+							{
+								s.__widget.append(self.hiddenButtons);
+							},
+							widget: function()
+							{
+								return $('<div/>').click(function(event)
+								{
+									event.stopPropagation();
+								});
+							}
+						});
+					}
+
+					self.moreButton.appendTo(self.mainList);
+				}
+				else {
+					self.moreButton.detach();
+				}
+			},
+
+			currentIds: [],
+			hiddenButtons: [],
 
 			add: function(self, options)
 			{
+				if(!self.ui) {
+					self.create(self);
+				}
+				if(!self.indexMap) {
+					self.indexMap = {};
+					$.each(self.database('buttonOrder'), function(index, uuid)
+					{
+						self.indexMap[uuid] = index;
+					});
+				}
+
 				self.run(options, function()
 				{
-					if(!(options.uuid in self.indexMap)) {
-						self.indexMap[options.uuid] = options.insert ? ++self.lastIndex : -1;
-						self.database('indexMap', self.indexMap);
-					}
+					var button = self.make(self, options);
 
-					if(self.indexMap[options.uuid] !== -1) {
-						if(!self.ui) {
-							self.create(self);
-						}
-
-						self.currents.push(options.uuid);
-						self.currents.sort(function(a, b)
+					if(options.uuid in self.indexMap) {
+						self.currentIds.push(options.uuid);
+						self.currentIds.sort(function(a, b)
 						{
 							return self.indexMap[a] - self.indexMap[b];
 						});
-						var index = $.inArray(options.uuid, self.currents);
-						var button = self.make(self, options);
+						var index = $.inArray(options.uuid, self.currentIds);
 						index === 0 ? button.prependTo(self.mainList) : button.insertAfter(self.mainList.children().eq(index - 1));
 					}
 					else {
-						self.pendings.push(options);
+						self.hiddenButtons.push(button[0]);
 					}
 				});
 			},
@@ -220,12 +245,9 @@ annuus.addModules({
 				}
 
 				self.frozen = true;
+				page.panel.append(self.hiddenButtons);
 				self.root.css('z-index', 150);
 				self.toggle(self, true);
-
-				for(var i=0; i<self.pendings.length; ++i) {
-					self.make(self, self.pendings.splice(i--, 1)[0]).appendTo(page.panel);
-				}
 
 				self.mainList.add(page.panel).sortable({
 					appendTo: '#an',
@@ -244,24 +266,25 @@ annuus.addModules({
 					},
 					stop: function(event, ui)
 					{
-						ui.item.css('display', ui.item.parent()[0] === self.mainList[0] ? 'block' : '');
+						ui.item.css('display', '');
 					}
 				});
 			},
 
 			panelUnselect: function(self, page)
 			{
-				var indexArray = self.mainList.sortable('toArray');
-				self.lastIndex = indexArray.length - 1;
-				$.each(self.indexMap, function(uuid)
+				self.currentIds = self.mainList.sortable('toArray');
+				self.hiddenButtons = page.panel.children('.ui-button');
+
+				var buttonOrder = self.currentIds.slice();
+				$.each(self.database('buttonOrder'), function(i, uuid)
 				{
-					self.indexMap[uuid] = -1;
+					if($.inArray(uuid, buttonOrder) === -1) {
+						buttonOrder.splice(i, 0, uuid);
+					}
 				});
-				$.each(indexArray, function(index, uuid)
-				{
-					self.indexMap[uuid] = index;
-				});
-				self.database('indexMap', self.indexMap);
+				self.database('buttonOrder', buttonOrder);
+				self.indexMap = null;
 
 				self.frozen = false;
 				self.root.css('z-index', '');

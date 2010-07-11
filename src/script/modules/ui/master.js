@@ -61,7 +61,7 @@ annuus.addModules({
 				};
 				var controlsFx = function()
 				{
-					show ? controls.fadeIn(200) : controls.fadeOut(400, overlayFx);
+					show ? controls.fadeIn(400) : controls.fadeOut(400, overlayFx);
 				};
 
 				$('<img/>', {
@@ -164,16 +164,21 @@ annuus.addModules({
 					self.active = page;
 				}
 
-				page.controls.each(function(i)
-				{
-					var val = show ? 'show' : 'hide';
-					if(i === 0) {
-						$(this).stop(true, true).animate({ height: val }, atOnce ? 0 : 400);
-					}
-					else {
-						$(this).stop(true, true).toggle('drop', { direction: 'left' }, atOnce ? 0 : 400);
-					}
-				});
+				if(atOnce) {
+					page.controls.toggle(show);
+				}
+				else {
+					page.controls.each(function(i)
+					{
+						var val = show ? 'show' : 'hide';
+						if(i === 0) {
+							$(this).stop(true, true).animate({ height: val }, 400);
+						}
+						else {
+							$(this).stop(true, true).toggle('drop', { direction: 'left' }, 400);
+						}
+					});
+				}
 
 				var type = show ? 'select' : 'unselect';
 				type in page.self && page.self[type](page.self, page);

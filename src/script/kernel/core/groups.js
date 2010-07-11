@@ -4,7 +4,7 @@ $(document).one('storage_ready', function()
 var docPageCode = $(document).pageCode();
 var profile = bolanderi.__storage.get();
 var statusTypes = profile.status ? ['core', 'debug', 'comp', 'on', 'off'] : 'core';
-var compTypes = { core:1, debug:1, comp:1 };
+var compTypes = { core:1, comp:1 };
 var services = {};
 var components = {};
 var actions = [];
@@ -34,7 +34,7 @@ $.each(bolanderi.get('MODULES'), function(moduleId, module)
 	$.digEach(module.pages, statusTypes, null, function(status, i, pageCode)
 	{
 		if(pageCode & docPageCode && (module.__pageCode = pageCode)
-		&& (status in compTypes || profile.privateData[module.id][module.__pageCode].status === 1)
+		&& (status in compTypes || status === 'debug' && bolanderi.get('DEBUG_MODE') || profile.privateData[module.id][module.__pageCode].status === 1)
 		&& isRequirementsMet(module)
 		) {
 			$.each(module.tasks, function(id, task)

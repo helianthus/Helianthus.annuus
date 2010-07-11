@@ -7,7 +7,7 @@ function normalize(target)
 	{
 		if(!$.isPlainObject(r)) {
 			target.requires.splice(i, 1, (r = {
-				type: { string: 'module', array: 'option' }[typeof r] || 'truthy',
+				type: { array: 'option' }[typeof r] || 'truthy',
 				params: r
 			}));
 		}

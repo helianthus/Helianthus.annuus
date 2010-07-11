@@ -3,14 +3,11 @@ $(document).one('storage_ready', function()
 
 var docPageCode = $(document).pageCode();
 var profile = bolanderi.__storage.get();
-
-var isModuleOn = function(module)
-{
-	return !!module && (
-	$.inArray(module.__pageCode, [].concat(module.pages.core || [], profile.status && module.pages.comp || [], profile.status && bolanderi.get('DEBUG_MODE') && module.pages.debug || [])) !== -1
-	|| profile.privateData[module.id][module.__pageCode].status >= (profile.status ? 1 : 4)
-	);
-};
+var statusTypes = profile.status ? ['core', 'debug', 'comp', 'on', 'off'] : 'core';
+var compTypes = { core:1, debug:1, comp:1 };
+var services = {};
+var components = {};
+var actions = [];
 var isRequirementsMet = function(target)
 {
 	var module = target.module || target;
@@ -18,9 +15,6 @@ var isRequirementsMet = function(target)
 	{
 		var ret;
 		switch(r.type) {
-			case 'module':
-			ret = isModuleOn(bolanderi.get('MODULES')[r.params[0]]);
-			break;
 			case 'option':
 			ret = bolanderi.__moduleData(module, 'options', r.params[0]) === r.params[1];
 			break;
@@ -35,15 +29,14 @@ var isRequirementsMet = function(target)
 	});
 };
 
-var services = {};
-var components = {};
-var actions = [];
-
 $.each(bolanderi.get('MODULES'), function(moduleId, module)
 {
-	$.digEach(module.pages, ['core', 'debug', 'comp', 'on', 'off'], null, function(status, i, pageCode)
+	$.digEach(module.pages, statusTypes, null, function(status, i, pageCode)
 	{
-		if(pageCode & docPageCode && (module.__pageCode = pageCode) && isModuleOn(module) && isRequirementsMet(module)) {
+		if(pageCode & docPageCode && (module.__pageCode = pageCode)
+		&& (status in compTypes || profile.privateData[module.id][module.__pageCode].status === 1)
+		&& isRequirementsMet(module)
+		) {
 			$.each(module.tasks, function(id, task)
 			{
 				if((task.page == null || task.page & docPageCode) && isRequirementsMet(task)) {

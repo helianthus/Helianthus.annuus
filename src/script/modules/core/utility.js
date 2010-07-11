@@ -1,4 +1,4 @@
-annuus.addModules({
+bolanderi.addModules({
 
 '6dbe57c3-1aca-42d1-bfc7-edd1613b4114':
 {

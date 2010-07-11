@@ -68,8 +68,8 @@ var styles;
 function write()
 {
 	$.each(styles || (styles = {
-		pre: $('<style id="annuus-style-pre" />').prependTo('head'),
-		post: $('<style id="annuus-style-post" />').appendTo('head')
+		pre: $('<style id="@PROJECT_NAME_SHORT@-style-pre" />').prependTo('head'),
+		post: $('<style id="@PROJECT_NAME_SHORT@-style-post" />').appendTo('head')
 	}), function(pos, style)
 	{
 		var css = cssData[pos].stack.join('');

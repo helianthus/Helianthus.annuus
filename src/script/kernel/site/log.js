@@ -1,3 +1,9 @@
+$(document).one('kernel_init', function()
+{
+	$.log('log', 'Helianthus.bolanderi - v{0} - by project.helianthus', annuus.get('BOLANDERI_VERSION'));
+	$.log('log', 'Helianthus.annuus - v{0} - by project.helianthus', annuus.get('PROJECT_VERSION'));
+});
+
 (function()
 {
 

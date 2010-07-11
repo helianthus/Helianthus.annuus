@@ -16,7 +16,7 @@ var messages = {
 	work_window_start: 'work(): window_start.',
 	work_document_start: 'work(): document_start.',
 	work_document_end: 'work(): document_end.',
-	work_window_end: 'work(): window_start.'
+	work_window_end: 'work(): window_end.'
 };
 
 var types = [];

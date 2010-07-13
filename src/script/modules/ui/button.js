@@ -286,6 +286,8 @@ annuus.addModules({
 				self.database('buttonOrder', buttonOrder);
 				self.indexMap = null;
 
+				self.mainList.sortable('destroy');
+
 				self.frozen = false;
 				self.root.css('z-index', '');
 				self.toggle(self, false);

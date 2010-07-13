@@ -92,11 +92,15 @@ bolanderi.Job.prototype = {
 
 	process: function(options)
 	{
+		if('__processResult' in options) {
+			return options.__processResult;
+		}
+
 		if(this.type !== 'service') {
 			$.error('scan()/run() is for services only. [{0}]', this.info());
 		}
 
-		return !$.any(this.params, function(name, details)
+		return (options.__processResult = !$.any(this.params, function(name, details)
 		{
 			if('defaultValue' in details && !(name in options)) {
 				options[name] = details.defaultValue;
@@ -110,24 +114,29 @@ bolanderi.Job.prototype = {
 			) {
 				return true;
 			}
-		})
+		}));
 	},
 
-	run: function(job, fn)
+	run: function(jobs, fn)
 	{
-		if(!this.process(job)) {
-			return;
-		}
+		var self = this;
 
-		$.event.trigger('job_start', [job, this]);
+		$.each([].concat(jobs), function(i, job)
+		{
+			if(!self.process(job)) {
+				return;
+			}
 
-		try {
-			fn();
-		}
-		catch(e) {
-			$.log('error', '{0} [{1}]', e.message, bolanderi.info(job));
-		}
+			$.event.trigger('job_start', [job, self]);
 
-		$.event.trigger('job_end', [job, this]);
+			try {
+				fn(i, job);
+			}
+			catch(e) {
+				$.log('error', '{0} [{1}]', e.message, bolanderi.info(job));
+			}
+
+			$.event.trigger('job_end', [job, self]);
+		});
 	}
 };

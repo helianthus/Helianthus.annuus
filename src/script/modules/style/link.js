@@ -12,9 +12,8 @@ annuus.addModules({
 	},
 	tasks: {
 		'e6d2ea58': {
-			run_at: 'document_start',
 			service: 'theme',
-			name: 'link-style',
+			name: 'theme-links',
 			position: 'pre',
 			js: function(self, options)
 			{

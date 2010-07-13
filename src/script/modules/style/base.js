@@ -32,9 +32,8 @@ annuus.addModules({
 	},
 	tasks: {
 		'd15b72b1': {
-			run_at: 'document_start',
 			service: 'theme',
-			name: 'main-style',
+			name: 'theme-base',
 			css: '\
 				.ui-widget-content { border-color: #{0[borderColorContent]}; background: #{0[bgColorContent]}; color: #{0[fcContent]}; } \
 				.ui-widget-content a { color: #{0[fcContent]}; } \

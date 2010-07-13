@@ -8,9 +8,8 @@ annuus.addModules({
 	},
 	tasks: {
 		'07e7e30d': {
-			run_at: 'document_start',
 			service: 'theme',
-			name: 'hkg-logo',
+			name: 'theme-logo',
 			js: function(self, options)
 			{
 				return options.uriHKGLogo

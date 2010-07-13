@@ -21,11 +21,7 @@ annuus.addModules({
 					}, self.data('themes')[$(this).text()]);
 
 					self.options(theme);
-
-					$.rules(function()
-					{
-						$.service.theme.refresh(theme);
-					});
+					$.service.theme.load(theme);
 				});
 
 				$.each(self.data('themes'), function(name)

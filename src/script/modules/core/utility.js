@@ -14,12 +14,9 @@ bolanderi.addModules({
 			},
 			init: function(self, jobs)
 			{
-				$.each(jobs, function(i, job)
+				self.run(jobs, function(i, job)
 				{
-					self.run(job, function()
-					{
-						job.js(job);
-					});
+					job.js(job);
 				});
 			}
 		}

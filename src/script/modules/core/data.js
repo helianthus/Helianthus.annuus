@@ -15,16 +15,13 @@ bolanderi.addModules({
 			},
 			init: function(self, jobs)
 			{
-				$.each(jobs, function(i, job)
+				self.run(jobs, function(i, job)
 				{
-					self.run(job, function()
-					{
-						if($.checkIf.exist(bolanderi.get('DATA', {}), job.name, job)) {
-							return;
-						}
+					if($.checkIf.exist(bolanderi.get('DATA', {}), job.name, job)) {
+						return;
+					}
 
-						bolanderi.get('DATA')[job.name] = job.json;
-					});
+					bolanderi.get('DATA')[job.name] = job.json;
 				});
 			}
 		}

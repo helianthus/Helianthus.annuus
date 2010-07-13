@@ -2,22 +2,28 @@ annuus.addModules({
 
 '8e08db0d-3c7b-418d-a873-6901f37c497f':
 {
-	title: '背景改動基礎',
+	title: 'Theme Service (with background fix)',
 	pages: { comp: [all] },
+	requires: ['theme'],
 	tasks: {
 		'5c6e7d7d': {
-			type: 'component',
-			name: 'style-base',
+			type: 'service',
+			name: 'theme-bgfix',
 			run_at: 'document_start',
-			css: '\
-				.TopMenuPanel, .PageMiddleBox, .bg_top, .bg_main { background-image: none; } \
-				.TopMenuBox, .TopMenuPanel + div.PageWidthContainer, table[width="955"] > tbody > tr:first-child { display: none; } \
-				.bg_top { height: auto; } \
-				\
-				#ctl00_TopBarHomeImage { width: 0 !important; height: 0 !important; } \
-			',
-			js: function(self)
+			init: function(self, jobs)
 			{
+				if(!jobs.length) {
+					return;
+				}
+
+				$.rules('\
+					.TopMenuPanel, .PageMiddleBox, .bg_top, .bg_main { background-image: none; } \
+					.TopMenuBox, .TopMenuPanel + div.PageWidthContainer, table[width="955"] > tbody > tr:first-child { display: none; } \
+					.bg_top { height: auto; } \
+					\
+					#ctl00_TopBarHomeImage { width: 0 !important; height: 0 !important; } \
+				');
+
 				$.digEach({
 					'': [
 						['/images/index_images/logo.jpg', 220, 115, 'logo'],
@@ -48,6 +54,8 @@ annuus.addModules({
 				{
 					$.rules('img[src][src][src{0}="{1[0]}"] { padding: 0 {1[1]}px {1[2]}px 0; width: 0; height: 0; background: url("{2.data(images)[{1[3]}]}") no-repeat center; }', symbol, info, self);
 				});
+
+				$.service.theme.add(jobs);
 			}
 		}
 	}

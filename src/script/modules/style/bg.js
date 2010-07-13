@@ -13,12 +13,10 @@ annuus.addModules({
 			options: { id: 'bgAero', value: false }
 		}}
 	},
-	include: ['style-base'],
 	tasks: {
 		'bb09974e': {
-			run_at: 'document_start',
-			service: 'theme',
-			name: 'style-bg',
+			service: 'theme-bgfix',
+			name: 'theme-bg',
 			js: function(self, theme)
 			{
 				var bg = window.opera && self.options('bgAero')

@@ -10,12 +10,10 @@ annuus.addModules({
 		fcTime: { title: '時間文字顏色', type: 'text', defaultValue: '800000', access: 'public' },
 		fcQuote: { title: '引用文字顏色', type: 'text', defaultValue: '0000a0', access: 'public' }
 	},
-	include: ['style-base'],
 	tasks: {
 		'd15b72b1': {
-			run_at: 'document_start',
-			service: 'theme',
-			name: 'forum-style',
+			service: 'theme-bgfix',
+			name: 'theme-forum',
 			//----- Welcome to HELL! -----//
 			css: '\
 				/* anchor */ \
@@ -261,9 +259,8 @@ annuus.addModules({
 
 		'b766aea7': {
 			option: ['同時套用於表單元件', true],
-			run_at: 'document_start',
 			service: 'theme',
-			name: 'form-style',
+			name: 'style-forms',
 			css: '\
 				input, textarea, select \
 					{ border: 1px inset #{0[borderColorContent]}; background-color: #{0[bgColorContent2]}; color: #{0[fcContent]}; } \

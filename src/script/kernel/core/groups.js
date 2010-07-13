@@ -6,8 +6,7 @@ var profile = bolanderi.__storage.get();
 var statusTypes = profile.status ? ['core', 'debug', 'comp', 'on', 'off'] : 'core';
 var compTypes = { core:1, comp:1 };
 var services = {};
-var components = {};
-var actions = [];
+var actions = {};
 var isRequirementsMet = function(target)
 {
 	var module = target.module || target;
@@ -18,6 +17,8 @@ var isRequirementsMet = function(target)
 			case 'option':
 			ret = bolanderi.__moduleData(module, 'options', r.params[0]) === r.params[1];
 			break;
+			case 'service':
+			return true;
 			case 'truthy':
 			ret = !!r.params[0];
 			break;
@@ -50,36 +51,28 @@ $.each(bolanderi.get('MODULES'), function(moduleId, module)
 						) {
 							break;
 						}
-						services[job.name] = job;
-						$(document).one('work_' + job.run_at, function()
+
+						job.jobs = $.make(actions, job.name, []);
+						services[job.name] = [];
+
+						$.each([].concat(job.module.requires, job.requires), function(i, r)
 						{
-							$.event.trigger('service_start', job);
-							$.each(job.api || {}, function(name, details)
-							{
-								if(!$.checkIf.missing(job, name, job.info())) {
-									$.make($, 'service', job.name, name, function()
-									{
-										job[name].apply(job, [job].concat([].slice.call(arguments)));
-									});
-								}
-							});
-							$.rules(function()
-							{
-								job.init(job, services[job.name].jobs || []);
-							});
-							$.event.trigger('service_end', job);
+							if(r && r.type === 'service') {
+								services[job.name].push(r.params[0]);
+							}
 						});
-						break;
-						case 'component':
-						if($.checkIf.missing(job, ['name']) || $.checkIf.exist(components, job.name, job)) {
-							break;
+
+						if(services[job.name].length) {
+							$(document).bind('service_end', { service: job }, listenService);
 						}
-						job.service = job.service || 'auto';
-						components[job.name] = job;
+						else {
+							$(document).one('work_' + job.run_at, { service: job }, runService);
+						}
+
 						break;
 						case 'action':
 						job.service = job.service || 'auto';
-						actions.push(job);
+						$.make(actions, job.service, []).push(job);
 						break;
 						default:
 						$.log('error', 'unknown task type "{0}" encountered, task dropped. [{1}]', job.type, job.info());
@@ -91,26 +84,46 @@ $.each(bolanderi.get('MODULES'), function(moduleId, module)
 	});
 });
 
-$.each(actions, function(i, action)
+function listenService(event, service)
 {
-	if(!(action.service in services)
-	|| !services[action.service].process(action)
-	|| action.include && !$.all(action.include, function(i, name)
-		{
-			return name in components;
-		},
-		function(i, name)
-		{
-			if(!components[name].__loaded) {
-				components[name].__loaded = true;
-				$.make(services, components[name].service, 'jobs', []).push(components[name]);
-			}
-		})
-	) {
-		return;
+	var self = event.data.service;
+	var index = $.inArray(service.name, services[self.name]);
+	if(index !== -1) {
+		services[self.name].splice(index, 1);
+		if(services[self.name].length === 0) {
+			bolanderi.ready(self.run_at, function()
+			{
+				runService({ data: { service: self } });
+			});
+		}
 	}
+}
 
-	$.make(services, action.service, 'jobs', []).push(action);
-});
+function runService(event)
+{
+	var service = event.data.service;
+
+	$.event.trigger('service_start', service);
+
+	$.each(service.api || {}, function(name, details)
+	{
+		if(!$.checkIf.missing(service, name)) {
+			$.make($, 'service', service.name, name, function()
+			{
+				service[name].apply(service, [service].concat([].slice.call(arguments)));
+			});
+		}
+	});
+	$.each(service.jobs, function(i, job)
+	{
+		service.process(job);
+	});
+	$.rules(function()
+	{
+		service.init(service, service.jobs);
+	});
+
+	$.event.trigger('service_end', service);
+}
 
 });

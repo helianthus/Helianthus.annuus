@@ -7,7 +7,7 @@ function normalize(target)
 	{
 		if(!$.isPlainObject(r)) {
 			target.requires.splice(i, 1, (r = {
-				type: { array: 'option' }[typeof r] || 'truthy',
+				type: { string: 'service', array: 'option' }[typeof r] || 'truthy',
 				params: r
 			}));
 		}
@@ -38,10 +38,6 @@ bolanderi.addModules = function(newModules)
 				title: task.title || module.title,
 				type: task.type || 'action'
 			});
-
-			if(module.include || task.include) {
-				task.include = [].concat(module.include || [], task.include || []);
-			}
 
 			if(task.option) {
 				$.make(module, 'options', taskId, { title: task.option[0], type: 'boolean', defaultValue: task.option[1] });

@@ -18,6 +18,7 @@ $.each({
 	unknown: {
 		message: 'unknown value "{0}" encountered.',
 		method: 'all',
+		param: 'target',
 		filter: function(target, value)
 		{
 			return target !== value;
@@ -44,13 +45,13 @@ $.each({
 		var val;
 		var result = $[data.method]([].concat(refs), function(i, value)
 		{
-			val = value;
+			val = data.param === 'target' ? target : value;
 			return data.filter(target, value);
 		});
 
 		if(result) {
 			info = info || target;
-			$.log('error', '{0}{1|} [{2}]', $.format(data.message, val), info instanceof bolanderi.Job && ' task dropped.', bolanderi.info(info));
+			$.log('error', '{0}{1|} [{2}]', $.format(data.message, val + ''), info instanceof bolanderi.Job && ' task dropped.', bolanderi.info(info));
 		}
 
 		return result;

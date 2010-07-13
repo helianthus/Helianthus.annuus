@@ -17,6 +17,11 @@ var cssData = {
 $.rules = function(callback)
 {
 	if($.isFunction(callback)) {
+		if(cache) {
+			callback();
+			return;
+		}
+
 		$.event.trigger('cache_on');
 		cache = true;
 		modified = false;

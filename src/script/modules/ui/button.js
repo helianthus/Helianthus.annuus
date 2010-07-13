@@ -11,11 +11,11 @@ annuus.addModules({
 		'4ea1dd56': {
 			type: 'service',
 			name: 'button',
-			run_at: 'window_start',
+			run_at: 'document_start',
 			params: {
 				uuid: { paramType: 'required', dataType: 'string', description: 'universally unique id for the button' },
 				title: { paramType: 'required', dataType: 'string' },
-				run_at: { paramType: 'optional', dataType: 'string', values: annuus.get('RUN_AT_TYPES').slice(0), defaultValue: 'document_start' },
+				run_at: { paramType: 'optional', dataType: 'string', values: annuus.get('RUN_AT_TYPES').slice(1), defaultValue: 'document_start' },
 				href: { paramType: 'optional', dataType: 'string' },
 				css: { paramType: 'optional', dataType: 'string', description: 'injected when button is clicked.', params: ['self'] },
 				widget: { paramType: 'optional', dataType: 'function', description: 'return a widget which is shown when the button is clicked.', params: ['self'] },

@@ -17,6 +17,7 @@ annuus.addModules({
 				title: { paramType: 'required', dataType: 'string' },
 				run_at: { paramType: 'optional', dataType: 'string', values: annuus.get('RUN_AT_TYPES').slice(1), defaultValue: 'document_start' },
 				href: { paramType: 'optional', dataType: 'string' },
+				target: { paramType: 'optional', dataType: 'string' },
 				css: { paramType: 'optional', dataType: 'string', description: 'injected when button is clicked.', params: ['self'] },
 				widget: { paramType: 'optional', dataType: 'function', description: 'return a widget which is shown when the button is clicked.', params: ['self'] },
 				click: { paramType: 'optional', dataType: 'function', description: 'click handler', params: ['self', 'event'] }
@@ -131,7 +132,8 @@ annuus.addModules({
 				var button = $('<a/>', {
 					id: options.uuid,
 					text: options.title,
-					href: options.href || annuus.get('DUMMY_HREF')
+					href: options.href || annuus.get('DUMMY_HREF'),
+					target: options.target || '_self'
 				})
 				.click(function(event)
 				{
@@ -279,7 +281,7 @@ annuus.addModules({
 				var buttonOrder = self.currentIds.slice();
 				$.each(self.database('buttonOrder'), function(i, uuid)
 				{
-					if($.inArray(uuid, buttonOrder) === -1) {
+					if(!document.getElementById(uuid)) {
 						buttonOrder.splice(i, 0, uuid);
 					}
 				});

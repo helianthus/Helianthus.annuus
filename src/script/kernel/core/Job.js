@@ -117,7 +117,7 @@ bolanderi.Job.prototype = {
 		}));
 	},
 
-	run: function(jobs, fn)
+	profile: function(jobs, fn)
 	{
 		var self = this;
 
@@ -134,6 +134,7 @@ bolanderi.Job.prototype = {
 			}
 			catch(e) {
 				$.log('error', '{0} [{1}]', e.message, bolanderi.info(job));
+				$.debug(e);
 			}
 
 			$.event.trigger('job_end', [job, self]);

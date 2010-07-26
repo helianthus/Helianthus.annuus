@@ -110,6 +110,9 @@ function runService(event)
 		if(!$.checkIf.missing(service, name)) {
 			$.make($, 'service', service.name, name, function()
 			{
+				if(name === 'add' && !service.process(arguments[0])) {
+					return;
+				}
 				service[name].apply(service, [service].concat([].slice.call(arguments)));
 			});
 		}

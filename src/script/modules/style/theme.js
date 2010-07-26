@@ -46,7 +46,7 @@ annuus.addModules({
 
 				$.rules(function()
 				{
-					self.run(jobs, function(i, job)
+					self.profile(jobs, function(i, job)
 					{
 						$.rules({ id: job.name, position: job.position }, 'css' in job ? job.css : job.js(job, theme), self.theme);
 					});

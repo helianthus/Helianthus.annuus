@@ -113,7 +113,7 @@ annuus.addModules({
 					self.panels = $('#an-master-panels').fixScroll('h1+div');
 				}
 
-				self.run(options, function()
+				self.profile(options, function()
 				{
 					self.nav
 					.append($.format('<li><a href="{0}">{1}</a></li>', annuus.get('DUMMY_HREF'), options.title))

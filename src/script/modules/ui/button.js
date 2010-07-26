@@ -221,7 +221,7 @@ annuus.addModules({
 					});
 				}
 
-				self.run(options, function()
+				self.profile(options, function()
 				{
 					var button = self.make(self, options);
 

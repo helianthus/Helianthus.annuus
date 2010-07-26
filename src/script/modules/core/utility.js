@@ -14,7 +14,7 @@ bolanderi.addModules({
 			},
 			init: function(self, jobs)
 			{
-				self.run(jobs, function(i, job)
+				self.profile(jobs, function(i, job)
 				{
 					job.js(job);
 				});

@@ -80,6 +80,7 @@
 				<stripjavacomments />
 				<striplinebreaks />
 				<tokenfilter>
+					<replaceregex pattern="\s+(?=[{,:;}])|(?&lt;=[{,:;}])\s+" replace="" flags="g" />
 					<replaceregex pattern="url([^)]+)" replace="none" flags="g" />
 					<replacestring from="&apos;" to="\&apos;" />
 				</tokenfilter>

@@ -10,9 +10,9 @@ annuus.addModules({
 		'07e7e30d': {
 			service: 'theme',
 			name: 'theme-logo',
-			js: function(self, options)
+			js: function(self, theme)
 			{
-				return options.uriHKGLogo
+				return theme.uriHKGLogo
 				?	'\
 						#ctl00_TopBarHomeLink { display: block; background-image: url("{0[uriHKGLogo]}"); } \
 						#ctl00_TopBarHomeImage { visibility: hidden; } \

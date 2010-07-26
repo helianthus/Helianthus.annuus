@@ -100,7 +100,7 @@ annuus.addModules({
 
 			pages: [],
 
-			build: function(self, options)
+			build: function(self, job)
 			{
 				if(!self.nav) {
 					self.nav = $('#an-master-nav').menu({
@@ -113,26 +113,26 @@ annuus.addModules({
 					self.panels = $('#an-master-panels').fixScroll('h1+div');
 				}
 
-				self.profile(options, function()
+				self.profile(job, function()
 				{
 					self.nav
-					.append($.format('<li><a href="{0}">{1}</a></li>', annuus.get('DUMMY_HREF'), options.title))
+					.append($.format('<li><a href="{0}">{1}</a></li>', annuus.get('DUMMY_HREF'), job.title))
 					.menu('refresh');
 
-					options.css && $.rules(options.css, options);
+					job.css && $.rules(job.css, job);
 
 					var page = {
-						self: options
+						self: job
 					};
 
-					page.controls = $($.format('<div><h1 class="ui-helper-reset ui-widget-header ui-corner-top">{0}</h1></div>', options.title))
-						.append($('<div/>').append(page.panel = options.panel(options)))
+					page.controls = $($.format('<div><h1 class="ui-helper-reset ui-widget-header ui-corner-top">{0}</h1></div>', job.title))
+						.append($('<div/>').append(page.panel = job.panel(job)))
 						.appendTo(self.panels);
 
-					if(options.sidebar) {
+					if(job.sidebar) {
 						page.controls.push(
 							$('<div class="ui-widget-content ui-corner-right"></div>')
-							.append(page.sidebar = options.sidebar(options))
+							.append(page.sidebar = job.sidebar(job))
 							.appendTo(self.sidebars)
 						);
 					}

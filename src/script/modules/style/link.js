@@ -15,7 +15,7 @@ annuus.addModules({
 			service: 'theme',
 			name: 'theme-links',
 			position: 'pre',
-			js: function(self, options)
+			js: function(self, theme)
 			{
 				var css = '\
 					a { color: #{0[fcAnchorLink]}; } \

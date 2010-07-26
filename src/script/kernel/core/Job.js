@@ -1,7 +1,6 @@
-bolanderi.Job = function(task)
+bolanderi.Job = function(options)
 {
-	$.extend(this, task);
-	this.task = task;
+	$.extend(this, options);
 };
 
 bolanderi.__moduleData = function(module, dataType, id, value)
@@ -79,6 +78,20 @@ bolanderi.Job.prototype = {
 		return bolanderi.__moduleData(this.module, 'database', id, value);
 	},
 
+	derive: function(options)
+	{
+		if(!(options && options.id)) {
+			$.error('derived job is missing an id!');
+		}
+
+		return new bolanderi.Job($.extend({
+			module: this.module,
+			service: this.service,
+			title: this.title,
+			type: this.type
+		}, options));
+	},
+
 	info: function()
 	{
 		return $.format('{0}, {1}, {2}{3}',
@@ -90,27 +103,32 @@ bolanderi.Job.prototype = {
 		return bolanderi.__moduleData(this.module, 'options', id, value);
 	},
 
-	process: function(options)
+	validate: function(job)
 	{
-		if('__processResult' in options) {
-			return options.__processResult;
+		if('__validationResult' in job) {
+			return job.__validationResult;
 		}
 
 		if(this.type !== 'service') {
-			$.error('scan()/run() is for services only. [{0}]', this.info());
+			$.error('validate()/profile() is for services only. [{0}]', this.info());
 		}
 
-		return (options.__processResult = !$.any(this.params, function(name, details)
+		if(!(job instanceof bolanderi.Job)) {
+			$.log('error', 'Validation failed. param must be a job object (try self.derive). [{0}, {1}]', this.info(), bolanderi.info(job));
+			return false;
+		}
+
+		return (job.__processResult = !$.any(this.params, function(name, details)
 		{
-			if('defaultValue' in details && !(name in options)) {
-				options[name] = details.defaultValue;
+			if('defaultValue' in details && !(name in job)) {
+				job[name] = details.defaultValue;
 			}
 
-			if($.checkIf.missing(details, ['paramType', 'dataType'], options)
-			|| $.checkIf.unknown(details.paramType, ['required', 'optional'], options)
-			|| details.paramType === 'required' && $.checkIf.missing(options, name)
-			|| name in options && $.checkIf.wrongType(options[name], details.dataType, options)
-			|| 'values' in details && $.checkIf.unknown(options[name], details.values, options)
+			if($.checkIf.missing(details, ['paramType', 'dataType'], this)
+			|| $.checkIf.unknown(details.paramType, ['required', 'optional'], this)
+			|| details.paramType === 'required' && $.checkIf.missing(job, name)
+			|| name in job && $.checkIf.wrongType(job[name], details.dataType, job)
+			|| 'values' in details && $.checkIf.unknown(job[name], details.values, job)
 			) {
 				return true;
 			}
@@ -123,7 +141,7 @@ bolanderi.Job.prototype = {
 
 		$.each([].concat(jobs), function(i, job)
 		{
-			if(!self.process(job)) {
+			if(!self.validate(job)) {
 				return;
 			}
 
@@ -133,7 +151,7 @@ bolanderi.Job.prototype = {
 				fn(i, job);
 			}
 			catch(e) {
-				$.log('error', '{0} [{1}]', e.message, bolanderi.info(job));
+				$.log('error', '{0} [{1}]', e.message, job.info());
 				$.debug(e);
 			}
 

@@ -34,7 +34,7 @@ $.each(messages, function(type)
 $(document)
 .bind(types.join(' '), function(event, job)
 {
-	$.log.apply(null, ['log', messages[event.type], bolanderi.info(job)].concat([].slice.call(arguments, 2)));
+	$.log.apply(null, ['log', messages[event.type], job instanceof bolanderi.Job && job.info()].concat([].slice.call(arguments, 2)));
 });
 
 })();

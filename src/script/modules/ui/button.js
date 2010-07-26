@@ -127,13 +127,13 @@ annuus.addModules({
 				});
 			},
 
-			make: function(self, options)
+			make: function(self, job)
 			{
 				var button = $('<a/>', {
-					id: options.uuid,
-					text: options.title,
-					href: options.href || annuus.get('DUMMY_HREF'),
-					target: options.target || '_self'
+					id: job.uuid,
+					text: job.title,
+					href: job.href || annuus.get('DUMMY_HREF'),
+					target: job.target || '_self'
 				})
 				.click(function(event)
 				{
@@ -144,20 +144,20 @@ annuus.addModules({
 				})
 				.button();
 
-				if(options.css) {
+				if(job.css) {
 					button.one('click', function()
 					{
-						$.rules(options.css, options);
+						$.rules(job.css, job);
 					});
 				}
 
-				if(options.widget) {
+				if(job.widget) {
 					button.click(function(event)
 					{
 						event.stopPropagation();
 
 						var old = self.active;
-						self.active = (options.__widget || (options.__widget = options.widget(options))).appendTo(self.container);
+						self.active = (job.__widget || (job.__widget = job.widget(job))).appendTo(self.container);
 						old.slideUp(200, function()
 						{
 							self.active.slideDown(200);
@@ -165,10 +165,10 @@ annuus.addModules({
 					});
 				}
 
-				if(options.click) {
+				if(job.click) {
 					button.click(function(event)
 					{
-						options.click.call(button[0], options, event);
+						job.click.call(button[0], job, event);
 					});
 				}
 
@@ -208,7 +208,7 @@ annuus.addModules({
 			currentIds: [],
 			hiddenButtons: [],
 
-			add: function(self, options)
+			add: function(self, job)
 			{
 				if(!self.ui) {
 					self.create(self);
@@ -221,17 +221,17 @@ annuus.addModules({
 					});
 				}
 
-				self.profile(options, function()
+				self.profile(job, function()
 				{
-					var button = self.make(self, options);
+					var button = self.make(self, job);
 
-					if(options.uuid in self.indexMap) {
-						self.currentIds.push(options.uuid);
+					if(job.uuid in self.indexMap) {
+						self.currentIds.push(job.uuid);
 						self.currentIds.sort(function(a, b)
 						{
 							return self.indexMap[a] - self.indexMap[b];
 						});
-						var index = $.inArray(options.uuid, self.currentIds);
+						var index = $.inArray(job.uuid, self.currentIds);
 						index === 0 ? button.prependTo(self.mainList) : button.insertAfter(self.mainList.children().eq(index - 1));
 					}
 					else {
@@ -321,12 +321,14 @@ annuus.addModules({
 		'98d53583': {
 			js: function(self)
 			{
+				var ID = 'acb540b1-d6e0-4c65-b953-d7ffabf26c65_';
 				$.each($.range(1,30), function(i,n)
 				{
-					$.service.button.add({
-						uuid: 'acb540b1-d6e0-4c65-b953-d7ffabf26c65_' + n,
+					$.service.button.add(self.derive({
+						id: ID + n,
+						uuid: ID + n,
 						title: '測試按扭' + n
-					});
+					}));
 				});
 			}
 		}

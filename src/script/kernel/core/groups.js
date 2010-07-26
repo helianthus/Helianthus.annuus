@@ -110,7 +110,7 @@ function runService(event)
 		if(!$.checkIf.missing(service, name)) {
 			$.make($, 'service', service.name, name, function()
 			{
-				if(name === 'add' && !service.process(arguments[0])) {
+				if(name === 'add' && !service.validate(arguments[0])) {
 					return;
 				}
 				service[name].apply(service, [service].concat([].slice.call(arguments)));
@@ -119,7 +119,7 @@ function runService(event)
 	});
 	$.each(service.jobs, function(i, job)
 	{
-		service.process(job);
+		service.validate(job);
 	});
 	$.rules(function()
 	{

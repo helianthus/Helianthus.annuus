@@ -6,6 +6,7 @@ annuus.addModules({
 	pages: { on: [view | profilepage | sendpm] },
 	tasks: {
 		'475b4b70': {
+			service: 'lock',
 			run_at: 'document_start',
 			css: '\
 				img[onload] { width: auto; height: auto; max-width: 100%; } \

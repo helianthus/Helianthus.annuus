@@ -24,8 +24,6 @@ bolanderi.addModules({
 
 			lock: function(self)
 			{
-				$.log('log', 'locking layout...');
-
 				$.rules('\
 					.repliers > tbody > tr > td + td > table, \
 					.ListPMText > table, .ListPMText > table > tbody > tr > td > table \
@@ -47,6 +45,7 @@ bolanderi.addModules({
 					});
 				}
 
+				$.log('log', 'Layout is now locked.');
 				self.isLocked = true;
 			},
 

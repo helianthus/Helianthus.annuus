@@ -40,7 +40,7 @@ bolanderi.addModules({
 					// fix vote page
 					$.service.auto.add({
 						frequency: 'always',
-						js: function(self)
+						js: function()
 						{
 							self.context().find('.repliers > tbody > tr > td[colspan="100%"]').attr('colspan', '2');
 						}
@@ -52,11 +52,9 @@ bolanderi.addModules({
 
 			add: function(self, job)
 			{
-				if(!isLocked) {
+				if(!self.isLocked) {
 					self.lock(self);
 				}
-
-				$.debug('test');
 
 				$.service.auto.add(job);
 			}

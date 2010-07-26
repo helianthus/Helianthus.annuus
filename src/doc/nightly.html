@@ -8,6 +8,7 @@
 body { font-family: sans-serif; }
 table { padding: 0.25em 0; }
 td { border: 1px solid black; padding: 0.5em; }
+p { margin-bottom: 0; }
 </style>
 </head>
 <body>
@@ -24,7 +25,11 @@ td { border: 1px solid black; padding: 0.5em; }
 		<tr><td>Maxthon 2</td><td><a href="beta/annuus.m2f">annuus.m2f</a></td></tr>
 		<tr><td>Firefox 3.5+ + Greasemonkey / Safari(Mac) + GreaseKit</td><td><a href="beta/annuus.user.js">annuus.user.js</a></td></tr>
 		<tr><td>Any modern browser + Privoxy</td><td><a href="beta/annuus.privoxy.zip">annuus.privoxy.zip</a></td></tr>
-		<tr><td>bookmarklet</td><td><a href="javascript:(function(A,n,N,u,U,s){u=n+'-'+N;if(!A.getElementById(u)){s=A.createElement(N);s.id=u;s.src='http://helianthus-'+n+'.appspot.com/beta/'+n+'.js';U=A.getElementsByTagName(N)[0];U.parentNode.insertBefore(s,U);}})(document,'annuus','script');">Helianthus.annuus</a></td></tr>
+		<tr><td>bookmarklet (drag to bookmark bar)</td><td><a href="javascript:(function(A,n,N,u,U,s){u=n+'-'+N;if(!A.getElementById(u)){s=A.createElement(N);s.id=u;s.src='http://helianthus-'+n+'.appspot.com/beta/'+n+'.js';U=A.getElementsByTagName(N)[0];U.parentNode.insertBefore(s,U);}})(document,'annuus','script');">Helianthus.annuus</a></td></tr>
 	</table>
+	<div>
+		<p>If your browser does not support dragging to bookmark bar, copy the text below and save as a bookmark:</p>
+		<textarea cols="105" rows="4" readonly="" onclick="this.select()">javascript:(function(A,n,N,u,U,s){u=n+'-'+N;if(!A.getElementById(u)){s=A.createElement(N);s.id=u;s.src='http://helianthus-'+n+'.appspot.com/beta/'+n+'.js';U=A.getElementsByTagName(N)[0];U.parentNode.insertBefore(s,U);}})(document,'annuus','script');</textarea>
+	</div>
 </body>
 </html>

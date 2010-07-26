@@ -9,7 +9,7 @@
 	<updated>@PROJECT_BUILD_TIMESTAMP@</updated>
 
 	<entry>
-		<id>urn:uuid:41bd8dc1-26ac-43a5-a7c0-7d6f6c5959f9</id>
+		<id>tag:helianthus-annuus.appspot.com,2010:nightly/@PROJECT_VERSION@</id>
 		<link rel="alternate" href="nightly.html" />
 		<title>Lastest builds</title>
 		<updated>@PROJECT_BUILD_TIMESTAMP@</updated>

@@ -20,8 +20,11 @@ annuus.addModules({
 						bgImageBody: ''
 					}, self.data('themes')[$(this).text()]);
 
-					self.options(theme);
-					$.service.theme.load(theme);
+					$.service.button.lockScroll(function()
+					{
+						self.options(theme);
+						$.service.theme.load(theme);
+					});
 				});
 
 				$.each(self.data('themes'), function(name)

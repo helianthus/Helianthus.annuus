@@ -24,6 +24,7 @@ annuus.addModules({
 			},
 			api: {
 				add: { description: 'add a new button.', params: ['job'] },
+				lockScroll: { description: 'save scroll position, execute fn, then restore the scroll position', params: ['fn'] },
 				panelSelect: { description: 'for internal use only.'},
 				panelUnselect: { description: 'for internal use only.'}
 			},
@@ -238,6 +239,13 @@ annuus.addModules({
 						self.hiddenButtons.push(button[0]);
 					}
 				});
+			},
+
+			lockScroll: function(self, fn)
+			{
+				var top = self.container.scrollTop();
+				fn();
+				self.container.scrollTop(top);
 			},
 
 			panelSelect: function(self, page)

@@ -55,7 +55,10 @@ annuus.addModules({
 					$.rules('img[src][src][src{0}="{1[0]}"] { padding: 0 {1[1]}px {1[2]}px 0; width: 0; height: 0; background: url("{2.data(images)[{1[3]}]}") no-repeat center; }', symbol, info, self);
 				});
 
-				$.service.theme.add(jobs);
+				$.each(jobs, function(i, job)
+				{
+					$.service.theme.add(job);
+				});
 			}
 		}
 	}

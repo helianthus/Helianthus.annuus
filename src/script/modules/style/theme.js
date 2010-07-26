@@ -16,7 +16,7 @@ annuus.addModules({
 				js: { paramType: 'optional', dataType: 'function', description: 'return css statements, cannot use together with parameter "css"', params: ['self', 'theme'] }
 			},
 			api: {
-				add: { description: 'add new theme job(s).', param: ['job(s)'] },
+				add: { description: 'add new theme job.', param: ['job'] },
 				load: { description: 'load a new theme.', param: ['theme'] }
 			},
 			init: function(self, jobs)
@@ -32,21 +32,19 @@ annuus.addModules({
 				self.load(self, self.theme);
 			},
 
-			add: function(self, jobs)
+			add: function(self, job)
 			{
-				var jobs = [].concat(jobs);
-				self.load(self, self.theme, jobs);
-				self.jobs = self.jobs.concat(jobs);
+				self.jobs.push(job);
+				self.load(self, self.theme, job);
 			},
 
 			load: function(self, theme, jobs)
 			{
 				self.theme = theme;
-				jobs = jobs || self.jobs;
 
 				$.rules(function()
 				{
-					self.profile(jobs, function(i, job)
+					self.profile(jobs || self.jobs, function(i, job)
 					{
 						$.rules({ id: job.name, position: job.position }, 'css' in job ? job.css : job.js(job, theme), self.theme);
 					});

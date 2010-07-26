@@ -15,28 +15,36 @@ bolanderi.addModules({
 				css: { paramType: 'optional', dataType: 'string', description: 'css statements', params: ['self'] },
 				js: { paramType: 'optional', dataType: 'function', description: 'do whatever you want here', params: ['self'] }
 			},
+			api: {
+				add: { description: 'add an auto job', params: ['job'] }
+			},
 			init: function(self, jobs)
 			{
 				$.each(jobs, function(i, job)
 				{
-					bolanderi.ready(job.run_at, function()
-					{
-						self.add(self, job);
-					});
-
-					job.frequency === 'always' && $(document).bind('work', function()
-					{
-						self.add(self, job);
-					});
+					self.add(self, job);
 				});
 			},
+
 			add: function(self, job)
 			{
-				if(job.frequency === 'always' && job.css) {
-					$.log('warn', '"css" property found in task with frequency "always", make sure this is intended. [{0}]', job.info());
-				}
+				bolanderi.ready(job.run_at, function()
+				{
+					self.run(self, job);
+				});
 
-				self.run(job, function()
+				job.frequency === 'always' && $(document).bind('work', function()
+				{
+					if(job.css) {
+						$.log('warn', '"css" property found in task with frequency "always", make sure this is intended. [{0}]', job.info());
+					}
+					self.run(self, job);
+				});
+			},
+
+			run: function(self, job)
+			{
+				self.profile(job, function()
 				{
 					job.css && $.rules(job.css, job);
 					job.js && job.js.call(job.context(), job);

@@ -170,12 +170,12 @@ $.extend({
 
 	isNumber: function(target)
 	{
-		return !isNaN(+target);
+		return /^(?:string|number)$/.test(typeof target) && !isNaN(+target);
 	},
 
 	isWord: function(target)
 	{
-		return typeof target === 'string' || typeof target === 'number' && !isNaN(target);
+		return typeof target === 'string' || $.isNumber(target);
 	},
 
 	isGarbage: function(target)
@@ -217,6 +217,14 @@ $.extend({
 			ret.push(i);
 		}
 		return ret;
+	},
+
+	typeOf: function(target, type)
+	{
+		return target === null && 'null'
+		|| (type = typeof target) !== 'object' && type
+		|| /Array|Function/.test(type = Object.prototype.toString.call(target).replace(/^[^ ]+ |\]$/g, '')) && type.toLowerCase()
+		|| 'object';
 	}
 });
 

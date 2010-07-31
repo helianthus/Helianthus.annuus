@@ -1,5 +1,12 @@
 bolanderi.Job = function(options)
 {
+	$.each(options, function(name)
+	{
+		if(name in bolanderi.Job.prototype) {
+			$.error('Job: overriding prototype methods is not allowed! [{0}]', bolanderi.info(options));
+		}
+	});
+
 	$.extend(this, options);
 };
 
@@ -90,6 +97,11 @@ bolanderi.Job.prototype = {
 			title: this.title,
 			type: this.type
 		}, options));
+	},
+
+	log: function(type)
+	{
+		$.log(type, $.format('{0} [{1}]', $.format([].slice.call(arguments, 1)), this.info()));
 	},
 
 	info: function()

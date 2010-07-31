@@ -94,7 +94,7 @@ annuus.addModules({
 					self.ajax(self, {
 						cache: false,
 						dataType: 'text',
-						url: $.uri({ querySet: { page: options.page } }),
+						url: $.url({ querySet: { page: options.page } }),
 						success: function(html)
 						{
 							page.lastReq = $.now();

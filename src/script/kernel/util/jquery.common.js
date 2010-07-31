@@ -82,14 +82,14 @@ $.extend({
 			var expire = (new Date(val === null ? '1999' : '2999')).toUTCString();
 
 			if(val !== null) {
-				document.cookie = $.format('{0}; expires={1}; domain={2}', cookie, expire, topLevel ? $.uriSet().domain : location.hostname);
+				document.cookie = $.format('{0}; expires={1}; domain={2}', cookie, expire, topLevel ? $.urlSet().domain : location.hostname);
 			}
 			else {
 				cookie = $.format('{0}; expires={1}', cookie, expire);
 
 				document.cookie = $.format('{0}; domain={1}', cookie, location.hostname);
 				document.cookie = cookie;
-				document.cookie = $.format('{0}; domain={1}', cookie, $.uriSet().domain);
+				document.cookie = $.format('{0}; domain={1}', cookie, $.urlSet().domain);
 			}
 		}
 	},

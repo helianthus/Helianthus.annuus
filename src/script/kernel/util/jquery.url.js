@@ -55,16 +55,16 @@
 
 	function parse(url)
 	{
-		var uriSet = {}, i = keys.length, arr = regex.exec(unescape(url));
+		var urlSet = {}, i = keys.length, arr = regex.exec(unescape(url));
 
 		while(i--) {
-			uriSet[keys[i]] = arr[i] || '';
+			urlSet[keys[i]] = arr[i] || '';
 		}
 
-		return $.extend(uriSet, { querySet: $.deparam(uriSet.query), fragmentSet: $.deparam(uriSet.fragment) });
+		return $.extend(urlSet, { querySet: $.deparam(urlSet.query), fragmentSet: $.deparam(urlSet.fragment) });
 	}
 
-	$.uri = function(url, param)
+	$.url = function(url, param)
 	{
 		if(typeof url !== 'string') {
 			param = url;
@@ -99,9 +99,9 @@
 		return url;
 	};
 
-	$.uriSet = function(url, param)
+	$.urlSet = function(url, param)
 	{
-		return parse($.uri(url, param));
+		return parse($.url(url, param));
 	};
 
 	var attrMap = {
@@ -116,15 +116,15 @@
 		script: 'src'
 	};
 
-	$.fn.uriSet = function()
+	$.fn.urlSet = function()
 	{
-		return this[0] && $.uriSet(this.attr(attrMap[this[0].nodeName.toLowerCase()]));
+		return this[0] && $.urlSet(this.attr(attrMap[this[0].nodeName.toLowerCase()]));
 	};
 
 	$.hash = function(name, val)
 	{
 		if(val === undefined) {
-			return name ? $.uriSet().fragmentSet[name] : $.uriSet().fragmentSet;
+			return name ? $.urlSet().fragmentSet[name] : $.urlSet().fragmentSet;
 		}
 
 		var hash, param = { poweredby: null };

@@ -108,7 +108,7 @@ annuus.addModules({
 				for(var i=1; i<=8; ++i) {
 					$('<a/>', {
 						text: 'Forum ' + i,
-						href: $.uri({ subdomain: 'forum' + i })
+						href: $.url({ subdomain: 'forum' + i })
 					}).button().appendTo(widget);
 				}
 

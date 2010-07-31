@@ -21,7 +21,7 @@ annuus.addModules({
 			frequency: 'always',
 			js: function(self)
 			{
-				if($.uriSet().querySet.type === 'MB') {
+				if($.urlSet().querySet.type === 'MB') {
 					self.context().find('td[colspan="5"]').attr('colspan', '6');
 				}
 			}

@@ -1,4 +1,4 @@
-bolanderi.addModules({
+annuus.addModules({
 
 '32c8606b-a331-43ff-bfea-1f6190b7e8a2':
 {
@@ -36,13 +36,14 @@ bolanderi.addModules({
 					window.opera && $.rules('#ctl00_ContentPlaceHolder1_view_form > div > table, .repliers { table-layout: fixed; }');
 
 					// fix vote page
-					$.service.auto.add({
+					$.service.auto.add(self.derive({
+						id: 'a44da0ba-58cf-423e-94fa-e1c9a7abf1cb',
 						frequency: 'always',
 						js: function()
 						{
 							self.context().find('.repliers > tbody > tr > td[colspan="100%"]').attr('colspan', '2');
 						}
-					});
+					}));
 				}
 
 				$.log('log', 'Layout is now locked.');

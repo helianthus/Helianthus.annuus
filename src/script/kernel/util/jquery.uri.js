@@ -3,14 +3,47 @@
 
 (function($)
 {
-	var keys = ['source','scheme','authority','userinfo','user','password','host','hostname','subdomain','domain','port','relative','path','directory','file','query','fragment'];
-	var regex = /^(?:([^:\/?#]+):)?(?:\/\/((?:(([^:@]+)(?::([^:@]*))?)@)?(((?:([^:\/?]+?)\.)?([^:\/?.]+\.[^:\/?]+))(?::(\d*))?)))?((((?:[^?#\/]*\/)*)([^?#]*))(?:\?([^#]*))?(?:#(.*))?)/;
+	// as close as possible to the lastest standard: http://tools.ietf.org/html/rfc3986
+	var keys = ['absolute','scheme','authority','userinfo','user','password','host','subdomain','domain','port','relative','path','directory','file','query','fragment'];
+	var regex = RegExp([
+		'^',
+		'(?:([^:/?#]+):)?', // scheme
+		'(?://(', // authority
+			'(?:(', // userinfo
+				'([^:/?#@]+)', // user
+				'(?::',
+					'([^@]*)', // password
+				')?',
+			')@)?',
+			'(', // host
+				'(?:',
+					'((?:\\.?[^:/?#.]+)+)', // subdomain
+				'\\.)?',
+				'([^:/?#.]+\\.[^:/?#.]+)', // domain
+			')',
+			'(?::',
+				'(\\d+)', // port
+			')?',
+		'))?',
+		'(', // relative
+			'(', // path
+				'(/(?:[^/?#]+/)*)?', // directory
+				'([^?#]*)', // file
+			')?',
+			'(?:\\?',
+				'([^#]*)', // query
+			')?',
+			'(?:#',
+				'(.*)', // fragment
+			')?',
+		')'
+	].join(''), 'i');
 
 	function clean(obj)
 	{
 		for(var key in obj) {
-			if(obj[key] === null) {
-				delete obj[key];
+			if(obj[key] == null) {
+				obj[key] = '';
 			}
 			else if(typeof obj[key] === 'object') {
 				clean(obj[key]);
@@ -28,7 +61,7 @@
 			uriSet[keys[i]] = arr[i] || '';
 		}
 
-		return clean($.extend(uriSet, { querySet: $.deparam(uriSet.query), fragmentSet: $.deparam(uriSet.fragment) }));
+		return $.extend(uriSet, { querySet: $.deparam(uriSet.query), fragmentSet: $.deparam(uriSet.fragment) });
 	}
 
 	$.uri = function(url, param)
@@ -40,66 +73,35 @@
 
 		if(!param) return url;
 
-		var ret = '', uriSet = clean($.copy(parse(url), param)), paramed;
+		var urlSet = clean($.copy(parse(url), param)), temp;
 
-		if(param.host) {
-			ret += param.host;
-		}
-		else {
-			if(param.hostname) {
-				ret += param.hostname;
-			}
-			else if(uriSet.domain) {
-				ret += (uriSet.subdomain && uriSet.subdomain + '.') + uriSet.domain;
-			}
+		url = param.authority;
 
-			if(uriSet.port) ret += ':' + uriSet.port;
-		}
+		if(!url) {
+			url = param.host || (urlSet.subdomain && urlSet.subdomain + '.') + urlSet.domain;
 
-		if(ret) {
-			if(param.authority) {
-				ret += param.authority;
+			if(url) {
+				url += urlSet.port && ':' + urlSet.port;
+				url = (param.userinfo || urlSet.user && urlSet.user + (urlSet.password && ':' + urlSet.password) + '@') + url;
+				url = (urlSet.scheme ? urlSet.scheme + '://' : '//') + url;
 			}
-			else if(uriSet.user) {
-				ret += uriSet.user + (uriSet.password && ':' + uriSet.password) + '@';
-			}
-
-			ret = (uriSet.protocol ? uriSet.protocol + '://' : '//') + ret;
 		}
 
 		if(param.relative) {
-			ret += param.relative;
+			url += param.relative;
 		}
 		else {
-			if(param.pathname) {
-				ret += param.pathname;
-			}
-			else if(uriSet.filename) {
-				ret += uriSet.directory + uriSet.filename;
-			}
-
-			if(param.query) {
-				ret += '?' + param.query;
-			}
-			else if(paramed = $.param(uriSet.querySet)) {
-				ret += '?' + paramed;
-			}
-
-			if(param.fragment) {
-				ret += '#' + param.fragment;
-			}
-			else if(paramed = $.param(uriSet.fragmentSet)) {
-				ret += '#' + paramed;
-			}
+			url += param.path || urlSet.directory + urlSet.file;
+			url += (temp = param.query || $.param(urlSet.querySet)) && '?' + temp;
+			url += (temp = param.fragment || $.param(urlSet.fragmentSet)) && '#' + temp;
 		}
 
-		return decodeURI(ret);
+		return url;
 	};
 
 	$.uriSet = function(url, param)
 	{
-		if(!url) url = location.href;
-		return parse(param ? $.uri(url, param) : url);
+		return parse($.uri(url, param));
 	};
 
 	var attrMap = {
@@ -119,27 +121,7 @@
 		return this[0] && $.uriSet(this.attr(attrMap[this[0].nodeName.toLowerCase()]));
 	};
 
-	$.search = function(url, param)
-	{
-		if(typeof url !== 'string') {
-			param = url;
-			url = location.search;
-		}
-
-		return param ? '?' + $.uriSet(url, { querySet: param }).query : url;
-	};
-
-	$.hash = function(url, param)
-	{
-		if(typeof url !== 'string') {
-			param = url;
-			url = location.hash
-		}
-
-		return param ? '#' + $.uriSet(url, { fragmentSet: param }).fragment : url;
-	};
-
-	$.state = function(name, val)
+	$.hash = function(name, val)
 	{
 		if(val === undefined) {
 			return name ? $.uriSet().fragmentSet[name] : $.uriSet().fragmentSet;

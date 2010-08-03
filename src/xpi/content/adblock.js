@@ -1,7 +1,7 @@
 (function()
 {
 	var referrer = /hkgolden\.com/i;
-	var keywords = /pixel-?hk|imrworldwide|googlesyndication|_getTracker|(?:Page|Inline|Google|\b)[Aa]ds?\b/;
+	var keywords = /bmediaasia|pixel-?hk|imrworldwide|googlesyndication|_getTracker|(?:Page|Inline|Google|\b)[Aa]ds?\b/;
 	var service = Components.classes["@mozilla.org/observer-service;1"].getService(Components.interfaces.nsIObserverService);
 	var observer = {
 		observe: function(subject) {

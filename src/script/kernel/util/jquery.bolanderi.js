@@ -59,29 +59,6 @@ $.each({
 });
 
 $.extend({
-	doc: function(html)
-	{
-		return $('<div>' + html.replace(/^[\s\S]+?<form/, '<form').replace(/<\/form>\s*<!--[\s\S]+/, '</form>') + '</div>').eq(0);
-	},
-	getDoc: function(url, success, setup)
-	{
-		$.ajax((setup = {
-			url: url,
-			dataType: 'text',
-			timeout: 10000,
-			success: function(html)
-			{
-				var jDoc = $.doc(html);
-				jDoc.pageCode() & 61438 ? success.call(setup, jDoc) : setup.error();
-			},
-			error: function()
-			{
-				$.run('log', '頁面讀取失敗, 5秒後重新讀取...');
-				setTimeout(function(){ $.ajax(setup); }, 5000);
-			}
-		}));
-	},
-
 	debug: function()
 	{
 		$.log('debug', '$.debug: ' + [].slice.call(arguments).join(', '));
@@ -125,18 +102,5 @@ $.extend({
 			}
 			console[type](msg);
 		}
-	}
-});
-
-$.fn.extend({
-	pageNo: function()
-	{
-		return this.__pageNo || (this.__pageNo = +this.urlSet().querySet.page || 1);
-	},
-
-	debug: function()
-	{
-		$.debug(this);
-		return this;
 	}
 });

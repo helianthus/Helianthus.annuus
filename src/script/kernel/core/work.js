@@ -1,22 +1,33 @@
 bolanderi.get('RUN_AT_TYPES', ['window_start', 'document_start', 'document_end', 'window_end']);
+bolanderi.get('WINDOW_STARTED', true);
 
 bolanderi.work = function(context)
 {
-	bolanderi.__context = $(context);
-
-	$.event.trigger('work', context);
+	$.event.trigger('work', (bolanderi.__context = $(context)));
 
 	if(!bolanderi.get('DOCUMENT_STARTED')) {
-		bolanderi.get('WINDOW_STARTED', true);
 		bolanderi.get('DOCUMENT_STARTED', true);
-		$.each(bolanderi.get('RUN_AT_TYPES'), function(i, type)
-		{
-			bolanderi.ready(type, function()
-			{
-				$.event.trigger('work_' + type);
-			});
-		});
+		$.event.trigger('document_start');
 	}
+};
+
+bolanderi.inCondition = function(target)
+{
+	return $.all(target.condition, function(name, obj)
+	{
+		switch(name) {
+			case 'is':
+				return obj;
+			case 'options':
+				return $.all(obj, function(name, obj)
+				{
+					return $.test(obj, target instanceof bolanderi.Job ? target.options(name) : bolanderi.__moduleData('options', name));
+				});
+			case 'test':
+				return obj(target);
+			break;
+		}
+	});
 };
 
 bolanderi.info = function()
@@ -34,12 +45,12 @@ bolanderi.ready = function(type, callback)
 	}
 
 	if(bolanderi.get(type.concat('ed').toUpperCase())) {
-		callback(type);
+		callback();
 	}
 	else {
 		$(document).one(type, function()
 		{
-			callback(type);
+			callback();
 		});
 	}
 };

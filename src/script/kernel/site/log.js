@@ -8,8 +8,6 @@ $(document).one('kernel_init', function()
 {
 
 var messages = {
-	//cache_off: '$.rules: cache off.',
-	//cache_on: '$.rules: cache on.',
 	document_end: 'DOM is ready.',
 	job_start: '{1.title}: {0}',
 	kernel_init: 'initalizing kernel...',

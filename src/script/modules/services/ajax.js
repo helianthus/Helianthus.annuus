@@ -1,7 +1,6 @@
 annuus.addModules({
 
-'9f5fe25b-ae3e-452c-848e-cddcb0143a1e':
-{
+'9f5fe25b-ae3e-452c-848e-cddcb0143a1e': {
 	title: 'Ajax Service',
 	pages: { on: [topics | view] },
 	tasks: {
@@ -134,7 +133,7 @@ annuus.addModules({
 			title: 'ajax',
 			click: function()
 			{
-				$.service.ajax.topics({
+				annuus.ajax.topics({
 					success: function(topics)
 					{
 						$.debug(topics);

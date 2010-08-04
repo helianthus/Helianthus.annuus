@@ -1,7 +1,6 @@
 annuus.addModules({
 
-'34c76972-813a-4145-b3d3-bf83d89723d7':
-{
+'34c76972-813a-4145-b3d3-bf83d89723d7': {
 	title: 'Button UI',
 	pages: { comp: [all] },
 	database: {
@@ -307,6 +306,7 @@ annuus.addModules({
 		'38443e34': {
 			service: 'master',
 			title: '按扭設定',
+			requires: ['button'],
 			panel: function(self)
 			{
 				$.rules('\
@@ -318,21 +318,22 @@ annuus.addModules({
 			},
 			select: function(self, page)
 			{
-				$.service.button.panelSelect(page);
+				annuus.button.panelSelect(page);
 			},
 			unselect: function(self, page)
 			{
-				$.service.button.panelUnselect(page);
+				annuus.button.panelUnselect(page);
 			}
 		},
 
 		'98d53583': {
+			requires: ['button'],
 			js: function(self)
 			{
 				var ID = 'acb540b1-d6e0-4c65-b953-d7ffabf26c65_';
 				$.each($.range(1,30), function(i,n)
 				{
-					$.service.button.add(self.derive({
+					annuus.button.add(self.derive({
 						id: ID + n,
 						uuid: ID + n,
 						title: '測試按扭' + n

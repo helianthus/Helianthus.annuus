@@ -1,7 +1,6 @@
 annuus.addModules({
 
-'8c6e0464-ab52-4bb1-8220-81c100eb70a5':
-{
+'8c6e0464-ab52-4bb1-8220-81c100eb70a5': {
 	title: '論壇樣式設定',
 	pages: { on: [all] },
 	options: {
@@ -287,7 +286,9 @@ annuus.addModules({
 
 		'16fc2c9f': {
 			page: profilepage,
-			requires: [!$.browser.mozilla],
+			condition: {
+				is: !$.browser.mozilla
+			},
 			css: '\
 				td[style*="color: #003366"] { padding: 4px; } \
 				td[style*="color: #003366"][style*="width: 70%"] { padding: 0; } \

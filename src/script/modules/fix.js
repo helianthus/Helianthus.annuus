@@ -1,7 +1,6 @@
 annuus.addModules({
 
-'9e98386a-66ce-4298-af6e-a7d1648d18b4':
-{
+'9e98386a-66ce-4298-af6e-a7d1648d18b4': {
 	title: '修正頁面闊度',
 	pages: { on: [giftpage] },
 	tasks: {
@@ -12,8 +11,7 @@ annuus.addModules({
 	}
 },
 
-'5ee24108-d17e-441d-b1c3-745fcf9fa422':
-{
+'5ee24108-d17e-441d-b1c3-745fcf9fa422': {
 	title: '修正站務台告示',
 	pages: { on: [topics] },
 	tasks: {
@@ -29,8 +27,7 @@ annuus.addModules({
 	}
 },
 
-'6086de99-4947-45c3-8332-5070931087e7':
-{
+'6086de99-4947-45c3-8332-5070931087e7': {
 	title: '修正新增bookmark對話框',
 	pages: { on: [all] },
 	tasks: {
@@ -44,8 +41,7 @@ annuus.addModules({
 	}
 },
 
-'74cd7f38-b0ad-4fca-ab39-673b0e2ee4c7':
-{
+'74cd7f38-b0ad-4fca-ab39-673b0e2ee4c7': {
 	title: '修正跳頁控件位置',
 	pages: { on: [view] },
 	tasks: {
@@ -56,8 +52,7 @@ annuus.addModules({
 	}
 },
 
-'06e59d06-5a10-4c3d-ab85-0c66a729208c':
-{
+'06e59d06-5a10-4c3d-ab85-0c66a729208c': {
 	title: '修正搜尋按扭位置',
 	pages: { on: [index] },
 	tasks: {

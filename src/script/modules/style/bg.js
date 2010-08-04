@@ -1,17 +1,12 @@
 annuus.addModules({
 
-'91f24db0-1e4e-4aa3-80cd-ac50dfb41a86':
-{
+'91f24db0-1e4e-4aa3-80cd-ac50dfb41a86': {
 	title: '設定背景',
 	pages: { on: [all] },
 	options: {
 		bgAero: { title: 'Aero Glass背景', description: '暫時僅Opera支援', type: 'checkbox', defaultValue: true },
-		bgImageBody: { title: '圖片位置', type: 'text', defaultValue: 'http://i29.tinypic.com/kexdw2.jpg', access: 'public', requires: {
-			options: { id: 'bgAero', value: false }
-		}},
-		autoFit: { title: '自動縮放', description: '可降低效能', type: 'checkbox', defaultValue: false, requires: {
-			options: { id: 'bgAero', value: false }
-		}}
+		bgImageBody: { title: '圖片位置', type: 'text', defaultValue: 'http://i29.tinypic.com/kexdw2.jpg', access: 'public', condition: { bgAero: false } },
+		autoFit: { title: '自動縮放', description: '可降低效能', type: 'checkbox', defaultValue: false, condition: { bgAero: false } }
 	},
 	tasks: {
 		'bb09974e': {

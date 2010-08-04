@@ -1,7 +1,6 @@
 bolanderi.addModules({
 
-'88f89208-0448-45d4-a487-e3622ea70afb':
-{
+'88f89208-0448-45d4-a487-e3622ea70afb': {
 	title: 'Data Service',
 	pages: { core: [all] },
 	tasks: {

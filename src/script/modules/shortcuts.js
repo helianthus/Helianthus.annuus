@@ -1,7 +1,6 @@
 annuus.addModules({
 
-'4a263d1b-4c3d-48a0-afc9-a63f13381aa3':
-{
+'4a263d1b-4c3d-48a0-afc9-a63f13381aa3': {
 	title: '加入吹水台按扭',
 	pages: { on: [all] },
 	tasks: {
@@ -14,8 +13,7 @@ annuus.addModules({
 	}
 },
 
-'29aeaf94-db3a-4b88-8c5a-cbd2113beba6':
-{
+'29aeaf94-db3a-4b88-8c5a-cbd2113beba6': {
 	title: '加入最頂/最底按扭',
 	pages: { on: [all] },
 	tasks: {
@@ -37,8 +35,7 @@ annuus.addModules({
 	}
 },
 
-'de06fe96-6073-44e7-bf53-c14a51bdf58f':
-{
+'de06fe96-6073-44e7-bf53-c14a51bdf58f': {
 	title: '加入轉台按扭',
 	pages: { on: [all] },
 	tasks: {
@@ -92,8 +89,7 @@ annuus.addModules({
 	}
 },
 
-'c64c9511-cc47-4d0a-8b69-e9aaa5f8a4a6':
-{
+'c64c9511-cc47-4d0a-8b69-e9aaa5f8a4a6': {
 	title: '加入轉換伺服器按扭',
 	pages: { on: [all] },
 	tasks: {
@@ -118,8 +114,7 @@ annuus.addModules({
 	}
 },
 
-'2265ebe2-4d4e-4d85-a8a2-e84f2d6c247f':
-{
+'2265ebe2-4d4e-4d85-a8a2-e84f2d6c247f': {
 	title: '加入會員服務按扭',
 	pages: { on: [all] },
 	tasks: {

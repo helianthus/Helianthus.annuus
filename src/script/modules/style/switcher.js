@@ -1,7 +1,6 @@
 annuus.addModules({
 
-'0a48fd35-9637-498a-96c6-de631780540d':
-{
+'0a48fd35-9637-498a-96c6-de631780540d': {
 	title: '主題轉換選單',
 	pages: { comp: [all] },
 	tasks: {
@@ -20,10 +19,10 @@ annuus.addModules({
 						bgImageBody: ''
 					}, self.data('themes')[$(this).text()]);
 
-					$.service.button.lockScroll(function()
+					annuus.button.lockScroll(function()
 					{
 						self.options(theme);
-						$.service.theme.load(theme);
+						annuus.theme.load(theme);
 					});
 				});
 

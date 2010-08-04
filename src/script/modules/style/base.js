@@ -1,7 +1,6 @@
 annuus.addModules({
 
-'8d20a0be-25e2-48e4-a4c1-9ec8fa809cab':
-{
+'8d20a0be-25e2-48e4-a4c1-9ec8fa809cab': {
 	title: '主樣式設定',
 	pages: { comp: [all] },
 	options: {

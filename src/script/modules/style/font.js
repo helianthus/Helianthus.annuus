@@ -1,7 +1,6 @@
 annuus.addModules({
 
-'736b0a78-4b70-45a2-a6c8-a3cdbe5f11fa':
-{
+'736b0a78-4b70-45a2-a6c8-a3cdbe5f11fa': {
 	title: '字體設定',
 	pages: { on: [all] },
 	options: {

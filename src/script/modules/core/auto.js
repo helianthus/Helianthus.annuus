@@ -1,17 +1,16 @@
 bolanderi.addModules({
 
-'e0311de6-a6fb-4bf5-bb91-e1f2db19d25b':
-{
+'e0311de6-a6fb-4bf5-bb91-e1f2db19d25b': {
 	title: 'Auto Service',
 	pages: { core: [all] },
 	tasks: {
 		'4ea1dd56': {
 			type: 'service',
 			name: 'auto',
-			run_at: 'document_start',
+			run_at: 'window_start',
 			params: {
 				frequency: { paramType: 'optional', dataType: 'string', values: ['once', 'always'], defaultValue: 'once', description: 'rerun on ajax event if set to always' },
-				run_at: { paramType: 'optional', dataType: 'string', values: bolanderi.get('RUN_AT_TYPES').slice(1), defaultValue: 'document_end' },
+				run_at: { paramType: 'optional', dataType: 'string', values: bolanderi.get('RUN_AT_TYPES'), defaultValue: 'document_end' },
 				css: { paramType: 'optional', dataType: 'string', description: 'css statements', params: ['self'] },
 				js: { paramType: 'optional', dataType: 'function', description: 'do whatever you want here', params: ['self'] }
 			},
@@ -28,10 +27,7 @@ bolanderi.addModules({
 
 			add: function(self, job)
 			{
-				bolanderi.ready(job.run_at, function()
-				{
-					self.run(self, job);
-				});
+				self.run(self, job);
 
 				job.frequency === 'always' && $(document).bind('work', function()
 				{

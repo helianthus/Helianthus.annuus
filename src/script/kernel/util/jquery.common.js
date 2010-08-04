@@ -29,25 +29,17 @@ $.each(['all', 'any', 'first'], function(i, name)
 });
 
 $.extend({
-	permute: function()
+	compact: function(array)
 	{
-		var args = [].slice.call(arguments);
-		var callback = args.pop();
 		var ret = [];
-
-		(function recurse(argsIndex, params)
-		{
-			if(argsIndex !== args.length) {
-				$.each(args[argsIndex], function(i, value)
-				{
-					recurse(argsIndex + 1, params.concat(value));
-				});
+		for(var i=0; i<array.length; ++i) {
+			if($.isGarbage(array[i]) || $.inArray(array[i], ret) !== -1) {
+				array.splice(i--, 1);
 			}
 			else {
-				ret.push(callback.apply(null, params));
+				ret.push(array[i]);
 			}
-		})(0, []);
-
+		}
 		return ret;
 	},
 
@@ -163,6 +155,17 @@ $.extend({
 		return target;
 	},
 
+	exec: function(fn)
+	{
+		fn.apply(null, [].slice.call(arguments, 1));
+		return fn;
+	},
+
+	getClass: function(target)
+	{
+		return Object.prototype.toString.call(target).replace(/^[^ ]+ |\]$/g, '');
+	},
+
 	isArrayLike: function(target)
 	{
 		return !!target && ($.isArray(target) || typeof target.callee === 'function' && typeof target.length === 'number' && $.size(target) === 0);
@@ -206,6 +209,28 @@ $.extend({
 		return obj;
 	},
 
+	permute: function()
+	{
+		var args = [].slice.call(arguments);
+		var callback = args.pop();
+		var ret = [];
+
+		(function recurse(argsIndex, params)
+		{
+			if(argsIndex !== args.length) {
+				$.each(args[argsIndex], function(i, value)
+				{
+					recurse(argsIndex + 1, params.concat(value));
+				});
+			}
+			else {
+				ret.push(callback.apply(null, params));
+			}
+		})(0, []);
+
+		return ret;
+	},
+
 	range: function()
 	{
 		var args = [].slice.call(arguments);
@@ -219,11 +244,24 @@ $.extend({
 		return ret;
 	},
 
+	test: function(obj, value)
+	{
+		switch($.getClass(obj)) {
+			case 'Function':
+				return obj(value);
+			case 'RegExp':
+				return obj.test(value);
+			default:
+				return arguments.length === 1 ? obj : obj === value;
+			break;
+		}
+	},
+
 	typeOf: function(target, type)
 	{
 		return target === null && 'null'
 		|| (type = typeof target) !== 'object' && type
-		|| /Array|Function/.test(type = Object.prototype.toString.call(target).replace(/^[^ ]+ |\]$/g, '')) && type.toLowerCase()
+		|| (/Array|Function/.test(type = $.getClass(target))) && type.toLowerCase()
 		|| 'object';
 	}
 });

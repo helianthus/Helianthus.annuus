@@ -1,7 +1,6 @@
 annuus.addModules({
 
-'dbc157c1-0ddd-47a6-9e05-af5b06d5953b':
-{
+'dbc157c1-0ddd-47a6-9e05-af5b06d5953b': {
 	title: '優化圖片縮放',
 	pages: { on: [view | profilepage | sendpm] },
 	tasks: {
@@ -23,11 +22,12 @@ annuus.addModules({
 	}
 },
 
-'7e43a229-aa4a-456c-becc-65e69a8873b9':
-{
+'7e43a229-aa4a-456c-becc-65e69a8873b9': {
 	title: '移除引用半透明',
 	pages: { on: [view] },
-	requires: [document.createElement('div').style.opacity != null],
+	condition: {
+		is: document.createElement('div').style.opacity != null
+	},
 	tasks: {
 		'475b4b70': {
 			run_at: 'document_start',
@@ -36,8 +36,7 @@ annuus.addModules({
 	}
 },
 
-'51ac61dd-9f7a-493e-804a-99acf6b741e4':
-{
+'51ac61dd-9f7a-493e-804a-99acf6b741e4': {
 	title: '強制顯示空白會員名稱',
 	pages: { on: [view | topics | search | tags | profilepage] },
 	tasks: {

@@ -104,6 +104,11 @@ bolanderi.Job.prototype = {
 		$.log(type, $.format('{0} [{1}]', $.format([].slice.call(arguments, 1)), this.info()));
 	},
 
+	inCondition: function()
+	{
+		return bolanderi.inCondition(this);
+	},
+
 	info: function()
 	{
 		return $.format('{0}, {1}, {2}{3}',
@@ -113,6 +118,34 @@ bolanderi.Job.prototype = {
 	options: function(id, value)
 	{
 		return bolanderi.__moduleData(this.module, 'options', id, value);
+	},
+
+	ready: function(callback)
+	{
+		var self = this;
+		var requires = $.compact([].concat(this.module.requires, this.requires));
+		var handler = function()
+		{
+			if($.all(requires, function(i, name)
+			{
+				return name in bolanderi.get('SERVICES', {});
+			})) {
+				$(document).unbind('service_end', handler);
+
+				bolanderi.ready(self.run_at, function()
+				{
+					if(self.inCondition()) {
+						callback.call(null, self);
+					}
+					else {
+						self.log('log', 'not in condition, job dropped.');
+					}
+				});
+			}
+		};
+
+		$(document).bind('service_end', handler);
+		handler();
 	},
 
 	validate: function(job)
@@ -130,7 +163,7 @@ bolanderi.Job.prototype = {
 			return false;
 		}
 
-		return (job.__processResult = !$.any(this.params, function(name, details)
+		return (job.__validationResult = !$.any(this.params, function(name, details)
 		{
 			if('defaultValue' in details && !(name in job)) {
 				job[name] = details.defaultValue;
@@ -157,17 +190,22 @@ bolanderi.Job.prototype = {
 				return;
 			}
 
-			$.event.trigger('job_start', [job, self]);
+			job.run_at = job.run_at || self.run_at;
 
-			try {
-				fn(i, job);
-			}
-			catch(e) {
-				$.log('error', '{0} [{1}]', e.message, job.info());
-				$.debug(e);
-			}
+			job.ready(function()
+			{
+				$.event.trigger('job_start', [job, self]);
 
-			$.event.trigger('job_end', [job, self]);
+				try {
+					fn(i, job);
+				}
+				catch(e) {
+					$.log('error', '{0} [{1}]', e.message, job.info());
+					$.debug(e);
+				}
+
+				$.event.trigger('job_end', [job, self]);
+			});
 		});
 	}
 };

@@ -1,69 +1,38 @@
 annuus.addModules({
 
-'0b721576-57a8-46b0-b0e5-6fec32e4aafa':
-{
-	title: 'Simple API',
+'0b721576-57a8-46b0-b0e5-6fec32e4aafa': {
+	title: 'Simple API Service',
 	pages: { comp: [all] },
 	tasks: {
 		'4ea1dd56': {
-			service: 'utility',
-			js: function()
+			type: 'service',
+			name: 'simple',
+			run_at: 'window_start',
+			api: {
+				isLoggedIn: {},
+				isReplyContent: {},
+				isVotePage: {}
+			},
+			init: function(self, jobs)
 			{
-				$.isLoggedIn = function()
-				{
-					return !!$.cookie('username');
-				};
-			}
-		},
+				if(jobs.length) {
+					$.log('warn', 'Simple API service cannot be used directly, please use the API provided instead.');
+				}
+			},
 
-		'54b6b897': {
-			page: view,
-			service: 'utility',
-			js: function() // need fix
+			isLoggedIn: function()
 			{
-				var info = { readyState: 'uninitialized', callbacks: [] };
+				return !!$.cookie('username');
+			},
 
-				$.fn.openerInfo = function(callback)
-				{
-					if(info.readyState === 'complete') {
-						return info;
-					}
-
-					info.callbacks.push(callback);
-
-					if(info.readyState === 'uninitialized') {
-						info.readyState = 'loading';
-
-						function getInfo(jScope)
-						{
-							info.readyState = 'complete';
-							var jInfo = jScope.replies().jInfos.eq(0);
-							$.extend(info, { userid: jInfo.attr('userid'), username: jInfo.attr('username') });
-
-							$.each(info.callbacks, function(){ this(info); });
-							delete info.callbacks;
-						}
-
-						if(this.pageNo() === 1) {
-							getInfo(this);
-						}
-						else {
-							$.getDoc('?message=' + window.messageid, getInfo);
-						}
-					}
-				};
-			}
-		},
-
-		'2181d0a6': {
-			page: view,
-			service: 'utility',
-			js: function()
+			isReplyContent: function(self, target)
 			{
-				$.fn.isReplyContent = function()
-				{
-					return !!this.closest('.repliers_right > tbody > tr:first-child > td').length;
-				};
+				return !!$(target || document).closest('.repliers_right > tbody > tr:first-child > td').length;
+			},
+
+			isVotePage: function(self, target)
+			{
+				return !!$(target || self.context()).find('.repliers:first > tbody > style').length;
 			}
 		}
 	}

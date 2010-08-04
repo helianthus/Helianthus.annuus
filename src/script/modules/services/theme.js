@@ -1,7 +1,6 @@
 annuus.addModules({
 
-'51ff8602-647e-4e0f-a332-674799703a7b':
-{
+'51ff8602-647e-4e0f-a332-674799703a7b': {
 	title: 'Theme Service',
 	pages: { comp: [all] },
 	tasks: {

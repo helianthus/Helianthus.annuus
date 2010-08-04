@@ -1,7 +1,6 @@
 annuus.addModules({
 
-'fc6c2fbe-6d60-426b-b45f-acfabdb28f63':
-{
+'fc6c2fbe-6d60-426b-b45f-acfabdb28f63': {
 	title: 'Master UI',
 	pages: { core: [all] },
 	tasks: {

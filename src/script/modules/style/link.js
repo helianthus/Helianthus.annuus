@@ -1,7 +1,6 @@
 annuus.addModules({
 
-'edd5174c-b7a4-48f1-8612-3f03c9adf05a':
-{
+'edd5174c-b7a4-48f1-8612-3f03c9adf05a': {
 	title: '連結樣式設定',
 	pages: { on: [all] },
 	options: {
@@ -42,8 +41,7 @@ annuus.addModules({
 	}
 },
 
-'68680179-e9f2-4472-9326-b0a25d0a5b2e':
-{
+'68680179-e9f2-4472-9326-b0a25d0a5b2e': {
 	title: '移除連結底線',
 	pages: { on: [all] },
 	tasks: {

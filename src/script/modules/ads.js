@@ -1,7 +1,6 @@
 annuus.addModules({
 
-'63d2407a-d8db-44cb-8666-64e5b76378a2':
-{
+'63d2407a-d8db-44cb-8666-64e5b76378a2': {
 	title: '隱藏廣告',
 	pages: { on: [all] },
 	tasks: {
@@ -56,7 +55,9 @@ annuus.addModules({
 		},
 		'defe6bdf': {
 			page: topics,
-			requires: [$.browser.msie && $.browser.version <= 8],
+			condition: {
+				is: $.browser.msie && $.browser.version <= 8
+			},
 			frequency: 'always',
 			js: function(self)
 			{

@@ -2,21 +2,22 @@ annuus.addModules({
 
 '9f5fe25b-ae3e-452c-848e-cddcb0143a1e': {
 	title: 'Ajax Service',
-	pages: { on: [topics | view] },
+	pages: { on: [all] },
 	tasks: {
 		'5f4e3d26-0e46-42d0-b1a5-ae3742b6751d': {
+			title: 'Ajax Service (base)',
 			type: 'service',
 			name: 'ajax',
 			run_at: 'document_start',
 			params: {
 			},
 			api: {
-				topics: {}
+				get: {}
 			},
 			init: function(self, jobs)
 			{
 				if(jobs.length) {
-					$.log('warn', 'Ajax service cannot be used directly, please use the API provided instead.');
+					bolanderi.log('warn', 'Ajax service cannot be used directly, please use the API provided instead.');
 				}
 			},
 
@@ -73,11 +74,17 @@ annuus.addModules({
 
 			get: function(self, options)
 			{
-				options.page = options.page || 1;
+				options = $.extend({
+					cache: true,
+					condition: {
+				page: 1
+				}
+			}, options);
+
 				var page = $.make(self.pages, options.page, {});
 
-				if(options.name in self.pages && (options.cache || $.now() - (page.lastReq || 0) < self.CACHE_TIME)) {
-					return self.pages[options.name];
+				if(options.name in page && (options.cache || $.now() - (page.lastReq || 0) < self.CACHE_TIME)) {
+					return page[options.name];
 				}
 
 				if(options.mapSrc) {
@@ -85,9 +92,12 @@ annuus.addModules({
 						mapSrc: null,
 						success: function(data)
 						{
-							options.success(self.pages[options.name] = options.map(data));
+							success(data);
 						}
 					}));
+				}
+				else if(options.cache && ($.urlSet().querySet.page || 1) == options.page) {
+					success($(document));
 				}
 				else {
 					self.ajax(self, {
@@ -97,32 +107,74 @@ annuus.addModules({
 						success: function(html)
 						{
 							page.lastReq = $.now();
-							options.success(self.pages[options.name] = options.map(html));
+							success($(html));
 						}
 					});
 				}
+
+				function success(context)
+				{
+					options.success(page[options.name] = options.map(context));
+				}
+			}
+		},
+
+		'6ee2c385-8c58-49a2-b60f-6f1417e62a65': {
+			title: 'Ajax Service (topics)',
+			type: 'extend',
+			name: 'ajax',
+			condition: {
+				page: topics
+			},
+			api: {
+				topicTable: {},
+				topics: {}
 			},
 
 			topicTable: function(self, options)
 			{
-				self.get(self, $.extend(options, {
+				annuus.ajax.get($.extend(options, {
 					name: 'topicTable',
-					map: function(html)
+					map: function(context)
 					{
-						return $(html).find('#HotTopics > div > table');
+						return context.find('#HotTopics > div > table');
 					}
 				}));
 			},
 
 			topics: function(self, options)
 			{
-				self.get(self, $.extend(options, {
+				annuus.ajax.get($.extend(options, {
 					name: 'topics',
 					mapSrc: 'topicTable',
-					map: function(table)
+					map: function(context)
 					{
-						return table.find('tr[userid]');
-					},
+						return context.find('tr[userid]');
+					}
+				}));
+			}
+		},
+
+		'f27d4532-9f81-453d-a8b1-cce957fcce42': {
+			title: 'Ajax Service (view)',
+			type: 'extend',
+			name: 'ajax',
+			condition: {
+				page: view
+			},
+			api: {
+				replies: {}
+			},
+
+			replies: function(self, options)
+			{
+				annuus.ajax.get($.extend(options, {
+					name: 'topics',
+					mapSrc: 'topicTable',
+					map: function(context)
+					{
+						return context.find('.repliers');
+					}
 				}));
 			}
 		},
@@ -133,7 +185,7 @@ annuus.addModules({
 			title: 'ajax',
 			click: function()
 			{
-				annuus.ajax.topics({
+				annuus.ajax_topics.topics({
 					success: function(topics)
 					{
 						$.debug(topics);

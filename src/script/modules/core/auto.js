@@ -32,7 +32,7 @@ bolanderi.addModules({
 				job.frequency === 'always' && $(document).bind('work', function()
 				{
 					if(job.css) {
-						$.log('warn', '"css" property found in task with frequency "always", make sure this is intended. [{0}]', job.info());
+						bolanderi.log('warn', '"css" property found in task with frequency "always", make sure this is intended. [{0}]', job.info());
 					}
 					self.run(self, job);
 				});
@@ -43,7 +43,7 @@ bolanderi.addModules({
 				self.profile(job, function()
 				{
 					job.css && $.rules(job.css, job);
-					job.js && job.js.call(job.context(), job);
+					job.js && job.js.call(annuus.context(), job);
 				});
 			}
 		}

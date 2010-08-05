@@ -327,6 +327,8 @@ annuus.addModules({
 		},
 
 		'98d53583': {
+			title: '測試按扭',
+			page: 0,
 			requires: ['button'],
 			js: function(self)
 			{

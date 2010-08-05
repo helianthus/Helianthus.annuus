@@ -285,7 +285,9 @@ annuus.addModules({
 		},
 
 		'16fc2c9f': {
-			page: profilepage,
+			condition: {
+				page: profilepage
+			},
 			condition: {
 				is: !$.browser.mozilla
 			},

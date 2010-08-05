@@ -1,7 +1,7 @@
 $(document).one('kernel_init', function()
 {
-	$.log('log', 'Helianthus.bolanderi - v{0} - by project.helianthus', annuus.get('BOLANDERI_VERSION'));
-	$.log('log', 'Helianthus.annuus - v{0} - by project.helianthus', annuus.get('PROJECT_VERSION'));
+	bolanderi.log('log', 'Helianthus.bolanderi - v{0} - by project.helianthus', annuus.get('BOLANDERI_VERSION'));
+	bolanderi.log('log', 'Helianthus.annuus - v{0} - by project.helianthus', annuus.get('PROJECT_VERSION'));
 });
 
 (function()
@@ -9,18 +9,15 @@ $(document).one('kernel_init', function()
 
 var messages = {
 	document_end: 'DOM is ready.',
-	job_start: '{1.title}: {0}',
+	job_start: '{1.title}: {0.info()}',
 	kernel_init: 'initalizing kernel...',
 	kernel_ready: 'kernel is ready.',
-	service_start: 'initializing service: {0}',
-	service_end: 'initialization complete: {0}',
+	service_start: '{0.title}: initializing...',
+	service_end: '{0.title}: initialization complete.',
+	service_extend: '{0.title}: service extended.',
 	storage_ready: 'storage is ready.',
 	window_end: 'window is loaded.',
-	work: 'work() triggered.',
-	work_window_start: 'work(): window_start.',
-	work_document_start: 'work(): document_start.',
-	work_document_end: 'work(): document_end.',
-	work_window_end: 'work(): window_end.'
+	work: 'work() triggered.'
 };
 
 var types = [];
@@ -30,9 +27,9 @@ $.each(messages, function(type)
 });
 
 $(document)
-.bind(types.join(' '), function(event, job)
+.bind(types.join(' '), function(event)
 {
-	$.log.apply(null, ['log', messages[event.type], job instanceof bolanderi.Job && job.info()].concat([].slice.call(arguments, 2)));
+	annuus.log.apply(null, ['log', messages[event.type]].concat([].slice.call(arguments, 1)));
 });
 
 })();

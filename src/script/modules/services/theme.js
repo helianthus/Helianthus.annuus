@@ -22,7 +22,7 @@ annuus.addModules({
 			{
 				for(var i=0; i<jobs.length; ++i) {
 					if('css' in jobs[i] === 'js' in jobs[i]) {
-						$.log('error', 'either parameter "css" or "js" must exclusively exist, task dropped. [{0}]', jobs[i].info());
+						bolanderi.log('error', 'either parameter "css" or "js" must exclusively exist, task dropped. [{0}]', jobs[i].info());
 						jobs.splice(i--, 1);
 					}
 				}

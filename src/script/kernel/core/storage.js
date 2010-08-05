@@ -28,7 +28,7 @@ $.each(bolanderi.get('MODULES'), function(moduleId, module)
 			}
 			else {
 				if(dataSet.access === 'public' && $.dig(defaultData.publicData, dataType, dataId) != null) {
-					$.error('public {0} id "{0}" already exists. [{0}]', dataType, dataId, module.title);
+					bolanderi.error('public {0} id "{0}" already exists. [{0}]', dataType, dataId, module.title);
 				}
 
 				$.make(dataSet.access === 'public' ? defaultData.publicData : defaultData.privateData[moduleId], dataType, dataId, dataSet.defaultValue);
@@ -84,7 +84,7 @@ var storageEngines = {
 var storage, storageMode;
 var cache = {};
 
-bolanderi.__storage = {
+bolanderi.storage = {
 	mode: function(mode)
 	{
 		if(mode) {
@@ -98,7 +98,7 @@ bolanderi.__storage = {
 
 	get: function(options)
 	{
-		options = $.extend({ curProfileOnly: true, mode: 'both', noCache: false }, options);
+		options = $.extend({ curProfileOnly: true, mode: 'mixed', noCache: false }, options);
 		var data = cache[options.mode];
 
 		if(options.noCache || !data) {
@@ -123,7 +123,7 @@ bolanderi.__storage = {
 
 	save: function()
 	{
-		cache.saved ? storage.set(JSON.stringify(cache.saved)) : $.log('error', 'storage cache not found, save failed.');
+		cache.saved ? storage.set(JSON.stringify(cache.saved)) : bolanderi.log('error', 'storage cache not found, save failed.');
 		cache.both = null;
 	},
 
@@ -135,7 +135,7 @@ bolanderi.__storage = {
 
 	clean: function()
 	{
-		var storage = bolanderi.__storage.get({ curProfileOnly: false, mode: 'saved' });
+		var storage = bolanderi.storage.get({ curProfileOnly: false, mode: 'saved' });
 		var modules = bolanderi.get('MODULES');
 
 		var map = {};
@@ -201,7 +201,7 @@ bolanderi.__storage = {
 			});
 		}
 
-		bolanderi.__storage.save();
+		bolanderi.storage.save();
 	}
 };
 

@@ -25,7 +25,7 @@ annuus.addModules({
 					));
 				}
 
-				$.each($.log.archives || {}, function(i, data)
+				$.each(annuus.log.archives || {}, function(i, data)
 				{
 					writeLog.apply(null, [null].concat(data));
 				});

@@ -1,3 +1,11 @@
+/*!
+ * jQuery Format Plugin
+ * Copyright (c) 2010 project.helianthus <http://github.com/helianthus>
+ * Licensed under the MIT License. <http://www.opensource.org/licenses/mit-license.php>
+ *
+ * version: 1.0.0
+ */
+
 (function($)
 {
 	var radixes = { b:2, o:8, d: 10, x:16, X:16 };
@@ -21,6 +29,11 @@
 		};
 	});
 
+	function isNumber(target)
+	{
+		return /^(?:string|number)$/.test(typeof target) && !isNaN(+target);
+	}
+
 	var formatters = function(target, format)
 	{
 		format.replace(/^(?:\*(\d+))?(?:(.)?([<>=^]))?([ +-])?(#)?(0)?(\d+)?(,)?(?:\.(\d+))?([bcdeEfgGFosxX%])?$/, function($0, repeat, fill, align, sign, _sharp, _0, width, _comma, precision, type)
@@ -35,7 +48,7 @@
 			}
 
 			if(!type) {
-				type = !$.isNumber(target) ? 's' : 'g';
+				type = !isNumber(target) ? 's' : 'g';
 			}
 
 			if(type !== 's') {
@@ -65,14 +78,14 @@
 				}
 				else {
 					if(/e/i.test(type)) {
-						target = $.isNumber(precision) ? target.toExponential() : target.toExponential(precision);
+						target = isNumber(precision) ? target.toExponential() : target.toExponential(precision);
 					}
 					else {
 						if(type === '%') {
 							target = target * 100;
 						}
 
-						target = $.isNumber(precision) ? target.toFixed(precision) : target + '';
+						target = isNumber(precision) ? target.toFixed(precision) : target + '';
 
 						if(type === '%') {
 							target += '%';
@@ -145,7 +158,7 @@
 				mods = $.format([mods].concat(args));
 
 				if(++count === 10) {
-					$.debug(target, mods);
+					window.console && console.log(target, mods);
 					$.error('jQuery.format: too many recursions!');
 				}
 			}
@@ -182,9 +195,9 @@
 					replacement = formatters(replacement, format);
 				}
 
-				if(!$.isWord(replacement)) {
-					$.debug(target, $0, replacement);
-					$.error('jQuery.format: replacement is not a string');
+				if(!/^(?:number|string)$/.test(typeof replacement)) {
+					window.console && console.log(target, $0, replacement);
+					$.error('jQuery.format: replacement is not a string or number.');
 				}
 
 				return replacement;

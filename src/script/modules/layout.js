@@ -21,7 +21,9 @@ annuus.addModules({
 		},
 
 		'cbe665ce': {
-			page: search | tags,
+			condition: {
+				page: search | tags
+			},
 			run_at: 'document_start',
 			css: '.HitSearchText { float: right; }'
 		}

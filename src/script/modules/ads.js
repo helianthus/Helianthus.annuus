@@ -12,7 +12,9 @@ annuus.addModules({
 			'
 		},
 		'62597db3': {
-			page: index | topics | search | tags | view,
+			condition: {
+				page: index | topics | search | tags | view
+			},
 			run_at: 'document_start',
 			css: '\
 				#MainPageAd2 + br + br + div { padding-bottom: 10px !important; } \
@@ -23,7 +25,9 @@ annuus.addModules({
 			'
 		},
 		'e295c5e0': {
-			page: topics | search | tags | view,
+			condition: {
+				page: topics | search | tags | view
+			},
 			run_at: 'document_start',
 			css: '\
 				#ctl00_ContentPlaceHolder1_MiddleAdSpace1 > div > div[style="float: right;"] /* text ad */ \
@@ -31,7 +35,9 @@ annuus.addModules({
 			'
 		},
 		'f760e485': {
-			page: topics | search | tags,
+			condition: {
+				page: topics | search | tags
+			},
 			run_at: 'document_start',
 			css: '\
 				td[colspan][height="52"] \
@@ -39,7 +45,9 @@ annuus.addModules({
 			'
 		},
 		'776549b6': {
-			page: topics,
+			condition: {
+				page: topics
+			},
 			run_at: 'document_start',
 			css: '\
 				.ContentPanel > table { width: 100%; } \
@@ -54,18 +62,22 @@ annuus.addModules({
 			'
 		},
 		'defe6bdf': {
-			page: topics,
+			condition: {
+				page: topics
+			},
 			condition: {
 				is: $.browser.msie && $.browser.version <= 8
 			},
 			frequency: 'always',
 			js: function(self)
 			{
-				self.context().find('td[colspan][height=52]').up('tr').hide();
+				annuus.context().find('td[colspan][height=52]').up('tr').hide();
 			}
 		},
 		'10053965': {
-			page: search | tags | view,
+			condition: {
+				page: search | tags | view
+			},
 			run_at: 'document_start',
 			css: '\
 				.ContentPanel > div[id^="ctl00_ContentPlaceHolder1"] > script:first-child + div { width: 100% !important; } \
@@ -75,15 +87,19 @@ annuus.addModules({
 			'
 		},
 		'18f3515f': {
-			page: search | tags,
+			condition: {
+				page: search | tags
+			},
 			frequency: 'always',
 			js: function(self)
 			{
-				self.context().find('td[colspan][height=52]').up('tr').hide();
+				annuus.context().find('td[colspan][height=52]').up('tr').hide();
 			}
 		},
 		'9b8cfb9a': {
-			page: view,
+			condition: {
+				page: view
+			},
 			run_at: 'document_start',
 			css: '\
 				#ctl00_ContentPlaceHolder1_view_form div > div[style*="padding: 18px 5px 18px 5px"] { border-bottom-width: 0 !important; } \
@@ -94,7 +110,9 @@ annuus.addModules({
 			'
 		},
 		'2c9dd57a': {
-			page: index,
+			condition: {
+				page: index
+			},
 			run_at: 'document_start',
 			css: '\
 				#ctl00_ContentPlaceHolder1_MiddleAdSpace1, /* text ad */ \
@@ -103,7 +121,9 @@ annuus.addModules({
 			'
 		},
 		'86d09787': {
-			page: profilepage,
+			condition: {
+				page: profilepage
+			},
 			run_at: 'document_start',
 			/*
 			#ctl00_ContentPlaceHolder1_PMPersonalTable .main_table1 > table > tbody > tr > td > table > tbody > tr:first-child ~ tr:not([style]),

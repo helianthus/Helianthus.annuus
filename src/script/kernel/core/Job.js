@@ -3,68 +3,15 @@ bolanderi.Job = function(options)
 	$.each(options, function(name)
 	{
 		if(name in bolanderi.Job.prototype) {
-			$.error('Job: overriding prototype methods is not allowed! [{0}]', bolanderi.info(options));
+			bolanderi.error('Job: overriding prototype methods is not allowed! [{0}]', bolanderi.info(options));
 		}
 	});
 
 	$.extend(this, options);
 };
 
-bolanderi.__moduleData = function(module, dataType, id, value)
-{
-	var isGet = typeof id in { string:1, undefined:1 } && typeof value === 'undefined';
-	var profile = bolanderi.__storage.get({ mode: isGet ? 'both' : 'saved' });
-	var paths = {
-		'public': [profile, 'publicData', dataType],
-		'protected': [profile, 'privateData', module.id, dataType],
-		'private': [profile, 'privateData', module.id, module.__pageCode, dataType]
-	};
-	var data = {};
-
-	if(isGet) {
-		$.each(paths, function(modifier, path)
-		{
-			$.extend(data, $.dig(path));
-		});
-		return typeof id === 'undefined' ? data : data[id];
-	}
-
-	if(typeof id === 'string') {
-		data[id] = value;
-	}
-	else {
-		data = id;
-	}
-
-	$.each(data, function(id, value)
-	{
-		var dataDef = $.dig(module, dataType, id);
-
-		if(dataType === 'options' && !dataDef && typeof $.dig(bolanderi.__storage.get(), 'publicData', dataType, id) === 'undefined') {
-			$.log('error', 'public option with id "{0}" does not exist. {1}', id, module.title);
-			return;
-		}
-
-		var container = $.make.apply(null, paths[dataDef ? dataDef.access || 'protected' : 'public'].concat({}));
-
-		if(value === null) {
-			delete container[id];
-		}
-		else {
-			container[id] = value;
-		}
-	});
-
-	bolanderi.__storage.save();
-};
-
 bolanderi.Job.prototype = {
 	constructor: bolanderi.Job,
-
-	context: function()
-	{
-		return bolanderi.__context;
-	},
 
 	data: function(name, value)
 	{
@@ -82,13 +29,13 @@ bolanderi.Job.prototype = {
 
 	database: function(id, value)
 	{
-		return bolanderi.__moduleData(this.module, 'database', id, value);
+		return bolanderi.moduleData(this.module, 'database', id, value);
 	},
 
 	derive: function(options)
 	{
 		if(!(options && options.id)) {
-			$.error('derived job is missing an id!');
+			bolanderi.error('derived job is missing an id!');
 		}
 
 		return new bolanderi.Job($.extend({
@@ -101,7 +48,7 @@ bolanderi.Job.prototype = {
 
 	log: function(type)
 	{
-		$.log(type, $.format('{0} [{1}]', $.format([].slice.call(arguments, 1)), this.info()));
+		bolanderi.log(type, $.format('{0} [{1}]', $.format([].slice.call(arguments, 1)), this.info()));
 	},
 
 	inCondition: function()
@@ -112,12 +59,12 @@ bolanderi.Job.prototype = {
 	info: function()
 	{
 		return $.format('{0}, {1}, {2}{3}',
-			this.module.title, this.id, this.type, this.type === 'action' ? $.format('({0})', this.service || 'unknown') : '');
+			this.title, this.id, this.type, this.type === 'action' ? $.format('({0})', this.service || 'unknown') : '');
 	},
 
 	options: function(id, value)
 	{
-		return bolanderi.__moduleData(this.module, 'options', id, value);
+		return bolanderi.moduleData(this.module, 'options', id, value);
 	},
 
 	ready: function(callback)
@@ -128,7 +75,7 @@ bolanderi.Job.prototype = {
 		{
 			if($.all(requires, function(i, name)
 			{
-				return name in bolanderi.get('SERVICES', {});
+				return name in bolanderi.get('SERVICES');
 			})) {
 				$(document).unbind('service_end', handler);
 
@@ -155,11 +102,11 @@ bolanderi.Job.prototype = {
 		}
 
 		if(this.type !== 'service') {
-			$.error('validate()/profile() is for services only. [{0}]', this.info());
+			bolanderi.error('validate()/profile() is for services only. [{0}]', this.info());
 		}
 
 		if(!(job instanceof bolanderi.Job)) {
-			$.log('error', 'Validation failed. param must be a job object (try self.derive). [{0}, {1}]', this.info(), bolanderi.info(job));
+			bolanderi.log('error', 'Validation failed. param must be a job object (try self.derive). [{0}, {1}]', this.info(), bolanderi.info(job));
 			return false;
 		}
 
@@ -169,11 +116,11 @@ bolanderi.Job.prototype = {
 				job[name] = details.defaultValue;
 			}
 
-			if($.checkIf.missing(details, ['paramType', 'dataType'], this)
-			|| $.checkIf.unknown(details.paramType, ['required', 'optional'], this)
-			|| details.paramType === 'required' && $.checkIf.missing(job, name)
-			|| name in job && $.checkIf.wrongType(job[name], details.dataType, job)
-			|| 'values' in details && $.checkIf.unknown(job[name], details.values, job)
+			if(bolanderi.checkIf.missing(details, ['paramType', 'dataType'], this)
+			|| bolanderi.checkIf.unknown(details.paramType, ['required', 'optional'], this)
+			|| details.paramType === 'required' && bolanderi.checkIf.missing(job, name)
+			|| name in job && bolanderi.checkIf.wrongType(job[name], details.dataType, job)
+			|| 'values' in details && bolanderi.checkIf.unknown(job[name], details.values, job)
 			) {
 				return true;
 			}
@@ -200,8 +147,8 @@ bolanderi.Job.prototype = {
 					fn(i, job);
 				}
 				catch(e) {
-					$.log('error', '{0} [{1}]', e.message, job.info());
-					$.debug(e);
+					bolanderi.log('error', '{0} [{1}]', e.message, job.info());
+					bolanderi.debug(e);
 				}
 
 				$.event.trigger('job_end', [job, self]);

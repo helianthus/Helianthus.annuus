@@ -66,10 +66,10 @@ annuus.addModules({
 				$('<img/>', {
 					id: 'an-master-switch',
 					title: '左鍵設換面板 | 中鍵設換開關',
-					src: self.data('images')[annuus.__storage.get().status ? 'master-switch' : 'master-switch-grayscale'],
+					src: self.data('images')[annuus.storage.get().status ? 'master-switch' : 'master-switch-grayscale'],
 					mousedown: function(event)
 					{
-						var profile = annuus.__storage.get({ mode: 'saved' });
+						var profile = annuus.storage.get({ mode: 'saved' });
 
 						switch(event.which) {
 							case 1:
@@ -89,7 +89,7 @@ annuus.addModules({
 							event.preventDefault();
 
 							profile.status = 1 - profile.status;
-							annuus.__storage.save();
+							annuus.storage.save();
 
 							location.reload();
 						}

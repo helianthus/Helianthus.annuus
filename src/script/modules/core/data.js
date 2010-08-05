@@ -16,7 +16,7 @@ bolanderi.addModules({
 			{
 				self.profile(jobs, function(i, job)
 				{
-					if($.checkIf.exist(bolanderi.get('DATA', {}), job.name, job)) {
+					if(bolanderi.checkIf.exist(bolanderi.get('DATA', {}), job.name, job)) {
 						return;
 					}
 

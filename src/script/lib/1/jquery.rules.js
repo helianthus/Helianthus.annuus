@@ -1,3 +1,12 @@
+/*!
+ * jQuery Rules Plugin
+ * Copyright (c) 2010 project.helianthus <http://github.com/helianthus>
+ * Licensed under the MIT License. <http://www.opensource.org/licenses/mit-license.php>
+ *
+ * version: 1.0.0
+ * requires: jquery.format.js
+ */
+
 (function($)
 {
 
@@ -22,7 +31,6 @@ $.rules = function(callback)
 			return;
 		}
 
-		$.event.trigger('cache_on');
 		cache = true;
 		modified = false;
 		callback();
@@ -30,7 +38,7 @@ $.rules = function(callback)
 			write();
 		}
 		cache = false;
-		$.event.trigger('cache_off');
+
 		return;
 	}
 
@@ -69,12 +77,13 @@ $.rules = function(callback)
 };
 
 var styles;
+var name = typeof bolanderi !== undefined ? '@PROJECT_NAME_SHORT@' : 'jquery-rules';
 
 function write()
 {
 	$.each(styles || (styles = {
-		pre: $('<style id="@PROJECT_NAME_SHORT@-style-pre" />').prependTo('head'),
-		post: $('<style id="@PROJECT_NAME_SHORT@-style-post" />').appendTo('head')
+		pre: $($.format('<style id="{0}-style-pre" />', name)).prependTo('head'),
+		post: $($.format('<style id="{0}-style-post" />', name)).appendTo('head')
 	}), function(pos, style)
 	{
 		var css = cssData[pos].stack.join('');
@@ -287,26 +296,21 @@ function compile(params)
 	$.support.filter = typeof document.createElement('div').filters !== 'undefined';
 
 	if($.support.filter) {
-		$.each([
-			[testStyle.cssText.indexOf('rgba') === -1, /background-color *: *rgba\( *(\d+), *(\d+), *(\d+), *([.\d]+) *\)[; ]*/i, function($0, $1, $2, $3, $4)
+		alternatives.push(
+			[/background-color *: *rgba\( *(\d+), *(\d+), *(\d+), *([.\d]+) *\)[; ]*/i, function($0, $1, $2, $3, $4)
 			{
 				return $.format('-ms-filter: "progid:DXImageTransform.Microsoft.Gradient(startColorStr=#{0},EndColorStr=#{0});"', $.format('{0:x}{1:x}{2:x}{3:x}', $4 * 255, $1, $2, $3));
 			}],
-			[typeof testStyle.opacity === 'undefined', /opacity *:([^;]+)[; ]*/i, function($0, $1)
+			[/opacity *:([^;]+)[; ]*/i, function($0, $1)
 			{
 				return $.format('-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(opacity={0});"', $1 * 100);
 			}],
-			[!$.any(testStyle, $.permute(prefixes, ['Transform'], function(){ return $.format('-{0[0]}-{0[1]}', arguments); }).concat('transform'), function(){ return true; }), /transform *: *rotate\(([^)]+)\)[; ]*/i, function($0, $1)
+			[/transform *: *rotate\(([^)]+)\)[; ]*/i, function($0, $1)
 			{
 				var rad = parseInt($1, 10) * Math.PI / 180;
 				return $.format('-ms-filter: "progid:DXImageTransform.Microsoft.Matrix(M11={0},M12={1!-},M21={1},M22={0},sizingMethod=\'auto expand\')";', Math.cos(rad), Math.sin(rad));
 			}]
-		], function(i, set)
-		{
-			if(set.shift()) {
-				alternatives.push(set);
-			}
-		});
+		);
 	}
 })();
 

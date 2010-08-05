@@ -20,7 +20,7 @@ annuus.addModules({
 			js: function(self)
 			{
 				if($.urlSet().querySet.type === 'MB') {
-					self.context().find('td[colspan="5"]').attr('colspan', '6');
+					annuus.context().find('td[colspan="5"]').attr('colspan', '6');
 				}
 			}
 		}

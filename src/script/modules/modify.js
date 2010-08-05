@@ -45,7 +45,7 @@ annuus.addModules({
 			css: '.an-blankname:before { content: "空白名稱"; font-style: italic; }',
 			js: function(self)
 			{
-				self.context().nameLinks().filter(function()
+				annuus.context().nameLinks().filter(function()
 				{
 					return this.offsetWidth === 0 && /userid=|st=A|ToggleUserDetail/.test($(this).attr('href'));
 				})

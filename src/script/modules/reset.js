@@ -11,7 +11,7 @@ annuus.addModules({
 				var HASH = '074d0ef7-b75b-4c06-aba4-6799c3b9cf02';
 				if(self.database('release_hash') !== HASH)
 				{
-					annuus.__storage.clear();
+					annuus.storage.clear();
 					self.database('release_hash', HASH);
 				}
 			}

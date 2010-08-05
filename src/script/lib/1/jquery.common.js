@@ -1,4 +1,12 @@
-$.each(['all', 'any', 'first'], function(i, name)
+/*!
+ * jQuery Common Utilities
+ * Copyright (c) 2010 project.helianthus <http://github.com/helianthus>
+ * Licensed under the MIT License. <http://www.opensource.org/licenses/mit-license.php>
+ *
+ * version: 1.0.0
+ */
+
+ $.each(['all', 'any', 'first'], function(i, name)
 {
 	$[name] = function()
 	{
@@ -101,6 +109,18 @@ $.extend({
 			}
 		});
 		return target;
+	},
+
+	debug: function()
+	{
+		if(window.console) {
+			// webkit throws error with this
+			// (console.debug || console.log)(...)
+			console[console.debug ? 'debug' : 'log'](arguments.length === 1 ? arguments[0] : arguments);
+		}
+		else {
+			$.timeout(100, arguments, $.debug);
+		}
 	},
 
 	dig: function(obj)

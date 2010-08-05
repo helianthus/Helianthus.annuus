@@ -7,7 +7,7 @@ bolanderi.addModules = function(newModules)
 {
 	$.each(newModules, function(moduleId, module)
 	{
-		if($.checkIf.exist(modules, moduleId) || $.checkIf.missing(module, ['title', 'pages'])) {
+		if(bolanderi.checkIf.exist(modules, moduleId) || bolanderi.checkIf.missing(module, ['title', 'pages'])) {
 			return;
 		}
 
@@ -25,6 +25,13 @@ bolanderi.addModules = function(newModules)
 			if(task.option) {
 				$.make(module, 'options', taskId, { title: task.option.title, type: 'boolean', defaultValue: task.option.defaultValue });
 				$.make(task, 'condition', 'options', taskId, true);
+			}
+
+			if(task.type === 'service') {
+				$.extend(task, {
+					api: task.api || {},
+					params: task.params || {}
+				});
 			}
 		});
 

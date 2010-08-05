@@ -26,7 +26,7 @@ $.event.trigger('kernel_ready');
 
 function init()
 {
-	bolanderi.__storage.mode(mode);
+	bolanderi.storage.mode(mode);
 	$.event.trigger('storage_ready');
 	bolanderi.work(document);
 }

@@ -11,7 +11,6 @@ annuus.addModules({
 			run_at: 'document_start',
 			js: function()
 			{
-
 				// firebug has a serious looping bug with safari :(
 				!$.browser.webkit && $.getScript('https://getfirebug.com/firebug-lite-beta.js');
 			}

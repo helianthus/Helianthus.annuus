@@ -1,5 +1,13 @@
-// part of it is based on parseUri by Steven Levithan
-// http://blog.stevenlevithan.com/archives/parseuri
+/*!
+ * jQuery URL Plugin
+ * Copyright (c) 2010 project.helianthus <http://github.com/helianthus>
+ * Licensed under the MIT License. <http://www.opensource.org/licenses/mit-license.php>
+ *
+ * Partly based on parseUri by Steven Levithan <http://blog.stevenlevithan.com/archives/parseuri>
+ *
+ * version: 1.0.0
+ * requires: jquery.format.js, jquery.deparam.js
+ */
 
 (function($)
 {
@@ -37,7 +45,7 @@
 				'(.*)', // fragment
 			')?',
 		')'
-	].join(''), 'i');
+	].join(''));
 
 	function clean(obj)
 	{
@@ -73,7 +81,7 @@
 
 		if(!param) return url;
 
-		var urlSet = clean($.copy(parse(url), param)), temp;
+		var urlSet = clean($.extend(true, parse(url), param)), temp;
 
 		url = param.authority;
 
@@ -131,6 +139,6 @@
 		if(name) param[name] = val;
 		hash = $.hash(param);
 
-		if(location.hash || hash !== '#') location.hash = hash === '#' ? '#poweredby=Project.Helianthus' : hash;
+		if(location.hash || hash !== '#') location.hash = hash === '#' ? '#.' : hash;
 	};
 })(jQuery);

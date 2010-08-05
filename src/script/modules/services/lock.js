@@ -49,13 +49,13 @@ annuus.addModules({
 							},
 							js: function(self)
 							{
-								self.context().find('.repliers > tbody > tr > td[colspan="100%"]').attr('colspan', '2');
+								annuus.context().find('.repliers > tbody > tr > td[colspan="100%"]').attr('colspan', '2');
 							}
 						}));
 					}
 				}
 
-				$.log('log', 'Layout is now locked.');
+				bolanderi.log('log', 'Layout is now locked.');
 				self.isLocked = true;
 			},
 

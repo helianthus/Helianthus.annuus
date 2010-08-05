@@ -16,7 +16,7 @@ annuus.addModules({
 			init: function(self, jobs)
 			{
 				if(jobs.length) {
-					$.log('warn', 'Simple API service cannot be used directly, please use the API provided instead.');
+					bolanderi.log('warn', 'Simple API service cannot be used directly, please use the API provided instead.');
 				}
 			},
 
@@ -32,7 +32,7 @@ annuus.addModules({
 
 			isVotePage: function(self, target)
 			{
-				return !!$(target || self.context()).find('.repliers:first > tbody > style').length;
+				return !!$(target || annuus.context()).find('.repliers:first > tbody > style').length;
 			}
 		}
 	}

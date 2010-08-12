@@ -148,7 +148,7 @@ bolanderi.Job.prototype = {
 				}
 				catch(e) {
 					bolanderi.log('error', '{0} [{1}]', e.message, job.info());
-					bolanderi.debug(e);
+					$.debug(e);
 				}
 
 				$.event.trigger('job_end', [job, self]);

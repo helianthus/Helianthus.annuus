@@ -32,4 +32,9 @@ $(document)
 	annuus.log.apply(null, ['log', messages[event.type]].concat([].slice.call(arguments, 1)));
 });
 
+$(document).bind('debug', function(event, msg)
+{
+	annuus.log('debug', '$.debug: ' + msg);
+});
+
 })();

@@ -7,15 +7,6 @@ $.extend(bolanderi, {
 		return bolanderi.__context;
 	},
 
-	debug: function()
-	{
-		bolanderi.log('debug', '$.debug: ' + [].slice.call(arguments).join(', '));
-
-		if(bolanderi.get('DEBUG_MODE')) {
-			$.debug.apply($, arguments);
-		}
-	},
-
 	error: function()
 	{
 		throw new Error($.format(arguments));

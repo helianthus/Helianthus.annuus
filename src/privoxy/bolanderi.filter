@@ -4,7 +4,7 @@ s`</head>`<script id="@PROJECT_NAME_SHORT@-script" src="@PROJECT_FILE_URL@"></sc
 
 # IE8 Re-enabler
 FILTER: annuus.ForceIE8
-s`<head>`<head>\n<meta http-equiv="X-UA-Compatible" content="IE=Edge" />`is
+s`(<head[^>]*>)`$1\n<meta http-equiv="X-UA-Compatible" content="IE=Edge" />`is
 FILTER: annuus.FixInnerForm
 s`(<(?:td|div)[^>]+?>\s*<)form`$1div`isg
 s`(?<=</)form(?=\>\s*</(?:td|div))`div`isg

@@ -23,7 +23,7 @@ annuus.addModules({
 			{
 				$.rules('\
 					#an-master > * { position: fixed; } \
-					#an-master-overlay { z-index: 120; height: 0; } \
+					#an-master-overlay { z-index: 120; top: -100%; } \
 					#an-master-switch { z-index: 300; top: 10px; left: 10px; cursor: pointer; } \
 					#an-master-sidebars { display: none; position: fixed; z-index: 130; left: 0; top: 70px; width: 150px; border-left: 0; } \
 					#an-master-sidebars > div { display: none; max-height: 100%; } \
@@ -34,8 +34,7 @@ annuus.addModules({
 					#an-master-panels { margin-right: 160px; } \
 					#an-master-panels > div { display: none; height: 100%; position: relative; font-size: 110%; } \
 					#an-master-panels > div > h1 { box-sizing: border-box; height: 2em; line-height: 2em; text-indent: 0.5em; } \
-					#an-master-panels > div > div { position: absolute; top: 2em; bottom: 0; left: 0; right: 0; overflow: auto; } \
-					#an-master-panels > div > div > * { font-size: 90%; } \
+					#an-master-panels > div > div { position: absolute; top: 2em; bottom: 0; left: 0; right: 0; overflow: auto; font-size: 90%; } \
 				');
 
 				$('\
@@ -54,13 +53,21 @@ annuus.addModules({
 				self.sidebars = $('#an-master-sidebars');
 				var controls = self.sidebars.add('#an-master-container');
 				var show;
-				var overlayFx = function()
+				var fx = [
+					function(next)
+					{
+						self.overlay.animate({ top: show ? '0%' : '-100%' }, show ? 800 : 200, show ? 'easeOutBounce' : 'swing', next);
+						//self.overlay.animate({ height: show ? '100%' : '0%' }, 200, next);//show ? 800 : 200, show ? 'easeOutBounce' : 'swing', next);
+					},
+					function(next)
+					{
+						//controls.toggle('fade', {}, 400, next);
+						show ? controls.fadeTo(0, 0, next).fadeTo(400, 1) : controls.fadeOut(400, next);
+					}
+				];
+				var fxEnd = function()
 				{
-					self.overlay.animate({ height: show ? '100%' : '0%' }, show ? { duration: 800, easing: 'easeOutBounce', complete: controlsFx } : 200);
-				};
-				var controlsFx = function()
-				{
-					show ? controls.fadeIn(400) : controls.fadeOut(400, overlayFx);
+					self.togglePage(self, self.active, show, true);
 				};
 
 				$('<img/>', {
@@ -81,8 +88,8 @@ annuus.addModules({
 							}
 
 							show = !show;
-							self.togglePage(self, self.active, show, true);
-							show ? overlayFx() : controlsFx();
+							document.body.style.overflow = show ? 'hidden' : '';
+							$(document).queue('master-fx', (show ? fx.slice() : fx.slice().reverse()).concat(fxEnd)).dequeue('master-fx');
 
 							break;
 							case 2:
@@ -109,7 +116,7 @@ annuus.addModules({
 						}
 					});
 
-					self.panels = $('#an-master-panels').fixScroll('h1+div');
+					self.panels = $('#an-master-panels');
 				}
 
 				self.profile(job, function()
@@ -121,17 +128,17 @@ annuus.addModules({
 					job.css && $.rules(job.css, job);
 
 					var page = {
-						self: job
+						job: job
 					};
 
 					page.controls = $($.format('<div><h1 class="ui-helper-reset ui-widget-header ui-corner-top">{0}</h1></div>', job.title))
-						.append($('<div/>').append(page.panel = job.panel(job)))
+						.append($('<div/>').append(page.panel = $(job.panel(job))))
 						.appendTo(self.panels);
 
 					if(job.sidebar) {
 						page.controls.push(
 							$('<div class="ui-widget-content ui-corner-right"></div>')
-							.append(page.sidebar = job.sidebar(job))
+							.append(page.sidebar = $(job.sidebar(job)))
 							.appendTo(self.sidebars)
 						);
 					}
@@ -163,24 +170,21 @@ annuus.addModules({
 					self.active = page;
 				}
 
-				if(atOnce) {
-					page.controls.toggle(show);
-				}
-				else {
-					page.controls.each(function(i)
-					{
-						var val = show ? 'show' : 'hide';
-						if(i === 0) {
-							$(this).stop(true, true).animate({ height: val }, 400);
-						}
-						else {
-							$(this).stop(true, true).toggle('drop', { direction: 'left' }, 400);
-						}
-					});
-				}
+				var speed = atOnce ? 0 : 400;
 
-				var type = show ? 'select' : 'unselect';
-				type in page.self && page.self[type](page.self, page);
+				page.controls.each(function(i)
+				{
+					if(i === 0) {
+						$(this).stop(true, true).animate({ height: show ? 'show' : 'hide' }, speed, function()
+						{
+							var callback = page.job[show ? 'select' : 'unselect'];
+							callback && setTimeout(function(){ callback(page.job, page); }, 0);
+						});
+					}
+					else {
+						$(this).stop(true, true).toggle('drop', { direction: 'left' }, speed);
+					}
+				});
 			}
 		}
 	}

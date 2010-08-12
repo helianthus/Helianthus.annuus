@@ -10,7 +10,7 @@ annuus.addModules({
 				#an-master-extractor { height: 100%; } \
 				#an-master-extractor > div { float: left; box-sizing: border-box; width: 50%; height: 100%; padding: 10px; } \
 				#an-master-extractor > div > div { margin-top: -1.3em; box-sizing: border-box; height: 100%; padding-top: 1.3em; } \
-				#an-master-extractor > div > div > textarea { float: left; margin: 0; box-sizing: border-box; width: 100%; height: 100%; } \
+				#an-master-extractor > div > div > textarea { float: left; margin: 0; box-sizing: border-box; width: 100%; height: 100%; resize: none; } \
 				#an-master-extractor-button { margin: 0; border: 0; width: 100%; border-top-left-radius: 0; border-bottom-left-radius: 0; } \
 			',
 			panel: function(self)

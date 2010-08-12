@@ -8,21 +8,18 @@ annuus.addModules({
 			service: 'master',
 			title: '記錄',
 			css: '\
-				#an-master-log { padding: 1em; } \
-				#an-master-log > li { display: block; font-size: 80%; } \
-				#an-master-log > li > pre { margin: 0; } \
-				.an-log-error { color: red; } \
+				#an-master-log { width: 100%; height: 100%; box-sizing: border-box; margin: 0; border: 0; padding: 0.5em; font-size: 80%; font-family: monospace; resize: none; border-radius: 0; } \
 			',
 			panel: function(self)
 			{
-				var panel = $('<ul id="an-master-log" class="ui-helper-reset" />');
+				self.panel = $('<textarea id="an-master-log" readonly />')[0];
 
 				function writeLog(event, type, msg, date)
 				{
-					panel.prepend($.format(
-						'<li><pre>{1.getHours():02}:{1.getMinutes():02}:{1.getSeconds():02}.{1.getMilliseconds():03} <span class="an-log-{0}">[{0}] {2}</span></pre></li>',
-						type, date || new Date(), $.format([msg].concat([].slice.call(arguments, 2))).toString().replace(/</g, '&lt;')
-					));
+					self.panel.value = $.format(
+						'{1.getHours():02}:{1.getMinutes():02}:{1.getSeconds():02}.{1.getMilliseconds():03} [{0}] {2}{3}',
+						type, date || new Date(), $.format([msg].concat([].slice.call(arguments, 2))), self.panel.value && '\n'
+					) + self.panel.value;
 				}
 
 				$.each(annuus.log.archives || {}, function(i, data)
@@ -32,7 +29,7 @@ annuus.addModules({
 
 				$(document).bind('log', writeLog);
 
-				return panel;
+				return self.panel;
 			}
 		}
 	}

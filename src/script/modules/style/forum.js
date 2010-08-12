@@ -257,7 +257,10 @@ annuus.addModules({
 		},
 
 		'b766aea7': {
-			option: ['同時套用於表單元件', true],
+			option: {
+				title: '同時套用於表單元件',
+				defaultValue: true
+			},
 			service: 'theme',
 			name: 'style-forms',
 			css: '\

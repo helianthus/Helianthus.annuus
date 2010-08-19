@@ -111,7 +111,7 @@ annuus.addModules({
 					self.opened = force;
 					force = true;
 				}
-				$.timeout('button-service-toggle', force || self.opened ? null : 500, function()
+				$.run('button-service-toggle', force || self.opened ? null : 500, function()
 				{
 					if(force || self.opened !== self.ui.is(':visible')) {
 						if(self.opened) {

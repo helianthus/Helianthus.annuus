@@ -113,14 +113,19 @@ $.extend({
 
 	debug: function()
 	{
-		if(window.console) {
-			// webkit throws error with this
-			// (console.debug || console.log)(...)
-			console[console.debug ? 'debug' : 'log'](arguments.length === 1 ? arguments[0] : arguments);
-		}
-		else {
-			$.timeout(100, arguments, $.debug);
-		}
+		$.event.trigger('debug', [].slice.call(arguments));
+
+		$.run(arguments, function()
+		{
+			if(window.console) {
+				// webkit throws error with this
+				// (console.debug || console.log)(...)
+				console[console.debug ? 'debug' : 'log'](arguments.length === 1 ? arguments[0] : arguments);
+			}
+			else if(!$.isReady) {
+				$.run(this, 100);
+			}
+		});
 	},
 
 	dig: function(obj)
@@ -287,17 +292,6 @@ $.extend({
 });
 
 $.fn.extend({
-	fixScroll: function(selector)
-	{
-		return this.mousewheel(function(event, delta)
-		{
-			var target = (selector ? $(event.target).closest(selector) : this)[0];
-			if(delta > 0 ? target.scrollTop === 0 : target.scrollTop >= target.scrollHeight - target.clientHeight) {
-				event.preventDefault();
-			}
-		});
-	},
-
 	toFlash: function(url, attrSet, paramSet)
 	{
 		attrSet = $.extend({ width: 0, height: 0, id: this[0].id || 'jquery-flash-' + $.time() }, attrSet);

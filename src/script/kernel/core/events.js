@@ -2,20 +2,20 @@
 {
 	var documentEnd = function()
 	{
-		$.timeout('checkDOM', null);
+		$.run('checkDOM', null);
 		bolanderi.get('DOCUMENT_ENDED', true);
 		$.event.trigger('document_end');
 	};
 
 	$(document).one('kernel_ready', function()
 	{
-		$.timeout('checkDOM', function()
+		$.run('checkDOM', function()
 		{
 			if($.isReady || $('#Side_GoogleAd').length) {
 				documentEnd();
 			}
 			else {
-				$.timeout('checkDOM', 50);
+				$.run('checkDOM', 50);
 			}
 		});
 	});

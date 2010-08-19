@@ -3,11 +3,11 @@ bolanderi.init = function()
 
 $.event.trigger('kernel_init');
 
-$.timeout('checkbody', function()
+$.run('checkbody', function()
 {
 
 if(!document.body) {
-	return $.timeout('checkbody', 50);
+	return $.run('checkbody', 50);
 }
 
 $('<div/>', { id: 'an' }).prependTo(document.body);
@@ -31,7 +31,7 @@ function init()
 	bolanderi.work(document);
 }
 
-$.timeout('checkStorage', [100], function(countdown)
+$.run('checkStorage', [100], function(countdown)
 {
 	switch(mode) {
 		case 'flash':
@@ -45,7 +45,7 @@ $.timeout('checkStorage', [100], function(countdown)
 	}
 
 	if(countdown) {
-		$.timeout('checkStorage', 50, [--countdown]);
+		$.run('checkStorage', 50, [--countdown]);
 	}
 	else {
 		mode = window.localStorage ? 'localStorage' : 'null';

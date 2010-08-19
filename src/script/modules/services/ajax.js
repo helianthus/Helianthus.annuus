@@ -77,9 +77,9 @@ annuus.addModules({
 				options = $.extend({
 					cache: true,
 					condition: {
-				page: 1
-				}
-			}, options);
+						page: 1
+					}
+				}, options);
 
 				var page = $.make(self.pages, options.page, {});
 

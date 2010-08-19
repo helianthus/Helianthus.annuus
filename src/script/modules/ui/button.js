@@ -111,7 +111,7 @@ annuus.addModules({
 					self.opened = force;
 					force = true;
 				}
-				$.run('button-service-toggle', force || self.opened ? null : 500, function()
+				$.run('button-service-toggle', force || self.opened ? false : 500, function()
 				{
 					if(force || self.opened !== self.ui.is(':visible')) {
 						if(self.opened) {
@@ -328,8 +328,10 @@ annuus.addModules({
 
 		'98d53583': {
 			title: '測試按扭',
-			page: 0,
 			requires: ['button'],
+			condition: {
+				page: 0,
+			},
 			js: function(self)
 			{
 				var ID = 'acb540b1-d6e0-4c65-b953-d7ffabf26c65_';

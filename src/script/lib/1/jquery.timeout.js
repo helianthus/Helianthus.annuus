@@ -1,5 +1,5 @@
 /*!
- * jQuery Timeout Plugin
+ * jQuery Run Plugin
  * Copyright (c) 2010 project.helianthus <http://github.com/helianthus>
  * Licensed under the MIT License. <http://www.opensource.org/licenses/mit-license.php>
  *
@@ -8,64 +8,79 @@
 
 (function($)
 {
-	var cache = {};
-
 	function isArrayLike(target)
 	{
 		return !!target && ($.isArray(target) || typeof target.callee === 'function' && typeof target.length === 'number');
 	}
 
-	$.timeout = function()
+	var cache = {};
+	var typeMap = {
+		boolean: 'clear',
+		'function': 'fn',
+		number: 'delay',
+		string: 'id'
+	};
+
+	$.run = function()
 	{
-		var id;
-		var args = [].slice.call(arguments);
+		var options = {};
 
-		if(typeof args[0] === 'string') {
-			id = args.shift();
+		$.each(arguments, function(i, arg)
+		{
+			var type = typeof arg;
 
-			if(cache[id]) {
-				clearTimeout(cache[id].timer);
+			if(arg === null) {
+				options.clear = true;
+			}
+			else if(type !== 'object') {
+				options[typeMap[type]] = arg;
+			}
+			else if(isArrayLike(arg)) {
+				options.params = arg;
+			}
+			else if($.isPlainObject(arg)) {
+				$.extend(options, arg);
+			}
+		});
+
+		if('id' in options) {
+			if(options.id in cache) {
+				clearTimeout(cache[options.id].timer);
+				options = $.extend(cache[options.id], options);
 			}
 
-			if(args[0] === null && args.length === 1) {
-				delete cache[id];
+			if(options.clear) {
+				delete cache[options.id];
 				return;
 			}
 		}
-
-		var delay = typeof args[0] === 'number' || args[0] === null ? args.shift() : id && cache[id] && cache[id].delay;
-		var params = isArrayLike(args[0]) ? args.shift() : [];
-		var callback = args[0] || cache[id].callback;
-
-		if(id) {
-			cache[id] = {
-				delay: delay,
-				callback: callback
-			};
+		else {
+			options.id = $.now();
 		}
+
+		if(!options.fn) {
+			$.error('jQuery.run: function is missing!');
+		}
+
+		cache[options.id] = options;
+		options.destroy = false;
 
 		var fn = function()
 		{
-			if(id) {
-				cache[id].destory = true;
-			}
+			options.destroy = true;
 
-			callback.apply(null, params);
+			options.fn.apply(options, options.params);
 
-			if(id && cache[id] && cache[id].destory) {
-				delete cache[id];
+			if(options.id in cache && cache[options.id].destroy) {
+				delete cache[options.id];
 			}
 		};
 
-		if(typeof delay !== 'number') {
+		if(typeof options.delay !== 'number') {
 			fn();
 		}
 		else {
-			var timer = setTimeout(fn, delay);
-
-			if(id) {
-				cache[id].timer = timer;
-			}
+			options.timer = setTimeout(fn, options.delay);
 		}
 	};
 })(jQuery);

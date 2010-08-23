@@ -6,7 +6,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	desc: '隱藏廣告',
 	page: { 65535: true },
 	type: 3,
-	options: { 'bRetroHideAds': { desc: '相容性模式', defaultValue: false, type: 'checkbox' } },
+	//options: { 'bRetroHideAds': { desc: '相容性模式', defaultValue: false, type: 'checkbox' } },
 	once: function()
 	{
 		$.each(
@@ -66,7 +66,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		},
 		function(nPageCode){ $d.pageCode() & nPageCode && AN.util.stackStyle(this); });
 
-		if(AN.util.getOptions('bRetroHideAds'))
+		if(true)//AN.util.getOptions('bRetroHideAds'))
 		{
 			AN.util.stackStyle('td[height="52"] { display: none; }');
 		}
@@ -122,7 +122,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	{
 		if($.browser.msie && $d.pageCode() == 32) $('div[style*="PADDING-BOTTOM: 18px"]').css('border-bottom', 0); // yet another IE8 bug!?
 
-		if(AN.util.getOptions('bRetroHideAds'))
+		if(true)//AN.util.getOptions('bRetroHideAds'))
 		{
 			$('td[height="52"]').parent().hide();
 		}

@@ -40,7 +40,6 @@ $.extend(
 		{
 			url: sURL,
 			dataType: 'text',
-			timeout: 10000,
 			success: function(sHTML)
 			{
 				var jNewDoc = $.doc(sHTML);

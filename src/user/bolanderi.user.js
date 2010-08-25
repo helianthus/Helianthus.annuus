@@ -4,7 +4,7 @@ if(/@PROJECT_TARGET_REGEX@/i.test(location.href)) {
 		var head = document.getElementsByTagName('head');
 		var script = document.createElement('script');
 
-		script.id = '@PROJECT_NAME_SHORT-script';
+		script.id = '@PROJECT_NAME_SHORT@-script';
 		//script.src = 'data:text/javascript;base64,' + encoded;
 		script.appendChild(document.createTextNode(atob(encodedScriptContent)));
 

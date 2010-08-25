@@ -3,56 +3,54 @@ bolanderi.init = function()
 
 $.event.trigger('kernel_init');
 
-$.run('checkbody', function()
+$.run(function()
 {
+	if(!document.body) {
+		return $.run(this, 50);
+	}
 
-if(!document.body) {
-	return $.run('checkbody', 50);
-}
+	$('<div/>', { id: 'bolanderi' }).prependTo(document.body);
 
-$('<div/>', { id: 'an' }).prependTo(document.body);
+	var mode = $.cookie('@PROJECT_NAME_SHORT@_storage_mode') || 'localStorage';
 
-var mode = $.cookie('an_storagemode') || 'localStorage';
+	if(mode === 'localStorage' && !window.localStorage || mode === 'sessionStorage' && !window.sessionStorage) {
+		mode = 'flash';
+	}
 
-if(mode === 'localStorage' && !window.localStorage || mode === 'sessionStorage' && !window.sessionStorage) {
-	mode = 'flash';
-}
+	if(mode === 'flash') {
+		bolanderi.get('FLASH_API', $('<div/>', { id: 'bolanderi-lso' }).appendTo('#bolanderi').toFlash('http://helianthus-annuus.googlecode.com/svn/other/lso.swf' + ($.browser.msie ? '?' + $.now() : ''))[0]);
+	}
 
-if(mode === 'flash') {
-	bolanderi.get('FLASH_API', $('<div/>', { id: 'bolanderi-lso' }).appendTo('#an').toFlash('http://helianthus-annuus.googlecode.com/svn/other/lso.swf' + ($.browser.msie ? '?' + $.now() : ''))[0]);
-}
+	$.event.trigger('kernel_ready');
 
-$.event.trigger('kernel_ready');
+	function init()
+	{
+		bolanderi.storage.mode(mode);
+		$.event.trigger('storage_ready');
+		bolanderi.work(document);
+	}
 
-function init()
-{
-	bolanderi.storage.mode(mode);
-	$.event.trigger('storage_ready');
-	bolanderi.work(document);
-}
-
-$.run('checkStorage', [100], function(countdown)
-{
-	switch(mode) {
-		case 'flash':
-		if(typeof bolanderi.get('FLASH_API').get !== 'function') {
-			break;
+	$.run([100], function(countdown)
+	{
+		switch(mode) {
+			case 'flash':
+				if(typeof bolanderi.get('FLASH_API').get !== 'function') {
+					break;
+				}
+			case 'localStorage':
+			case 'sessionStorage':
+			case 'null':
+				return init();
 		}
-		case 'localStorage':
-		case 'sessionStorage':
-		case 'null':
-		return init();
-	}
 
-	if(countdown) {
-		$.run('checkStorage', 50, [--countdown]);
-	}
-	else {
-		mode = window.localStorage ? 'localStorage' : 'null';
-		init();
-	}
-});
-
+		if(countdown) {
+			$.run(this, 50, [--countdown]);
+		}
+		else {
+			mode = window.localStorage ? 'localStorage' : 'null';
+			init();
+		}
+	});
 });
 
 };

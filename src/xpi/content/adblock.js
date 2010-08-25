@@ -12,7 +12,7 @@
 		}
 	};
 
-	document.addEventListener('AnnuusStatusChange', function(event)
+	document.addEventListener('@PROJECT_NAME_SHORT@_status_change', function(event)
 	{
 		service[event.status ? 'addObserver' : 'removeObserver'](observer, "http-on-modify-request", false);
 	}, false);

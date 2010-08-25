@@ -82,5 +82,7 @@
 		else {
 			options.timer = setTimeout(fn, options.delay);
 		}
+
+		return options;
 	};
 })(jQuery);

@@ -9,7 +9,12 @@ $.run(function()
 		return $.run(this, 50);
 	}
 
-	$('<div/>', { id: 'bolanderi' }).prependTo(document.body);
+	var root = $('#bolanderi');
+	if(!root.length) {
+		root = $('<div/>', { id: 'bolanderi' }).prependTo(document.body);
+	}
+
+	$('<div/>', { id: '@PROJECT_NAME_SHORT@' }).appendTo(root);
 
 	var mode = $.cookie('@PROJECT_NAME_SHORT@_storage_mode') || 'localStorage';
 
@@ -18,7 +23,7 @@ $.run(function()
 	}
 
 	if(mode === 'flash') {
-		bolanderi.get('FLASH_API', $('<div/>', { id: 'bolanderi-lso' }).appendTo('#bolanderi').toFlash('http://helianthus-annuus.googlecode.com/svn/other/lso.swf' + ($.browser.msie ? '?' + $.now() : ''))[0]);
+		bolanderi.get('FLASH_API', $('<div/>', { id: 'bolanderi-lso' }).appendTo(root).toFlash('http://helianthus-annuus.googlecode.com/svn/other/lso.swf' + ($.browser.msie ? '?' + $.now() : ''))[0]);
 	}
 
 	$.event.trigger('kernel_ready');

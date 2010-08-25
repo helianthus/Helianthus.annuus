@@ -89,7 +89,7 @@ annuus.addModules({
 					event.preventDefault();
 					self.container.stop(true).animate({ scrollTop: $.format('{0}={1}', delta < 0 ? '+' : '-', Math.abs(delta) * 100) }, 'fast', 'linear');
 				})
-				.appendTo('#an');
+				.appendTo('#annuus');
 
 				self.ui = $('#an-button-ui');
 				self.container = self.ui.children();

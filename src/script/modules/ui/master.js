@@ -47,7 +47,7 @@ annuus.addModules({
 						</div> \
 					</div> \
 				')
-				.appendTo('#an');
+				.appendTo('#annuus');
 
 				self.overlay = $('#an-master-overlay');
 				self.sidebars = $('#an-master-sidebars');

@@ -137,7 +137,9 @@ function compile(params)
 
 (function()
 {
-	var cssTEXT = $('<div/>').append('<div style="border-top: solid 1px blue; border-left: dashed; padding: 3px 3PX; COLor : #000;" />').html().replace(/<div style="([^"]+).+/i, '$1');
+	var testNode = document.createElement('div');
+	testNode.innerHTML = '<div style="border-top: solid 1px blue; border-left: dashed; padding: 3px 3PX; COLor : #ffffff;" />';
+	var cssTEXT = testNode.innerHTML.replace(/<div style="([^"]+).+/i, '$1');
 	var csstext = cssTEXT.toLowerCase();
 	var rWidth = /\d+\S+|thin|medium|thick/i;
 	var rStyle = /none|hidden|dotted|dashed|solid|double|groove|ridge|inset|outset/i;
@@ -155,6 +157,10 @@ function compile(params)
 				$1 = $.format('{0[0]:*2}{0[1]:*2}{0[2]:*2}', $1);
 			}
 			return $.format('rgb({0.substr(0,2)!x}, {0.substr(2,2)!x}, {0.substr(4,2)!x})', $1);
+		}],
+		[cssTEXT.indexOf('#FFFFFF') !== -1, /#(\w+)/g, function($0)
+		{
+			return $0.toUpperCase();
 		}],
 		// borderAutofilled: FF
 		[csstext.indexOf('medium') !== -1, /border(?:-(?:top|right|bottom|left))? *: *[^;\"]+/gi, function($0)

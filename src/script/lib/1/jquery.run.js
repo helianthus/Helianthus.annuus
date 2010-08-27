@@ -15,7 +15,7 @@
 
 	var cache = {};
 	var typeMap = {
-		boolean: 'clear',
+		'boolean': 'clear',
 		'function': 'fn',
 		number: 'delay',
 		string: 'id'

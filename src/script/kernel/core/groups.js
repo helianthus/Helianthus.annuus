@@ -1,7 +1,7 @@
 $(document).one('storage_ready', function()
 {
 
-bolanderi.get('SERVICES', {})
+bolanderi.get('SERVICES', {});
 var docPageCode = $(document).pageCode();
 var profile = bolanderi.storage.get();
 var statusTypes = profile.status ? ['core', 'debug', 'comp', 'on', 'off'] : 'core';
@@ -9,12 +9,40 @@ var compTypes = { core:1, comp:1 };
 var services = {};
 var actions = {};
 
+function runService(service)
+{
+	bolanderi.trigger('service_start', service);
+
+	$.each(service.api || {}, function(name, details)
+	{
+		if(bolanderi.checkIf.missing(service, name)) {
+			service.error('initialization failed.');
+		}
+
+		$.make(bolanderi, service.name, name, function()
+		{
+			return service[name].apply(service, [service].concat([].slice.call(arguments)));
+		});
+	});
+
+	bolanderi.trigger('service_ready', service);
+
+	service.init && $.rules(function()
+	{
+		service.init(service, service.jobs);
+	});
+
+	bolanderi.get('SERVICES')[service.name] = service;
+
+	bolanderi.trigger('service_end', service);
+}
+
 $.each(bolanderi.get('MODULES'), function(moduleId, module)
 {
 	$.digEach(module.pages, statusTypes, null, function(status, i, pageCode)
 	{
 		if(pageCode & docPageCode && (module.__pageCode = pageCode)
-		&& (status in compTypes || status === 'debug' && bolanderi.get('DEBUG_MODE') || profile.privateData[module.id][module.__pageCode].status === 1)
+		&& (status in compTypes || status === 'debug' && bolanderi.get('DEBUG_MODE') || profile.privateData[moduleId][pageCode].status === 1)
 		&& bolanderi.inCondition(module)
 		) {
 			$.each(module.tasks, function(id, task)
@@ -34,20 +62,17 @@ $.each(bolanderi.get('MODULES'), function(moduleId, module)
 
 							services[job.name] = job;
 							job.jobs = $.make(actions, job.name, []);
-							$(document).one('work_' + job.run_at, function()
-							{
-								job.ready(runService);
-							});
+							job.ready(runService);
 						break;
 						case 'action':
 							job.service = job.service || 'auto';
 							$.make(actions, job.service, []).push(job);
 						break;
 						case 'extend':
-							$(document).bind('service_end', function(event, service)
+							bolanderi.bind('service_ready', function(event, service)
 							{
 								if(service.name === job.name) {
-									$(document).unbind(event);
+									bolanderi.unbind(event);
 
 									$.extend(service.api, job.api);
 									$.each(job, function(name, obj)
@@ -57,7 +82,7 @@ $.each(bolanderi.get('MODULES'), function(moduleId, module)
 										}
 									});
 
-									$.event.trigger('service_extend', job);
+									bolanderi.trigger('service_extend', job);
 								}
 							});
 						break;
@@ -72,30 +97,6 @@ $.each(bolanderi.get('MODULES'), function(moduleId, module)
 	});
 });
 
-function runService(service)
-{
-	$.event.trigger('service_start', service);
-
-	$.each(service.api || {}, function(name, details)
-	{
-		if(bolanderi.checkIf.missing(service, name)) {
-			service.error('initialization failed.');
-		}
-
-		$.make(bolanderi, service.name, name, function()
-		{
-			return service[name].apply(service, [service].concat([].slice.call(arguments)));
-		});
-	});
-
-	service.init && $.rules(function()
-	{
-		service.init(service, service.jobs);
-	});
-
-	bolanderi.get('SERVICES')[service.name] = service;
-
-	$.event.trigger('service_end', service);
-}
+bolanderi.trigger('jobs_ready');
 
 });

@@ -1,4 +1,4 @@
-annuus.addModules({
+annuus.add({
 
 'dbc157c1-0ddd-47a6-9e05-af5b06d5953b': {
 	title: '優化圖片縮放',

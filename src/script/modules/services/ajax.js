@@ -1,4 +1,4 @@
-annuus.addModules({
+annuus.add({
 
 '9f5fe25b-ae3e-452c-848e-cddcb0143a1e': {
 	title: 'Ajax Service',

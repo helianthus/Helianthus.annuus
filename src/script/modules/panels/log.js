@@ -1,4 +1,4 @@
-annuus.addModules({
+annuus.add({
 
 '4d8f8a79-93a5-4aa6-b33b-106310687f5e': {
 	title: '記錄面板',

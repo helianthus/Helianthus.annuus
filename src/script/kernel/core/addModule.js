@@ -3,7 +3,7 @@
 
 var modules = bolanderi.get('MODULES', {});
 
-bolanderi.addModules = function(newModules)
+bolanderi.add = function(newModules)
 {
 	$.each(newModules, function(moduleId, module)
 	{

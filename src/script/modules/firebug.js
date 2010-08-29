@@ -1,4 +1,4 @@
-annuus.addModules({
+annuus.add({
 
 '730294d8-b68c-4e68-a9b6-ee006813d3f1': {
 	title: 'Firebug Lite',

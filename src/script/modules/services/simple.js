@@ -1,4 +1,4 @@
-annuus.addModules({
+annuus.add({
 
 '0b721576-57a8-46b0-b0e5-6fec32e4aafa': {
 	title: 'Simple API Service',

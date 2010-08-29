@@ -1,4 +1,4 @@
-annuus.addModules({
+annuus.add({
 
 '1c769cd2-51c4-4235-a608-5bbf3ccce455': {
 	title: '修正「部份」會員之頭像',

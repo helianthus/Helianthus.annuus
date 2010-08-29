@@ -1,4 +1,4 @@
-annuus.addModules({
+annuus.add({
 
 'edd5174c-b7a4-48f1-8612-3f03c9adf05a': {
 	title: '連結樣式設定',

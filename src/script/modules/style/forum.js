@@ -1,4 +1,4 @@
-annuus.addModules({
+annuus.add({
 
 '8c6e0464-ab52-4bb1-8220-81c100eb70a5': {
 	title: '論壇樣式設定',

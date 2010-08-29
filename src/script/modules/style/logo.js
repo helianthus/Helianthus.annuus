@@ -1,4 +1,4 @@
-annuus.addModules({
+annuus.add({
 
 '2f8ce225-424a-4846-b8ea-59ebaa3fe649': {
 	title: '設定高登Logo',

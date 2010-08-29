@@ -1,4 +1,4 @@
-annuus.addModules({
+annuus.add({
 
 '000b79c2-cbe6-4ce3-ab43-9515ea428078': {
 	title: 'Images',

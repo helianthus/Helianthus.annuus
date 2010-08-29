@@ -1,4 +1,4 @@
-annuus.addModules({
+annuus.add({
 
 'fc6c2fbe-6d60-426b-b45f-acfabdb28f63': {
 	title: 'Master UI',

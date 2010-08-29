@@ -1,4 +1,4 @@
-annuus.addModules({
+annuus.add({
 
 'a5028650-a065-425e-9903-7e2aff643f17': {
 	title: '自動重設存檔',

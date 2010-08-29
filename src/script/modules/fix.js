@@ -1,4 +1,4 @@
-annuus.addModules({
+annuus.add({
 
 '9e98386a-66ce-4298-af6e-a7d1648d18b4': {
 	title: '修正頁面闊度',

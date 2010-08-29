@@ -1,4 +1,4 @@
-annuus.addModules({
+annuus.add({
 
 '3aad9218-46e4-4512-92b8-07d5f5f3626e': {
 	title: '縮短Bookmark列',

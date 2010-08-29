@@ -133,7 +133,7 @@ annuus.addModules({
 
 			topicTable: function(self, options)
 			{
-				annuus.ajax.get($.extend(options, {
+				self.get(self, $.extend(options, {
 					name: 'topicTable',
 					map: function(context)
 					{
@@ -144,7 +144,7 @@ annuus.addModules({
 
 			topics: function(self, options)
 			{
-				annuus.ajax.get($.extend(options, {
+				self.get(self, $.extend(options, {
 					name: 'topics',
 					mapSrc: 'topicTable',
 					map: function(context)
@@ -168,7 +168,7 @@ annuus.addModules({
 
 			replies: function(self, options)
 			{
-				annuus.ajax.get($.extend(options, {
+				self.get(self, $.extend(options, {
 					name: 'topics',
 					mapSrc: 'topicTable',
 					map: function(context)
@@ -185,7 +185,7 @@ annuus.addModules({
 			title: 'ajax',
 			click: function()
 			{
-				annuus.ajax_topics.topics({
+				annuus.ajax.topics({
 					success: function(topics)
 					{
 						$.debug(topics);

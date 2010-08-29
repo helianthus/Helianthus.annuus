@@ -1,10 +1,12 @@
-bolanderi.get('RUN_AT_TYPES', ['window_start', 'document_start', 'document_end', 'window_end']);
-bolanderi.get('WINDOW_STARTED', true);
-
 $.extend(bolanderi, {
-	context: function()
+	context: function(context)
 	{
-		return bolanderi.__context;
+		if(context) {
+			bolanderi.__context = context[0] || context;
+		}
+		else {
+			return bolanderi.__context;
+		}
 	},
 
 	error: function()
@@ -51,7 +53,7 @@ $.extend(bolanderi, {
 		var msg = $.format([].slice.call(arguments, 1));
 
 		$.make(annuus.log, 'archives', []).push([type, msg, new Date()]);
-		$.event.trigger('log', [type, msg]);
+		bolanderi.trigger('log', [type, msg]);
 
 		if(type === 'log' || type === 'debug') {
 			return;
@@ -125,23 +127,24 @@ $.extend(bolanderi, {
 			callback();
 		}
 		else {
-			$(document).one(type, function()
-			{
-				callback();
-			});
+			bolanderi.one(type, callback);
 		}
 	},
 
-	work: function(context)
+	trigger: function(type, params)
 	{
-		$.event.trigger('work', (bolanderi.__context = $(context)));
-
-		if(!bolanderi.get('DOCUMENT_STARTED')) {
-			bolanderi.get('DOCUMENT_STARTED', true);
-			$.each(bolanderi.get('RUN_AT_TYPES'), function(i, type)
-			{
-				$.event.trigger('work_' + type);
-			});
-		}
+		$.event.trigger('bolanderi_event', [type].concat(params));
+		$.event.trigger.apply($.event, arguments);
 	}
 });
+
+(function()
+{
+	$.each(['one', 'bind', 'unbind'], function(i, name)
+	{
+		bolanderi[name] = function()
+		{
+			$.fn[name].apply($(document), arguments);
+		};
+	});
+})();

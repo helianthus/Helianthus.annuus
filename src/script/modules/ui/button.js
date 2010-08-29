@@ -259,7 +259,7 @@ annuus.addModules({
 				self.toggle(self, true);
 
 				self.mainList.add(page.panel).sortable({
-					appendTo: '#an',
+					appendTo: '#annuus',
 					connectWith: self.mainList.add(page.panel),
 					helper: 'clone',
 					items: '.ui-button',
@@ -330,7 +330,7 @@ annuus.addModules({
 			title: '測試按扭',
 			requires: ['button'],
 			condition: {
-				page: 0,
+				page: 0
 			},
 			js: function(self)
 			{

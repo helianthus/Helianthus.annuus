@@ -141,7 +141,7 @@ bolanderi.Job.prototype = {
 
 			job.ready(function()
 			{
-				$.event.trigger('job_start', [job, self]);
+				bolanderi.trigger('job_start', [job, self]);
 
 				try {
 					fn(i, job);
@@ -151,7 +151,7 @@ bolanderi.Job.prototype = {
 					$.debug(e);
 				}
 
-				$.event.trigger('job_end', [job, self]);
+				bolanderi.trigger('job_end', [job, self]);
 			});
 		});
 	}

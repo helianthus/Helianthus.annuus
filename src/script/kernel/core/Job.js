@@ -1,5 +1,9 @@
 bolanderi.Job = function(options)
 {
+	if(this instanceof bolanderi.Job === false) {
+		return new bolanderi.Job(options);
+	}
+
 	$.each(options, function(name)
 	{
 		if(name in bolanderi.Job.prototype) {
@@ -7,7 +11,15 @@ bolanderi.Job = function(options)
 		}
 	});
 
-	$.extend(this, options);
+	var self = this;
+
+	$.each(options, function(key, obj)
+	{
+		self[key] = !$.isFunction(obj) ? obj : function()
+		{
+			return obj.apply(this, [self].concat([].slice.call(arguments)));
+		};
+	});
 };
 
 bolanderi.Job.prototype = {

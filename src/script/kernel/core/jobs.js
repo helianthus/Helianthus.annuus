@@ -19,17 +19,14 @@ function runService(service)
 			service.error('initialization failed.');
 		}
 
-		$.make(bolanderi, service.name, name, function()
-		{
-			return service[name].apply(service, [service].concat([].slice.call(arguments)));
-		});
+		$.make(bolanderi, service.name, name, service[name]);
 	});
 
 	bolanderi.trigger('service_ready', service);
 
 	service.init && $.rules(function()
 	{
-		service.init(service, service.jobs);
+		service.init(service.jobs);
 	});
 
 	bolanderi.get('SERVICES')[service.name] = service;
@@ -48,7 +45,12 @@ $.each(bolanderi.get('MODULES'), function(moduleId, module)
 			$.each(module.tasks, function(id, task)
 			{
 				if(bolanderi.inCondition(task)) {
-					var job = module.tasks[id] = new bolanderi.Job(task);
+					try {
+						var job = module.tasks[id] = new bolanderi.Job(task);
+					}
+					catch(e) {
+						return;
+					}
 
 					switch(job.type) {
 						case 'service':
@@ -73,6 +75,10 @@ $.each(bolanderi.get('MODULES'), function(moduleId, module)
 							{
 								if(service.name === job.name) {
 									bolanderi.unbind(event);
+
+									if(service.module !== job.module) {
+										job.error('service can only be extended by sibling tasks!');
+									}
 
 									$.extend(service.api, job.api);
 									$.each(job, function(name, obj)

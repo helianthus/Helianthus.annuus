@@ -100,7 +100,7 @@ annuus.add({
 					success($(document));
 				}
 				else {
-					self.ajax(self, {
+					self.ajax({
 						cache: false,
 						dataType: 'text',
 						url: $.url({ querySet: { page: options.page } }),
@@ -133,7 +133,7 @@ annuus.add({
 
 			topicTable: function(self, options)
 			{
-				self.get(self, $.extend(options, {
+				self.get($.extend(options, {
 					name: 'topicTable',
 					map: function(context)
 					{
@@ -144,7 +144,7 @@ annuus.add({
 
 			topics: function(self, options)
 			{
-				self.get(self, $.extend(options, {
+				self.get($.extend(options, {
 					name: 'topics',
 					mapSrc: 'topicTable',
 					map: function(context)
@@ -168,7 +168,7 @@ annuus.add({
 
 			replies: function(self, options)
 			{
-				self.get(self, $.extend(options, {
+				self.get($.extend(options, {
 					name: 'topics',
 					mapSrc: 'topicTable',
 					map: function(context)

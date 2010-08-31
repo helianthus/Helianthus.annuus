@@ -28,13 +28,13 @@ annuus.add({
 				}
 
 				self.theme = self.options();
-				self.load(self, self.theme);
+				self.load(self.theme);
 			},
 
 			add: function(self, job)
 			{
 				self.jobs.push(job);
-				self.load(self, self.theme, job);
+				self.load(self.theme, job);
 			},
 
 			load: function(self, theme, jobs)
@@ -45,7 +45,7 @@ annuus.add({
 				{
 					self.profile(jobs || self.jobs, function(i, job)
 					{
-						$.rules({ id: job.name, position: job.position }, 'css' in job ? job.css : job.js(job, theme), self.theme);
+						$.rules({ id: job.name, position: job.position }, 'css' in job ? job.css : job.js(theme), self.theme);
 					});
 				});
 			}

@@ -21,20 +21,20 @@ bolanderi.add({
 			{
 				$.each(jobs, function(i, job)
 				{
-					self.add(self, job);
+					self.add(job);
 				});
 			},
 
 			add: function(self, job)
 			{
-				self.run(self, job);
+				self.run(job);
 
 				job.frequency === 'always' && $(document).bind('work', function()
 				{
 					if(job.css) {
 						bolanderi.log('warn', '"css" property found in task with frequency "always", make sure this is intended. [{0}]', job.info());
 					}
-					self.run(self, job);
+					self.run(job);
 				});
 			},
 
@@ -43,7 +43,7 @@ bolanderi.add({
 				self.profile(job, function()
 				{
 					job.css && $.rules(job.css, job);
-					job.js && job.js.call(annuus.context(), job);
+					job.js && job.js.call(annuus.context());
 				});
 			}
 		}

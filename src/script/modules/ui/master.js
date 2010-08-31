@@ -16,7 +16,7 @@ annuus.add({
 			},
 			init: function(self, jobs)
 			{
-				self.create(self);
+				self.create();
 			},
 
 			create: function(self)
@@ -67,7 +67,7 @@ annuus.add({
 				];
 				var fxEnd = function()
 				{
-					self.togglePage(self, self.active, show, true);
+					self.togglePage(self.active, show, true);
 				};
 
 				$('<img/>', {
@@ -84,7 +84,7 @@ annuus.add({
 
 							var job;
 							while(job = self.jobs.shift()) {
-								self.build(self, job);
+								self.build(job);
 							}
 
 							show = !show;
@@ -112,7 +112,7 @@ annuus.add({
 					self.nav = $('#an-master-nav').menu({
 						select: function(event, ui)
 						{
-							self.switchTo(self, self.pages[ui.item.index()]);
+							self.switchTo(self.pages[ui.item.index()]);
 						}
 					});
 
@@ -132,13 +132,13 @@ annuus.add({
 					};
 
 					page.controls = $($.format('<div><h1 class="ui-helper-reset ui-widget-header ui-corner-top">{0}</h1></div>', job.title))
-						.append($('<div/>').append(page.panel = $(job.panel(job))))
+						.append($('<div/>').append(page.panel = $(job.panel())))
 						.appendTo(self.panels);
 
 					if(job.sidebar) {
 						page.controls.push(
 							$('<div class="ui-widget-content ui-corner-right"></div>')
-							.append(page.sidebar = $(job.sidebar(job)))
+							.append(page.sidebar = $(job.sidebar()))
 							.appendTo(self.sidebars)
 						);
 					}
@@ -156,8 +156,8 @@ annuus.add({
 				if(page === self.active) {
 					return;
 				}
-				self.togglePage(self, self.active, false);
-				self.togglePage(self, page, true);
+				self.togglePage(self.active, false);
+				self.togglePage(page, true);
 			},
 
 			togglePage: function(self, page, show, atOnce)

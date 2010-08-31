@@ -15,7 +15,7 @@ annuus.add({
 			{
 				$.each(jobs, function(i, job)
 				{
-					self.add(self, job);
+					self.add(job);
 				});
 			},
 
@@ -62,7 +62,7 @@ annuus.add({
 			add: function(self, job)
 			{
 				if(!self.isLocked) {
-					self.lock(self);
+					self.lock();
 				}
 
 				annuus.auto.add(job);

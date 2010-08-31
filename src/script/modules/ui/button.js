@@ -33,7 +33,7 @@ annuus.add({
 				{
 					bolanderi.ready(self.run_at, function()
 					{
-						self.add(self, job);
+						self.add(job);
 					});
 				});
 			},
@@ -72,7 +72,7 @@ annuus.add({
 						self.opened = !self.opened;
 
 						if(!self.ui.queue().length) {
-							self.toggle(self);
+							self.toggle();
 						}
 					}
 				})
@@ -82,7 +82,7 @@ annuus.add({
 						return;
 					}
 					self.opened = false;
-					self.toggle(self, false);
+					self.toggle(false);
 				})
 				.mousewheel(function(event, delta)
 				{
@@ -105,7 +105,7 @@ annuus.add({
 			toggle: function(self, force)
 			{
 				if(!self.ui) {
-					self.create(self);
+					self.create();
 				}
 				if(typeof force === 'boolean') {
 					self.opened = force;
@@ -115,13 +115,13 @@ annuus.add({
 				{
 					if(force || self.opened !== self.ui.is(':visible')) {
 						if(self.opened) {
-							self.more(self);
+							self.more();
 							self.container.children().hide().find('.ui-state-focus').removeClass('ui-state-focus');
 							self.active = self.mainList.show();
 						}
 						self.ui.stop(true).toggle('fold', { size: 5 }, 300, function()
 						{
-							self.toggle(self);
+							self.toggle();
 						});
 					}
 				});
@@ -157,7 +157,7 @@ annuus.add({
 						event.stopPropagation();
 
 						var old = self.active;
-						self.active = (job.__widget || (job.__widget = job.widget(job))).appendTo(self.container);
+						self.active = (job.__widget || (job.__widget = job.widget())).appendTo(self.container);
 						old.slideUp(200, function()
 						{
 							self.active.slideDown(200);
@@ -168,7 +168,7 @@ annuus.add({
 				if(job.click) {
 					button.click(function(event)
 					{
-						job.click.call(button[0], job, event);
+						job.click.call(button[0], event);
 					});
 				}
 
@@ -181,12 +181,13 @@ annuus.add({
 			{
 				if(!self.frozen && self.hiddenButtons.length) {
 					if(!self.moreButton.length) {
-						self.moreButton = self.make(self, {
+						var options;
+						self.moreButton = self.make(options = {
 							uuid: null,
 							title: '更多...',
-							click: function(s)
+							click: function()
 							{
-								s.__widget.append(self.hiddenButtons);
+								options.__widget.append(self.hiddenButtons);
 							},
 							widget: function()
 							{
@@ -211,7 +212,7 @@ annuus.add({
 			add: function(self, job)
 			{
 				if(!self.ui) {
-					self.create(self);
+					self.create();
 				}
 				if(!self.indexMap) {
 					self.indexMap = {};
@@ -223,7 +224,7 @@ annuus.add({
 
 				self.profile(job, function()
 				{
-					var button = self.make(self, job);
+					var button = self.make(job);
 
 					if(job.uuid in self.indexMap) {
 						self.currentIds.push(job.uuid);
@@ -250,13 +251,13 @@ annuus.add({
 			panelSelect: function(self, page)
 			{
 				if(!self.root) {
-					self.create(self);
+					self.create();
 				}
 
 				self.frozen = true;
 				page.panel.append(self.hiddenButtons);
 				self.root.css('z-index', 150);
-				self.toggle(self, true);
+				self.toggle(true);
 
 				self.mainList.add(page.panel).sortable({
 					appendTo: '#annuus',
@@ -299,7 +300,7 @@ annuus.add({
 
 				self.frozen = false;
 				self.root.css('z-index', '');
-				self.toggle(self, false);
+				self.toggle(false);
 			}
 		},
 

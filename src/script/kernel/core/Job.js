@@ -63,10 +63,10 @@ bolanderi.Job.prototype = {
 		bolanderi.log(type, $.format('{0} [{1}]', $.format([].slice.call(arguments, 1)), this.info()));
 	},
 
-	inCondition: function()
+	inCondition: $.memoize(function()
 	{
 		return bolanderi.inCondition(this);
-	},
+	}),
 
 	info: function()
 	{
@@ -77,66 +77,6 @@ bolanderi.Job.prototype = {
 	options: function(id, value)
 	{
 		return bolanderi.moduleData(this.module, 'options', id, value);
-	},
-
-	ready: function(callback)
-	{
-		var self = this;
-		var requires = $.compact([].concat(this.module.requires, this.requires));
-		var handler = function()
-		{
-			if($.all(requires, function(i, name)
-			{
-				return name in bolanderi.get('SERVICES');
-			})) {
-				$(document).unbind('service_end', handler);
-
-				bolanderi.ready(self.run_at, function()
-				{
-					if(self.inCondition()) {
-						callback.call(null, self);
-					}
-					else {
-						self.log('log', 'not in condition, job dropped.');
-					}
-				});
-			}
-		};
-
-		$(document).bind('service_end', handler);
-		handler();
-	},
-
-	validate: function(job)
-	{
-		if('__validationResult' in job) {
-			return job.__validationResult;
-		}
-
-		if(this.type !== 'service') {
-			bolanderi.error('validate()/profile() is for services only. [{0}]', this.info());
-		}
-
-		if(!(job instanceof bolanderi.Job)) {
-			bolanderi.log('error', 'Validation failed. param must be a job object (try self.derive). [{0}, {1}]', this.info(), bolanderi.info(job));
-			return false;
-		}
-
-		return (job.__validationResult = !$.any(this.params, function(name, details)
-		{
-			if('defaultValue' in details && !(name in job)) {
-				job[name] = details.defaultValue;
-			}
-
-			if(bolanderi.checkIf.missing(details, ['paramType', 'dataType'], this)
-			|| bolanderi.checkIf.unknown(details.paramType, ['required', 'optional'], this)
-			|| details.paramType === 'required' && bolanderi.checkIf.missing(job, name)
-			|| name in job && bolanderi.checkIf.wrongType(job[name], details.dataType, job)
-			|| 'values' in details && bolanderi.checkIf.unknown(job[name], details.values, job)
-			) {
-				return true;
-			}
-		}));
 	},
 
 	profile: function(jobs, fn)
@@ -155,16 +95,90 @@ bolanderi.Job.prototype = {
 			{
 				bolanderi.trigger('job_start', [job, self]);
 
-				try {
+				job.run(function()
+				{
 					fn(i, job);
-				}
-				catch(e) {
-					bolanderi.log('error', '{0} [{1}]', e.message, job.info());
-					$.debug(e);
-				}
+				});
 
 				bolanderi.trigger('job_end', [job, self]);
 			});
+		});
+	},
+
+	ready: function(callback)
+	{
+		var self = this;
+
+		if(self.isReady) {
+			callback.call(self, self);
+		}
+		else {
+			var requires = $.compact([].concat(self.module.requires, self.requires));
+
+			bolanderi.bindAndRun('service_end', function(event)
+			{
+				for(var i=requires.length;i--;) {
+					if(requires[i] in bolanderi.get('SERVICES')) {
+						requires.splice(i, 1);
+					}
+				}
+
+				if(requires.length === 0) {
+					bolanderi.unbind(event);
+
+					bolanderi.ready(self.run_at, function()
+					{
+						if(self.inCondition()) {
+							self.isReady = true;
+							self.ready(callback);
+						}
+						else {
+							self.log('log', 'not in condition, job dropped.');
+						}
+					});
+				}
+			});
+		}
+	},
+
+	run: function(fn)
+	{
+		try {
+			fn.call(this, this);
+		}
+		catch(e) {
+			bolanderi.log('error', '{0} [{1}]', e.message, this.info());
+			$.debug(e);
+		}
+	},
+
+	validate: function(job)
+	{
+		var self = this;
+
+		if(self.type !== 'service') {
+			bolanderi.error('validate()/profile() is for services only. [{0}]', self.info());
+		}
+
+		if(!(job instanceof bolanderi.Job)) {
+			bolanderi.log('error', 'Validation failed. param must be a job object (try self.derive). [{0}, {1}]', self.info(), bolanderi.info(job));
+			return false;
+		}
+
+		return !$.any(self.params, function(name, details)
+		{
+			if('defaultValue' in details && !(name in job)) {
+				job[name] = details.defaultValue;
+			}
+
+			if(bolanderi.checkIf.missing(details, ['paramType', 'dataType'], self)
+			|| bolanderi.checkIf.unknown(details.paramType, ['required', 'optional'], self)
+			|| details.paramType === 'required' && bolanderi.checkIf.missing(job, name)
+			|| name in job && bolanderi.checkIf.wrongType(job[name], details.dataType, job)
+			|| 'values' in details && bolanderi.checkIf.unknown(job[name], details.values, job)
+			) {
+				return true;
+			}
 		});
 	}
 };

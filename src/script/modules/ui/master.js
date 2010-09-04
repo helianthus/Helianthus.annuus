@@ -178,7 +178,7 @@ annuus.add({
 						$(this).stop(true, true).animate({ height: show ? 'show' : 'hide' }, speed, function()
 						{
 							var callback = page.job[show ? 'select' : 'unselect'];
-							callback && setTimeout(function(){ callback(page.job, page); }, 0);
+							callback && $.run(callback, [page], 0);
 						});
 					}
 					else {

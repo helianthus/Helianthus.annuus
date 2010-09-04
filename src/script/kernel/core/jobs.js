@@ -26,7 +26,10 @@ function runService(service)
 
 	service.init && $.rules(function()
 	{
-		service.init(service.jobs);
+		service.run(function()
+		{
+			service.init(service.jobs);
+		});
 	});
 
 	bolanderi.get('SERVICES')[service.name] = service;

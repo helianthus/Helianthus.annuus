@@ -25,14 +25,14 @@ annuus.add({
 				return !!$.cookie('username');
 			},
 
-			isReplyContent: function(self, target)
+			isReplyContent: function(self, context)
 			{
-				return !!$(target || document).closest('.repliers_right > tbody > tr:first-child > td').length;
+				return !!$(context).closest('.repliers_right > tbody > tr:first-child > td').length;
 			},
 
-			isVotePage: function(self, target)
+			isVotePage: function(self, context)
 			{
-				return !!$(target || annuus.context()).find('.repliers:first > tbody > style').length;
+				return !!$(context).find('.repliers:first > tbody > style').length;
 			}
 		}
 	}

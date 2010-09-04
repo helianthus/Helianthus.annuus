@@ -43,9 +43,9 @@ annuus.add({
 		'475b4b70': {
 			run_at: 'document_end',
 			css: '.an-blankname:before { content: "空白名稱"; font-style: italic; }',
-			js: function(self)
+			js: function(self, context)
 			{
-				annuus.context().nameLinks().filter(function()
+				context.nameLinks().filter(function()
 				{
 					return this.offsetWidth === 0 && /userid=|st=A|ToggleUserDetail/.test($(this).attr('href'));
 				})

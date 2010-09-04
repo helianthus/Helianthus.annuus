@@ -47,9 +47,9 @@ annuus.add({
 									return annuus.simple.isVotePage();
 								}
 							},
-							js: function(self)
+							js: function(self, context)
 							{
-								annuus.context().find('.repliers > tbody > tr > td[colspan="100%"]').attr('colspan', '2');
+								context.find('.repliers > tbody > tr > td[colspan="100%"]').attr('colspan', '2');
 							}
 						}));
 					}

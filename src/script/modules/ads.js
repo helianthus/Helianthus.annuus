@@ -69,9 +69,9 @@ annuus.add({
 				is: $.browser.msie && $.browser.version <= 8
 			},
 			frequency: 'always',
-			js: function(self)
+			js: function(self, context)
 			{
-				annuus.context().find('td[colspan][height=52]').up('tr').hide();
+				context.find('td[colspan][height=52]').up('tr').hide();
 			}
 		},
 		'10053965': {
@@ -91,9 +91,9 @@ annuus.add({
 				page: search | tags
 			},
 			frequency: 'always',
-			js: function(self)
+			js: function(self, context)
 			{
-				annuus.context().find('td[colspan][height=52]').up('tr').hide();
+				context.find('td[colspan][height=52]').up('tr').hide();
 			}
 		},
 		'9b8cfb9a': {

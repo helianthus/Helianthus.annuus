@@ -17,10 +17,10 @@ annuus.add({
 	tasks: {
 		'd661e32f': {
 			frequency: 'always',
-			js: function(self)
+			js: function(self, context)
 			{
 				if($.urlSet().querySet.type === 'MB') {
-					annuus.context().find('td[colspan="5"]').attr('colspan', '6');
+					context.find('td[colspan="5"]').attr('colspan', '6');
 				}
 			}
 		}

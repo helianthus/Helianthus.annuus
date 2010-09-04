@@ -50,7 +50,7 @@ $.rules = function(callback)
 	}
 
 	if(!(options.position in cssData)) {
-		$.error('unknown position "{0}" found.', options.position);
+		throw Error('unknown position "{0}" found.', options.position);
 	}
 
 	var data = cssData[options.position];

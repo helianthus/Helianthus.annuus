@@ -159,7 +159,7 @@
 
 				if(++count === 10) {
 					window.console && console.log(target, mods);
-					$.error('jQuery.format: too many recursions!');
+					throw Error('jQuery.format: too many recursions!');
 				}
 			}
 			while(mods !== temp);
@@ -197,7 +197,7 @@
 
 				if(!/^(?:number|string)$/.test(typeof replacement)) {
 					window.console && console.log(target, $0, replacement);
-					$.error('jQuery.format: replacement is not a string or number.');
+					throw Error('jQuery.format: replacement is not a string or number.');
 				}
 
 				return replacement;

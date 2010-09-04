@@ -59,7 +59,7 @@
 		}
 
 		if(!options.fn) {
-			$.error('jQuery.run: function is missing!');
+			throw Error('jQuery.run: function is missing!');
 		}
 
 		cache[options.id] = options;

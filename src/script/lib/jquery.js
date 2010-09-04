@@ -11,7 +11,7 @@
  * Copyright 2010, The Dojo Foundation
  * Released under the MIT, BSD, and GPL Licenses.
  *
- * Date: ${date}
+ * Date: Thu Sep 2 16:15:54 2010 -0400
  */
 (function( window, undefined ) {
 
@@ -138,7 +138,9 @@ jQuery.fn = jQuery.prototype = {
 				} else {
 					elem = document.getElementById( match[2] );
 
-					if ( elem ) {
+					// Check parentNode to catch when Blackberry 4.6 returns
+					// nodes that are no longer in the document #6963
+					if ( elem && elem.parentNode ) {
 						// Handle the case where IE and Opera return items
 						// by name instead of ID
 						if ( elem.id !== match[2] ) {
@@ -457,18 +459,24 @@ jQuery.extend({
 	// Since version 1.3, DOM methods and functions like alert
 	// aren't supported. They return false on IE (#2968).
 	isFunction: function( obj ) {
-		return toString.call(obj) === "[object Function]";
+		return jQuery.type(obj) === "function";
 	},
 
-	isArray: function( obj ) {
-		return toString.call(obj) === "[object Array]";
+	isArray: Array.isArray || function( obj ) {
+		return jQuery.type(obj) === "array";
+	},
+
+	type: function( obj ) {
+		return obj == null ?
+			String( obj ) :
+			toString.call(obj).slice(8, -1).toLowerCase();
 	},
 
 	isPlainObject: function( obj ) {
 		// Must be an Object.
 		// Because of IE, we also have to check the presence of the constructor property.
 		// Make sure that DOM nodes and window objects don't pass through, as well
-		if ( !obj || toString.call(obj) !== "[object Object]" || obj.nodeType || obj.setInterval ) {
+		if ( !obj || jQuery.type(obj) !== "object" || obj.nodeType || obj.setInterval ) {
 			return false;
 		}
 
@@ -613,7 +621,10 @@ jQuery.extend({
 			// The window, strings (and functions) also have 'length'
 			// The extra typeof function check is to prevent crashes
 			// in Safari 2 (See: #3039)
-			if ( array.length == null || typeof array === "string" || jQuery.isFunction(array) || (typeof array !== "function" && array.setInterval) ) {
+			// Tweaked logic slightly to handle Blackberry 4.7 RegExp issues #6930
+			var type = jQuery.type(array);
+
+			if ( array.length == null || type === "string" || type === "function" || type === "regexp" || "setInterval" in array ) {
 				push.call( ret, array );
 			} else {
 				jQuery.merge( ret, array );
@@ -985,12 +996,16 @@ jQuery.props = {
 	usemap: "useMap",
 	frameborder: "frameBorder"
 };
-var expando = "jQuery" + jQuery.now(), uuid = 0, windowData = {};
+var windowData = {};
 
 jQuery.extend({
 	cache: {},
 
-	expando: expando,
+	// Please use with caution
+	uuid: 0,
+
+	// Unique for each copy of jQuery on the page
+	expando: "jQuery" + jQuery.now(),
 
 	// The following elements throw uncatchable exceptions if you
 	// attempt to add expando properties to them.
@@ -1010,7 +1025,8 @@ jQuery.extend({
 			elem;
 
 		var id = elem[ jQuery.expando ], cache = jQuery.cache, thisCache,
-			isNode = elem.nodeType;
+			isNode = elem.nodeType,
+			store;
 
 		if ( !id && typeof name === "string" && data === undefined ) {
 			return;
@@ -1023,19 +1039,34 @@ jQuery.extend({
 
 		// Compute a unique ID for the element
 		} else if ( !id ) {
-			elem[ jQuery.expando ] = id = ++uuid;
+			elem[ jQuery.expando ] = id = ++jQuery.uuid;
 		}
 
 		// Avoid generating a new cache unless none exists and we
 		// want to manipulate it.
 		if ( typeof name === "object" ) {
-			cache[ id ] = jQuery.extend(true, {}, name);
+			if ( isNode ) {
+				cache[ id ] = jQuery.extend(true, {}, name);
+			} else {
+				store = jQuery.extend(true, {}, name);
+				cache[ id ] = function() {
+					return store;
+				};
+			}
 
 		} else if ( !cache[ id ] ) {
-			cache[ id ] = {};
+			if ( isNode ) {
+				cache[ id ] = {};
+			} else {
+				store = {};
+				cache[ id ] = function() {
+					return store;
+				};
+			}
+
 		}
 
-		thisCache = cache[ id ];
+		thisCache = isNode ? cache[ id ] : cache[ id ]();
 
 		// Prevent overriding the named cache with undefined values
 		if ( data !== undefined ) {
@@ -1054,8 +1085,12 @@ jQuery.extend({
 			windowData :
 			elem;
 
-		var id = elem[ jQuery.expando ], cache = jQuery.cache,
-			isNode = elem.nodeType, thisCache = isNode ? cache[ id ] : id;
+		var isNode = elem.nodeType,
+			id = elem[ jQuery.expando ], cache = jQuery.cache;
+		if ( id && !isNode ) {
+			id = id();
+		}
+		var thisCache = cache[ id ];
 
 		// If we want to remove a specific section of the element's data
 		if ( name ) {
@@ -1106,12 +1141,18 @@ jQuery.fn.extend({
 			if ( data === undefined && this.length ) {
 				data = jQuery.data( this[0], key );
 			}
+
 			return data === undefined && parts[1] ?
 				this.data( parts[0] ) :
 				data;
+
 		} else {
-			return this.trigger("setData" + parts[1] + "!", [parts[0], value]).each(function() {
+			return this.each(function() {
+				var $this = jQuery( this ), args = [ parts[0], value ];
+
+				$this.triggerHandler( "setData" + parts[1] + "!", args );
 				jQuery.data( this, key, value );
+				$this.triggerHandler( "changeData" + parts[1] + "!", args );
 			});
 		}
 	},
@@ -1353,7 +1394,10 @@ jQuery.fn.extend({
 
 			if ( elem ) {
 				if ( jQuery.nodeName( elem, "option" ) ) {
-					return (elem.attributes.value || {}).specified ? elem.value : elem.text;
+					// attributes.value is undefined in Blackberry 4.7 but
+					// uses .value. See #6932
+					var val = elem.attributes.value;
+					return !val || val.specified ? elem.value : elem.text;
 				}
 
 				// We need to handle select boxes special
@@ -1492,7 +1536,8 @@ jQuery.extend({
 			}
 
 			// If applicable, access the attribute via the DOM 0 way
-			if ( name in elem && notxml && !special ) {
+			// 'in' checks fail in Blackberry 4.7 #6931
+			if ( (name in elem || elem[ name ] !== undefined) && notxml && !special ) {
 				if ( set ) {
 					// We can't allow the type property to be changed (since it causes problems in IE)
 					if ( name === "type" && rtype.test( elem.nodeName ) && elem.parentNode ) {
@@ -1533,6 +1578,12 @@ jQuery.extend({
 			if ( set ) {
 				// convert the value to a string (all browsers do this but IE) see #1070
 				elem.setAttribute( name, "" + value );
+			}
+
+			// Ensure that missing attributes return undefined
+			// Blackberry 4.7 returns "" from getAttribute #6938
+			if ( !elem.attributes[ name ] && !elem.hasAttribute( name ) ) {
+				return undefined;
 			}
 
 			var attr = !jQuery.support.hrefNormalized && notxml && special ?
@@ -1821,7 +1872,7 @@ jQuery.event = {
 		if ( !bubbling ) {
 			event = typeof event === "object" ?
 				// jQuery.Event object
-				event[expando] ? event :
+				event[ jQuery.expando ] ? event :
 				// Object literal
 				jQuery.extend( jQuery.Event(type), event ) :
 				// Just the event type (string)
@@ -1979,7 +2030,7 @@ jQuery.event = {
 	props: "altKey attrChange attrName bubbles button cancelable charCode clientX clientY ctrlKey currentTarget data detail eventPhase fromElement handler keyCode layerX layerY metaKey newValue offsetX offsetY originalTarget pageX pageY prevValue relatedNode relatedTarget screenX screenY shiftKey srcElement target toElement view wheelDelta which".split(" "),
 
 	fix: function( event ) {
-		if ( event[ expando ] ) {
+		if ( event[ jQuery.expando ] ) {
 			return event;
 		}
 
@@ -2108,7 +2159,7 @@ jQuery.Event = function( src ) {
 	this.timeStamp = jQuery.now();
 
 	// Mark it as fixed
-	this[ expando ] = true;
+	this[ jQuery.expando ] = true;
 };
 
 function returnFalse() {
@@ -3053,7 +3104,9 @@ var Expr = Sizzle.selectors = {
 		ID: function(match, context, isXML){
 			if ( typeof context.getElementById !== "undefined" && !isXML ) {
 				var m = context.getElementById(match[1]);
-				return m ? [m] : [];
+				// Check parentNode to catch when Blackberry 4.6 returns
+				// nodes that are no longer in the document #6963
+				return m && m.parentNode ? [m] : [];
 			}
 		},
 		NAME: function(match, context){
@@ -3412,57 +3465,89 @@ try {
 	};
 }
 
-var sortOrder;
+var sortOrder, siblingCheck;
 
 if ( document.documentElement.compareDocumentPosition ) {
 	sortOrder = function( a, b ) {
+		if ( a === b ) {
+			hasDuplicate = true;
+			return 0;
+		}
+
 		if ( !a.compareDocumentPosition || !b.compareDocumentPosition ) {
-			if ( a == b ) {
-				hasDuplicate = true;
-			}
 			return a.compareDocumentPosition ? -1 : 1;
 		}
 
-		var ret = a.compareDocumentPosition(b) & 4 ? -1 : a === b ? 0 : 1;
-		if ( ret === 0 ) {
-			hasDuplicate = true;
-		}
-		return ret;
+		return a.compareDocumentPosition(b) & 4 ? -1 : 1;
 	};
-} else if ( "sourceIndex" in document.documentElement ) {
+} else {
 	sortOrder = function( a, b ) {
-		if ( !a.sourceIndex || !b.sourceIndex ) {
-			if ( a == b ) {
-				hasDuplicate = true;
-			}
-			return a.sourceIndex ? -1 : 1;
+		var ap = [], bp = [], aup = a.parentNode, bup = b.parentNode,
+			cur = aup, al, bl;
+
+		// The nodes are identical, we can exit early
+		if ( a === b ) {
+			hasDuplicate = true;
+			return 0;
+
+		// If the nodes are siblings (or identical) we can do a quick check
+		} else if ( aup === bup ) {
+			return siblingCheck( a, b );
+
+		// If no parents were found then the nodes are disconnected
+		} else if ( !aup ) {
+			return -1;
+
+		} else if ( !bup ) {
+			return 1;
 		}
 
-		var ret = a.sourceIndex - b.sourceIndex;
-		if ( ret === 0 ) {
-			hasDuplicate = true;
-		}
-		return ret;
-	};
-} else if ( document.createRange ) {
-	sortOrder = function( a, b ) {
-		if ( !a.ownerDocument || !b.ownerDocument ) {
-			if ( a == b ) {
-				hasDuplicate = true;
-			}
-			return a.ownerDocument ? -1 : 1;
+		// Otherwise they're somewhere else in the tree so we need
+		// to build up a full list of the parentNodes for comparison
+		while ( cur ) {
+			ap.unshift( cur );
+			cur = cur.parentNode;
 		}
 
-		var aRange = a.ownerDocument.createRange(), bRange = b.ownerDocument.createRange();
-		aRange.setStart(a, 0);
-		aRange.setEnd(a, 0);
-		bRange.setStart(b, 0);
-		bRange.setEnd(b, 0);
-		var ret = aRange.compareBoundaryPoints(Range.START_TO_END, bRange);
-		if ( ret === 0 ) {
-			hasDuplicate = true;
+		cur = bup;
+
+		while ( cur ) {
+			bp.unshift( cur );
+			cur = cur.parentNode;
 		}
-		return ret;
+
+		al = ap.length;
+		bl = bp.length;
+
+		// Start walking down the tree looking for a discrepancy
+		for ( var i = 0; i < al && i < bl; i++ ) {
+			if ( ap[i] !== bp[i] ) {
+				return siblingCheck( ap[i], bp[i] );
+			}
+		}
+
+		// We ended someplace up the tree so do a sibling check
+		return i === al ?
+			siblingCheck( a, bp[i], -1 ) :
+			siblingCheck( ap[i], b, 1 );
+	};
+
+	siblingCheck = function( a, b, ret ) {
+		if ( a === b ) {
+			return ret;
+		}
+
+		var cur = a.nextSibling;
+
+		while ( cur ) {
+			if ( cur === b ) {
+				return -1;
+			}
+
+			cur = cur.nextSibling;
+		}
+
+		return 1;
 	};
 }
 
@@ -3723,6 +3808,7 @@ var posProcess = function(selector, context){
 	return Sizzle.filter( later, tmpSet );
 };
 
+// EXPOSE
 jQuery.find = Sizzle;
 jQuery.expr = Sizzle.selectors;
 jQuery.expr[":"] = jQuery.expr.filters;
@@ -3731,8 +3817,6 @@ jQuery.text = Sizzle.getText;
 jQuery.isXMLDoc = Sizzle.isXML;
 jQuery.contains = Sizzle.contains;
 
-
-window.Sizzle = Sizzle;
 
 })();
 var runtil = /Until$/,
@@ -4660,7 +4744,7 @@ jQuery.extend({
 		var style = elem.style || elem, set = value !== undefined;
 
 		// IE uses filters for opacity
-		if ( !jQuery.support.opacity && name === "opacity" ) {
+		if ( !jQuery.support.opacity && name === "opacity" && style.filter ) {
 			if ( set ) {
 				// IE has trouble with opacity if it does not have layout
 				// Force it by setting the zoom level
@@ -5082,16 +5166,24 @@ jQuery.extend({
 			s.dataType = "script";
 
 			// Handle JSONP-style loading
-			window[ jsonp ] = window[ jsonp ] || function( tmp ) {
+			var customJsonp = window[ jsonp ];
+
+			window[ jsonp ] = function( tmp ) {
 				data = tmp;
 				jQuery.ajax.handleSuccess( s, xhr, status, data );
 				jQuery.ajax.handleComplete( s, xhr, status, data );
-				// Garbage collect
-				window[ jsonp ] = undefined;
 
-				try {
-					delete window[ jsonp ];
-				} catch( jsonpError ) {}
+				if ( jQuery.isFunction( customJsonp ) ) {
+					customJsonp( tmp );
+
+				} else {
+					// Garbage collect
+					window[ jsonp ] = undefined;
+
+					try {
+						delete window[ jsonp ];
+					} catch( jsonpError ) {}
+				}
 
 				if ( head ) {
 					head.removeChild( script );
@@ -5281,7 +5373,9 @@ jQuery.extend({
 				}
 
 				// Fire the complete handlers
-				jQuery.ajax.handleComplete( s, xhr, status, data );
+				if ( !jsonp ) {
+					jQuery.ajax.handleComplete( s, xhr, status, data );
+				}
 
 				if ( isTimeout === "timeout" ) {
 					xhr.abort();
@@ -5319,7 +5413,7 @@ jQuery.extend({
 
 		// Send the data
 		try {
-			xhr.send( type === "POST" || type === "PUT" || type === "DELETE" ? s.data : null );
+			xhr.send( (type !== "GET" && s.data) || null );
 
 		} catch( sendError ) {
 			jQuery.ajax.handleError( s, xhr, null, e );

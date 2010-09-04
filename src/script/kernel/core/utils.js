@@ -1,14 +1,4 @@
 $.extend(bolanderi, {
-	context: function(context)
-	{
-		if(context) {
-			bolanderi.__context = context[0] || context;
-		}
-		else {
-			return bolanderi.__context;
-		}
-	},
-
 	error: function()
 	{
 		throw new Error($.format(arguments));

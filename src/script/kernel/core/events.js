@@ -2,8 +2,6 @@ bolanderi.get('RUN_AT_TYPES', ['window_start', 'document_start', 'document_end',
 
 $(document).one('jobs_ready', function()
 {
-	bolanderi.context(document);
-
 	bolanderi.get('WINDOW_STARTED', true);
 	bolanderi.trigger('window_start');
 

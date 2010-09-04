@@ -41,10 +41,7 @@ $.extend({
 	{
 		var ret = [];
 		for(var i=0; i<array.length; ++i) {
-			if($.isGarbage(array[i]) || $.inArray(array[i], ret) !== -1) {
-				array.splice(i--, 1);
-			}
-			else {
+			if(!$.isGarbage(array[i]) && $.inArray(array[i], ret) === -1) {
 				ret.push(array[i]);
 			}
 		}
@@ -234,6 +231,28 @@ $.extend({
 		return obj;
 	},
 
+	memoize: function(option, fn)
+	{
+		var key = 'memoize' + $.now();
+		if(arguments.length === 1) {
+			fn = option;
+		}
+
+		return function()
+		{
+			var cache = {
+				'number': arguments[option],
+				'function': this,
+				'object': option
+			}[typeof option];
+
+			if(key in cache === false) {
+				cache[key] = fn.apply(this, arguments);
+			}
+			return cache[key];
+		};
+	},
+
 	permute: function()
 	{
 		var args = [].slice.call(arguments);
@@ -282,6 +301,21 @@ $.extend({
 		}
 	},
 
+	toOptions: function(args, map)
+	{
+		var options = {};
+		$.each(args, function(i, arg)
+		{
+			if($.isPlainObject(arg)) {
+				$.extend(options, arg);
+			}
+			else {
+				options[map[$.typeOf(arg)]] = arg;
+			}
+		});
+		return options;
+	},
+
 	typeOf: function(target, type)
 	{
 		return target === null && 'null'
@@ -292,6 +326,23 @@ $.extend({
 });
 
 $.fn.extend({
+	bindAndRun: function()
+	{
+		this.bind.apply(this, arguments);
+
+		var options = $.toOptions(arguments, {
+			'function': 'handler',
+			'array': 'data',
+			'string': 'type'
+		});
+		var event = $.extend(new $.Event(options), options);
+
+		this.each(function()
+		{
+			options.handler.call(this, event);
+		});
+	},
+
 	toFlash: function(url, attrSet, paramSet)
 	{
 		attrSet = $.extend({ width: 0, height: 0, id: this[0].id || 'jquery-flash-' + $.time() }, attrSet);

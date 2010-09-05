@@ -1,4 +1,6 @@
 $.extend(bolanderi, {
+	doc: $(document),
+
 	error: function()
 	{
 		throw new Error($.format(arguments));
@@ -17,7 +19,7 @@ $.extend(bolanderi, {
 						return $.test(obj, bolanderi.moduleData(target.module || target, 'options', name));
 					});
 				case 'page':
-					return $(document).pageCode() & obj;
+					return bolanderi.pageCode() & obj;
 				case 'test':
 					return 'module' in target && !(target instanceof bolanderi.Job) || obj(target);
 				break;
@@ -107,6 +109,24 @@ $.extend(bolanderi, {
 		bolanderi.storage.save();
 	},
 
+	pageCode: function(context)
+	{
+		context = $.$(context || bolanderi.doc);
+
+		return $.memoize(context, 'pageCode', function()
+		{
+			var pageName = bolanderi.pageName(context);
+
+			for(var code in bolanderi.get('PAGES')) {
+				if(bolanderi.get('PAGES')[code].name === pageName) {
+					return +code;
+				}
+			}
+
+			return 0;
+		});
+	},
+
 	ready: function(type, callback)
 	{
 		if(bolanderi.checkIf.unknown(type, bolanderi.get('RUN_AT_TYPES'), 'bolanderi.ready()')) {
@@ -134,7 +154,7 @@ $.extend(bolanderi, {
 	{
 		bolanderi[name] = function()
 		{
-			$.fn[name].apply($(document), arguments);
+			$.fn[name].apply(bolanderi.doc, arguments);
 		};
 	});
 })();

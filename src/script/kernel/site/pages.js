@@ -35,36 +35,19 @@ bolanderi.get('PAGES', {
 	8192: { name: 'newblog', title: '新增文章頁' }
 });
 
-$.fn.extend({
-	pageName: function()
-	{
-		if(this.__pageName) return this.__pageName;
+bolanderi.pageName = function(context)
+{
+	context = $.$(context || bolanderi.doc);
 
-		var root = this.root();
+	return $.memoize(context, 'pageName', function()
+	{
+		var root = context.root();
 
 		if(root.find('#ctl00_ContentPlaceHolder1_SystemMessageBoard').length) {
-			this.__pageName = 'message';
-		}
-		else {
-			var name = /\w+/.exec($.urlSet(root.find('#aspnetForm').attr('action') || location.href).file);
-			this.__pageName = name ? name[0].toLowerCase() : 'default';
+			return 'message';
 		}
 
-		return this.__pageName;
-	},
-
-	pageCode: function()
-	{
-		if(this.__pageCode != null) return this.__pageCode;
-
-		var pageName = this.pageName();
-
-		for(var code in bolanderi.get('PAGES')) {
-			if(bolanderi.get('PAGES')[code].name === pageName) {
-				return this.__pageCode = +code;
-			}
-		}
-
-		return this.__pageCode = 0;
-	}
-});
+		var name = $.urlSet(root.find('#aspnetForm').attr('action') || location.href).file.match(/[^.]+/);
+		return name ? name[0].toLowerCase() : 'default';
+	});
+};

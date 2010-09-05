@@ -17,7 +17,11 @@ bolanderi.Job = function(options)
 	{
 		self[key] = !$.isFunction(obj) ? obj : function()
 		{
-			return obj.apply(this, [self].concat([].slice.call(arguments)));
+			var args = [self].concat([].slice.call(arguments));
+			return self.run(function()
+			{
+				return obj.apply(this, args);
+			});
 		};
 	});
 };
@@ -143,12 +147,25 @@ bolanderi.Job.prototype = {
 
 	run: function(fn)
 	{
+		var tried = this._tried;
+		this.tried = true;
+
 		try {
-			fn.call(this, this);
+			return fn.call(this, this);
 		}
 		catch(e) {
-			bolanderi.log('error', '{0} [{1}]', e.message, this.info());
-			$.debug(e);
+			if(tried) {
+				throw e;
+			}
+			else {
+				bolanderi.log('error', '{0} [{1}]', e.message, this.info());
+				$.debug(e);
+			}
+		}
+		finally {
+			if(!tried) {
+				this._tried = false;
+			}
 		}
 	},
 

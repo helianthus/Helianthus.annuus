@@ -6,7 +6,7 @@
  * version: 1.0.0
  */
 
- $.each(['all', 'any', 'first'], function(i, name)
+$.each(['all', 'any', 'first'], function(i, name)
 {
 	$[name] = function()
 	{
@@ -37,6 +37,11 @@
 });
 
 $.extend({
+	$: function(j)
+	{
+		return j instanceof $ ? j : $(j);
+	},
+
 	compact: function(array)
 	{
 		var ret = [];
@@ -231,26 +236,35 @@ $.extend({
 		return obj;
 	},
 
-	memoize: function(option, fn)
+	match: function(str, regex)
 	{
-		var key = 'memoize' + $.now();
-		if(arguments.length === 1) {
-			fn = option;
-		}
+		var match = str.match(regex);
+		return match && match[0];
+	},
 
-		return function()
+	memoize: function()
+	{
+		var dynamic = arguments.length === 3;
+		var arg = [].slice.call(arguments);
+		var fn = arg.pop();
+		var key = dynamic ? arg.pop() : 'memoize' + $.now();
+		arg = arg[0];
+
+		var wrapper = function()
 		{
-			var cache = {
-				'number': arguments[option],
-				'function': this,
-				'object': option
-			}[typeof option];
+			var cache = dynamic ? arg : {
+				'number': arguments[arg],
+				'object': arg,
+				'undefined': this
+			}[typeof arg];
 
 			if(key in cache === false) {
 				cache[key] = fn.apply(this, arguments);
 			}
 			return cache[key];
 		};
+
+		return dynamic ? wrapper() : wrapper;
 	},
 
 	permute: function()
@@ -396,7 +410,8 @@ $.fn.extend({
 
 	root: function()
 	{
-		return $(document).own(this) ? $(document) : this.up();
+		var doc = $(this[0].ownerDocument || document);
+		return doc.own(this) ? doc : this.up();
 	},
 
 	own: function(target)

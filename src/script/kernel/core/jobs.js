@@ -45,13 +45,14 @@ $.each(bolanderi.get('MODULES'), function(moduleId, module)
 		&& (status in compTypes || status === 'debug' && bolanderi.get('DEBUG_MODE') || profile.privateData[moduleId][pageCode].status === 1)
 		&& bolanderi.inCondition(module)
 		) {
-			$.each(module.tasks, function(id, task)
+			$.each(module.tasks, function(taskId, task)
 			{
 				if(bolanderi.inCondition(task)) {
 					try {
-						var job = module.tasks[id] = new bolanderi.Job(task);
+						var job = module.tasks[taskId] = new bolanderi.Job(task);
 					}
 					catch(e) {
+						bolanderi.log('error', e.message);
 						return;
 					}
 

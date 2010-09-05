@@ -1,7 +1,13 @@
+bolanderi.get('JOBS', {});
+
 bolanderi.Job = function(options)
 {
 	if(this instanceof bolanderi.Job === false) {
 		return new bolanderi.Job(options);
+	}
+
+	if(!options.uuid || options.uuid in bolanderi.get('JOBS')) {
+		bolanderi.error('Job: uuid does not exist or is already taken! [{0}]', bolanderi.info(options));
 	}
 
 	$.each(options, function(name)
@@ -24,6 +30,8 @@ bolanderi.Job = function(options)
 			});
 		};
 	});
+
+	bolanderi.get('JOBS')[this.uuid] = this;
 };
 
 bolanderi.Job.prototype = {
@@ -50,7 +58,7 @@ bolanderi.Job.prototype = {
 
 	derive: function(options)
 	{
-		if(!(options && options.id)) {
+		if(!(options && options.uuid)) {
 			bolanderi.error('derived job is missing an id!');
 		}
 
@@ -75,7 +83,7 @@ bolanderi.Job.prototype = {
 	info: function()
 	{
 		return $.format('{0}, {1}, {2}{3}',
-			this.title, this.id, this.type, this.type === 'action' ? $.format('({0})', this.service || 'unknown') : '');
+			this.title, this.uuid, this.type, this.type === 'action' ? $.format('({0})', this.service || 'unknown') : '');
 	},
 
 	options: function(id, value)

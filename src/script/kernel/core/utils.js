@@ -29,7 +29,7 @@ $.extend(bolanderi, {
 	{
 		return $.first(arguments, function(i, obj)
 		{
-			return obj == null || typeof obj === 'string' ? obj : obj instanceof bolanderi.Job ? obj.info() : obj.title || obj.id;
+			return obj == null || typeof obj === 'string' ? obj : obj instanceof bolanderi.Job ? obj.info() : obj.title || obj.uuid;
 		}) || 'unknown';
 	},
 
@@ -65,8 +65,8 @@ $.extend(bolanderi, {
 		var profile = bolanderi.storage.get({ mode: isGet ? 'mixed' : 'saved' });
 		var paths = {
 			'public': [profile, 'publicData', dataType],
-			'protected': [profile, 'privateData', module.id, dataType],
-			'private': [profile, 'privateData', module.id, module.__pageCode, dataType]
+			'protected': [profile, 'privateData', module.uuid, dataType],
+			'private': [profile, 'privateData', module.uuid, module.__pageCode, dataType]
 		};
 		var data = {};
 

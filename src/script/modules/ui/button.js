@@ -7,7 +7,7 @@ annuus.add({
 		buttonOrder: { defaultValue: [] }
 	},
 	tasks: {
-		'4ea1dd56': {
+		'a69b3fb5-969a-47a6-b8f9-2fa05dfacf41': {
 			type: 'service',
 			name: 'button',
 			run_at: 'document_start',
@@ -327,7 +327,7 @@ annuus.add({
 			}
 		},
 
-		'98d53583': {
+		'79faca60-e8be-44b6-9c44-854dbd68f2bd': {
 			title: '測試按扭',
 			requires: ['button'],
 			condition: {

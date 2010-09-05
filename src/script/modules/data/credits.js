@@ -4,7 +4,7 @@ annuus.add({
 	title: 'Credits',
 	pages: { comp: [all] },
 	tasks: {
-		'99da408d': {
+		'885c9074-bfbc-4887-93a7-1a7ed55a2ef0': {
 			service: 'data',
 			name: 'credits',
 			json: [

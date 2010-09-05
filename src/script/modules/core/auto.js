@@ -4,7 +4,7 @@ bolanderi.add({
 	title: 'Auto Service',
 	pages: { core: [all] },
 	tasks: {
-		'4ea1dd56': {
+		'b13ee67b-178f-40a9-9d38-d43012c20d0e': {
 			type: 'service',
 			name: 'auto',
 			run_at: 'window_start',

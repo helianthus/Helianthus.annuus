@@ -4,7 +4,7 @@ annuus.add({
 	title: '優化圖片縮放',
 	pages: { on: [view | profilepage | sendpm] },
 	tasks: {
-		'475b4b70': {
+		'9debc824-c7ef-435e-88b9-e53f8b1e3440': {
 			service: 'lock',
 			run_at: 'document_start',
 			css: '\
@@ -29,7 +29,7 @@ annuus.add({
 		is: document.createElement('div').style.opacity != null
 	},
 	tasks: {
-		'475b4b70': {
+		'092b4c39-2499-487c-bfe3-9e41c6b10a6b': {
 			run_at: 'document_start',
 			css: 'blockquote { opacity: 1; }'
 		}
@@ -40,7 +40,7 @@ annuus.add({
 	title: '強制顯示空白會員名稱',
 	pages: { on: [view | topics | search | tags | profilepage] },
 	tasks: {
-		'475b4b70': {
+		'e7e146d9-efcc-445c-8040-522fc66ecdf8': {
 			run_at: 'document_end',
 			css: '.an-blankname:before { content: "空白名稱"; font-style: italic; }',
 			js: function(self, context)

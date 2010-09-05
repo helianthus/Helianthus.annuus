@@ -4,7 +4,7 @@ annuus.add({
 	title: '主題轉換選單',
 	pages: { comp: [all] },
 	tasks: {
-		'1697d048': {
+		'8bc3a1cf-fce3-451d-bb31-ce5873e27660': {
 			service: 'button',
 			uuid: 'adbe91b5-163f-4bf4-9a02-178a665297a4',
 			title: '轉換主題',

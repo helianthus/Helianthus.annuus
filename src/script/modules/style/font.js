@@ -7,7 +7,7 @@ annuus.add({
 		ffDefault: { title: '字體名稱', type: 'text', defaultValue: 'sans-serif', access: 'public' }
 	},
 	tasks: {
-		'e6d2ea58': {
+		'c74f2af0-22de-4795-b049-1bded410a0b5': {
 			run_at: 'document_start',
 			css: '\
 				body, td, p, textarea, .ui-widget, #aspnetForm [class] { font-family: {0.options(ffDefault)}; } \

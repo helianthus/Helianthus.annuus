@@ -4,7 +4,7 @@ bolanderi.add({
 	title: 'Data Service',
 	pages: { core: [all] },
 	tasks: {
-		'4ea1dd56': {
+		'5228d14d-404d-44c3-9245-6a35018c1324': {
 			type: 'service',
 			name: 'data',
 			run_at: 'window_start',

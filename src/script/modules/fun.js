@@ -5,7 +5,7 @@ annuus.add({
 	description: 'IE/FF 3.5+/Chrome/Opera 10.5+/Safari 3.2+',
 	pages: { on: [view] },
 	tasks: {
-		'475b4b70': {
+		'1232db16-525f-4cf7-83ab-0278fce0d400': {
 			run_at: 'document_start',
 			css: 'a[href="/ProfilePage.aspx?userid=93457"] > img[alt="Logo"] { transform: rotate(30deg); }'
 		}

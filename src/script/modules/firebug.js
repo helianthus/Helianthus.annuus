@@ -7,7 +7,7 @@ annuus.add({
 		is: !$.browser.mozilla
 	},
 	tasks: {
-		'e6d2ea58': {
+		'a944a86c-31dc-41d5-be0c-c24af10acfb9': {
 			run_at: 'document_start',
 			js: function()
 			{

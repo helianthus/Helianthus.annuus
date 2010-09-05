@@ -4,7 +4,7 @@ annuus.add({
 	title: 'Master UI',
 	pages: { core: [all] },
 	tasks: {
-		'4ea1dd56': {
+		'f6fc7afe-d09c-4183-8568-7bef78713ff8': {
 			type: 'service',
 			name: 'master',
 			run_at: 'document_start',

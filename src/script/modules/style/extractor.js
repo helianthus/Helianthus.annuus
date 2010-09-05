@@ -4,7 +4,7 @@ annuus.add({
 	title: '主題轉換工具',
 	pages: { debug: [all] },
 	tasks: {
-		'46ffedd9': {
+		'9aebcbbc-ce7a-479c-b47c-8388104ffa6c': {
 			service: 'master',
 			css: '\
 				#an-master-extractor { height: 100%; } \

@@ -4,7 +4,7 @@ annuus.add({
 	title: '自動重設存檔',
 	pages: { comp: [all] },
 	tasks: {
-		'1697d048': {
+		'9c97a199-7dac-423b-847b-39422b2d127f': {
 			run_at: 'window_start',
 			js: function(self)
 			{

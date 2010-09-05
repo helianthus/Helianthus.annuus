@@ -4,14 +4,14 @@ annuus.add({
 	title: '隱藏廣告',
 	pages: { on: [all] },
 	tasks: {
-		'07890003': {
+		'f8323979-f0a0-4b55-b5e1-e36d6b363488': {
 			run_at: 'document_start',
 			css: '\
 				#HKGTopAd \
 					{ display: none; } \
 			'
 		},
-		'62597db3': {
+		'1ea3aed8-d234-4784-85d1-e02de12de215': {
 			condition: {
 				page: index | topics | search | tags | view
 			},
@@ -24,7 +24,7 @@ annuus.add({
 					{ display: none; } \
 			'
 		},
-		'e295c5e0': {
+		'1e6fdb31-764d-45a7-ae88-4461438a97d2': {
 			condition: {
 				page: topics | search | tags | view
 			},
@@ -34,7 +34,7 @@ annuus.add({
 					{ display: none; } \
 			'
 		},
-		'f760e485': {
+		'e4b44a1c-8389-4eba-a5f9-32f337be5e23': {
 			condition: {
 				page: topics | search | tags
 			},
@@ -44,7 +44,7 @@ annuus.add({
 					{ display: none; } \
 			'
 		},
-		'776549b6': {
+		'64b84d5c-aabc-49b9-94e7-1e6e0dd296a4': {
 			condition: {
 				page: topics
 			},
@@ -61,7 +61,7 @@ annuus.add({
 					{ display: none; } \
 			'
 		},
-		'defe6bdf': {
+		'808f491d-abbb-436b-a9fa-571cef76df00': {
 			condition: {
 				page: topics
 			},
@@ -74,7 +74,7 @@ annuus.add({
 				context.find('td[colspan][height=52]').up('tr').hide();
 			}
 		},
-		'10053965': {
+		'a9ed7beb-e600-4089-9917-c11637e4f227': {
 			condition: {
 				page: search | tags | view
 			},
@@ -86,7 +86,7 @@ annuus.add({
 					{ display: none; } \
 			'
 		},
-		'18f3515f': {
+		'2e3963f6-a91a-4aff-85dd-ddd990f2696f': {
 			condition: {
 				page: search | tags
 			},
@@ -96,7 +96,7 @@ annuus.add({
 				context.find('td[colspan][height=52]').up('tr').hide();
 			}
 		},
-		'9b8cfb9a': {
+		'255923d1-c9d8-44dc-bacc-aba98c8717d7': {
 			condition: {
 				page: view
 			},
@@ -109,7 +109,7 @@ annuus.add({
 					{ display: none; } \
 			'
 		},
-		'2c9dd57a': {
+		'38f96446-8655-4e33-bc63-e13413f17b55': {
 			condition: {
 				page: index
 			},
@@ -120,7 +120,7 @@ annuus.add({
 					{ display: none; } \
 			'
 		},
-		'86d09787': {
+		'29af6c66-db5a-4a35-b669-4f13bbf5d656': {
 			condition: {
 				page: profilepage
 			},

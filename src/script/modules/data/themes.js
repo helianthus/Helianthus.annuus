@@ -4,7 +4,7 @@ annuus.add({
 	title: 'Themes',
 	pages: { comp: [all] },
 	tasks: {
-		'd15b72b1': {
+		'81b11495-93a1-4062-a89c-bc5d427b05df': {
 			service: 'data',
 			name: 'themes',
 			json: {

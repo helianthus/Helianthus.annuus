@@ -10,7 +10,7 @@ annuus.add({
 		fcQuote: { title: '引用文字顏色', type: 'text', defaultValue: '0000a0', access: 'public' }
 	},
 	tasks: {
-		'd15b72b1': {
+		'1d2284d2-46d3-43f0-ba6b-600d87e3060c': {
 			service: 'theme-bgfix',
 			name: 'theme-forum',
 			//----- Welcome to HELL! -----//
@@ -256,7 +256,7 @@ annuus.add({
 			'
 		},
 
-		'b766aea7': {
+		'db61b091-1751-4c40-aeeb-5fe13bd6e64b': {
 			option: {
 				title: '同時套用於表單元件',
 				defaultValue: true
@@ -287,7 +287,7 @@ annuus.add({
 			'
 		},
 
-		'16fc2c9f': {
+		'3e406d61-0fc4-4fb4-bc65-304f572097a2': {
 			condition: {
 				page: profilepage
 			},

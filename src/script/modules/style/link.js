@@ -10,7 +10,7 @@ annuus.add({
 		styleHoverState: { title: '顯示懸浮文字顏色', type: 'checkbox', defaultValue: false }
 	},
 	tasks: {
-		'e6d2ea58': {
+		'3e809eed-85f4-4895-b53e-84a8ac7722ab': {
 			service: 'theme',
 			name: 'theme-links',
 			position: 'pre',
@@ -45,7 +45,7 @@ annuus.add({
 	title: '移除連結底線',
 	pages: { on: [all] },
 	tasks: {
-		'bb09974e': {
+		'719587be-bf54-4fa6-b665-63e8163701d0': {
 			run_at: 'document_start',
 			css: '\
 				a, \

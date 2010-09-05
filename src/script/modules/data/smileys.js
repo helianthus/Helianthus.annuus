@@ -4,7 +4,7 @@ annuus.add({
 	title: 'Smileys',
 	pages: { comp: [all] },
 	tasks: {
-		'3f6e1cd6': {
+		'218c9e64-5f2a-4b20-bac9-1c9dd3d2280d': {
 			service: 'data',
 			name: 'smileys',
 			json: [

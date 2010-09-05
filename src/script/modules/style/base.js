@@ -30,7 +30,7 @@ annuus.add({
 		bgColorShadow: { title: '陰影顏色', type: 'text', defaultValue: 'aaaaaa', access: 'public' }
 	},
 	tasks: {
-		'd15b72b1': {
+		'e6ab71d0-4fa3-49b9-896e-e3aacc883c2f': {
 			service: 'theme',
 			name: 'theme-base',
 			css: '\
@@ -96,7 +96,7 @@ annuus.add({
 			'
 		},
 
-		'090ffa76': {
+		'7cb4a5e1-792f-4594-b1b5-373abea74665': {
 			run_at: 'document_start',
 			css: '\
 				.ui-button:focus { outline: 0; } \

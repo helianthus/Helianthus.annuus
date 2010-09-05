@@ -4,7 +4,7 @@ annuus.add({
 	title: '加入吹水台按扭',
 	pages: { on: [all] },
 	tasks: {
-		'e6d2ea58': {
+		'247ad4fd-200c-476f-85f2-323e77e8e1d7': {
 			service: 'button',
 			uuid: 'ed7a9b3c-f63b-44c1-a942-ac2b8355e207',
 			title: '吹水台',
@@ -17,7 +17,7 @@ annuus.add({
 	title: '加入最頂/最底按扭',
 	pages: { on: [all] },
 	tasks: {
-		'e6d2ea58': {
+		'b7d38976-a39c-4c59-9ef2-a81794e1090e': {
 			service: 'button',
 			uuid: '47396980-091c-4a69-b69d-e5e0edc9910e',
 			title: '最頂／最底',
@@ -39,7 +39,7 @@ annuus.add({
 	title: '加入轉台按扭',
 	pages: { on: [all] },
 	tasks: {
-		'e6d2ea58': {
+		'3c09b443-ea4e-420a-bd8b-e90eeb5d08c2': {
 			service: 'button',
 			uuid: 'c2a14609-7b55-4a71-9c06-ecc23eaba1ac',
 			title: '轉台',

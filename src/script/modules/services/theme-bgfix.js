@@ -5,7 +5,7 @@ annuus.add({
 	pages: { comp: [all] },
 	requires: ['theme'],
 	tasks: {
-		'5c6e7d7d': {
+		'dd48482a-ab64-4e80-b21e-8d98236e9c31': {
 			type: 'service',
 			name: 'theme-bgfix',
 			run_at: 'document_start',

@@ -4,7 +4,7 @@ annuus.add({
 	title: 'Theme Service',
 	pages: { comp: [all] },
 	tasks: {
-		'475b4b70': {
+		'9ee6fcac-41e6-446b-b3f5-965e5a36150c': {
 			type: 'service',
 			name: 'theme',
 			run_at: 'document_start',

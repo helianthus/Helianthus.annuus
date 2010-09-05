@@ -7,7 +7,7 @@ annuus.add({
 		uriHKGLogo: { title: 'Logo位置', type: 'text', defaultValue: '', access: 'public' }
 	},
 	tasks: {
-		'07e7e30d': {
+		'8732054c-a7cd-4350-9d61-920bd5156e06': {
 			service: 'theme',
 			name: 'theme-logo',
 			js: function(self, theme)

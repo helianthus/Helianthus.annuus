@@ -4,7 +4,7 @@ annuus.add({
 	title: 'Images',
 	pages: { core: [all] },
 	tasks: {
-		'e823fa56': {
+		'5648804d-28e1-4d18-b42c-d9680cb64c57': {
 			service: 'data',
 			name: 'images',
 			json: {

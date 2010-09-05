@@ -4,7 +4,7 @@ annuus.add({
 	title: 'Simple API Service',
 	pages: { comp: [all] },
 	tasks: {
-		'4ea1dd56': {
+		'c5f21133-2122-4eae-80f2-7693de7061df': {
 			type: 'service',
 			name: 'simple',
 			run_at: 'window_start',

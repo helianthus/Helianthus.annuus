@@ -4,7 +4,7 @@ annuus.add({
 	title: '縮短Bookmark列',
 	pages: { on: [all] },
 	tasks: {
-		'475b4b70': {
+		'af10a270-0d1e-4e5b-baa0-fb83dd493d62': {
 			run_at: 'document_start',
 			css: '.hkg_bottombar { width: auto; padding-right: 10px; }'
 		}
@@ -15,12 +15,12 @@ annuus.add({
 	title: '優化熱門關鍵字位置',
 	pages: { on: [all] },
 	tasks: {
-		'475b4b70': {
+		'deabdbbe-12e8-49be-9028-3f572f3012f6': {
 			run_at: 'document_start',
 			css: '#st + div { padding-right: 0 !important; }'
 		},
 
-		'cbe665ce': {
+		'c9b1c7b9-6335-460a-bb48-204080558446': {
 			condition: {
 				page: search | tags
 			},

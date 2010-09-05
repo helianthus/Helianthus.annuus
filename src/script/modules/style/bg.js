@@ -9,7 +9,7 @@ annuus.add({
 		autoFit: { title: '自動縮放', description: '可降低效能', type: 'checkbox', defaultValue: false, condition: { bgAero: false } }
 	},
 	tasks: {
-		'bb09974e': {
+		'dc3c9523-0f89-49ae-a5f7-2efe995b9dd4': {
 			service: 'theme-bgfix',
 			name: 'theme-bg',
 			js: function(self, theme)

@@ -12,7 +12,6 @@ annuus.add({
 			name: 'button',
 			run_at: 'document_start',
 			params: {
-				uuid: { paramType: 'required', dataType: 'string', description: 'universally unique id for the button' },
 				title: { paramType: 'required', dataType: 'string' },
 				run_at: { paramType: 'optional', dataType: 'string', values: annuus.get('RUN_AT_TYPES').slice(1), defaultValue: 'document_start' },
 				href: { paramType: 'optional', dataType: 'string' },
@@ -339,7 +338,6 @@ annuus.add({
 				$.each($.range(1,30), function(i,n)
 				{
 					annuus.button.add(self.derive({
-						id: ID + n,
 						uuid: ID + n,
 						title: '測試按扭' + n
 					}));

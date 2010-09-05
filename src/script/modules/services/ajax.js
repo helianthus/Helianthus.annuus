@@ -181,7 +181,6 @@ annuus.add({
 
 		'a1cf1fae-73e0-4f4e-94c3-e1b614ea6a9f': {
 			service: 'button',
-			uuid: '86f552ce-d545-4ddf-a440-52950d12c17f',
 			title: 'ajax',
 			click: function()
 			{

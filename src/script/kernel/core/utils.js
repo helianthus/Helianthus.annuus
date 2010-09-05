@@ -150,7 +150,7 @@ $.extend(bolanderi, {
 
 (function()
 {
-	$.each(['one', 'bind', 'bindAndRun', 'unbind'], function(i, name)
+	$.each(['one', 'bind', 'bindAndRun', 'unbind', 'queue'], function(i, name)
 	{
 		bolanderi[name] = function()
 		{

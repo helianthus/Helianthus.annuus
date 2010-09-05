@@ -89,7 +89,7 @@ annuus.add({
 
 							show = !show;
 							document.body.style.overflow = show ? 'hidden' : '';
-							$(document).queue('master-fx', (show ? fx.slice() : fx.slice().reverse()).concat(fxEnd)).dequeue('master-fx');
+							annuus.queue('master-fx', (show ? fx.slice() : fx.slice().reverse()).concat(fxEnd)).dequeue('master-fx');
 
 							break;
 							case 2:

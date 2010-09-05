@@ -27,7 +27,7 @@ annuus.add({
 					writeLog.apply(null, [null].concat(data));
 				});
 
-				$(document).bind('log', writeLog);
+				annuus.bind('log', writeLog);
 
 				return self.panel;
 			}

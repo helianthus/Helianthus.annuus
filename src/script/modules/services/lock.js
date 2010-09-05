@@ -30,7 +30,7 @@ annuus.add({
 					body { word-wrap: break-word; } \
 				');
 
-				if($(document).pageName() === 'view') {
+				if(bolanderi.pageName() === 'view') {
 					$.rules('\
 						.repliers_right td { display: block; overflow: hidden; overflow-x: auto; } \
 					');

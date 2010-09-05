@@ -25,11 +25,9 @@ bolanderi.add({
 				});
 			},
 
-			$d: $(document),
-
 			add: function(self, job)
 			{
-				self.exec(job, self.$d);
+				self.exec(job, bolanderi.doc);
 
 				job.frequency === 'always' && bolanderi.bind('content_load', function(event, context)
 				{

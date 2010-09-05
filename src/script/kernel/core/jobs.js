@@ -2,7 +2,7 @@ $(document).one('storage_ready', function()
 {
 
 bolanderi.get('SERVICES', {});
-var docPageCode = $(document).pageCode();
+var docPageCode = bolanderi.pageCode();
 var profile = bolanderi.storage.get();
 var statusTypes = profile.status ? ['core', 'debug', 'comp', 'on', 'off'] : 'core';
 var compTypes = { core:1, comp:1 };

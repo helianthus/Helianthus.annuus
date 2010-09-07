@@ -153,29 +153,25 @@ bolanderi.Job.prototype = {
 		}
 	},
 
-	run: function(fn)
+	run: $.arg({}, function(track, fn)
 	{
-		var tried = this._tried;
-		this.tried = true;
-
-		try {
+		if(track[this.uuid]) {
 			return fn.call(this, this);
 		}
-		catch(e) {
-			if(tried) {
-				throw e;
+		else {
+			track[this.uuid] = true;
+			try {
+				return fn.call(this, this);
 			}
-			else {
+			catch(e) {
 				bolanderi.log('error', '{0} [{1}]', e.message, this.info());
 				$.debug(e);
 			}
-		}
-		finally {
-			if(!tried) {
-				this._tried = false;
+			finally {
+				track[this.uuid] = false;
 			}
 		}
-	},
+	}),
 
 	validate: function(job)
 	{

@@ -150,11 +150,12 @@ $.extend(bolanderi, {
 
 (function()
 {
-	$.each(['one', 'bind', 'bindAndRun', 'unbind', 'queue'], function(i, name)
+	$.each(['one', 'bind', 'bindAndRun', 'unbind', 'queue', 'dequeue'], function(i, name)
 	{
 		bolanderi[name] = function()
 		{
 			$.fn[name].apply(bolanderi.doc, arguments);
+			return bolanderi;
 		};
 	});
 })();

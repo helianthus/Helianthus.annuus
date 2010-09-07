@@ -42,6 +42,17 @@ $.extend({
 		return j instanceof $ ? j : $(j);
 	},
 
+	arg: function()
+	{
+		var args = [].slice.call(arguments);
+		var fn = args.pop();
+
+		return function()
+		{
+			return fn.apply(this, args.concat([].slice.call(arguments)));
+		};
+	},
+
 	compact: function(array)
 	{
 		var ret = [];

@@ -1,4 +1,3 @@
-*.html
-*.txt
-*.markdown
-*.md
+*.*
+!*.js
+!*.css

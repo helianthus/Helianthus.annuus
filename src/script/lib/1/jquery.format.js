@@ -3,7 +3,7 @@
  * Copyright (c) 2010 project.helianthus <http://github.com/helianthus>
  * Licensed under the MIT License. <http://www.opensource.org/licenses/mit-license.php>
  *
- * version: 1.0.0
+ * version: 1.0.0pre
  */
 
 (function($)

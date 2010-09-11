@@ -5,7 +5,7 @@
  *
  * Partly based on parseUri by Steven Levithan <http://blog.stevenlevithan.com/archives/parseuri>
  *
- * version: 1.0.0
+ * version: 1.0.0pre
  * requires: jquery.format.js, jquery.deparam.js
  */
 

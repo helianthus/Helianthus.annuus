@@ -63,13 +63,13 @@
 
 	function parse(url)
 	{
-		var urlSet = {}, i = keys.length, arr = regex.exec(unescape(url));
+		var urlSet = {}, i = keys.length, arr = regex.exec(url);
 
 		while(i--) {
 			urlSet[keys[i]] = arr[i] || '';
 		}
 
-		return $.extend(urlSet, { querySet: $.deparam(urlSet.query), fragmentSet: $.deparam(urlSet.fragment) });
+		return $.extend(urlSet, { querySet: $.deparam(/%u[a-fA-F\d]{4}/g.test(urlSet.query) ? unescape(urlSet.query).replace(/%/g, '%25') : urlSet.query), fragmentSet: $.deparam(urlSet.fragment) });
 	}
 
 	$.url = function(url, param)

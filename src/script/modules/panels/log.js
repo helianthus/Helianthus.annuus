@@ -4,7 +4,7 @@ annuus.add({
 	title: '記錄面板',
 	pages: { on: [all] },
 	tasks: {
-		'e6d2ea58': {
+		'27959dbd-6a92-401d-8673-7601ab5abc30': {
 			service: 'master',
 			title: '記錄',
 			css: '\

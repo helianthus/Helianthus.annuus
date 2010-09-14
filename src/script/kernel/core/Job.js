@@ -1,6 +1,6 @@
 bolanderi.get('JOBS', {});
 
-bolanderi.Job = function(options)
+bolanderi.Job = function(options, manual)
 {
 	if(this instanceof bolanderi.Job === false) {
 		return new bolanderi.Job(options);
@@ -10,28 +10,22 @@ bolanderi.Job = function(options)
 		bolanderi.error('Job: uuid does not exist or is already taken! [{0}]', bolanderi.info(options));
 	}
 
-	$.each(options, function(name)
+	var self = this;
+
+	$.each(options, function(key)
 	{
-		if(name in bolanderi.Job.prototype) {
+		if(key in self) {
 			bolanderi.error('Job: overriding prototype methods is not allowed! [{0}]', bolanderi.info(options));
 		}
 	});
 
-	var self = this;
+	$.extend(self, options);
 
-	$.each(options, function(key, obj)
-	{
-		self[key] = !$.isFunction(obj) ? obj : function()
-		{
-			var args = [self].concat([].slice.call(arguments));
-			return self.run(function()
-			{
-				return obj.apply(this, args);
-			});
-		};
-	});
+	if(!manual) {
+		self.wrapMethods();
+	}
 
-	bolanderi.get('JOBS')[this.uuid] = this;
+	bolanderi.get('JOBS')[self.uuid] = self;
 };
 
 bolanderi.Job.prototype = {
@@ -201,5 +195,24 @@ bolanderi.Job.prototype = {
 				return true;
 			}
 		});
-	}
+	},
+
+	wrapMethods: $.memoize(function()
+	{
+		var self = this;
+
+		$.each(self, function(key, method)
+		{
+			if($.isFunction(method) && self.hasOwnProperty(key)) {
+				self[key] = function()
+				{
+					var args = [self].concat([].slice.call(arguments));
+					return self.run(function()
+					{
+						return method.apply(this, args);
+					});
+				};
+			}
+		});
+	})
 };

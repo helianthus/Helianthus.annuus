@@ -68,7 +68,7 @@ $.extend(bolanderi, {
 		var paths = {
 			'public': [profile, 'publicData', dataType],
 			'protected': [profile, 'privateData', module.uuid, dataType],
-			'private': [profile, 'privateData', module.uuid, module.__pageCode, dataType]
+			'private': [profile, 'privateData', module.uuid, module._pageCode, dataType]
 		};
 		var data = {};
 

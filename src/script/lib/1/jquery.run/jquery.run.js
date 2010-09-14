@@ -21,6 +21,8 @@
 		string: 'id'
 	};
 
+	var guid = 0;
+
 	$.run = function()
 	{
 		var options = {};
@@ -55,7 +57,7 @@
 			}
 		}
 		else {
-			options.id = $.now();
+			options.id = ++guid;
 		}
 
 		if(!options.fn) {

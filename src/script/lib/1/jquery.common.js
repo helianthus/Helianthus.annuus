@@ -253,30 +253,33 @@ $.extend({
 		return match && match[0];
 	},
 
-	memoize: function()
+	memoize: (function(guid)
 	{
-		var dynamic = arguments.length === 3;
-		var arg = [].slice.call(arguments);
-		var fn = arg.pop();
-		var key = dynamic ? arg.pop() : 'memoize' + $.now();
-		arg = arg[0];
-
-		var wrapper = function()
+		return function()
 		{
-			var cache = dynamic ? arg : {
-				'number': arguments[arg],
-				'object': arg,
-				'undefined': this
-			}[typeof arg];
+			var dynamic = arguments.length === 3;
+			var arg = [].slice.call(arguments);
+			var fn = arg.pop();
+			var key = dynamic ? arg.pop() : 'memoize' + ++guid;
+			arg = arg[0];
 
-			if(key in cache === false) {
-				cache[key] = fn.apply(this, arguments);
-			}
-			return cache[key];
+			var wrapper = function()
+			{
+				var cache = dynamic ? arg : {
+					'number': arguments[arg],
+					'object': arg,
+					'undefined': this
+				}[typeof arg];
+
+				if(key in cache === false) {
+					cache[key] = fn.apply(this, arguments);
+				}
+				return cache[key];
+			};
+
+			return dynamic ? wrapper() : wrapper;
 		};
-
-		return dynamic ? wrapper() : wrapper;
-	},
+	})(0),
 
 	permute: function()
 	{

@@ -64,6 +64,11 @@ $.extend({
 		return ret;
 	},
 
+	condition: function(condition, callback)
+	{
+		$.isFunction(condition) ? condition(callback) : condition && callback();
+	},
+
 	cookie: function(name, val, topLevel)
 	{
 		if(!name) {

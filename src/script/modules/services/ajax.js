@@ -12,10 +12,84 @@ annuus.add({
 			params: {
 			},
 			api: {
-				get: {}
+				ajax: {
+					description: 'wrapper around jQuery.ajax, with automatic connection control',
+					params: [
+						{
+							name: 'options',
+							description: 'refer to jQuery.ajax',
+							required: true,
+							type: 'object'
+						}
+					]
+				},
+				get: {
+					description: 'page manager, with automatic cache control',
+					params: [
+						{
+							name: 'options',
+							required: true,
+							type: 'object',
+							values: {
+								complete: {
+									description: 'refer to jQuery.ajax',
+									required: false,
+									dataType: 'function'
+								},
+								cache: {
+									description: 'refer to jQuery.ajax',
+									required: false,
+									dataType: 'boolean'
+								},
+								error: {
+									description: 'refer to jQuery.ajax',
+									required: false,
+									dataType: 'function'
+								},
+								map: {
+									description: 'the actual mapper function',
+									required: true,
+									dataType: 'function',
+									args: [
+										{ name: 'mapSrc', description: 'map source', dataType: 'jQuery' }
+									],
+									returnValue: { description: 'mapped data', dataType: 'jQuery' }
+								},
+								mapSrc: {
+									description: 'name of the source for map function, defaults to page root if omitted',
+									required: false,
+									dataType: 'string'
+								},
+								name: {
+									description: 'name of mapped data',
+									required: true,
+									dataType: 'string'
+								},
+								page: {
+									description: 'page number, defaults to 1 if omitted',
+									required: false,
+									dataType: 'number'
+								},
+								success: {
+									description: 'called if mapping succeeds',
+									required: false,
+									dataType: 'function',
+									args: [
+										{ name: 'mappedData', description: 'mapped data returned by options.map', dataType: 'jQuery' }
+									]
+								}
+							}
+						}
+					]
+				}
 			},
 			init: function(self, jobs)
 			{
+				self.pages[$.urlSet().querySet.page || 1] = {
+					lastReq: $.now(),
+					root: $(document)
+				};
+
 				if(jobs.length) {
 					bolanderi.log('warn', 'Ajax service cannot be used directly, please use the API provided instead.');
 				}
@@ -30,23 +104,23 @@ annuus.add({
 			{
 				bolanderi.ready('document_end', function()
 				{
-					self.log('log', 'queuing request to [{0}].', options.url);
+					self.log('log', 'queuing request to <{0}>.', options.url);
 
 					var queue = $.queue(document, 'ajax', function(next)
 					{
 						++self.count;
 
-						self.log('log', 'requesting [{0}]...', options.url);
+						self.log('log', 'requesting <{0}>...', options.url);
 
 						$.ajax($.extend({}, options, {
 							success: function(html, status)
 							{
-								self.log('log', 'success on retrieving [{0}] - status: {1}.', options.url, status);
+								self.log('log', 'success on retrieving <{0}> - status: {1}.', options.url, status);
 								options.success && options.success.apply(options, arguments);
 							},
 							error: function(xhr, status, e)
 							{
-								self.log('error', 'fail on retrieving [{0}] - status: {1}, error: {2}.', options.url, status, e);
+								self.log('error', 'fail on retrieving <{0}> - status: {1}, error: {2}.', options.url, status, e);
 								options.error && options.error.apply(options, arguments);
 							},
 							complete: function()
@@ -72,50 +146,54 @@ annuus.add({
 
 			pages: {},
 
-			get: function(self, options)
+			get: function(self)
 			{
-				options = $.extend({
+				var options = $.extend.apply($, [{
 					cache: true,
-					condition: {
-						page: 1
-					}
-				}, options);
+					page: 1,
+					success: $.noop
+				}].concat([].slice.call(arguments, 1)));
 
-				var page = $.make(self.pages, options.page, {});
+				var page = $.make(self.pages, options.page, { lastReq: 0 });
 
-				if(options.name in page && (options.cache || $.now() - (page.lastReq || 0) < self.CACHE_TIME)) {
-					return page[options.name];
-				}
-
-				if(options.mapSrc) {
-					self[options.mapSrc](self, $.extend({}, options, {
-						mapSrc: null,
-						success: function(data)
-						{
-							success(data);
-						}
-					}));
-				}
-				else if(options.cache && ($.urlSet().querySet.page || 1) == options.page) {
-					success($(document));
-				}
-				else {
+				$.condition(options.fetched || options.cache && $.now() - page.lastReq < self.CACHE_TIME || function(callback)
+				{
 					self.ajax({
 						cache: false,
-						dataType: 'text',
+						dataType: 'text', // prevent auto script injection
 						url: $.url({ querySet: { page: options.page } }),
 						success: function(html)
 						{
-							page.lastReq = $.now();
-							success($(html));
-						}
-					});
-				}
+							page = self.pages[options.page] = {
+								lastReq: $.now(),
+								root: $(html)
+							};
 
-				function success(context)
+							callback();
+						},
+						error: options.error || $.noop,
+						complete: options.complete || $.noop
+					});
+				},
+				function()
 				{
-					options.success(page[options.name] = options.map(context));
-				}
+					if(options.name in page) {
+						options.success(page[options.name]);
+					}
+					else if(options.mapSrc) {
+						self[options.mapSrc]($.extend({}, options, {
+							fetched: true,
+							mapSrc: null,
+							success: function(context)
+							{
+								options.success(page[options.name] = options.map(context));
+							}
+						}));
+					}
+					else {
+						options.success(page[options.name] = options.map(page.root));
+					}
+				});
 			}
 		},
 
@@ -127,31 +205,51 @@ annuus.add({
 				page: topics
 			},
 			api: {
-				topicTable: {},
-				topics: {}
+				topicTable: {
+					description: 'get the table containing the topic list',
+					params: [
+						{
+							name: 'options',
+							description: 'refer to ajax.get',
+							required: true,
+							type: 'object'
+						}
+					]
+				},
+				topics: {
+					description: 'get the topic rows',
+					params: [
+						{
+							name: 'options',
+							description: 'refer to ajax.get',
+							required: true,
+							type: 'object'
+						}
+					]
+				},
 			},
 
 			topicTable: function(self, options)
 			{
-				self.get($.extend(options, {
+				self.get(options, {
 					name: 'topicTable',
 					map: function(context)
 					{
 						return context.find('#HotTopics > div > table');
 					}
-				}));
+				});
 			},
 
 			topics: function(self, options)
 			{
-				self.get($.extend(options, {
+				self.get(options, {
 					name: 'topics',
 					mapSrc: 'topicTable',
 					map: function(context)
 					{
 						return context.find('tr[userid]');
 					}
-				}));
+				});
 			}
 		},
 
@@ -163,33 +261,28 @@ annuus.add({
 				page: view
 			},
 			api: {
-				replies: {}
+				replies: {
+					description: 'get replie tables',
+					params: [
+						{
+							name: 'options',
+							description: 'refer to ajax.get',
+							required: true,
+							type: 'object'
+						}
+					]
+				}
 			},
 
 			replies: function(self, options)
 			{
 				self.get($.extend(options, {
-					name: 'topics',
-					mapSrc: 'topicTable',
+					name: 'replies',
 					map: function(context)
 					{
 						return context.find('.repliers');
 					}
 				}));
-			}
-		},
-
-		'a1cf1fae-73e0-4f4e-94c3-e1b614ea6a9f': {
-			service: 'button',
-			title: 'ajax',
-			click: function()
-			{
-				annuus.ajax.topics({
-					success: function(topics)
-					{
-						$.debug(topics);
-					}
-				});
 			}
 		}
 	}

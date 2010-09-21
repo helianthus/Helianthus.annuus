@@ -6,8 +6,8 @@ bolanderi.Job = function(options, manual)
 		return new bolanderi.Job(options);
 	}
 
-	if(!options.uuid || options.uuid in bolanderi.get('JOBS')) {
-		bolanderi.error('Job: uuid does not exist or is already taken! [{0}]', bolanderi.info(options));
+	if(!options.id || options.id in bolanderi.get('JOBS')) {
+		bolanderi.error('Job: id does not exist or is already taken! [{0}]', bolanderi.info(options));
 	}
 
 	var self = this;
@@ -25,7 +25,7 @@ bolanderi.Job = function(options, manual)
 		self.wrapMethods();
 	}
 
-	bolanderi.get('JOBS')[self.uuid] = self;
+	bolanderi.get('JOBS')[self.id] = self;
 };
 
 bolanderi.Job.prototype = {
@@ -52,7 +52,7 @@ bolanderi.Job.prototype = {
 
 	derive: function(options)
 	{
-		if(!(options && options.uuid)) {
+		if(!(options && options.id)) {
 			bolanderi.error('derived job is missing an id!');
 		}
 
@@ -77,7 +77,7 @@ bolanderi.Job.prototype = {
 	info: function()
 	{
 		return $.format('{0}, {1}, {2}{3}',
-			this.title, this.uuid, this.type, this.type === 'action' ? $.format('({0})', this.service || 'unknown') : '');
+			this.title, this.id, this.type, this.type === 'action' ? $.format('({0})', this.service || 'unknown') : '');
 	},
 
 	options: function(id, value)
@@ -149,11 +149,11 @@ bolanderi.Job.prototype = {
 
 	run: $.arg({}, function(track, fn)
 	{
-		if(track[this.uuid]) {
+		if(track[this.id]) {
 			return fn.call(this, this);
 		}
 		else {
-			track[this.uuid] = true;
+			track[this.id] = true;
 			try {
 				return fn.call(this, this);
 			}
@@ -162,7 +162,7 @@ bolanderi.Job.prototype = {
 				$.debug(e);
 			}
 			finally {
-				track[this.uuid] = false;
+				track[this.id] = false;
 			}
 		}
 	}),

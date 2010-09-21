@@ -49,7 +49,7 @@ function extendService(event, service)
 	if(service.name === task.name) {
 		bolanderi.unbind(event);
 
-		if(service.module.uuid !== task.module.uuid) {
+		if(service.module.id !== task.module.id) {
 			bolanderi.log('error', 'service can only be extended by sibling tasks! [{0}]', bolanderi.info(task));
 			return;
 		}

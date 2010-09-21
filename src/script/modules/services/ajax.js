@@ -9,8 +9,6 @@ annuus.add({
 			type: 'service',
 			name: 'ajax',
 			run_at: 'document_start',
-			params: {
-			},
 			api: {
 				ajax: {
 					description: 'wrapper around jQuery.ajax, with automatic connection control',
@@ -154,9 +152,9 @@ annuus.add({
 					success: $.noop
 				}].concat([].slice.call(arguments, 1)));
 
-				var page = $.make(self.pages, options.page, { lastReq: 0 });
+				var page = self.pages[options.page];
 
-				$.condition(options.fetched || options.cache && $.now() - page.lastReq < self.CACHE_TIME || function(callback)
+				$.condition(page && (options.cache || $.now() - page.lastReq < self.CACHE_TIME) || function(callback)
 				{
 					self.ajax({
 						cache: false,
@@ -182,7 +180,7 @@ annuus.add({
 					}
 					else if(options.mapSrc) {
 						self[options.mapSrc]($.extend({}, options, {
-							fetched: true,
+							cache: true,
 							mapSrc: null,
 							success: function(context)
 							{

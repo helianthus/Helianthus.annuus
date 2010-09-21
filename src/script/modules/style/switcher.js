@@ -1,6 +1,5 @@
 annuus.add({
-
-'0a48fd35-9637-498a-96c6-de631780540d': {
+	id: '0a48fd35-9637-498a-96c6-de631780540d',
 	title: '主題轉換選單',
 	pages: { comp: [all] },
 	tasks: {
@@ -38,6 +37,4 @@ annuus.add({
 			}
 		}
 	}
-}
-
 });

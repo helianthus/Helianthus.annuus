@@ -1,6 +1,5 @@
 annuus.add({
-
-'f42d2599-ae79-40de-a3a2-9016097454f4': {
+	id: 'f42d2599-ae79-40de-a3a2-9016097454f4',
 	title: 'Themes',
 	pages: { comp: [all] },
 	tasks: {
@@ -984,6 +983,4 @@ annuus.add({
 			}
 		}
 	}
-}
-
 });

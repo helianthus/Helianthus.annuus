@@ -1,6 +1,5 @@
 annuus.add({
-
-'c183b764-e03d-426b-a2be-64f3b706787b': {
+	id: 'c183b764-e03d-426b-a2be-64f3b706787b',
 	title: 'Smileys',
 	pages: { comp: [all] },
 	tasks: {
@@ -302,6 +301,4 @@ annuus.add({
 			]
 		}
 	}
-}
-
 });

@@ -1,6 +1,5 @@
 annuus.add({
-
-'8e08db0d-3c7b-418d-a873-6901f37c497f': {
+	id: '8e08db0d-3c7b-418d-a873-6901f37c497f',
 	title: 'Theme Service (with background fix)',
 	pages: { comp: [all] },
 	requires: ['theme'],
@@ -61,6 +60,4 @@ annuus.add({
 			}
 		}
 	}
-}
-
 });

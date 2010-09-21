@@ -1,6 +1,5 @@
 annuus.add({
-
-'736b0a78-4b70-45a2-a6c8-a3cdbe5f11fa': {
+	id: '736b0a78-4b70-45a2-a6c8-a3cdbe5f11fa',
 	title: '字體設定',
 	pages: { on: [all] },
 	options: {
@@ -15,6 +14,4 @@ annuus.add({
 			'
 		}
 	}
-}
-
 });

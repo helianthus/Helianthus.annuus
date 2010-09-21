@@ -1,6 +1,5 @@
 annuus.add({
-
-'2de3e000-9db8-40cf-9fb8-598474ce4df8': {
+	id: '2de3e000-9db8-40cf-9fb8-598474ce4df8',
 	title: 'Credits',
 	pages: { comp: [all] },
 	tasks: {
@@ -96,6 +95,4 @@ annuus.add({
 			]
 		}
 	}
-}
-
 });

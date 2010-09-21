@@ -1,6 +1,5 @@
 bolanderi.add({
-
-'e0311de6-a6fb-4bf5-bb91-e1f2db19d25b': {
+	id: 'e0311de6-a6fb-4bf5-bb91-e1f2db19d25b',
 	title: 'Auto Service',
 	pages: { core: [all] },
 	tasks: {
@@ -48,6 +47,4 @@ bolanderi.add({
 			}
 		}
 	}
-}
-
 });

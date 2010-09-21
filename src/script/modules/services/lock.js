@@ -1,6 +1,5 @@
 annuus.add({
-
-'32c8606b-a331-43ff-bfea-1f6190b7e8a2': {
+	id: '32c8606b-a331-43ff-bfea-1f6190b7e8a2',
 	title: 'Auto Service (with layout locking)',
 	pages: { on: [all] },
 	tasks: {
@@ -69,6 +68,4 @@ annuus.add({
 			}
 		}
 	}
-}
-
 });

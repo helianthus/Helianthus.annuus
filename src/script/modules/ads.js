@@ -1,6 +1,5 @@
 annuus.add({
-
-'63d2407a-d8db-44cb-8666-64e5b76378a2': {
+	id: '63d2407a-d8db-44cb-8666-64e5b76378a2',
 	title: '隱藏廣告',
 	pages: { on: [all] },
 	tasks: {
@@ -136,6 +135,4 @@ annuus.add({
 			'
 		}
 	}
-}
-
 });

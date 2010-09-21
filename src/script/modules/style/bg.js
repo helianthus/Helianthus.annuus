@@ -1,6 +1,5 @@
 annuus.add({
-
-'91f24db0-1e4e-4aa3-80cd-ac50dfb41a86': {
+	id: '91f24db0-1e4e-4aa3-80cd-ac50dfb41a86',
 	title: '設定背景',
 	pages: { on: [all] },
 	options: {
@@ -38,6 +37,4 @@ annuus.add({
 			}
 		}
 	}
-}
-
 });

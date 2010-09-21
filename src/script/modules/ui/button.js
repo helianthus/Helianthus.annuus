@@ -1,6 +1,5 @@
 annuus.add({
-
-'34c76972-813a-4145-b3d3-bf83d89723d7': {
+	id: '34c76972-813a-4145-b3d3-bf83d89723d7',
 	title: 'Button UI',
 	pages: { comp: [all] },
 	database: {
@@ -129,7 +128,7 @@ annuus.add({
 			make: function(self, job)
 			{
 				var button = $('<a/>', {
-					id: job.uuid,
+					id: job.id,
 					text: job.title,
 					href: job.href || annuus.get('DUMMY_HREF'),
 					target: job.target || '_self'
@@ -182,7 +181,7 @@ annuus.add({
 					if(!self.moreButton.length) {
 						var options;
 						self.moreButton = self.make(options = {
-							uuid: null,
+							id: null,
 							title: '更多...',
 							click: function()
 							{
@@ -215,9 +214,9 @@ annuus.add({
 				}
 				if(!self.indexMap) {
 					self.indexMap = {};
-					$.each(self.database('buttonOrder'), function(index, uuid)
+					$.each(self.database('buttonOrder'), function(index, id)
 					{
-						self.indexMap[uuid] = index;
+						self.indexMap[id] = index;
 					});
 				}
 
@@ -225,13 +224,13 @@ annuus.add({
 				{
 					var button = self.make(job);
 
-					if(job.uuid in self.indexMap) {
-						self.currentIds.push(job.uuid);
+					if(job.id in self.indexMap) {
+						self.currentIds.push(job.id);
 						self.currentIds.sort(function(a, b)
 						{
 							return self.indexMap[a] - self.indexMap[b];
 						});
-						var index = $.inArray(job.uuid, self.currentIds);
+						var index = $.inArray(job.id, self.currentIds);
 						index === 0 ? button.prependTo(self.mainList) : button.insertAfter(self.mainList.children().eq(index - 1));
 					}
 					else {
@@ -286,10 +285,10 @@ annuus.add({
 				self.hiddenButtons = page.panel.children('.ui-button');
 
 				var buttonOrder = self.currentIds.slice();
-				$.each(self.database('buttonOrder'), function(i, uuid)
+				$.each(self.database('buttonOrder'), function(i, id)
 				{
-					if(!document.getElementById(uuid)) {
-						buttonOrder.splice(i, 0, uuid);
+					if(!document.getElementById(id)) {
+						buttonOrder.splice(i, 0, id);
 					}
 				});
 				self.database('buttonOrder', buttonOrder);
@@ -338,13 +337,11 @@ annuus.add({
 				$.each($.range(1,30), function(i,n)
 				{
 					annuus.button.add(self.derive({
-						uuid: ID + n,
+						id: ID + n,
 						title: '測試按扭' + n
 					}));
 				});
 			}
 		}
 	}
-}
-
 });

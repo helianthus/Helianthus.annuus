@@ -1,6 +1,5 @@
 bolanderi.add({
-
-'88f89208-0448-45d4-a487-e3622ea70afb': {
+	id: '88f89208-0448-45d4-a487-e3622ea70afb',
 	title: 'Data Service',
 	pages: { core: [all] },
 	tasks: {
@@ -25,6 +24,4 @@ bolanderi.add({
 			}
 		}
 	}
-}
-
 });

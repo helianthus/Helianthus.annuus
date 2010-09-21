@@ -1,6 +1,5 @@
 annuus.add({
-
-'51ff8602-647e-4e0f-a332-674799703a7b': {
+	id: '51ff8602-647e-4e0f-a332-674799703a7b',
 	title: 'Theme Service',
 	pages: { comp: [all] },
 	tasks: {
@@ -51,6 +50,4 @@ annuus.add({
 			}
 		}
 	}
-}
-
 });

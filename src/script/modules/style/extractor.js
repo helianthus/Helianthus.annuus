@@ -1,6 +1,5 @@
 annuus.add({
-
-'c878628c-8414-4d1e-9a20-717d1dd0517c': {
+	id: 'c878628c-8414-4d1e-9a20-717d1dd0517c',
 	title: '主題轉換工具',
 	pages: { debug: [all] },
 	tasks: {
@@ -56,6 +55,4 @@ annuus.add({
 			}
 		}
 	}
-}
-
 });

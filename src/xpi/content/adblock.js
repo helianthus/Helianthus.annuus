@@ -2,7 +2,6 @@
 {
 	var referrer = /hkgolden\.com/i;
 	var keywords = /bmediaasia|pixel-?hk|imrworldwide|googlesyndication|_getTracker|(?:Page|Inline|Google|\b)[Aa]ds?\b/;
-	var service = Components.classes["@mozilla.org/observer-service;1"].getService(Components.interfaces.nsIObserverService);
 	var observer = {
 		observe: function(subject) {
 			subject.QueryInterface(Components.interfaces.nsIHttpChannel);
@@ -14,6 +13,6 @@
 
 	document.addEventListener('@PROJECT_NAME_SHORT@_status_change', function(event)
 	{
-		service[event.status ? 'addObserver' : 'removeObserver'](observer, "http-on-modify-request", false);
+		Components.classes["@mozilla.org/observer-service;1"].getService(Components.interfaces.nsIObserverService)[event.status ? 'addObserver' : 'removeObserver'](observer, "http-on-modify-request", false);
 	}, false);
 })();

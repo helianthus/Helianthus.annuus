@@ -6,6 +6,7 @@ var profile = bolanderi.storage.get();
 var statusTypes = profile.status ? ['core', 'debug', 'comp', 'on', 'off'] : 'core';
 var compTypes = { core:1, comp:1 };
 var services = bolanderi.get('SERVICES', {});
+var api = bolanderi.get('API', {});
 var actions = {};
 
 function runService(service)
@@ -24,7 +25,7 @@ function runService(service)
 			return;
 		}
 
-		$.make(bolanderi, service.name, key, service[key]);
+		$.make(api, service.name, key, service[key]);
 	}
 
 	bolanderi.trigger('service_ready', service);

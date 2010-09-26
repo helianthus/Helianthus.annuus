@@ -1,4 +1,14 @@
 $.extend(bolanderi, {
+	api: function(name)
+	{
+		var api = bolanderi.get('API');
+		if(name in api) {
+			return api[name];
+		}
+
+		bolanderi.error('api "{0}" does not exist!', name);
+	},
+
 	doc: $(document),
 
 	error: function()

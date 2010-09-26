@@ -4,6 +4,9 @@ annuus.add({
 	pages: { on: [view | topics | search | tags | profilepage] },
 	tasks: {
 		'e7e146d9-efcc-445c-8040-522fc66ecdf8': {
+			condition: {
+				is: false
+			},
 			run_at: 'document_end',
 			css: '.an-blankname:before { content: "空白名稱"; font-style: italic; }',
 			js: function(self, context)

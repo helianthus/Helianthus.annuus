@@ -55,7 +55,7 @@ annuus.add({
 
 				$.each(jobs, function(i, job)
 				{
-					annuus.theme.add(job);
+					annuus.api('theme').add(job);
 				});
 			}
 		}

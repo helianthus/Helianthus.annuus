@@ -37,13 +37,13 @@ annuus.add({
 					if($.browser.opera) {
 						$.rules('#ctl00_ContentPlaceHolder1_view_form > div > table, .repliers { table-layout: fixed; }');
 
-						annuus.auto.add(self.derive({
+						annuus.api('auto').add(self.derive({
 							id: 'a44da0ba-58cf-423e-94fa-e1c9a7abf1cb',
 							frequency: 'always',
 							condition: {
 								test: function()
 								{
-									return annuus.simple.isVotePage();
+									return annuus.api('simple').isVotePage();
 								}
 							},
 							js: function(self, context)
@@ -64,7 +64,7 @@ annuus.add({
 					self.lock();
 				}
 
-				annuus.auto.add(job);
+				annuus.api('auto').add(job);
 			}
 		}
 	}

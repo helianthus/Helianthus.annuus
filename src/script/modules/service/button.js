@@ -166,7 +166,7 @@ annuus.add({
 				if(job.click) {
 					button.click(function(event)
 					{
-						job.click.call(button[0], event);
+						job.click.call(this, event, job.__widget);
 					});
 				}
 
@@ -179,13 +179,12 @@ annuus.add({
 			{
 				if(!self.frozen && self.hiddenButtons.length) {
 					if(!self.moreButton.length) {
-						var options;
-						self.moreButton = self.make(options = {
-							id: null,
+						self.moreButton = self.make({
+							id: 'an-button-more',
 							title: '更多...',
-							click: function()
+							click: function(event, widget)
 							{
-								options.__widget.append(self.hiddenButtons);
+								widget.append(self.hiddenButtons);
 							},
 							widget: function()
 							{
@@ -317,11 +316,11 @@ annuus.add({
 			},
 			select: function(self, page)
 			{
-				annuus.button.panelSelect(page);
+				annuus.api('button').panelSelect(page);
 			},
 			unselect: function(self, page)
 			{
-				annuus.button.panelUnselect(page);
+				annuus.api('button').panelUnselect(page);
 			}
 		},
 
@@ -329,14 +328,14 @@ annuus.add({
 			title: '測試按扭',
 			requires: ['button'],
 			condition: {
-				page: 0
+				is: false
 			},
 			js: function(self)
 			{
 				var ID = 'acb540b1-d6e0-4c65-b953-d7ffabf26c65_';
 				$.each($.range(1,30), function(i,n)
 				{
-					annuus.button.add(self.derive({
+					annuus.api('button').add(self.derive({
 						id: ID + n,
 						title: '測試按扭' + n
 					}));

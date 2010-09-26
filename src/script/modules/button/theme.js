@@ -17,10 +17,10 @@ annuus.add({
 						bgImageBody: ''
 					}, self.data('themes')[$(this).text()]);
 
-					annuus.button.lockScroll(function()
+					annuus.api('button').lockScroll(function()
 					{
 						self.options(theme);
-						annuus.theme.load(theme);
+						annuus.api('theme').load(theme);
 					});
 				});
 

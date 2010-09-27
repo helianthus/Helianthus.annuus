@@ -109,7 +109,6 @@
 
 	$.urlSet = function(url, param)
 	{
-		debugger;
 		return parse($.url(url, param));
 	};
 

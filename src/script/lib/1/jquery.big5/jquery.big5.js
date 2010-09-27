@@ -25,7 +25,7 @@ $.decodeBig5URIComponent = function(b)
 
 		if(prev) {
 			c = encoded ? c : c.charCodeAt(0).toString(16);
-			ret += String.fromCharCode('0x' + $.b2u(c + prev));
+			ret += String.fromCharCode('0x' + $.btou(c + prev));
 			prev = null;
 		}
 		else if(encoded && parseInt(c, 16) >= 0xA1) {

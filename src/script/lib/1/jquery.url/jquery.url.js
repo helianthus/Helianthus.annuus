@@ -69,7 +69,7 @@
 			urlSet[keys[i]] = arr[i] || '';
 		}
 
-		return $.extend(urlSet, { querySet: $.deparam(/%u[a-fA-F\d]{4}/g.test(urlSet.query) ? unescape(urlSet.query).replace(/%/g, '%25') : urlSet.query), fragmentSet: $.deparam(urlSet.fragment) });
+		return $.extend(urlSet, { querySet: $.deparam(urlSet.query), fragmentSet: $.deparam(urlSet.fragment) });
 	}
 
 	$.url = function(url, param)
@@ -109,6 +109,7 @@
 
 	$.urlSet = function(url, param)
 	{
+		debugger;
 		return parse($.url(url, param));
 	};
 

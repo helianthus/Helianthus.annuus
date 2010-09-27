@@ -42,8 +42,11 @@
 
     // Iterate over all name=value pairs.
     $.each( params.replace( /\+/g, ' ' ).split( '&' ), function(j,v){
-      var param = v.split( '=' ),
-        key = decode( param[0] ),
+      var param = v.split( '=' );
+
+      $.event.trigger('deparam_decode', [param]);
+
+      var  key = decode( param[0] ),
         val,
         cur = obj,
         i = 0,

@@ -59,4 +59,14 @@ $(function()
 	});
 });
 
+// admin is using every deprecated stuff (BIG5, escape)
+// so we need to normalize the query string for search before passing to decodeURIComponent
+// to avoid "URI malformed" error
+annuus.bind('deparam_decode', function(event, param)
+{
+	if(param[0] === 'searchstring') {
+		param[1] = encodeURIComponent(param[1].indexOf('%u') !== -1 ? unescape(param[1]) : $.decodeBig5URIComponent(param[1]));
+	}
+});
+
 })();

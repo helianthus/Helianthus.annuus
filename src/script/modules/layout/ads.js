@@ -65,7 +65,7 @@ annuus.add({
 				page: topics
 			},
 			condition: {
-				is: $.browser.msie && $.browser.version <= 8
+				test: $.browser.msie && $.browser.version <= 8
 			},
 			frequency: 'always',
 			js: function(self, context)

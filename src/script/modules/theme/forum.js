@@ -291,7 +291,7 @@ annuus.add({
 				page: profilepage
 			},
 			condition: {
-				is: !$.browser.mozilla
+				test: !$.browser.mozilla
 			},
 			css: '\
 				td[style*="color: #003366"] { padding: 4px; } \

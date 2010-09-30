@@ -328,7 +328,7 @@ annuus.add({
 			title: '測試按扭',
 			requires: ['button'],
 			condition: {
-				is: false
+				test: false
 			},
 			js: function(self)
 			{

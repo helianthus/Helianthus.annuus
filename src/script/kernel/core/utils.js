@@ -21,8 +21,6 @@ $.extend(bolanderi, {
 		return $.all(target.condition, function(name, obj)
 		{
 			switch(name) {
-				case 'is':
-					return obj;
 				case 'options':
 					return $.all(obj, function(name, obj)
 					{
@@ -31,7 +29,7 @@ $.extend(bolanderi, {
 				case 'page':
 					return bolanderi.pageCode() & obj;
 				case 'test':
-					return 'module' in target && !(target instanceof bolanderi.Job) || obj(target);
+					return $.test(obj);
 				break;
 			}
 		});

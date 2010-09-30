@@ -69,7 +69,7 @@ bolanderi.Job.prototype = {
 		bolanderi.log(type, $.format('{0} [{1}]', $.format([].slice.call(arguments, 1)), this.info()));
 	},
 
-	inCondition: $.memoize(function()
+	inCondition: $.once(function()
 	{
 		return bolanderi.inCondition(this);
 	}),
@@ -197,7 +197,7 @@ bolanderi.Job.prototype = {
 		});
 	},
 
-	wrapMethods: $.memoize(function()
+	wrapMethods: $.once(function()
 	{
 		var self = this;
 

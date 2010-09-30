@@ -121,7 +121,7 @@ $.extend(bolanderi, {
 	{
 		context = $.$(context || bolanderi.doc);
 
-		return $.memoize(context, 'pageCode', function()
+		return $.once(context, 'pageCode', function()
 		{
 			var pageName = bolanderi.pageName(context);
 

@@ -39,7 +39,7 @@ bolanderi.pageName = function(context)
 {
 	context = $.$(context || bolanderi.doc);
 
-	return $.memoize(context, 'pageName', function()
+	return $.once(context, 'pageName', function()
 	{
 		var root = context.root();
 

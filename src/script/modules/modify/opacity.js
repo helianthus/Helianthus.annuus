@@ -3,7 +3,7 @@ annuus.add({
 	title: '移除引用半透明',
 	pages: { on: [view] },
 	condition: {
-		is: document.createElement('div').style.opacity != null
+		test: Modernizr.opacity
 	},
 	tasks: {
 		'092b4c39-2499-487c-bfe3-9e41c6b10a6b': {

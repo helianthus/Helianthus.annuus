@@ -258,7 +258,7 @@ $.extend({
 		return match && match[0];
 	},
 
-	memoize: (function(guid)
+	once: (function(guid)
 	{
 		return function()
 		{

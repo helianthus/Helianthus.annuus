@@ -413,6 +413,12 @@ $.fn.extend({
 		}
 	},
 
+	set: function(key, value)
+	{
+		this[key] = value;
+		return this;
+	},
+
 	up: function(selector, th)
 	{
 		if(!th) th = 1;

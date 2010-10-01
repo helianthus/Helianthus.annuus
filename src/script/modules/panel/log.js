@@ -17,7 +17,7 @@ annuus.add({
 				{
 					self.panel.value = $.format(
 						'{1.getHours():02}:{1.getMinutes():02}:{1.getSeconds():02}.{1.getMilliseconds():03} [{0}] {2}{3}',
-						type, date || new Date(), $.format([msg].concat([].slice.call(arguments, 2))), self.panel.value && '\n'
+						type, date, msg, self.panel.value && '\n'
 					) + self.panel.value;
 				}
 

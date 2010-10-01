@@ -66,7 +66,7 @@ bolanderi.Job.prototype = {
 
 	log: function(type)
 	{
-		bolanderi.log(type, $.format('{0} [{1}]', $.format([].slice.call(arguments, 1)), this.info()));
+		bolanderi.log(type, '{0} [{1}]', $.format([].slice.call(arguments, 1)), this.info());
 	},
 
 	inCondition: $.once(function()
@@ -76,8 +76,7 @@ bolanderi.Job.prototype = {
 
 	info: function()
 	{
-		return $.format('{0}, {1}, {2}{3}',
-			this.title, this.id, this.type, this.type === 'action' ? $.format('({0})', this.service || 'unknown') : '');
+		return $.format('{0.title}, {0.id}, {0.type}{1}', this, this.type === 'action' ? '{0.service|unknown}' : '');
 	},
 
 	options: function(id, value)

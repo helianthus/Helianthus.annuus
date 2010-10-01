@@ -188,10 +188,7 @@ annuus.add({
 							},
 							widget: function()
 							{
-								return $('<div/>').click(function(event)
-								{
-									event.stopPropagation();
-								});
+								return $('<div/>');
 							}
 						});
 					}

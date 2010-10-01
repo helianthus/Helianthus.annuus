@@ -51,11 +51,12 @@ $.extend(bolanderi, {
 		}
 
 		var msg = $.format([].slice.call(arguments, 1));
+		var data = [type, msg, new Date()];
 
-		$.make(annuus.log, 'archives', []).push([type, msg, new Date()]);
-		bolanderi.trigger('log', [type, msg]);
+		$.make(annuus.log, 'archives', []).push(data);
+		bolanderi.trigger('log', data);
 
-		if(type === 'log' || type === 'debug') {
+		if(type !== 'warn' || type !== 'error') {
 			return;
 		}
 

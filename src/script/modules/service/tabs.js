@@ -43,17 +43,18 @@ annuus.add({
 					html { overflow: hidden; } \
 					#an-tabs-overlay { position: fixed; z-index: 500; width: 100%; height: 100%; } \
 					#an-tabs-overlay > div { position: relative; top: 50%; margin-top: -1em; line-height: 2em; font-size: 2em; text-align: center; } \
-					#an-tabs-overlay > div > img { vertical-align: text-bottom; } \
+					#an-tabs-overlay > div > img:first-child { vertical-align: text-bottom; } \
+					#an-tabs-overlay > div > img + img { margin-left: 0.1em; } \
 					#an-tabs-frames > iframe { display: none; position: fixed; width: 100%; height: 100%; border: 0; } \
 				');
 
 				$($.format('\
 					<div id="an-tabs"> \
-						<div id="an-tabs-overlay" class="an-content-background"><div><img src="{0}"/>loading...</div></div> \
+						<div id="an-tabs-overlay" class="an-content-background"><div><img src="{0.master-switch}"/>loading...<img src="{0.throbber}"/></div></div> \
 						<div id="an-tabs-frames"></div> \
 					</div> \
 				',
-				self.data('images')['master-switch']))
+				self.data('images')))
 				.appendTo('#annuus');
 
 				self.frames = $('#an-tabs-frames');

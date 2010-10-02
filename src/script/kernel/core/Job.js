@@ -76,7 +76,7 @@ bolanderi.Job.prototype = {
 
 	info: function()
 	{
-		return $.format('{0.title}, {0.id}, {0.type}{1}', this, this.type === 'action' ? '{0.service|unknown}' : '');
+		return $.format('{0.title}, {0.id}, {0.type}{1}', this, this.type === 'action' ? '({0.service|unknown})' : '');
 	},
 
 	options: function(id, value)

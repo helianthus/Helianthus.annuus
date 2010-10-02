@@ -56,7 +56,7 @@ $.extend(bolanderi, {
 		$.make(annuus.log, 'archives', []).push(data);
 		bolanderi.trigger('log', data);
 
-		if(type !== 'warn' || type !== 'error') {
+		if(type !== 'warn' && type !== 'error') {
 			return;
 		}
 

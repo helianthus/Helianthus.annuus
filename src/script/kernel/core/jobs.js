@@ -32,10 +32,7 @@ function runService(service)
 
 	service.init && $.rules(function()
 	{
-		service.run(function()
-		{
-			service.init(service.jobs);
-		});
+		service.init(service.jobs);
 	});
 
 	services[service.name] = service;

@@ -184,6 +184,12 @@
 			<fileset file="${dir.build}/${project.name.short}.js" />
 		</copy>
 
+		<!-- oex -->
+		<copy todir="${dir.build}/oex">
+			<fileset dir="src/oex" />
+		</copy>
+		<copy file="${dir.build}/${project.name.short}.js" todir="${dir.build}/oex/includes" />
+
 		<!-- safariextension -->
 		<copy todir="${dir.build}/annuus.safariextension">
 			<fileset dir="src/safariextz" />
@@ -265,6 +271,9 @@
 		<exec executable="cmd" osfamily="windows">
 			<arg value="/C crxmake --pack-extension=${dir.build}/crx --pack-extension-key=${crx.key} --extension-out=${dir.dist.sub}/${project.name.short}.crx" />
 		</exec>
+
+		<!-- oex -->
+		<zip destfile="${dir.dist.sub}/${project.name.short}.oex" basedir="${dir.build}/oex" />
 
 		<!-- xpi -->
 		<mkdir dir="${dir.build}/xpi_package/chrome" />

@@ -223,7 +223,7 @@ annuus.add({
 							type: 'object'
 						}
 					]
-				},
+				}
 			},
 
 			topicTable: function(self, options)

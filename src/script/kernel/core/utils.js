@@ -11,6 +11,8 @@ $.extend(bolanderi, {
 
 	doc: $(document),
 
+	parent: window.frameElement ? window.parent : null,
+
 	error: function()
 	{
 		throw new Error($.format(arguments));

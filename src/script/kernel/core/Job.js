@@ -146,7 +146,26 @@ bolanderi.Job.prototype = {
 		}
 	},
 
-	run: $.arg({}, function(track, fn)
+	run: $.arg({}, function(data, fn)
+	{
+		if(data.tracking) {
+			return fn.call(this, this);
+		}
+		else {
+			data.tracking = true;
+			try {
+				return fn.call(this, this);
+			}
+			catch(e) {
+				bolanderi.log('error', '{0} [{1}]', e.message, this.info());
+				$.debug(e);
+			}
+			finally {
+				data.tracking = false;
+			}
+		}
+	}),
+	/*$.arg({}, function(track, fn)
 	{
 		if(track[this.id]) {
 			return fn.call(this, this);
@@ -164,7 +183,7 @@ bolanderi.Job.prototype = {
 				track[this.id] = false;
 			}
 		}
-	}),
+	}),*/
 
 	validate: function(job)
 	{

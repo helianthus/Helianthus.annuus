@@ -2,6 +2,7 @@ annuus.add({
 	id: '1f270f48-95f7-4ee9-804e-73f377c5d024',
 	title: 'Notice Service',
 	pages: { on: [all] },
+	requires: ['broadcast'],
 	tasks: {
 		'ea3957ff-f942-41a4-892b-7b23a7492633': {
 			type: 'service',
@@ -19,7 +20,7 @@ annuus.add({
 					#an-notice > div { display: none; margin-bottom: 0.7em; font-size: 80%; opacity: 0.8; } \
 					#an-notice > div > div { margin: 0.5em; } \
 					#an-notice > div > div:first-child > .an-notice-icon { float: left; } \
-					#an-notice > div > div:first-child > .ui-icon-close { float: right; cursor: pointer; } \
+					#an-notice > div > div:first-child > .an-notice-close { float: right; cursor: pointer; } \
 					#an-notice > div > div:first-child > .an-notice-header { font-weight: bold; } \
 					#an-notice > div > .an-notice-content { clear: both; font-size: 90%; } \
 					#an-notice > div > .an-notice-controls { clear: both; text-align: center; font-size: 90%; } \
@@ -54,13 +55,17 @@ annuus.add({
 					error: 'alert'
 				}[options.type] || 'notice';
 
-				self.log('info', '{0.header|} - {0.content|}', options);
+				annuus.api('broadcast').send(function(window)
+				{
+					var log = $.dig(window, 'annuus', 'log');
+					log && log('info', '{0.header|} - {0.content|}', options);
+				});
 
 				return self.notices[noticeId] = $($.format('\
 					<div class="ui-state-{0} ui-corner-all"> \
 						<div> \
 							<span class="an-notice-icon ui-icon ui-icon-{1.icon}" /> \
-							<span class="an-notice-close ui-icon ui-icon-close" /> \
+							<span class="an-notice-close ui-icon ui-icon-circle-close" /> \
 							<span class="an-notice-header">{1.header|}</span> \
 						</div> \
 						<div class="an-notice-content">{1.content|}</div> \

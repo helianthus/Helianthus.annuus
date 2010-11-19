@@ -30,8 +30,9 @@ annuus.add({
 			run_at: 'document_start',
 
 			api: {
-				open: {},
+				broadcast: {},
 				close: {},
+				open: {},
 				select: {},
 				tabReady: {},
 				widget: {}
@@ -72,6 +73,14 @@ annuus.add({
 							$('#bolanderi').siblings().add('#an-button, #an-master').remove();
 						});
 					}
+				});
+			},
+
+			broadcast: function(self, fn)
+			{
+				$.each(self.tabs, function(i, tab)
+				{
+					fn(tab.frame[0].contentWindow);
 				});
 			},
 
@@ -144,7 +153,7 @@ annuus.add({
 							url: tab.frame[0].src
 						});
 
-						$.log('warn', 'URL of main tab is changed, auto fixing by re-opening the main tab.');
+						self.log('warn', 'URL of main tab is changed, auto fixing by re-opening the main tab.');
 					}
 				}
 			},
@@ -185,7 +194,7 @@ annuus.add({
 					tabId = options.id = +options.id || ++self.guid;
 
 					options = $.extend({
-						notify: true,
+						notify: true
 					}, options);
 
 					self.update(options);

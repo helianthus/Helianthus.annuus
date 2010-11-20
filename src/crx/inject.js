@@ -4,7 +4,7 @@ if(!document.getElementById('annuus') && /forum\d+\.hkgolden\.com/.test(location
 	head = document.getElementsByTagName('head'),
 	script = document.createElement('script');
 
-	script.id = 'annuus';
+	script.id = 'annuus-script-v3';
 	script.charset = 'utf-8';
 	script.src = chrome.extension.getURL("annuus.js");
 

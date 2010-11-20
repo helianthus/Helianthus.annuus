@@ -40,7 +40,11 @@ window.addEventListener('load', function()
 				script = doc.createElement('script');
 				script.charset = 'utf-8';
 				script.src = 'resource://annuus/annuus.js';
-				doc.getElementsByTagName('head')[0].appendChild(script);
+				var head = doc.getElementsByTagName('head');
+				(function inject()
+				{
+					head[0] ? head[0].appendChild(script) : setTimeout(inject, 50);
+				})();
 			}
 		},
 		onStateChange: noop,

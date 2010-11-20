@@ -165,13 +165,13 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 			{
 				if(aCurrent[i] != aLastest[i])
 				{
-					if(aCurrent[i] < aLastest[i] && confirm('發現新版本!\n按確定進行更新'))
+					if(+aCurrent[i] < +aLastest[i] && confirm('發現新版本!\n按確定進行更新'))
 					{
 						var sPrefix = 'http://helianthus-annuus.googlecode.com/svn/dist/v3/' + sType + '/';
 
 						if(navigator.userAgent.indexOf('MAXTHON 2.0') !== -1) window.open(sPrefix + 'annuus.m2f', '_self');
 						else if ($.browser.mozilla) window.open(sPrefix + 'annuus.xpi', '_self');
-						else if(navigator.userAgent.indexOf('Chrome/4') !== -1) window.open(sPrefix + 'annuus.crx', '_self');
+						else if(navigator.userAgent.indexOf('Chrome/') !== -1) window.open(sPrefix + 'annuus.crx', '_self');
 
 						window.open('http://code.google.com/p/helianthus-annuus/wiki/Changelog', '_blank');
 					}

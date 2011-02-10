@@ -1,6 +1,6 @@
 {
 	"name": "Helianthus.annuus",
-	"version": "${AN_VERSION}",
+	"version": "3.7.10.4410",
 	"description": ":o)",
 	"___update_url": "http://helianthus-annuus.googlecode.com/svn/other/annuus.crx.xml",
 	"content_scripts": [
@@ -10,5 +10,6 @@
 			"run_at": "document_start",
 			"all_frames": true
 		}
-	]
+	],
+	"permissions": ["http://*.hkgolden.com/*"]
 }

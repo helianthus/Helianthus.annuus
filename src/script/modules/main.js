@@ -670,7 +670,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 				sHTML += '<li>沒有任何過濾器</li>';
 			}
 
-			$('#an-filterlist').html('<ul>' + sHTML + '</ul>');
+			$('#an-filterlist').html('<ul>' + sHTML + '</ul>').css('max-height', $.winHeight(0.9));
 
 			AN.shared.gray(true, 'an-filterlist');
 		});
@@ -1369,7 +1369,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 				if(!jSnippets) {
 					AN.util.addStyle($.sprintf('\
 					#an-snippets { padding: 5px; } \
-					#an-snippets > ul { float: left; } \
+					#an-snippets > ul { height: 350px; overflow: auto; } \
 					#an-snippets > ul > li { padding: 2px 0; } \
 					#an-snippets > ul > li > span { margin-right: 5px; border: 1px solid black; padding: 0 5px; background-color: %(sMainHeaderBgColor)s; color: %(sMainHeaderFontColor)s; cursor: pointer; } \
 					#an-snippets > div { float: right; margin-left: 10px; padding-left: 10px; text-align: center; border-left: 1px solid gray; } \
@@ -1380,7 +1380,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 
 					var index, editing, jDesc, jContent;
 					jSnippets = AN.shared.box('an-snippets', '自訂文字', 700)
-					.append('<ul></ul><div><input /><textarea></textarea><button type="button">ok</button><button type="button">cancel</button></div>')
+					.append('<div><input /><textarea></textarea><button type="button">ok</button><button type="button">cancel</button></div><ul></ul>')
 					.click(function(event)
 					{
 						var jTarget = $(event.target);

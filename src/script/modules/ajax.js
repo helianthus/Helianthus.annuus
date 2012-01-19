@@ -207,40 +207,42 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 				$d.trigger('workend');
 			});
 		}
-
-		$('#aspnetForm').submit(function(event)
-		{
-			event.preventDefault();
-
-			if(isWorking) {
-				AN.shared('log', '正在工作中, 完成將自動重試');
-				$d.one('workend', function()
-				{
-					$('#aspnetForm').submit();
-				});
-				return;
-			}
-
-			$d.trigger('workstart');
-
-			AN.shared('log', '正在發送回覆...');
-			$.post(location.pathname + location.search, $('#aspnetForm').serialize() + '&ctl00%24ContentPlaceHolder1%24btn_Submit.x=0&ctl00%24ContentPlaceHolder1%24btn_Submit.y=0', function(sHTML)
+		
+		if(AN.util.isLoggedIn()) {
+			$('#aspnetForm').submit(function(event)
 			{
-				if($.doc(sHTML).pageName() !== 'view') {
-					AN.shared('log', '回覆發送失敗!');
-					$d.trigger('workend');
+				event.preventDefault();
+
+				if(isWorking) {
+					AN.shared('log', '正在工作中, 完成將自動重試');
+					$d.one('workend', function()
+					{
+						$('#aspnetForm').submit();
+					});
 					return;
 				}
 
-				$('#ctl00_ContentPlaceHolder1_messagetext').val('');
-				$('#previewArea').empty();
-				AN.shared('log', '回覆發送完成');
+				$d.trigger('workstart');
 
-				$d.trigger('workend');
+				AN.shared('log', '正在發送回覆...');
+				$.post(location.pathname + location.search, $('#aspnetForm').serialize() + '&ctl00%24ContentPlaceHolder1%24btn_Submit.x=0&ctl00%24ContentPlaceHolder1%24btn_Submit.y=0', function(sHTML)
+				{
+					if($.doc(sHTML).pageName() !== 'view') {
+						AN.shared('log', '回覆發送失敗!');
+						$d.trigger('workend');
+						return;
+					}
 
-				getReplies(true);
+					$('#ctl00_ContentPlaceHolder1_messagetext').val('');
+					$('#previewArea').empty();
+					AN.shared('log', '回覆發送完成');
+
+					$d.trigger('workend');
+
+					getReplies(true);
+				});
 			});
-		});
+		}
 
 		var isWorking = false;
 

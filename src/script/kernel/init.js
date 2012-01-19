@@ -802,13 +802,15 @@ if(JSON.stringify(document.createElement("input").value)!== "" ) {
 }
 
 $.event.special.click = {
-	add: function(handler)
+	add: function(handleObj)
 	{
-		return function(event)
-		{
-			if(event.type === 'click' && !(event.data && event.data.disableCheck) && event.button > 0) return;
-			handler.apply(this, arguments);
-		};
+		handleObj.handler = (function(handler) {
+			return function(event)
+			{
+				if(event.type === 'click' && !(handleObj.data && handleObj.data.disableCheck) && event.button > 0) return;
+				handler.apply(this, arguments);
+			};
+		})(handleObj.handler);
 	}
 };
 

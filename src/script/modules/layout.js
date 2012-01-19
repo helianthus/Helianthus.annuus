@@ -298,6 +298,17 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	}
 },
 
+'96df064c-efb6-44be-9251-4a7751a45504':
+{
+	desc: '隱藏Facebook Like按扭',
+	page: { 32: false },
+	type: 3,
+	once: function()
+	{
+		AN.util.stackStyle('#DivMarkThread + iframe { display: none; }');
+	}
+},
+
 '26eaf7f8-d260-4b42-b6d9-08b235f56d43':
 {
 	desc: '隱藏引用原文連結',

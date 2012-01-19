@@ -13,23 +13,12 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 
 '5e173905-9c47-4f37-8d3f-4c31ea871115':
 {
-	desc: '隱藏頂部按扭',
+	desc: '隱藏用戶資料列',
 	page: { 65534: false },
 	type: 3,
 	once: function()
 	{
-		AN.util.stackStyle('.TopMenuBox { visibility: hidden; }');
-	}
-},
-
-'7af1060d-d38c-40b9-b16b-df1bb799cb74':
-{
-	desc: '隱藏Logo列',
-	page: { 65534: false },
-	type: 3,
-	once: function()
-	{
-		AN.util.stackStyle('.TopBannerBox { display: none; }');
+		AN.util.stackStyle('#aspnetForm > table > tbody > tr:first-child > td > table > tbody > tr:first-child { display: none; }');
 	}
 },
 
@@ -40,7 +29,18 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	type: 3,
 	once: function()
 	{
-		AN.util.stackStyle('.TopMenuPanel + .PageWidthContainer { display: none; }');
+		AN.util.stackStyle('#aspnetForm > table > tbody > tr:first-child > td > table > tbody > tr:first-child + tr { display: none; }');
+	}
+},
+
+'7af1060d-d38c-40b9-b16b-df1bb799cb74':
+{
+	desc: '隱藏Logo列',
+	page: { 65534: false },
+	type: 3,
+	once: function()
+	{
+		AN.util.stackStyle('#aspnetForm > table > tbody > tr:first-child + tr { display: none; }');
 	}
 },
 

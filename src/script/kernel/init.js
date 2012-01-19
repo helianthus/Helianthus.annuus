@@ -282,7 +282,7 @@ $.fn.extend(
 
 			jThis
 			.data('jContent', jTr.find('.repliers_right td:first'))
-			.data('jNameLink', jTr.find('a:first'))
+			.data('jNameLink', jTr.find('a[href]:first'))
 			.data('sUserid', jTr.attr('userid'))
 			.data('sUserName', jTr.attr('username'));
 
@@ -637,7 +637,7 @@ $.extend(AN,
 		isLoggedIn: function()
 		{
 			var bIsLoggedIn = arguments.callee.bIsLoggedIn;
-			return (bIsLoggedIn !== undefined) ? bIsLoggedIn : (arguments.callee.bIsLoggedIn = ($('#ctl00_ContentPlaceHolder1_lb_UserName a:first').attr('href').indexOf('login.aspx') == -1));
+			return (bIsLoggedIn !== undefined) ? bIsLoggedIn : (arguments.callee.bIsLoggedIn = !$('#ctl00_loginEmail').length);
 		}
 	},
 

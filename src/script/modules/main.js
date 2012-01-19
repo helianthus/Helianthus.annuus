@@ -14,19 +14,10 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			65535: '\
 			#HKGTopAd { display: none; } \
 			',
-			// default
-			2: '\
-			#ctl00_ContentPlaceHolder1_MiddleAdSpace1, /* text ad */\
-			.ContentPanel > div > div:first-child, /* flash ad */\
-			#ctl00_ContentPlaceHolder1_lb_NewPM + br /* blank line */\
-				{ display: none; } \
-			',
 			// topics
 			4: '\
-			.ContentPanel > table { width: 100%; } \
-			.ContentPanel > table > tbody > tr > td:first-child { width: auto !important; } \
-			.ContentPanel > table > tbody > tr > td:first-child + td \
-				{ display: none; } \
+			.PageMiddleBox > table > tbody > tr > td:first-child { width: 100% !important; } \
+			.PageMiddleBox > table > tbody > tr > td:first-child + td { display: none; } \
 			',
 			// search, tags
 			24: '\
@@ -48,14 +39,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			,
 			// topics, search, tags, view
 			60: '\
-			#ctl00_ContentPlaceHolder1_MiddleAdSpace1 div[style*="right"] { display: none; } /* text ad */\
-			',
-			// default, topics, search, tags, view
-			62: '\
-			#MainPageAd2 + br + br + div { padding-bottom: 10px !important; } \
-			#MainPageAd2, #MainPageAd2 ~ br, /* text ads */\
-			#ctl00_ContentPlaceHolder1_lb_NewPM + br \
-				{ display: none; } \
+			#MiddlePageAd1, #MainPageAd2, #ctl00_ContentPlaceHolder1_MiddleAdSpace1 div[style*="right"] { display: none; } /* text ad */\
 			',
 			// profilepage
 			64: '\

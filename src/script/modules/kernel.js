@@ -165,7 +165,7 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 			{
 				if(aCurrent[i] != aLastest[i])
 				{
-					if(+aCurrent[i] < +aLastest[i] && confirm('發現新版本!\n按確定進行更新'))
+					if(+aCurrent[i] < +aLastest[i] && confirm('Helianthus.annuus:\n發現新版本!\n按確定進行更新'))
 					{
 						var sPrefix = 'http://helianthus-annuus.googlecode.com/svn/dist/v3/' + sType + '/';
 

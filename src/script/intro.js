@@ -136,25 +136,23 @@ $s = [
 				[
 					['[:o)n]', 'clown'],
 					['[:o)2n]', 'clown2'],
-					['[:o)3n]', 'clown3']
-				],
-				[
+					['[:o)3n]', 'clown3'],
+					['#assn#', 'ass'],
 					['[sosadn]', 'sosad'],
 					['[sosad2n]', 'sosad2'],
 					['[sosad3n]', 'sosad3'],
 					['[bangheadn]', 'banghead'],
-					['[banghead2n]', 'banghead2'],
-					['[bouncern]', 'bouncer']
+					['[banghead2n]', 'banghead2']
 				],
 				[
 					['[yipesn]', 'yipes'],
 					['[369n]', '369'],
 					['[3692n]', '3692'],
-					['[fuckn]', 'diu']
+					['[fuckn]', 'diu'],
+					['[bouncern]', 'bouncer']
 				]
 			],
 			span: [
-				['#assn#', 'ass'],
 				['[offtopicn]', 'offtopic'],
 				['[offtopic2n]', 'offtopic2']
 			]

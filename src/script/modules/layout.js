@@ -125,8 +125,8 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	once: function()
 	{
 		AN.util.addStyle($.sprintf('\
-		#aspnetForm { width: %s; } \
-		table[width="972px"], td[width="972px"] { width: 100%; } \
+		td[valign="top"] > table[width="972px"] { width: %s; margin: 0 auto; } \
+		td[width="972px"] { width: 100%; } \
 		#ctl00_ContentPlaceHolder1_ProfileForm td[width="8"] { display: none; } \
 		',
 		AN.util.getOptions('nPageWidth')

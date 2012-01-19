@@ -1042,8 +1042,8 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 				event.preventDefault();
 
 				$('<img title="已轉換連結為圖片" class="an-imagified" src="'+$r['image-export']+'" />')
-				.after($.sprintf('<a href="%(url)s" target="_blank"><img onload="DrawImage(this)" src="%(url)s" alt="%(url)s" /></a>', { url: event.target.href }))
-				.insertAfter(jTarget);
+				.insertAfter(jTarget)
+				.after($.sprintf('<a href="%(url)s" target="_blank"><img onload="DrawImage(this)" src="%(url)s" alt="%(url)s" /></a>', { url: event.target.href }));
 			}
 		});
 	},

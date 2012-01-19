@@ -39,7 +39,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			,
 			// topics, search, tags, view
 			60: '\
-			#MiddlePageAd1, #MainPageAd2, #ctl00_ContentPlaceHolder1_MiddleAdSpace1 div[style*="right"] { display: none; } /* text ad */\
+			#GenMainPageAd1, #MiddlePageAd1, #MainPageAd2, #ctl00_ContentPlaceHolder1_MiddleAdSpace1 div[style*="right"] { display: none; } /* text ad */\
 			',
 			// profilepage
 			64: '\

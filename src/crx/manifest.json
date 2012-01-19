@@ -1,6 +1,6 @@
 {
 	"name": "Helianthus.annuus",
-	"version": "3.7.10.4410",
+	"version": "${AN_VERSION}",
 	"description": ":o)",
 	"___update_url": "http://helianthus-annuus.googlecode.com/svn/other/annuus.crx.xml",
 	"content_scripts": [

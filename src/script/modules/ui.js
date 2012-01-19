@@ -129,7 +129,7 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 					var tableHTML = '', imgHTML = '';
 					for(var nServer=1; nServer<=12; nServer++)
 					{
-						tableHTML += $.sprintf('<tr><td><a href="%s">Forum %s</a></td><td class="an-server-response"></td></tr>', sURL.replace(/forum\d/i, 'forum' + nServer), nServer);
+						tableHTML += $.sprintf('<tr><td><a href="%s">Forum %s</a></td><td class="an-server-response"></td></tr>', sURL.replace(/forum\d+/i, 'forum' + nServer), nServer);
 						imgHTML += '<img />';
 					}
 

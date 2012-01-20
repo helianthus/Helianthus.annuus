@@ -121,15 +121,17 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	desc: '拉闊頁面',
 	page: { 65534: false },
 	type: 3,
-	options: { nPageWidth: { desc: '頁面闊度 [可設定為auto, 80%, 1000px等]', defaultValue: 'auto', type: 'text' } },
+	options: { nPageWidth: { desc: '頁面闊度 [可設定為80%, 1000px等]', defaultValue: '100%', type: 'text' } },
 	once: function()
 	{
+		var w = AN.util.getOptions('nPageWidth');
+		
 		AN.util.addStyle($.sprintf('\
 		td[valign="top"] > table[width="972px"] { width: %s; margin: 0 auto; } \
 		td[width="972px"] { width: 100%; } \
 		#ctl00_ContentPlaceHolder1_ProfileForm td[width="8"] { display: none; } \
 		',
-		AN.util.getOptions('nPageWidth')
+		w === 'auto' ? '100%' : w
 		));
 	}
 },

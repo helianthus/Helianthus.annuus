@@ -127,9 +127,10 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 
 					var sURL = (location.href.indexOf('aspxerrorpath=') > 0) ? $.sprintf('http://%s/topics.aspx?type=BW', location.hostname) : location.href;
 					var tableHTML = '', imgHTML = '';
-					for(var nServer=1; nServer<=12; nServer++)
+					
+					for(var nServer=0; nServer<=12; nServer++)
 					{
-						tableHTML += $.sprintf('<tr><td><a href="%s">Forum %s</a></td><td class="an-server-response"></td></tr>', sURL.replace(/forum\d+/i, 'forum' + nServer), nServer);
+						tableHTML += $.sprintf('<tr><td><a href="%s">%s</a></td><td class="an-server-response"></td></tr>', sURL.replace(/forum\d+/i, nServer === 0 ? 'm' : 'forum' + nServer), nServer === 0 ? 'Mobile' : 'Forum ' + nServer);
 						imgHTML += '<img />';
 					}
 
@@ -147,7 +148,7 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 						jTestImages.each(function(i)
 						{
 							var nTime = $.time();
-							$(this).data('nTime', nTime).attr('src', $.sprintf('http://forum%s.hkgolden.com/images/spacer.gif?tId=%s', i+1, nTime));
+							$(this).data('nTime', nTime).attr('src', $.sprintf('http://%s.hkgolden.com/images/spacer.gif?tId=%s', i === 0 ? 'm' : 'forum' + i, nTime));
 						});
 					})
 					.end().find('tbody').html(tableHTML);

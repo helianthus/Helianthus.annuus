@@ -443,13 +443,13 @@ $.extend(AN,
 			if(sValue === undefined) // GET
 			{
 				var match = document.cookie.match(new RegExp("(?:^|;\\s*)" + sName + "=([^;]*)"));
-        return match && match[1];
+				return match && match[1];
 			}
 			else
 			{
 				var dExpire = new Date;
 				dExpire.setFullYear(sValue ? 2999 : 1999); // SET : DEL
-				document.cookie = $.sprintf('%s=%s; domain=%s; expires=%s; path=/', sName, sValue || '', location.hostname, dExpire.toUTCString());
+				document.cookie = $.sprintf('%s=%s; domain=hkgolden.com; expires=%s; path=/', sName, sValue || '', dExpire.toUTCString());
 
 				return true;
 			}

@@ -238,7 +238,6 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	page: { 32: false },
 	type: 3,
 	options: {
-		bHideNameSpace: { desc: '隱藏多餘空白', defaultValue: true, type: 'checkbox' },
 		bHideAvatar: { desc: '隱藏高級會員頭像', defaultValue: false, type: 'checkbox' },
 		bHideMemberLevel: { desc: '隱藏會員級別圖片', defaultValue: false, type: 'checkbox' },
 		bHideAward: { desc: '隱藏(善)圖像', defaultValue: false, type: 'checkbox' }
@@ -255,24 +254,7 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 			if(AN.util.getOptions(name)) css.push(selector);
 		});
 		
-		if(AN.util.getOptions('bHideNameSpace')) css.push(
-			AN.util.getOptions('bHideAvatar')
-			? 'div[id^="ThreadUser"] > br'
-			: 'div[id^="ThreadUser"] > br:first-child, div[id^="ThreadUser"] > br:first-child + br'
-		);
-		
 		AN.util.stackStyle(css.join(',') + ' { display: none; }');
-	}
-},
-
-'9aebeb97-8507-4553-995d-0903dc764ec3':
-{
-	desc: '隱藏會員級別圖片',
-	page: { 32: false },
-	type: 3,
-	once: function()
-	{
-		AN.util.stackStyle('img[src^="labels/"] { display: none; }');
 	}
 },
 

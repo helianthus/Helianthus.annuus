@@ -305,7 +305,7 @@ $.fn.extend(
 		var jThis = this;
 		this.treeTop().find('td,th').filter(function(){ return $(this).children().length === 0; }).each(function()
 		{
-			if(/\s*最後回應時間/.test($(this).html()))
+			if(/\s*回覆/.test($(this).html()))
 			{
 				jThis.jTopicTable = $(this).up('table');
 				return false;

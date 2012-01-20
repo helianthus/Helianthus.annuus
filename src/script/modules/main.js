@@ -616,10 +616,10 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			(jScope || $(document)).topics().each(function()
 			{
 				var jThis = $(this);
-				var sTitle = jThis.data('sTitle');
+				var sTitle = jThis.data('sTitle').toLowerCase();
 				$.each(aFilter, function(i, sFilter)
 				{
-					if(sTitle.indexOf(sFilter) != -1) {
+					if(sTitle.indexOf(sFilter.toLowerCase()) != -1) {
 						nCount++;
 						jThis.hide();
 						return false;

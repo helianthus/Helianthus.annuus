@@ -221,6 +221,17 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	}
 },
 
+'a2257837-e528-4b4c-a794-84fc4ccca225':
+{
+	desc: '隱藏討論區守則',
+	page: { 4: false },
+	type: 3,
+	once: function()
+	{
+		AN.util.stackStyle('.Topic_ListPanel > .DivBoxContainer { display: none; }');
+	}
+},
+
 '74cd7f38-b0ad-4fca-ab39-673b0e2ee4c7':
 {
 	desc: '修正跳頁控件位置',
@@ -288,6 +299,17 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	once: function()
 	{
 		AN.util.stackStyle('#DivMarkThread + iframe { display: none; }');
+	}
+},
+
+'2c7998ad-10cc-4bca-9f2c-85f1771356c2':
+{
+	desc: '隱藏投訴文章連結',
+	page: { 32: false },
+	type: 3,
+	once: function()
+	{
+		AN.util.stackStyle('a[href^="contactus.aspx?messageid="] { display: none; }');
 	}
 },
 

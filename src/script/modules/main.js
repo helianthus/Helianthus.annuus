@@ -335,6 +335,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	}
 },
 
+
 'e54d5c5f-47ae-4839-b4e8-6fc3733edfef':
 {
 	desc: '改進公司模式',
@@ -347,11 +348,22 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	},
 	once: function()
 	{
-		if(AN.util.cookie('companymode') == 'Y')
+		if(AN.util.cookie('crossover_companymode') == 'Y')
 		{
 			$('head').append($.sprintf('<link rel="shortcut icon" href="%s" />', AN.util.getOptions('sCModeFavicon')));
 			document.title = AN.util.getOptions('sCModeTitle');
 		}
+	}
+},
+
+'4fd8aa4c-5a8f-405f-aecd-d535b0e99aec':
+{
+	desc: '強制停用懷舊模式',
+	page: { 65534: true },
+	type: 4,
+	once: function()
+	{
+		AN.util.cookie('crossover_sensormode', 'N');
 	}
 },
 

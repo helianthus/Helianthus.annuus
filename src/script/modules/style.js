@@ -12,6 +12,18 @@ AN.mod['Style Editor'] = { ver: 'N/A', author: '向日', fn: {
 	}
 },
 
+'eda2bf08-c9d8-45ed-9f97-1936be93e32d':
+{
+	desc: '強制更改全局字體大小',
+	page: { 65534: false },
+	type: 2,
+	options: { sMainFontSize: { desc: '字體大小', defaultValue: '16', type: 'text' } },
+	once: function()
+	{
+		AN.util.stackStyle($.sprintf('body, td, p { font-size: %spx; }', AN.util.getOptions('sMainFontSize')));
+	}
+},
+
 'cad6d058-f999-460d-ac29-4074f33f46fb':
 {
 	desc: '設定連結樣式',

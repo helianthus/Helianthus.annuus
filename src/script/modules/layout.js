@@ -13,23 +13,23 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 
 '5e173905-9c47-4f37-8d3f-4c31ea871115':
 {
-	desc: '隱藏用戶資料列',
+	desc: '隱藏頂部藍色列',
 	page: { 65534: false },
 	type: 3,
 	once: function()
 	{
-		AN.util.stackStyle('#aspnetForm > table > tbody > tr:first-child > td > table > tbody > tr:first-child { display: none; }');
+		AN.util.stackStyle('#aspnetForm > table > tbody > tr:first-child { display: none; }');
 	}
 },
 
 '7ca54ba4-e2b7-489c-9adc-7ac7d62012f0':
 {
-	desc: '隱藏按扭列',
+	desc: '隱藏頂部啡色列',
 	page: { 65534: false },
 	type: 3,
 	once: function()
 	{
-		AN.util.stackStyle('#aspnetForm > table > tbody > tr:first-child > td > table > tbody > tr:first-child + tr { display: none; }');
+		AN.util.stackStyle('#aspnetForm > table > tbody > tr:first-child + tr { display: none; }');
 	}
 },
 
@@ -40,7 +40,7 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	type: 3,
 	once: function()
 	{
-		AN.util.stackStyle('#aspnetForm > table > tbody > tr:first-child + tr { display: none; }');
+		AN.util.stackStyle('#aspnetForm > table > tbody > tr:first-child + tr + tr { display: none; }');
 	}
 },
 

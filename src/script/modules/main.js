@@ -351,7 +351,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	},
 	once: function()
 	{
-		if(AN.util.cookie('crossover_companymode') == 'Y')
+		if(AN.util.cookie('companymode') == 'Y')
 		{
 			$('head').append($.sprintf('<link rel="shortcut icon" href="%s" />', AN.util.getOptions('sCModeFavicon')));
 			document.title = AN.util.getOptions('sCModeTitle');

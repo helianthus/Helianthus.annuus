@@ -1129,7 +1129,16 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			{
 				if(nWidth > 640) nWidth = 640;
 				nHeight = nWidth / 16 * 9 + 25;
-				sUrl = $.sprintf('http://www.youtube.com/v/%s&fs=1&rel=0&ap=%%2526fmt%%3D22', sUrl.replace(/.+?v=([^&]+).*/i, '$1'));
+				sUrl = $.sprintf('http://www.youtube.com/v/%s&fs=1&rel=0&ap=%%2526fmt%%3D22', sUrl.replace(/.+?v=([^&#]+).*/i, '$1'));
+			}
+		},
+		{
+			regex: 'youtu\\.be/.',
+			fn: function()
+			{
+				if(nWidth > 640) nWidth = 640;
+				nHeight = nWidth / 16 * 9 + 25;
+				sUrl = $.sprintf('http://www.youtube.com/v/%s&fs=1&rel=0&ap=%%2526fmt%%3D22', sUrl.replace(/.+\/([^&#]+).*/i, '$1'));
 			}
 		},
 		{

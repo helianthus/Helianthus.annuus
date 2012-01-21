@@ -127,7 +127,7 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 		var w = AN.util.getOptions('nPageWidth');
 		
 		AN.util.addStyle($.sprintf('\
-		td[valign="top"] > table[width="972px"] { width: %s; margin: 0 auto; } \
+		.PageWidthContainer, td[valign="top"] > table[width="972px"] { width: %s; margin: 0 auto; } \
 		td[width="972px"] { width: 100%; } \
 		#ctl00_ContentPlaceHolder1_ProfileForm td[width="8"] { display: none; } \
 		',

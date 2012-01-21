@@ -637,7 +637,7 @@ $.extend(AN,
 		isLoggedIn: function()
 		{
 			var bIsLoggedIn = arguments.callee.bIsLoggedIn;
-			return (bIsLoggedIn !== undefined) ? bIsLoggedIn : (arguments.callee.bIsLoggedIn = !$('#ctl00_loginEmail').length);
+			return (bIsLoggedIn !== undefined) ? bIsLoggedIn : (arguments.callee.bIsLoggedIn = !$('#emailLabel,#ctl00_ContentPlaceHolder1_lb_UserName > a[href="login.aspx"]').length);
 		}
 	},
 

@@ -8,7 +8,7 @@ AN.mod['Style Editor'] = { ver: 'N/A', author: '向日', fn: {
 	options: { sMainFontFamily: { desc: '字體名稱', defaultValue: 'SimSun', type: 'text' } },
 	once: function()
 	{
-		AN.util.stackStyle($.sprintf('body * { font-family: %s !important; }', AN.util.getOptions('sMainFontFamily')));
+		AN.util.stackStyle($.sprintf('#aspnetForm > div *, #an { font-family: %s; }', AN.util.getOptions('sMainFontFamily')));
 	}
 },
 

@@ -16,6 +16,9 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			',
 			// topics
 			4: '\
+			.ContentPanel > table { width: 100%; } \
+			.ContentPanel > table > tbody > tr > td:first-child { width: auto !important; } \
+			.ContentPanel > table > tbody > tr > td:first-child + td { display: none; } \
 			.PageMiddleBox > table > tbody > tr > td:first-child { width: 100% !important; } \
 			.PageMiddleBox > table > tbody > tr > td:first-child + td { display: none; } \
 			',
@@ -39,7 +42,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			,
 			// topics, search, tags, view
 			60: '\
-			#GenMainPageAd1, #MiddlePageAd1, #MainPageAd2, #ctl00_ContentPlaceHolder1_MiddleAdSpace1 div[style*="right"] { display: none; } /* text ad */\
+			#GenMainPageAd1, #MiddlePageAd1, #MainPageAd2, #MainPageAd2 ~ br, #ctl00_ContentPlaceHolder1_lb_NewPM + br, #ctl00_ContentPlaceHolder1_MiddleAdSpace1 div[style*="right"] { display: none; } \
 			',
 			// profilepage
 			64: '\

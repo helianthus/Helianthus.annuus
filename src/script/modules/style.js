@@ -109,7 +109,7 @@ AN.mod['Style Editor'] = { ver: 'N/A', author: '向日', fn: {
 		.ProfileBoxTitle:first-child, .DivResizableBoxTitle:first-child, .title:first-child, *[bgcolor="#6ea0c4"]:first-child, .redhottitle:first-child { background: url(%(sBlueBarBgImage)s) no-repeat; } \
 		*[src*="/p.jpg"], *[src*="/redhotp.jpg"] { visibility: hidden; } \
 		/* blue bars , red bars, and main forum page bars */\
-		.ProfileBoxTitle, .DivResizableBoxTitle, .title, *[bgcolor="#6ea0c4"], *[colspan="6"] { background-color: %(sBlueBarBgColor)s !important; color: %(sBlueBarFontColor)s; } \
+		.DivBoxTitle, .ProfileBoxTitle, .DivResizableBoxTitle, .title, *[bgcolor="#6ea0c4"], *[colspan="6"] { background-color: %(sBlueBarBgColor)s !important; color: %(sBlueBarFontColor)s; } \
 		.redhottitle { background-color: %(sRedTitleBgColor)s; color: %(sRedTitleFontColor)s; } \
 		/* hot people */\
 		table[style*="255, 85, 96"], tr[style*="255, 85, 96"], table[style*="#ff5560"], tr[style*="#ff5560"] { background-color: %(sRedHeaderBgColor)s !important; } \
@@ -120,7 +120,7 @@ AN.mod['Style Editor'] = { ver: 'N/A', author: '向日', fn: {
 		.HitSearchText { color: %(sMainHeaderFontColor)s; } \
 		a.hitsearch_link { color: %(sMainFontColor)s; } \
 		/* annoucements, profilepage tabs */\
-		.DivResizableBoxDetails, .ProfileBoxDetails { border-color: %(sBlueSecBgColor)s; } \
+		.DivBoxDetails, .DivResizableBoxDetails, .ProfileBoxDetails { border-color: %(sBlueSecBgColor)s; } \
 		*[bgcolor="#ccddea"], .ajax__tab_tab, #advarea tr:first-child + tr td { background-color: %(sBlueSecBgColor)s !important; } \
 		.p__tab_xp .ajax__tab_tab { color: %(sMainFontColor)s; } \
 		.p__tab_xp .ajax__tab_active .ajax__tab_tab, .p__tab_xp .ajax__tab_hover .ajax__tab_tab { color: %(sMainHoverColor)s; } \

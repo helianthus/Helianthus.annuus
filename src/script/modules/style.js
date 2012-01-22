@@ -82,7 +82,8 @@ AN.mod['Style Editor'] = { ver: 'N/A', author: '向日', fn: {
 	{
 		AN.util.stackStyle($.sprintf(' \
 		/* Global stuff */\
-		body, textarea, input, select { background-color: %(sMainBgColor)s; border: 2px solid %(sMainBorderColor)s; } \
+		body, textarea, input, select { background-color: %(sMainBgColor)s; } \
+		textarea, input, select { border: 2px solid %(sMainBorderColor)s; } \
 		body, p, td, textarea, input, select, .addthis_toolbox > a, .addthis_toolbox > span, .href_txt1 { color: %(sMainFontColor)s; } \
 		*[style*="#EADEB8"] { background-color: %(sSecBgColor)s; } \
 		/* main border */\

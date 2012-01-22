@@ -107,7 +107,7 @@ AN.mod['Style Editor'] = { ver: 'N/A', author: '向日', fn: {
 		#ctl00_TopBarHomeLink { display: block; background: url(%(sLogoBgImage)s) no-repeat; } \
 		#ctl00_TopBarHomeLink img { visibility: hidden; } \
 		/* thin bars icon */\
-		.ProfileBoxTitle:first-child, .DivResizableBoxTitle:first-child, .title:first-child, *[bgcolor="#6ea0c4"]:first-child, .redhottitle:first-child { background: url(%(sBlueBarBgImage)s) no-repeat; } \
+		.DivBoxTitle, .ProfileBoxTitle:first-child, .DivResizableBoxTitle:first-child, .title:first-child, *[bgcolor="#6ea0c4"]:first-child, .redhottitle:first-child { background: url(%(sBlueBarBgImage)s) no-repeat; } \
 		*[src*="/p.jpg"], *[src*="/redhotp.jpg"] { visibility: hidden; } \
 		/* blue bars , red bars, and main forum page bars */\
 		.DivBoxTitle, .ProfileBoxTitle, .DivResizableBoxTitle, .title, *[bgcolor="#6ea0c4"], *[colspan="6"] { background-color: %(sBlueBarBgColor)s !important; color: %(sBlueBarFontColor)s; } \
@@ -141,7 +141,7 @@ AN.mod['Style Editor'] = { ver: 'N/A', author: '向日', fn: {
 		.FooterPanel > div:first-child { background-color: %(sFooterBgColor)s !important; } \
 		a.terms_link { color: %(sMainFontColor)s; } \
 		/* bookmark bar */\
-		.hkg_bottombar, .hkg_bottombar *, .hkg_bbMenu, .hkg_bbMenu * { background-color: %(sSecBgColor)s; border-color: %(sMainBorderColor)s; color: %(sMainFontColor)s; } \
+		.repliers_left_user_details, .hkg_bottombar, .hkg_bottombar *, .hkg_bbMenu, .hkg_bbMenu * { background-color: %(sSecBgColor)s; border-color: %(sMainBorderColor)s; color: %(sMainFontColor)s; } \
 		.hkg_bb_bookmark_TitleBox, .hkg_bb_bookmark_TitleBox *, .hkg_bb_bookmarkItem_Hover, .hkg_bb_bookmarkItem_Hover a div { background-color: %(sMainHeaderBgColor)s; color: %(sMainHeaderFontColor)s; } \
 		.hkg_bb_bookmarkItem a div { background-color: transparent; color: inherit; } \
 		.hkg_bbItem_MiniFunc, .hkg_bbItem_MiniFunc_Hover, .hkg_bbItem, .hkg_bbItem_Hover, .hkg_bbItem_Selected { border: 0; } \

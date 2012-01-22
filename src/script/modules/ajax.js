@@ -23,32 +23,28 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 			window.changePage = $.noop;
 		});
 
-		window.ToggleUserDetail = $.noop;
-
-		AN.util.stackStyle('.hkg_bottombar_link > img { border: 0; }');
+		AN.util.stackStyle('.hkg_bottombar_link[href^="javascript: BlockUser("] { display: none; }');
+		
+		var uid = 1001;
+		
 		$d.bind('mousedown.userlinkbox', function(event)
 		{
 			var jTarget = $(event.target);
 			if(!jTarget.is('a[href^="javascript: ToggleUserDetail"]')) return;
 
 			event.preventDefault();
-
-			var jContainer = jTarget.nextAll('div:first');
-			var jUserDetails = jContainer.children('.repliers_left_user_details');
-
-			if(!jUserDetails.length) {
-				jContainer.append($.sprintf('\
-				<div class="repliers_left_user_details"> \
-					<a class="hkg_bottombar_link" href="/ProfilePage.aspx?userid=%(userid)s"><img src="/images/bb_bookmarks/profile.gif" /></a> \
-					<a class="hkg_bottombar_link" href="/blog/blog.aspx?userid=%(userid)s"><img src="/images/bb_bookmarks/blog.gif" /></a> \
-				</div> \
-				',
-				{ userid: jTarget.up('tr').attr('userid') }
-				));
+			
+			var id = jTarget.data('an-threadId');
+			
+			if(!id) {
+				id = uid++;
+				
+				jTarget.data('an-threadId', id)
+				.nextAll('div:first').attr('id', 'ThreadUser' + id)
+				.closest('tr[id^="Thread_No"]').attr('id', 'Thread_No' + id);
 			}
-			else {
-				jUserDetails.toggle();
-			}
+			
+			window.ToggleUserDetail(id);
 		});
 
 		var pages = {};

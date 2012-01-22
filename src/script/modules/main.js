@@ -359,14 +359,21 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	}
 },
 
-'4fd8aa4c-5a8f-405f-aecd-d535b0e99aec':
+'12672bd9-54ef-4266-aeab-bde9af26373a':
 {
-	desc: '強制停用懷舊模式',
+	desc: '修正論壇偏好設定',
 	page: { 65534: true },
 	type: 4,
 	once: function()
 	{
-		AN.util.cookie('crossover_sensormode', 'N');
+		$.each(['companymode', 'sensormode', 'filtermode', 'fontsize'], function(i, setting)
+		{
+			var match = location.search.match(setting + '=([^&#]+)');
+			if(match) {
+				AN.util.cookie(setting, null, 'hkgolden.com');
+				AN.util.cookie(setting, match[1], location.hostname);
+			}
+		});
 	}
 },
 

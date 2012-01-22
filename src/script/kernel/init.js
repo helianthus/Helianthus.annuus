@@ -438,7 +438,7 @@ $.extend(AN,
 			location.replace(location.href.replace(/forum\d+/, 'forum' + nForum));
 		},
 
-		cookie: function(sName, sValue)
+		cookie: function(sName, sValue, sDomain)
 		{
 			if(sValue === undefined) // GET
 			{
@@ -449,7 +449,7 @@ $.extend(AN,
 			{
 				var dExpire = new Date;
 				dExpire.setFullYear(sValue ? 2999 : 1999); // SET : DEL
-				document.cookie = $.sprintf('%s=%s; domain=hkgolden.com; expires=%s; path=/', sName, sValue || '', dExpire.toUTCString());
+				document.cookie = $.sprintf('%s=%s; domain=%s; expires=%s; path=/', sName, sValue || '', sDomain || 'hkgolden.com', dExpire.toUTCString());
 
 				return true;
 			}

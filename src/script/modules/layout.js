@@ -18,7 +18,7 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	type: 3,
 	once: function()
 	{
-		AN.util.stackStyle('#aspnetForm > table > tbody > tr:first-child { display: none; }');
+		AN.util.stackStyle('body > #aspnetForm > table > tbody > tr:first-child { display: none; }');
 	}
 },
 
@@ -29,7 +29,7 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	type: 3,
 	once: function()
 	{
-		AN.util.stackStyle('#aspnetForm > table > tbody > tr:first-child + tr { display: none; }');
+		AN.util.stackStyle('body > #aspnetForm > table > tbody > tr:first-child + tr { display: none; }');
 	}
 },
 
@@ -40,7 +40,7 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	type: 3,
 	once: function()
 	{
-		AN.util.stackStyle('#aspnetForm > table > tbody > tr:first-child + tr + tr { display: none; }');
+		AN.util.stackStyle('body > #aspnetForm > table > tbody > tr:first-child + tr + tr { display: none; }');
 	}
 },
 

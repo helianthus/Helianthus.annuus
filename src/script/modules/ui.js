@@ -121,6 +121,7 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 					#an-server caption { padding-top: 0.5em; text-align: center; caption-side: bottom; } \
 					#an-server caption a { display: inline-block; border-width: 1px; padding: 0.2em; } \
 					#an-server table { text-align: center; } \
+					#an-server td { font-size: 80%; } \
 					');
 
 					AN.shared.box('an-server', '伺服器狀態', 300).append('<div><table><caption><a href="javascript:">進行測試</a></caption><thead><tr><td>伺服器</td><td>回應時間</td></tr></thead><tbody></tbody></table></div>');
@@ -128,7 +129,7 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 					var sURL = (location.href.indexOf('aspxerrorpath=') > 0) ? $.sprintf('http://%s/topics.aspx?type=BW', location.hostname) : location.href;
 					var tableHTML = '', imgHTML = '';
 					
-					for(var nServer=0; nServer<=12; nServer++)
+					for(var nServer=0; nServer<=18; nServer++)
 					{
 						tableHTML += $.sprintf('<tr><td><a href="%s">%s</a></td><td class="an-server-response"></td></tr>', sURL.replace(/forum\d+/i, nServer === 0 ? 'm' : 'forum' + nServer), nServer === 0 ? 'Mobile' : 'Forum ' + nServer);
 						imgHTML += '<img />';

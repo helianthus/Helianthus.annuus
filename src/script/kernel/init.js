@@ -228,7 +228,7 @@ $.fn.extend(
 
 		return this.sPageName =
 			$('#ctl00_ContentPlaceHolder1_SystemMessageBoard', this).length && 'message' ||
-			$('#aspnetForm', this).length && $('#aspnetForm', this).attr('action').match(/[a-z]+(?=\.aspx)/i)[0].toLowerCase() ||
+			$('#aspnetForm', this).length && $('#aspnetForm', this).attr('action').match(/[a-z_]+(?=\.aspx)/i)[0].toLowerCase().replace(/_html$/, '') ||
 			$('body > :first', this).is('b') && 'terms' ||
 			'error';
 	},

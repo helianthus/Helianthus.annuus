@@ -126,7 +126,9 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 
 					AN.shared.box('an-server', '伺服器狀態', 300).append('<div><table><caption><a href="javascript:">進行測試</a></caption><thead><tr><td>伺服器</td><td>回應時間</td></tr></thead><tbody></tbody></table></div>');
 
-					var sURL = (location.href.indexOf('aspxerrorpath=') > 0) ? $.sprintf('http://%s/topics.aspx?type=BW', location.hostname) : location.href;
+					var sURL = (location.href.indexOf('aspxerrorpath=') > 0)
+						? $.sprintf('http://%s/topics.aspx?type=BW', location.hostname)
+						: location.href.replace(/topics_(bw)\.htm(\??)/i, function($0, $1, $2){ return 'topics.aspx?type=' + $1.toUpperCase() + ($2 ? '&' : ''); });
 					var tableHTML = '', imgHTML = '';
 					
 					for(var nServer=0; nServer<=18; nServer++)

@@ -19,8 +19,6 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			.ContentPanel > table { width: 100%; } \
 			.ContentPanel > table > tbody > tr > td:first-child { width: auto !important; } \
 			.ContentPanel > table > tbody > tr > td:first-child + td { display: none; } \
-			.PageMiddleBox > table > tbody > tr > td:first-child { width: 100% !important; } \
-			.PageMiddleBox > table > tbody > tr > td:first-child + td { display: none; } \
 			',
 			// search, tags
 			24: '\
@@ -33,8 +31,14 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			#ctl00_ContentPlaceHolder1_view_form > script:first-child + div { width: 100% !important; } \
 			#ctl00_ContentPlaceHolder1_view_form > script:first-child + div + div { display: none; } \
 			#ctl00_ContentPlaceHolder1_view_form div > div[style*="%s"] { border-bottom: 0 !important; } \
-			#ctl00_ContentPlaceHolder1_view_form div > div[style*="58px"], /* top & bottom ads */\
-			#ctl00_ContentPlaceHolder1_view_form > div > table[width="100%"] > tbody > tr + tr /* inline ads */\
+			#ctl00_ContentPlaceHolder1_view_form > div > br + table[width] { margin-bottom: 0 !important; } \
+			#ctl00_ContentPlaceHolder1_view_form > div > br + table[width] > tbody > tr > td > .repliers:first-child, \
+			.repliers + br, .repliers ~ table:last-child, \
+			#ctl00_ContentPlaceHolder1_view_form > div > br + table[width] +table+table+table+table+table, \
+			#ctl00_ContentPlaceHolder1_view_form > div > br + table[width] +table+table+table+table+table +table+table+table+table+table, \
+			#ctl00_ContentPlaceHolder1_view_form > div > br + table[width] +table+table+table+table+table +table+table+table+table+table +table+table+table+table+table, \
+			#ctl00_ContentPlaceHolder1_view_form > div > br + table[width] +table+table+table+table+table +table+table+table+table+table +table+table+table+table+table +table+table+table+table+table, \
+			#ctl00_ContentPlaceHolder1_view_form > div > br + table[width] +table+table+table+table+table +table+table+table+table+table +table+table+table+table+table +table+table+table+table+table +table+table+table+table+table \
 				{ display: none; } \
 			',
 			$.browser.msie ? 'PADDING-BOTTOM: 18px' : 'padding: 18px'

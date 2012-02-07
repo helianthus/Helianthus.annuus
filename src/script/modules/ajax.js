@@ -60,9 +60,16 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 		function handleNewPage(jScope, newPageNo)
 		{
 			var jDiv = $('.repliers:first', jScope).up('div');
-			jDiv
-			.prepend(jDiv.prev())
-			.children('div:eq(1)').nextAll()[jScope ? 'remove' : 'insertAfter'](jScope ? undefined : jDiv);
+			
+			jDiv.prepend(jDiv.prev());
+			
+			var extras = jDiv.find('#newmessage').prevAll('div:eq(2)').nextAll();
+			if(jScope) {
+				extras.remove();
+			}
+			else {
+				extras.not('script').insertAfter(jDiv);
+			}
 
 			if(displayMode != 2) {
 				var jSelect = jDiv.find('select[name="page"]');
@@ -78,6 +85,7 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 						break;
 					}
 				}
+				console.log(jDiv);
 				if(pageNo > pages.last) jDiv.insertAfter(pages[pages.last]);
 
 				AN.modFn.execMods(jDiv);
@@ -150,10 +158,10 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 			{
 				updateElements(jNewDoc);
 
-				var jNewReplies = jNewDoc.find('.repliers').closest('div > table');
+				var jNewReplies = jNewDoc.replies();//.closest('div > table');
 				var jNewSelect = jNewDoc.find('select[name="page"]:first');
 
-				var oldReplyNum = pages[pages.last].find('.repliers').length;
+				var oldReplyNum = pages[pages.last].replies().length;
 				var newLastPageNo = jNewSelect.children().length;
 
 				var difference = jNewReplies.length - oldReplyNum;

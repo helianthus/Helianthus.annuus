@@ -268,26 +268,31 @@ $.fn.extend(
 	{
 		if(this.jReplies) return this.jReplies;
 
-		var jReplies = this.jReplies = this.find('.repliers');
-
-		jReplies.extend(
-		{
-			jContents: $(),
-			jNameLinks: $()
-		});
-
-		jReplies.each(function()
+		var jContents = $();
+		var jNameLinks = $();
+		
+		var jReplies = this.jReplies = this.find('.repliers')
+		.filter(function()
 		{
 			var jThis = $(this), jTr = jThis.find('.repliers_left').parent();
 
-			jThis
-			.data('jContent', jTr.find('.repliers_right td:first'))
-			.data('jNameLink', jTr.find('a[href]:first'))
-			.data('sUserid', jTr.attr('userid'))
-			.data('sUserName', jTr.attr('username'));
-
-			jReplies.jContents.push(jThis.data('jContent')[0]);
-			jReplies.jNameLinks.push(jThis.data('jNameLink')[0]);
+			jThis.data({
+				jContent: jTr.find('.repliers_right td:first'),
+				jNameLink: jTr.find('a[href]:first'),
+				sUserid: jTr.attr('userid'),
+				sUserName: jTr.attr('username')
+			});
+			
+			if(jThis.data('sUserid')) {
+				jContents.push(jThis.data('jContent')[0]);
+				jNameLinks.push(jThis.data('jNameLink')[0]);
+				
+				return true;
+			}
+		})
+		.extend({
+			jContents: jContents,
+			jNameLinks: jNameLinks
 		});
 
 		return sSelector ? jReplies.filter(sSelector) : jReplies;

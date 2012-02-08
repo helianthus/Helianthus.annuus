@@ -366,7 +366,7 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 				AN.shared('log', '正在讀取最新列表...');
 			}
 
-			$.getDoc(AN.util.getURL({ page: nPage }), function(jNewDoc)
+			$.getDoc(/topics_bw/i.test(location.pathname) ? location.pathname.replace(/_bw(?:_\d+)/i, '_bw' + (nPage === 1 ? '' : ('_' + nPage))) : AN.util.getURL({ page: nPage }), function(jNewDoc)
 			{
 				var jNewTbody = jNewDoc.topics().jTbody;
 				var jTopicTable = $d.topicTable();

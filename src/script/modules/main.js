@@ -6,7 +6,6 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	desc: '隱藏廣告',
 	page: { 65535: true },
 	type: 3,
-	//options: { 'bRetroHideAds': { desc: '相容性模式', defaultValue: false, type: 'checkbox' } },
 	once: function()
 	{
 		$.each(
@@ -26,6 +25,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			#ctl00_ContentPlaceHolder1_topics_form > script:first-child + div + div { display: none; } \
 				{ display: none; } \
 			',
+			28: 'td[height="52"] { display: none; }',
 			// view
 			32: $.sprintf('\
 			#ctl00_ContentPlaceHolder1_view_form > script:first-child + div { width: 100% !important; } \
@@ -33,13 +33,10 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			#ctl00_ContentPlaceHolder1_view_form div > div[style*="%s"] { border-bottom: 0 !important; } \
 			#ctl00_ContentPlaceHolder1_view_form > div > br + table[width] { margin-bottom: 0 !important; } \
 			#ctl00_ContentPlaceHolder1_view_form > div > br + table[width] > tbody > tr > td > .repliers:first-child, \
-			.repliers + br, .repliers ~ table:last-child, \
-			#ctl00_ContentPlaceHolder1_view_form > div > br + table[width] +table+table+table+table+table, \
-			#ctl00_ContentPlaceHolder1_view_form > div > br + table[width] +table+table+table+table+table +table+table+table+table+table, \
-			#ctl00_ContentPlaceHolder1_view_form > div > br + table[width] +table+table+table+table+table +table+table+table+table+table +table+table+table+table+table, \
-			#ctl00_ContentPlaceHolder1_view_form > div > br + table[width] +table+table+table+table+table +table+table+table+table+table +table+table+table+table+table +table+table+table+table+table, \
-			#ctl00_ContentPlaceHolder1_view_form > div > br + table[width] +table+table+table+table+table +table+table+table+table+table +table+table+table+table+table +table+table+table+table+table +table+table+table+table+table \
+			.repliers + br, \
+			.repliers > tbody > tr:last-child \
 				{ display: none; } \
+			.repliers > tbody > tr[userid] { display: table-row; } \
 			',
 			$.browser.msie ? 'PADDING-BOTTOM: 18px' : 'padding: 18px'
 			)
@@ -56,66 +53,17 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			'
 		},
 		function(nPageCode){ $d.pageCode() & nPageCode && AN.util.stackStyle(this); });
-
-		if(true)//AN.util.getOptions('bRetroHideAds'))
-		{
-			AN.util.stackStyle('td[height="52"] { display: none; }');
-		}
-		else if($d.pageCode() & 28)
-		{
-			if($.browser.msie)
-			{
-				AN.util.stackStyle($.sprintf(
-				$d.pageName() == 'topics'
-				?
-				'\
-				#HotTopics tr:first-child+tr%(extra)s, \
-				#HotTopics tr:first-child+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr%(extra)s, \
-				#HotTopics tr:first-child+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr%(extra)s, \
-				#HotTopics tr:first-child+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr%(extra)s \
-					{ display: none; } \
-				'
-				:
-				'\
-				#ctl00_ContentPlaceHolder1_topics_form > div + table + table tr:first-child+tr%(extra)s, \
-				#ctl00_ContentPlaceHolder1_topics_form > div + table + table tr:first-child+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr%(extra)s, \
-				#ctl00_ContentPlaceHolder1_topics_form > div + table + table tr:first-child+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr%(extra)s, \
-				#ctl00_ContentPlaceHolder1_topics_form > div + table + table tr:first-child+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr+tr%(extra)s, \
-				td[height="52"] \
-					{ display: none; } \
-				'
-				,
-				{ extra: $('#aspnetForm[action*="type=MB"]').length ? '+tr' : '' }
-				));
-			}
-			else
-			{
-				AN.util.stackStyle($.sprintf(
-				$d.pageName() == 'topics'
-				?
-				'\
-				#HotTopics tr:nth-child(11n+%(num)s) \
-					{ display: none; } \
-				'
-				:
-				'\
-				#ctl00_ContentPlaceHolder1_topics_form > div + table + table tr:nth-child(11n+%(num)s), \
-				#ctl00_ContentPlaceHolder1_topics_form > div + table + table table tr:last-child \
-					{ display: none; } \
-				'
-				,
-				{ num: $('#aspnetForm[action*="type=MB"]').length ? 3 : 2 }
-				));
-			}
-		}
 	},
-	infinite: function()
+	infinite: function(jDoc)
 	{
 		if($.browser.msie && $d.pageCode() == 32) $('div[style*="PADDING-BOTTOM: 18px"]').css('border-bottom', 0); // yet another IE8 bug!?
 
-		if(true)//AN.util.getOptions('bRetroHideAds'))
+		if($d.pageCode() & 28)
 		{
-			$('td[height="52"]').parent().hide();
+			jDoc.find('td[height="52"]').parent().hide();
+		}
+		else if($d.pageCode() === 32) {
+			jDoc.find('.repliers_left').parent().not('[userid]').closest('.repliers').filter(':only-child').closest('table[width]').hide();
 		}
 	}
 },

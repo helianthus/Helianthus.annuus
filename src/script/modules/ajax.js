@@ -61,15 +61,19 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 		{
 			var jDiv = $('.repliers:first', jScope).up('div');
 			
-			jDiv.prepend(jDiv.prev());
+			var extras = jDiv.find('#newmessage').prevAll('div:last').prev().nextAll().andSelf();
 			
-			var extras = jDiv.find('#newmessage').prevAll('div:eq(2)').nextAll();
+			jDiv.append(extras.slice(0, 2));
+			
+			extras = extras.slice(2);
 			if(jScope) {
 				extras.remove();
 			}
 			else {
 				extras.not('script').insertAfter(jDiv);
 			}
+			
+			jDiv.prepend(jDiv.prev());
 
 			if(displayMode != 2) {
 				var jSelect = jDiv.find('select[name="page"]');
@@ -85,7 +89,7 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 						break;
 					}
 				}
-				console.log(jDiv);
+				
 				if(pageNo > pages.last) jDiv.insertAfter(pages[pages.last]);
 
 				AN.modFn.execMods(jDiv);
@@ -158,7 +162,7 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 			{
 				updateElements(jNewDoc);
 
-				var jNewReplies = jNewDoc.replies();//.closest('div > table');
+				var jNewReplies = jNewDoc.replies();
 				var jNewSelect = jNewDoc.find('select[name="page"]:first');
 
 				var oldReplyNum = pages[pages.last].replies().length;
@@ -174,7 +178,8 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 					var jNewElements = $();
 
 					if(difference > 0) {
-						jNewElements = jNewElements.add(jNewReplies.slice(oldReplyNum).insertAfter(pages[pages.last].children('table:last')));
+						jNewElements = jNewElements.add(jNewReplies.slice(oldReplyNum).closest('table[width=100%]').insertAfter(pages[pages.last].children('table[width=100%]:last')));
+						pages[pages.last].jReplies = null;
 						AN.shared('log', $.sprintf('加入%s個新回覆', difference));
 					}
 
@@ -204,6 +209,8 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 							});
 						}
 					}
+					
+					console.log(jNewElements);
 
 					AN.modFn.execMods(jNewElements);
 				}

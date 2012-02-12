@@ -61,6 +61,8 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 		{
 			var jDiv = $('.repliers:first', jScope).up('div');
 			
+			jDiv.find('script').remove();
+			
 			var extras = jDiv.find('#newmessage').prevAll('div:last').prev().nextAll().andSelf();
 			
 			jDiv.append(extras.slice(0, 2));

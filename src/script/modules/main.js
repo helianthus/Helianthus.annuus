@@ -1086,25 +1086,22 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			regex: 'youtube\\.com/watch\\?',
 			fn: function()
 			{
-				if(nWidth > 640) nWidth = 640;
 				nHeight = nWidth / 16 * 9 + 25;
-				sUrl = $.sprintf('http://www.youtube.com/v/%s&fs=1&rel=0&ap=%%2526fmt%%3D22', sUrl.replace(/.+?v=([^&#]+).*/i, '$1'));
+				sUrl = $.sprintf('http://www.youtube.com/v/%s?version=3&fs=1&rel=0', sUrl.replace(/.+?v=([^&#]+).*/i, '$1'));
 			}
 		},
 		{
 			regex: 'youtu\\.be/.',
 			fn: function()
 			{
-				if(nWidth > 640) nWidth = 640;
 				nHeight = nWidth / 16 * 9 + 25;
-				sUrl = $.sprintf('http://www.youtube.com/v/%s&fs=1&rel=0&ap=%%2526fmt%%3D22', sUrl.replace(/.+\/([^&#]+).*/i, '$1'));
+				sUrl = $.sprintf('http://www.youtube.com/v/%s?version=3&fs=1&rel=0', sUrl.replace(/.+\/([^&#]+).*/i, '$1'));
 			}
 		},
 		{
 			regex: 'vimeo\\.com/\\d',
 			fn: function()
 			{
-				if(nWidth > 504) nWidth = 504;
 				nHeight = nWidth / 1.5;
 				sUrl = $.sprintf('http://vimeo.com/moogaloop.swf?clip_id=%s&show_title=1&fullscreen=1', sUrl.replace(/.+vimeo\.com\/(\d+).*/i, '$1'));
 			}
@@ -1113,7 +1110,6 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			regex: 'youku\\.com/v_show/',
 			fn: function()
 			{
-				if(nWidth > 480) nWidth = 480;
 				nHeight = nWidth / 4 * 3 + 40;
 				sUrl = $.sprintf('http://player.youku.com/player.php/sid/%s/v.swf', sUrl.replace(/.+?id_([^\/]+).*/i, '$1'));
 			}
@@ -1122,7 +1118,6 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			regex: 'tudou\\.com/programs/',
 			fn: function()
 			{
-				if(nWidth > 420) nWidth = 420;
 				nHeight = nWidth / 4 * 3 + 48;
 				sUrl = $.sprintf('http://www.tudou.com/v/%s', sUrl.replace(/.+?view\/([^\/]+).*/i, '$1'));
 			}
@@ -1150,6 +1145,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 				event.preventDefault();
 
 				sUrl = event.target.href;
+				console.log(jTarget.up('td,div').outerWidth());
 				nWidth = jTarget.up('td,div').width();
 				$.each(aSites, function()
 				{

@@ -820,11 +820,11 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	type: 6,
 	once: function()
 	{
-		AN.util.stackStyle('.an-nameforcedshown:before { content: "<空白名稱>"; font-style: italic; }');
+		AN.util.stackStyle('.an-nameforcedshown { font-style: italic; }');
 	},
 	infinite: function(jDoc)
 	{
-		jDoc.replies().jNameLinks.filter(function(){ return $(this).width() === 0; }).addClass('an-nameforcedshown');
+		jDoc.replies().jNameLinks.filter(function(){ return $(this).width() === 0; }).addClass('an-nameforcedshown').html('<空白名稱>');
 	}
 },
 

@@ -371,7 +371,7 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 
 			if(isNaN(nPage) || nPage < 1)
 			{
-				nPage = 1;
+				nPage = $d.pageNo();
 				AN.shared('log', '正在讀取最新列表...');
 			}
 
@@ -381,9 +381,10 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 				var jTopicTable = $d.topicTable();
 
 				if(nPage == 1) jTopicTable.empty();
+				jNewTbody.find('script').remove();
 				jTopicTable.append(jNewTbody);
 
-				if(nPage == AN.util.getOptions('nNumOfTopicPage'))
+				if(nPage == $d.pageNo() - 1 + AN.util.getOptions('nNumOfTopicPage'))
 				{
 					AN.modFn.execMods($(document).topicTable());
 					AN.shared('log', '列表更新完成');
@@ -403,7 +404,7 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 
 		if(AN.util.getOptions('nNumOfTopicPage') > 1)
 		{
-			setTimeout(function(){ refreshTopics(2); }, 0);
+			setTimeout(function(){ refreshTopics($d.pageNo() + 1); }, 0);
 		}
 
 		var setNextRefresh = function()

@@ -40,6 +40,7 @@ $.extend(
 		{
 			url: sURL,
 			dataType: 'text',
+			mimeType: 'text/html; charset=BIG5',
 			success: function(sHTML)
 			{
 				var jNewDoc = $.doc(sHTML);
@@ -316,6 +317,10 @@ $.fn.extend(
 				return false;
 			}
 		});
+		
+		if(!this.jTopicTable) {
+			console.log(this);
+		}
 
 		return this.jTopicTable;
 	},

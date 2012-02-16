@@ -527,7 +527,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		jDoc.topics().jTitleCells.find('a:first-child').each(function()
 		{
 			var jThis = $(this);
-			var sOri = sText = jThis.html();
+			var sOri = sText = jThis.text();
 
 			sText = sText.replace(rSmiley, '<img style="border-width:0px" src="/faces/$1.gif" alt="$&" />');
 

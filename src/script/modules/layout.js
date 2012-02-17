@@ -93,7 +93,7 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 		AN.util.stackStyle('.FooterPanel ~ br { display: none; }');
 	}
 },
-
+/*
 '8c317615-b5e7-4b1a-a140-b7319c5b0a5b':
 {
 	desc: '隱藏Bookmark Bar',
@@ -115,7 +115,7 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 		AN.util.stackStyle('#hkg_bottombar { width: auto; }');
 	}
 },
-
+*/
 '02837e6a-3dd7-4c73-a155-90d6f6edd8f9':
 {
 	desc: '拉闊頁面',
@@ -370,7 +370,7 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 		AN.util.stackStyle('#ctl00_ContentPlaceHolder1_UpdatePanelPM + br, #ctl00_ContentPlaceHolder1_HotPeoples { display: none; }');
 	}
 },
-
+/*
 'c18ff3e6-b9fc-4786-95d6-1c1bc800172a':
 {
 	desc: '隱藏書籤',
@@ -381,7 +381,7 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 		AN.util.stackStyle('#ctl00_ContentPlaceHolder1_HotPeoples + br, #ctl00_ContentPlaceHolder1_BookmarkTable { display: none; }');
 	}
 },
-
+*/
 '222f0c01-1ebd-49d6-b7f4-b1b7fc60ca40':
 {
 	desc: '隱藏起底列表',
@@ -389,7 +389,7 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	type: 3,
 	once: function()
 	{
-		AN.util.stackStyle('#ctl00_ContentPlaceHolder1_siteUpdateProgress + table { display: none; }');
+		AN.util.stackStyle('#ctl00_ContentPlaceHolder1_UpdatePanelHistory { display: none; }');
 	}
 },
 

@@ -1145,7 +1145,6 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 				event.preventDefault();
 
 				sUrl = event.target.href;
-				console.log(jTarget.up('td,div').outerWidth());
 				nWidth = jTarget.up('td,div').width() || 640;
 				$.each(aSites, function()
 				{

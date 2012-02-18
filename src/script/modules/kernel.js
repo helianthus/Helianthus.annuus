@@ -43,7 +43,7 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 	type: 4,
 	once: function()
 	{
-		if(location.pathname !== '/login.aspx' && document.referrer.indexOf('/login.aspx') > 0) location.replace('/topics.aspx?type=BW');
+		//if(location.pathname !== '/login.aspx' && document.referrer.indexOf('/login.aspx') > 0) location.replace('/topics.aspx?type=BW');
 
 		if(location.hash.indexOf('#page=') != -1 && AN.util.getPageNo(location.search) != AN.util.getPageNo(location.hash))
 			return location.replace( AN.util.getURL({ page: location.hash.replace(/#page=/, '') }).replace(/&highlight_id=0\b/, '') );

@@ -647,7 +647,7 @@ $.extend(AN,
 
 		isLoggedIn: function()
 		{
-			AN.util.cookie('username', 'hkgolden.com');
+			AN.util.cookie('username', null, 'hkgolden.com');
 			return !!AN.util.cookie('username');
 		}
 	},

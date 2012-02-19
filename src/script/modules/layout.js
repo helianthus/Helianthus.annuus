@@ -304,30 +304,41 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	}
 },
 
-'2c7998ad-10cc-4bca-9f2c-85f1771356c2':
+'eec2a29d-44b5-470b-bffd-2da4184428f4':
 {
-	desc: '隱藏投訴文章連結',
+	desc: '隱藏留名按扭',
 	page: { 32: false },
 	type: 3,
 	once: function()
 	{
-		AN.util.stackStyle('a[href^="contactus.aspx?messageid="] { display: none; }');
+		AN.util.stackStyle('div > a[id^="laumingHref"] { display: none; }');
+	}
+},
+
+'2c7998ad-10cc-4bca-9f2c-85f1771356c2':
+{
+	desc: '隱藏投訴文章按扭',
+	page: { 32: false },
+	type: 3,
+	once: function()
+	{
+		AN.util.stackStyle('div > a[href^="contactus.aspx?messageid="] { display: none; }');
 	}
 },
 
 '26eaf7f8-d260-4b42-b6d9-08b235f56d43':
 {
-	desc: '隱藏引用原文連結',
+	desc: '隱藏引用原文按扭',
 	page: { 32: false },
 	type: 3,
-	options: { bCDROMMode: { desc: '同時隱藏快速引用連結及登入提示 [CD-ROM專用]', defaultValue: false, type: 'checkbox' } },
+	options: { bCDROMMode: { desc: '同時隱藏快速引用按扭及登入提示 [CD-ROM專用]', defaultValue: false, type: 'checkbox' } },
 	once: function()
 	{
-		var sSelector = 'a[href^="post.aspx?mt=Y&rid="]';
+		var sSelector = 'div > a[href^="post.aspx?mt=Y&rid="]';
 
 		if(AN.util.getOptions('bCDROMMode'))
 		{
-			sSelector += ',a[href*="QuoteReply("],#ct100_ContentPlaceHolder1_QuickReplyLoginTable';
+			sSelector += ',div > a[href*="QuoteReply("],#ct100_ContentPlaceHolder1_QuickReplyLoginTable';
 		}
 
 		AN.util.stackStyle(sSelector + '{ display: none; }');

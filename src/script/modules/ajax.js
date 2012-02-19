@@ -365,7 +365,7 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 	},
 	once: function(jDoc)
 	{
-		var refreshTopics = function(nPage)
+		var refreshTopics = function(nPage, jNewDoc)
 		{
 			clearTimeout(tRefresh);
 
@@ -375,7 +375,7 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 				AN.shared('log', '正在讀取最新列表...');
 			}
 
-			$.getDoc(/topics_/i.test(location.pathname) ? location.pathname.replace(/(?:_\d+)?.htm/i, (nPage === 1 ? '' : ('_' + nPage))) + '.htm' : AN.util.getURL({ page: nPage }), function(jNewDoc)
+			$.getDoc((jNewDoc || $d).find('img[alt="next"][src="images/button-next.gif"]').parent().attr('href'), function(jNewDoc)
 			{
 				var jNewTbody = jNewDoc.topics().jTbody;
 				var jTopicTable = $d.topicTable();
@@ -397,7 +397,7 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 				}
 				else
 				{
-					refreshTopics(nPage + 1);
+					refreshTopics(nPage + 1, jNewDoc);
 				}
 			});
 		};

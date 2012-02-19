@@ -310,7 +310,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		}
 	}
 },
-
+/*
 '12672bd9-54ef-4266-aeab-bde9af26373a':
 {
 	desc: '修正論壇偏好設定',
@@ -328,7 +328,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		});
 	}
 },
-
+*/
 // 加入物件 //
 '231825ad-aada-4f5f-8adc-5c2762c1b0e5':
 {

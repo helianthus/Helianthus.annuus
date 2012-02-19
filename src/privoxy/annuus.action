@@ -1,16 +1,16 @@
 # Others // ForceMarkup got to be done first
 { +filter{annuus.ForceMarkup} }
-forum*.hkgolden.com/(?:$|[a-z]+?\.(?:aspx|html))
+forum*.hkgolden.com/(?:$|[a-z]+?\.(?:aspx|html?))
 { +filter{annuus.ForceStrictMode} }
-forum*.hkgolden.com/(?:$|[a-z]+?\.(?:aspx|html))
+forum*.hkgolden.com/(?:$|[a-z]+?\.(?:aspx|html?))
 
 # Scripts
 { +filter{annuus.js} }
-forum*.hkgolden.com/(?:$|[a-z]+?\.(?:aspx|html))
+forum*.hkgolden.com/(?:$|[a-z]+?\.(?:aspx|html?))
 
 # IE8 Re-enabler
-{ +filter{annuus.ForceIE8} }
-forum*.hkgolden.com/(?:$|[a-z]+?\.(?:aspx|html))
+{ +filter{annuus.ForceIEEdge} }
+forum*.hkgolden.com/(?:$|[a-z]+?\.(?:aspx|html?))
 { +filter{annuus.FixInnerForm} }
 forum*.hkgolden.com/(?:$|topic|search|tags)
 { +filter{annuus.FixProfileLayout} }
@@ -20,8 +20,8 @@ forum*.hkgolden.com/golden_apps
 
 # Rubbish Remover
 { +filter{annuus.EndScripts} }
-forum*.hkgolden.com/(?:$|[a-z]+?\.(?:aspx|html))
+forum*.hkgolden.com/(?:$|[a-z]+?\.(?:aspx|html?))
 { +filter{annuus.DynScripts} }
-forum*.hkgolden.com/(?:$|[a-z]+?\.(?:aspx|html))
+forum*.hkgolden.com/(?:$|[a-z]+?\.(?:aspx|html?))
 { +filter{annuus.BookmarkBar} }
-### forum*.hkgolden.com/(?:$|[a-z]+?\.(?:aspx|html))
+### forum*.hkgolden.com/(?:$|[a-z]+?\.(?:aspx|html?))

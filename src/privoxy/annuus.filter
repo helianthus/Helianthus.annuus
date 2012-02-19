@@ -3,7 +3,7 @@ FILTER: annuus.js
 s`</head>`<script charset="utf-8" src="${AN_URL}"></script>\n</head>`is
 
 # IE8 Re-enabler
-FILTER: annuus.ForceIE8
+FILTER: annuus.ForceIEEdge
 s`<head>`<head>\n<meta http-equiv="X-UA-Compatible" content="IE=Edge" />`is
 FILTER: annuus.FixInnerForm
 s`(<(?:td|div)[^>]+?>\s*<)form`$1div`isg

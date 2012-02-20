@@ -43,7 +43,7 @@ window.addEventListener('load', function()
 				var head = doc.getElementsByTagName('head');
 				(function inject()
 				{
-					head[0] ? head[0].appendChild(script) : setTimeout(inject, 50);
+					head[0] ? head[0].appendChild(script) : progress.isLoadingDocument && setTimeout(inject, 50);
 				})();
 			}
 		},

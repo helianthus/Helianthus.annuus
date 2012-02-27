@@ -211,8 +211,6 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 							});
 						}
 					}
-					
-					console.log(jNewElements);
 
 					AN.modFn.execMods(jNewElements);
 				}

@@ -365,27 +365,32 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 	},
 	once: function(jDoc)
 	{
-		var refreshTopics = function(nPage, jNewDoc)
+		var working = false;
+		var tbodies = [];
+		var refreshTopics = function(nPage, url, continued)
 		{
 			clearTimeout(tRefresh);
+			
+			if(working && !continued) {
+				return;
+			}
+			
+			working = true;
 
-			if(isNaN(nPage) || nPage < 1)
+			if(isNaN(nPage))
 			{
-				nPage = $d.pageNo();
+				nPage = 1;
 				AN.shared('log', '正在讀取最新列表...');
 			}
 
-			$.getDoc((jNewDoc || $d).find('img[alt="next"][src="images/button-next.gif"]').parent().attr('href'), function(jNewDoc)
+			$.getDoc(url || location.href, function(jNewDoc)
 			{
-				var jNewTbody = jNewDoc.topics().jTbody;
-				var jTopicTable = $d.topicTable();
+				tbodies.push(jNewDoc.topics().jTbody.find('script').remove().end()[0]);
 
-				if(nPage == 1) jTopicTable.empty();
-				jNewTbody.find('script').remove();
-				jTopicTable.append(jNewTbody);
-
-				if(nPage == $d.pageNo() - 1 + AN.util.getOptions('nNumOfTopicPage'))
+				if(nPage >= AN.util.getOptions('nNumOfTopicPage'))
 				{
+					$d.topicTable().empty().append(tbodies);
+					tbodies = [];
 					AN.modFn.execMods($(document).topicTable());
 					AN.shared('log', '列表更新完成');
 
@@ -394,22 +399,24 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 						AN.shared('log2', $.sprintf('%s秒後再次重新整埋....', nInterval));
 						setNextRefresh();
 					}
+					
+					working = false;
 				}
 				else
 				{
-					refreshTopics(nPage + 1, jNewDoc);
+					refreshTopics(++nPage, jDoc.find('img[alt="next"][src="images/button-next.gif"]').parent().attr('href'), true);
 				}
 			});
 		};
 
 		if(AN.util.getOptions('nNumOfTopicPage') > 1)
 		{
-			setTimeout(function(){ refreshTopics($d.pageNo() + 1); }, 0);
+			setTimeout(function(){ refreshTopics(); }, 0);
 		}
 
 		var setNextRefresh = function()
 		{
-			tRefresh = setTimeout(refreshTopics, nInterval * 1000);
+			tRefresh = setTimeout(function(){ refreshTopics(); }, nInterval * 1000);
 		};
 
 		if(AN.util.getOptions('bAddGetBtn_T')) jDoc.defer(2, '加入更新按扭', function(){ AN.shared('addButton', '更新列表', refreshTopics); });

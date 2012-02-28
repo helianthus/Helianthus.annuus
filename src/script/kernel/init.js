@@ -648,7 +648,7 @@ $.extend(AN,
 		isLoggedIn: function()
 		{
 			AN.util.cookie('username', null, 'hkgolden.com');
-			return !!AN.util.cookie('username');
+			return !!$('#ctl00_ContentPlaceHolder1_QuickReplyTable').length || !!AN.util.cookie('username');
 		}
 	},
 

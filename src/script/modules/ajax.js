@@ -402,7 +402,7 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 				}
 				else
 				{
-					refreshTopics(++nPage, jDoc.find('img[alt="next"][src="images/button-next.gif"]').parent().attr('href'), true);
+					refreshTopics(++nPage, jNewDoc.find('img[alt="next"][src="images/button-next.gif"]').parent().attr('href'), true);
 				}
 			});
 		};

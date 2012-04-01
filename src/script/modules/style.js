@@ -60,7 +60,7 @@ AN.mod['Style Editor'] = { ver: 'N/A', author: '向日', fn: {
 	options:
 	{
 		sLogoBgImage: { desc: '高登Logo圖片', defaultValue: '/images/index_images/logo.jpg', type: 'text' },
-		sTopBgImage: { desc: '頂部背景圖片', defaultValue: '/images/index_images/bg_top.jpg', type: 'text' },
+		/*sTopBgImage: { desc: '頂部背景圖片', defaultValue: '/images/index_images/bg_top.jpg', type: 'text' },*/
 		sMainBgImage: { desc: '主表格背景圖片', defaultValue: '/images/index_images/bg_maintop.jpg', type: 'text' },
 		sRedTitleFontColor: { desc: '紅人榜標題字體顏色', defaultValue: '#FFFFFF', type: 'text' },
 		sRedTitleBgColor: { desc: '紅人榜標題背景顏色', defaultValue: '#CC2331', type: 'text' },
@@ -101,6 +101,7 @@ AN.mod['Style Editor'] = { ver: 'N/A', author: '向日', fn: {
 		/* under logo links, footer text, username links, bookmarkbar */\
 		.encode_link, .txt_11pt_1A3448, *[style*="color: black"], *[style*="COLOR: black"], *[style*="color:Black"], *[style*="COLOR:Black"], .hkg_bottombar_link { color: %(sMainFontColor)s !important; } \
 		/* non-transparent images */\
+		body, .lightbrown_bg { background-image: none; } \
 		.TopMenuPanel, .bg_top { background-image: url(%(sTopBgImage)s); } \
 		.PageMiddleBox, .bg_main { background-image: url(%(sMainBgImage)s); } \
 		/* main logo */\

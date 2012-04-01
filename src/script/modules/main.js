@@ -215,7 +215,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		{
 			var jTarget = $(event.target);
 			if(jTarget.parent('a').length) jTarget = jTarget.parent();
-			if(!jTarget.is('a') || !(AN.util.getOptions('bTopicLinksOnly') ? /view\.aspx/i : /^(?!javascript|#)/).test(jTarget.attr('href'))) return;
+			if(!jTarget.is('a') || !(AN.util.getOptions('bTopicLinksOnly') ? /view\.aspx/i : /^(?!javascript|#)/i).test(jTarget.attr('href'))) return;
 
 			event.preventDefault();
 			window.open(jTarget.attr('href'));

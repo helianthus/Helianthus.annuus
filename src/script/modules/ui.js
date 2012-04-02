@@ -130,13 +130,16 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 						? $.sprintf('http://%s/topics.aspx?type=BW', location.hostname)
 						: location.href.replace(/topics_(bw)\.htm(\??)/i, function($0, $1, $2){ return 'topics.aspx?type=' + $1.toUpperCase() + ($2 ? '&' : ''); });
 					var tableHTML = '', imgHTML = '';
-					
-					for(var nServer=0; nServer<=7; nServer++)
-					{
-						tableHTML += $.sprintf('<tr><td><a href="%s">%s</a></td><td class="an-server-response"></td></tr>', sURL.replace(/forum\d+/i, nServer === 0 ? 'm' : 'forum' + nServer), nServer === 0 ? 'Mobile' : 'Forum ' + nServer);
+
+					var subs = [['demoforum', 'Demo Forum'], ['m', 'Mobile']];
+					for(var i=7; i--;) {
+						subs.unshift(['forum' + (i + 1), 'Forum ' + (i + 1)]);
+					}
+					for(var i=0; i<subs.length; i++) {
+						tableHTML += $.sprintf('<tr><td><a href="%s">%s</a></td><td class="an-server-response"></td></tr>', sURL.replace(/demoforum|forum\d+/i, subs[i][0]), subs[i][1]);
 						imgHTML += '<img />';
 					}
-
+						
 					var jTestImages = $('<div>' + imgHTML + '</div>').children().bind('load error', function(event)
 					{
 						var jImg = $(event.target);
@@ -151,7 +154,7 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 						jTestImages.each(function(i)
 						{
 							var nTime = $.time();
-							$(this).data('nTime', nTime).attr('src', $.sprintf('http://%s.hkgolden.com/images/spacer.gif?tId=%s', i === 0 ? 'm' : 'forum' + i, nTime));
+							$(this).data('nTime', nTime).attr('src', $.sprintf('http://%s.hkgolden.com/images/spacer.gif?tId=%s', subs[i][0]));
 						});
 					})
 					.end().find('tbody').html(tableHTML);

@@ -1,4 +1,4 @@
-if(!document.getElementById('annuus') && /forum\d+\.hkgolden\.com/.test(location.href))
+if(!document.getElementById('annuus') && /(?:demoforum|forum\d+)\.hkgolden\.com/.test(location.href))
 {
 	var
 	head = document.getElementsByTagName('head'),

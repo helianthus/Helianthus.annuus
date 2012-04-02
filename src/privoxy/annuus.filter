@@ -10,8 +10,6 @@ s`(<(?:td|div)[^>]+?>\s*<)form`$1div`isg
 s`(?<=</)form(?=\>\s*</(?:td|div))`div`isg
 FILTER: annuus.FixProfileLayout
 s`<tr><td[^>]+><span id="PMInLineAd.+?</tr>``isg
-FILTER: annuus.FixBookmarkBar
-s`document\.all \? 'className' :``isg
 
 # Others
 FILTER: annuus.ForceMarkup
@@ -24,6 +22,3 @@ FILTER: annuus.EndScripts
 s`<div id="Side_GoogleAd".+?</body>`</body>`is
 FILTER: annuus.DynScripts
 s`document.write``isg
-FILTER: annuus.BookmarkBar
-s`.+?/golden_apps/.+``ig
-s`<!-- BottomBar Functions -->.+?<!-- End of BottomBar Functions -->``is

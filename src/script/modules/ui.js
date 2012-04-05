@@ -131,7 +131,7 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 						: location.href.replace(/topics_(bw)\.htm(\??)/i, function($0, $1, $2){ return 'topics.aspx?type=' + $1.toUpperCase() + ($2 ? '&' : ''); });
 					var tableHTML = '', imgHTML = '';
 
-					var subs = [['demoforum', 'Demo Forum'], ['m', 'Mobile']];
+					var subs = [['forum101', 'Forum 101'], ['m', 'Mobile']];
 					for(var i=7; i--;) {
 						subs.unshift(['forum' + (i + 1), 'Forum ' + (i + 1)]);
 					}
@@ -154,7 +154,7 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 						jTestImages.each(function(i)
 						{
 							var nTime = $.time();
-							$(this).data('nTime', nTime).attr('src', $.sprintf('http://%s.hkgolden.com/images/spacer.gif?tId=%s', subs[i][0]));
+							$(this).data('nTime', nTime).attr('src', $.sprintf('http://%s.hkgolden.com/images/spacer.gif?tId=%s', subs[i][0], nTime));
 						});
 					})
 					.end().find('tbody').html(tableHTML);

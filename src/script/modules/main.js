@@ -17,7 +17,10 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			4: '\
 			.ContentPanel > table { width: 100%; } \
 			.ContentPanel > table > tbody > tr > td:first-child { width: auto !important; } \
-			.ContentPanel > table > tbody > tr > td:first-child + td { display: none; } \
+			.ContentPanel > table > tbody > tr > td:first-child + td, \
+			tr[id="Thread_No15"] + tr, \
+			.Topic_ListPanel > center \
+				{ display: none; } \
 			',
 			// search, tags
 			24: '\
@@ -30,9 +33,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			32: $.sprintf('\
 			#ctl00_ContentPlaceHolder1_view_form > script:first-child + div { width: 100% !important; } \
 			#ctl00_ContentPlaceHolder1_view_form > script:first-child + div + div { display: none; } \
-			#ctl00_ContentPlaceHolder1_view_form div > div[style*="%s"] { border-bottom: 0 !important; } \
-			#ctl00_ContentPlaceHolder1_view_form > div > br + table[width] { margin-bottom: 0 !important; } \
-			#ctl00_ContentPlaceHolder1_view_form > div > br + table[width] > tbody > tr > td > .repliers:first-child, \
+			#ctl00_ContentPlaceHolder1_view_form > div > table > tbody > tr > td[align="center"], \
 			.repliers + br, \
 			.repliers > tbody > tr:last-child \
 				{ display: none; } \
@@ -56,14 +57,12 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	},
 	infinite: function(jDoc)
 	{
-		if($.browser.msie && $d.pageCode() == 32) $('div[style*="PADDING-BOTTOM: 18px"]').css('border-bottom', 0); // yet another IE8 bug!?
-
 		if($d.pageCode() & 28)
 		{
 			jDoc.find('td[height="52"]').parent().hide();
 		}
 		else if($d.pageCode() === 32) {
-			jDoc.find('.repliers_left').parent().not('[userid]').closest('.repliers').filter(':only-child').closest('table[width]').hide();
+			jDoc.find('.repliers_left').parent().not('[userid]').closest('.repliers').filter(':only-child').add('td[align="center"] > noscript').closest('table[width]').hide();
 		}
 	}
 },

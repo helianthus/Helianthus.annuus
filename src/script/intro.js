@@ -1,6 +1,8 @@
 (function()
 {
 
+if(!/(?:demoforum|groupon|forum\d+)\.hkgolden\.com$/i.test(location.hostname)) return;
+
 if(document.body && document.body.firstChild.className == 'webkit-line-gutter-backdrop' || /\.(?:gif|jpe?g|png|asmx)$/i.test(location.href)) return;
 
 document.domain = 'hkgolden.com';

@@ -4,7 +4,7 @@ window.addEventListener('load', function()
 	pref = Components.classes['@mozilla.org/preferences-service;1'].getService(Components.interfaces.nsIPrefBranch).getBranch('extensions.annuus.'),
 	status = pref.getBoolPref('status'),
 	overlay = document.getElementById('annuus-overlay'),
-	rHKG = /^http:\/\/(?:demoforum|forum\d+)\.hkgolden\.com/i,
+	rHKG = /\.hkgolden\.com$/i,
 	noop = function(){};
 
 	function setStatus()

@@ -136,7 +136,7 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 						subs.unshift(['forum' + (i + 1), 'Forum ' + (i + 1)]);
 					}
 					for(var i=0; i<subs.length; i++) {
-						tableHTML += $.sprintf('<tr><td><a href="%s">%s</a></td><td class="an-server-response"></td></tr>', sURL.replace(/demoforum|forum\d+/i, subs[i][0]), subs[i][1]);
+						tableHTML += $.sprintf('<tr><td><a href="%s">%s</a></td><td class="an-server-response"></td></tr>', sURL.replace(/forum\d+/i, subs[i][0]), subs[i][1]);
 						imgHTML += '<img />';
 					}
 						

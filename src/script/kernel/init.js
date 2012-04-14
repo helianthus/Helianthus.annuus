@@ -460,7 +460,7 @@ $.extend(AN,
 			{
 				var dExpire = new Date;
 				dExpire.setFullYear(sValue ? 2999 : 1999); // SET : DEL
-				document.cookie = $.sprintf('%s=%s; domain=%s; expires=%s; path=/', sName, sValue || '', sDomain || 'hkgolden.com', dExpire.toUTCString());
+				document.cookie = $.sprintf('%s=%s; %s expires=%s; path=/', sName, sValue || '', sDomain ? 'domain=' + sDomain + ';': '', dExpire.toUTCString());
 
 				return true;
 			}

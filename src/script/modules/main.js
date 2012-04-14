@@ -883,7 +883,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	type: 6,
 	once: function()
 	{
-		var rForum = /(?:demoforum|m|forum\d*)\.hkgolden\.com/i;
+		var rForum = /(?:demoforum|groupon|m|forum\d*)\.hkgolden\.com/i;
 		$d.mousedown(function(event)
 		{
 			var jTarget = $(event.target);

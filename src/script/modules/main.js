@@ -309,25 +309,29 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		}
 	}
 },
-/*
-'12672bd9-54ef-4266-aeab-bde9af26373a':
+
+'fecb6345-232f-4781-b839-4919f845959a':
 {
-	desc: '修正論壇偏好設定',
-	page: { 65534: true },
+	desc: '強制設定論壇選項',
+	page: { 65534: false },
 	type: 4,
+	options:
+	{
+		companymode: { desc: '公司模式', defaultValue: false, type: 'checkbox' },
+		filtermode: { desc: '過濾模式', defaultValue: false, type: 'checkbox' },
+		sensormode: { desc: '懷舊模式', defaultValue: false, type: 'checkbox' },
+		fontsize: { desc: '字型大小', type: 'select', choices: ['大字型', '小字型'], defaultValue: '大字型' }
+	},
 	once: function()
 	{
 		$.each(['companymode', 'sensormode', 'filtermode', 'fontsize'], function(i, setting)
 		{
-			var match = location.search.match(setting + '=([^&#]+)');
-			if(match) {
-				AN.util.cookie(setting, null, 'hkgolden.com');
-				AN.util.cookie(setting, match[1], location.hostname);
-			}
+			var val = AN.util.getOptions(setting);
+			AN.util.cookie(setting, setting === 'fontsize' ? (val === '大字型' ? 'L' : 'S') : (val ? 'Y' : 'N'));
 		});
 	}
 },
-*/
+
 // 加入物件 //
 '231825ad-aada-4f5f-8adc-5c2762c1b0e5':
 {

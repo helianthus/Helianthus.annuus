@@ -327,6 +327,8 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		$.each(['companymode', 'sensormode', 'filtermode', 'fontsize'], function(i, setting)
 		{
 			var val = AN.util.getOptions(setting);
+			AN.util.cookie(setting, null, 'hkgolden.com');
+			AN.util.cookie(setting, null, location.hostname);
 			AN.util.cookie(setting, setting === 'fontsize' ? (val === '大字型' ? 'L' : 'S') : (val ? 'Y' : 'N'));
 		});
 	}

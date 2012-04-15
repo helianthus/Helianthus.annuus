@@ -322,7 +322,7 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	type: 3,
 	once: function()
 	{
-		AN.util.stackStyle('div > a[href^="contactus.aspx?messageid="] { display: none; }');
+		AN.util.stackStyle('.repliers_right a[href^="contactus.aspx?messageid="] { display: none; }');
 	}
 },
 
@@ -334,11 +334,11 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	options: { bCDROMMode: { desc: '同時隱藏快速引用按扭及登入提示 [CD-ROM專用]', defaultValue: false, type: 'checkbox' } },
 	once: function()
 	{
-		var sSelector = 'div > a[href^="post.aspx?mt=Y&rid="]';
+		var sSelector = '.repliers_right a[href^="post.aspx?mt=Y&rid="]';
 
 		if(AN.util.getOptions('bCDROMMode'))
 		{
-			sSelector += ',div > a[href*="QuoteReply("],#ct100_ContentPlaceHolder1_QuickReplyLoginTable';
+			sSelector += ', .repliers_right a[href*="QuoteReply("],#ct100_ContentPlaceHolder1_QuickReplyLoginTable';
 		}
 
 		AN.util.stackStyle(sSelector + '{ display: none; }');

@@ -21,6 +21,8 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			tr[id="Thread_No15"] + tr, \
 			.Topic_ListPanel > center \
 				{ display: none; } \
+			.PageMiddleBox > table > tbody > tr > td:first-child { width: 100% !important; } \
+			.PageMiddleBox > table > tbody > tr > td:first-child + td { display: none; } \
 			',
 			// search, tags
 			24: '\
@@ -38,6 +40,10 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			.repliers > tbody > tr:last-child \
 				{ display: none; } \
 			.repliers > tbody > tr[userid] { display: table-row; } \
+			#ctl00_ContentPlaceHolder1_view_form div > div[style*="%s"] { border-bottom: 0 !important; } \
+			#ctl00_ContentPlaceHolder1_view_form div > div[style*="58px"], /* top & bottom ads */\
+			#ctl00_ContentPlaceHolder1_view_form > div > table[width="100%"] > tbody > tr + tr /* inline ads */\
+				{ display: none; } \
 			',
 			$.browser.msie ? 'PADDING-BOTTOM: 18px' : 'padding: 18px'
 			)

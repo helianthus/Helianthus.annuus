@@ -378,7 +378,7 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 				$.each(oStructure, function(sType)
 				{
 					var jContainer = (isNaN(sType) || sType > 6) ? $('#an-settings-tabs-extend') : $('#an-settings-tabs-main');
-					jContainer.append($.sprintf('<li><a href="javascript:" rel="an-settings-panel-%s">%s</a></li>', sType, oTypeMap[sType]));
+					jContainer.append($.sprintf('<li><a href="javascript:" data-panel="an-settings-panel-%s">%s</a></li>', sType, oTypeMap[sType]));
 
 					sHTML += $.sprintf('<fieldset id="an-settings-panel-%s"><legend>%s</legend>', sType, oTypeMap[sType]);
 					$.each(this, function(sPage)
@@ -454,7 +454,7 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 					var jThis = $(this);
 					if(!jThis.find('h4').length)
 					{
-						$($.sprintf('[rel=%s]', jThis.attr('id'))).parent().add(jThis).remove();
+						$($.sprintf('[data-panel=%s]', jThis.attr('id'))).parent().add(jThis).remove();
 					}
 				});
 
@@ -464,7 +464,7 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 					jTabLinks.css('text-decoration', '');
 					$(this).css('text-decoration', 'underline');
 					jFieldsets.hide();
-					$('#' + $(this).attr('rel')).show().parent().parent().scrollTop(0);
+					$('#' + $(this).attr('data-panel')).show().parent().parent().scrollTop(0);
 				};
 				jTabLinks.click(tabClick);
 

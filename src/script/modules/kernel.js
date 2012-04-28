@@ -201,7 +201,7 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 	type: 3,
 	once: function()
 	{
-		var css = 'body { word-wrap: break-word; }';
+		var css = 'body { word-wrap: break-word; } .DivResizableBoxDetails { word-wrap: normal; }';
 
 		if($(document).pageName() === 'view') {
 			css += '\

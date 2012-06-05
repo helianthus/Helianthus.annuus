@@ -32,14 +32,11 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			',
 			28: 'td[height="52"] { display: none; }',
 			// view
-			32: $.sprintf('\
+			32: '\
 			#ctl00_ContentPlaceHolder1_view_form > script:first-child + div { width: 100% !important; } \
 			#ctl00_ContentPlaceHolder1_view_form > script:first-child + div + div { display: none; } \
 			.repliers_right > tbody > tr:first-child + tr { display: none; } \
 			',
-			$.browser.msie ? 'PADDING-BOTTOM: 18px' : 'padding: 18px'
-			)
-			,
 			// topics, search, tags, view
 			60: '\
 			#GenMainPageAd1, #MiddlePageAd1, #MainPageAd2, #MainPageAd2 ~ br, #ctl00_ContentPlaceHolder1_lb_NewPM + br, #ctl00_ContentPlaceHolder1_MiddleAdSpace1 div[style*="right"] { display: none; } \
@@ -58,9 +55,6 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		if($d.pageCode() & 28)
 		{
 			jDoc.find('td[height="52"]').parent().hide();
-		}
-		else if($d.pageCode() === 32) {
-			//jDoc.find('.repliers_left').parent().not('[userid]').closest('.repliers').filter(':only-child').add('td[align="center"] > noscript').closest('div > table[width]').hide();
 		}
 	}
 },

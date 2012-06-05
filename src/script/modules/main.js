@@ -35,15 +35,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			32: $.sprintf('\
 			#ctl00_ContentPlaceHolder1_view_form > script:first-child + div { width: 100% !important; } \
 			#ctl00_ContentPlaceHolder1_view_form > script:first-child + div + div { display: none; } \
-			#ctl00_ContentPlaceHolder1_view_form > div > table > tbody > tr > td[align="center"], \
-			.repliers + br, \
-			.repliers > tbody > tr:last-child \
-				{ display: none; } \
-			.repliers > tbody > tr[userid] { display: table-row; } \
-			#ctl00_ContentPlaceHolder1_view_form div > div[style*="%s"] { border-bottom: 0 !important; } \
-			#ctl00_ContentPlaceHolder1_view_form div > div[style*="58px"], /* top & bottom ads */\
-			#ctl00_ContentPlaceHolder1_view_form > div > table[width="100%"] > tbody > tr + tr /* inline ads */\
-				{ display: none; } \
+			.repliers_right > tbody > tr:first-child + tr { display: none; } \
 			',
 			$.browser.msie ? 'PADDING-BOTTOM: 18px' : 'padding: 18px'
 			)
@@ -68,7 +60,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			jDoc.find('td[height="52"]').parent().hide();
 		}
 		else if($d.pageCode() === 32) {
-			jDoc.find('.repliers_left').parent().not('[userid]').closest('.repliers').filter(':only-child').add('td[align="center"] > noscript').closest('div > table[width]').hide();
+			//jDoc.find('.repliers_left').parent().not('[userid]').closest('.repliers').filter(':only-child').add('td[align="center"] > noscript').closest('div > table[width]').hide();
 		}
 	}
 },

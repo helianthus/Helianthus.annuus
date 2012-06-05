@@ -36,6 +36,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			#ctl00_ContentPlaceHolder1_view_form > script:first-child + div { width: 100% !important; } \
 			#ctl00_ContentPlaceHolder1_view_form > script:first-child + div + div { display: none; } \
 			.repliers_right > tbody > tr:first-child + tr { display: none; } \
+			#Thread_No0 > td > .repliers_right > tbody > tr:first-child + tr { display: table-row; } \
 			',
 			// topics, search, tags, view
 			60: '\

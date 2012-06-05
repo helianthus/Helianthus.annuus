@@ -63,6 +63,17 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 			
 			jDiv.find('script').remove();
 			
+			if(location.search.indexOf('type=FN') !== -1) {
+				var tables = $('.PageMiddlePanel > div', jScope).children();
+				if(tables.length > 1) {
+					tables.find('script').remove().end().slice(1).remove().appendTo(jDiv).filter('table').each(function()
+					{
+						var table = $(this);
+						table.replaceWith(table.find('> tbody > tr > td[align] > *'));
+					});
+				}
+			}
+			
 			var extras = jDiv.find('#newmessage').prevAll('div:last').prev().nextAll().andSelf();
 			
 			jDiv.append(extras.slice(0, 2));
@@ -116,7 +127,7 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 			function handlePageChange(jDiv) {
 				if(displayMode === 0) pages[curPageNo].hide();
 				history.pushState ? history.pushState(null, null, AN.util.getURL({ page: targetPageNo })) : location.hash = 'page=' + targetPageNo;
-				if(!isAuto) jDiv[0].scrollIntoView();//targetPageNo > curPageNo);
+				if(!isAuto) jDiv[0].scrollIntoView();
 				curPageNo = targetPageNo;
 				AN.shared('log', '轉頁完成');
 				$d.trigger({ type: 'workend', isPageChangeEnd: true, previouslyCached: previouslyCached });

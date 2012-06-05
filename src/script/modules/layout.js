@@ -152,6 +152,20 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	}
 },
 
+'f6f55623-02e3-4174-8de6-5d66086a9846':
+{
+	desc: '隱藏投票格',
+	page: { 4: false },
+	type: 3,
+	once: function()
+	{
+		AN.util.stackStyle('\
+		#MainPageAd2 ~ link + script + div[style] \
+			{ display: none; } \
+		');
+	}
+},
+
 'b44ee3a6-950e-4b2a-b99a-399b6384bcce':
 {
 	desc: '隱藏搜尋列上下空白',

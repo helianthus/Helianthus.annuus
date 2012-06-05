@@ -115,7 +115,7 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 
 			function handlePageChange(jDiv) {
 				if(displayMode === 0) pages[curPageNo].hide();
-				location.hash = 'page=' + targetPageNo;
+				history.pushState ? history.pushState(null, null, AN.util.getURL({ page: targetPageNo })) : location.hash = 'page=' + targetPageNo;
 				if(!isAuto) jDiv[0].scrollIntoView();//targetPageNo > curPageNo);
 				curPageNo = targetPageNo;
 				AN.shared('log', '轉頁完成');

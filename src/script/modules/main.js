@@ -1080,7 +1080,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	defer: 2, // after layout is fixed
 	options: {
 		videoConvertMode: { desc: '轉換模式', type: 'select', choices: ['自動轉換', '自動轉換(引用中的連結除外)', '手動轉換'], defaultValue: '自動轉換(引用中的連結除外)' },
-		videoMaxWidth: { desc: '播放器最大闊度 [可設定為80%, 1000px等]', type: 'text', defaultValue: '100%' }
+		videoMaxWidth: { desc: '播放器最大闊度 [可設定為80%, 1000px等]', type: 'text', defaultValue: '640px' }
 	},
 	once: function()
 	{

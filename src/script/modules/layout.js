@@ -427,6 +427,17 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	{
 		AN.util.stackStyle('table[width="800"] { width: 100%; }');
 	}
+},
+
+'c6a95665-c983-4fd8-9f32-211d7c073d9f':
+{
+	desc: '隠藏財經台左側資訊',
+	page: { 36: true },
+	type: 3,
+	once: function()
+	{
+		AN.util.stackStyle('#PageMiddlePanel > div > table > tbody > tr > td[width="236px"] > div { display: none; }');
+	}
 }
 
 }};

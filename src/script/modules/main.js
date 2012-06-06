@@ -58,7 +58,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			jDoc.find('td[height="52"]').parent().hide();
 		}
 		else if($d.pageCode() === 32) {
-			jDoc.find('.repliers_left').parent().not('[userid]').closest('.repliers').filter(':only-child').add('td[align="center"] > noscript').closest('div > table[width]').hide();
+			jDoc.find('.repliers_left').parent().not('[userid]').closest('div > table[width]').hide();
 		}
 	}
 },

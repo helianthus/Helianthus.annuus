@@ -33,8 +33,8 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			28: 'td[height="52"] { display: none; }',
 			// view
 			32: '\
-			#ctl00_ContentPlaceHolder1_view_form > script:first-child + div { width: 100% !important; } \
-			#ctl00_ContentPlaceHolder1_view_form > script:first-child + div + div { display: none; } \
+			#ctl00_ContentPlaceHolder1_view_form > script:first-child + div, #ctl00_ContentPlaceHolder1_view_form > div:first-child { width: 100% !important; } \
+			#ctl00_ContentPlaceHolder1_view_form > script:first-child + div + div, #ctl00_ContentPlaceHolder1_view_form > div:first-child + div { display: none; } \
 			.repliers_right > tbody > tr:first-child + tr { display: none; } \
 			#Thread_No0 > td > .repliers_right > tbody > tr:first-child + tr { display: table-row; } \
 			',

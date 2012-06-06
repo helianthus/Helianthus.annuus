@@ -173,6 +173,8 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 
 			$.getDoc(AN.util.getURL({ page: pages.last }), function(jNewDoc)
 			{
+				jNewDoc.find('script').remove();
+			
 				updateElements(jNewDoc);
 
 				var jNewReplies = jNewDoc.replies();

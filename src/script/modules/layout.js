@@ -127,7 +127,7 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 		var w = AN.util.getOptions('nPageWidth');
 		
 		AN.util.addStyle($.sprintf('\
-		.PageWidthContainer { width: %s; } \
+		.PageWidthContainer, /* type=FN */ #PageMiddlePanel > div[style] > table { width: %s; } \
 		.PageMiddleBox { width: auto; } \
 		#ctl00_ContentPlaceHolder1_ProfileForm td[width="8"] { display: none; } \
 		',

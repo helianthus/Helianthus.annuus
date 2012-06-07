@@ -38,6 +38,13 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			.repliers_right > tbody > tr:first-child + tr { display: none; } \
 			#Thread_No0 > td > .repliers_right > tbody > tr:first-child + tr { display: table-row; } \
 			',
+			36: '\
+			/* type=FN */ \
+			table[width="1427px"] { width: auto } \
+			#PageMiddlePanel > div[style] { width: auto !important; } \
+			#PageMiddlePanel > div[style] > table { margin: auto; } \
+			#PageMiddlePanel > div[style] > table > tbody > tr > td[width="236px"] { display: none; } \
+			',
 			// topics, search, tags, view
 			60: '\
 			#GenMainPageAd1, #MiddlePageAd1, #MainPageAd2, #MainPageAd2 ~ br, #ctl00_ContentPlaceHolder1_lb_NewPM + br, #ctl00_ContentPlaceHolder1_MiddleAdSpace1 div[style*="right"] { display: none; } \

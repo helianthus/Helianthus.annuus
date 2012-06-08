@@ -1104,7 +1104,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			fn: function()
 			{
 				nHeight = nWidth / 16 * 9 + 25;
-				sUrl = $.sprintf('http://www.youtube.com/v/%s?version=3&fs=1&rel=0', sUrl.replace(/.+\/([^&#]+).*/i, '$1'));
+				sUrl = $.sprintf('http://www.youtube.com/v/%s?version=3&fs=1&rel=0', sUrl.replace(/.+\/([^?&#]+).*/i, '$1'));
 			}
 		},
 		{

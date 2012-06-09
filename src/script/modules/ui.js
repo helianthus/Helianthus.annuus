@@ -128,7 +128,7 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 
 					var sURL = (location.href.indexOf('aspxerrorpath=') > 0)
 						? $.sprintf('http://%s/topics.aspx?type=BW', location.hostname)
-						: location.href.replace(/topics_(bw)\.htm(\??)/i, function($0, $1, $2){ return 'topics.aspx?type=' + $1.toUpperCase() + ($2 ? '&' : ''); });
+						: location.href.replace(/topics_(bw)(?:_[^.]+)?\.htm(\??)/i, function($0, $1, $2){ return 'topics.aspx?type=' + $1.toUpperCase() + ($2 ? '&' : ''); });
 					var tableHTML = '', imgHTML = '';
 
 					var subs = [['forum101', 'Forum 101'], ['m', 'Mobile']];

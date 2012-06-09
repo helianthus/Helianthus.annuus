@@ -631,13 +631,15 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 					var jTarget = $(event.target);
 					if(!jTarget.is('span:first-child')) return;
 
-					var sFilter = jTarget.next().html();
-
-					var nIndex = $.inArray(sFilter, aFilter);
+					var nIndex = jTarget.closest('li').index();
 					if(nIndex != -1) aFilter.splice(nIndex, 1);
 
 					AN.util.data('aTopicFilter', aFilter);
 					jTarget.parent().remove();
+					
+					if(aFilter.length === 0) {
+						$(this).children().append('<li>沒有任何過濾器</li>');
+					}
 				});
 			}
 

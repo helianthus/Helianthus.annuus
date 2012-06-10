@@ -1,29 +1,15 @@
 window.addEventListener('load', function()
 {
-	var
-	pref = Components.classes['@mozilla.org/preferences-service;1'].getService(Components.interfaces.nsIPrefBranch).getBranch('extensions.annuus.'),
-	status = pref.getBoolPref('status'),
-	overlay = document.getElementById('annuus-overlay'),
-	rHKG = /\.hkgolden\.com$/i,
-	noop = function(){};
-
-	function setStatus()
-	{
-		overlay.src = status ? 'chrome://annuus/skin/status-on.png' : 'chrome://annuus/skin/status-off.png';
-	}
-	setStatus();
-
-	overlay.addEventListener('command', function()
-	{
-		status = !status;
-		setStatus();
-		pref.setBoolPref('status', status);
-	}, false);
+	var pref = Components.classes['@mozilla.org/preferences-service;1'].getService(Components.interfaces.nsIPrefBranch).getBranch('extensions.annuus.');
+	var status = pref.getBoolPref('status');
+	var overlay = document.getElementById('annuus-overlay');
+	var rTarget = /\.hkgolden\.com$/i;
+	var noop = function(){};
 
 	gBrowser.addProgressListener({
 		onLocationChange: function(progress, request, uri)
 		{
-			overlay.hidden = !(uri && rHKG.test(uri.prePath));
+			overlay.hidden = !rTarget.test(gBrowser.currentURI.prePath);
 		},
 		onStateChange: noop,
 		onProgressChange: noop,
@@ -31,25 +17,22 @@ window.addEventListener('load', function()
 		onSecurityChange: noop
 	});
 
-	gBrowser.addTabsProgressListener({
-		onLocationChange: function(browser, progress, request, uri)
-		{
-			if(progress.isLoadingDocument && status && rHKG.test(uri.prePath)) {
-				var
-				doc = browser.contentDocument,
-				script = doc.createElement('script');
-				script.charset = 'utf-8';
-				script.src = 'resource://annuus/annuus.js';
-				var head = doc.getElementsByTagName('head');
-				(function inject()
-				{
-					head[0] ? head[0].appendChild(script) : progress.isLoadingDocument && setTimeout(inject, 50);
-				})();
-			}
-		},
-		onStateChange: noop,
-		onProgressChange: noop,
-		onStatusChange: noop,
-		onSecurityChange: noop
-	});
+	overlay.addEventListener('command', function()
+	{
+		status = !status;
+		pref.setBoolPref('status', status);
+		setStatus();
+	}, false);
+
+	var event = document.createEvent('Event');
+	event.initEvent('annuus_status_change', false, false);
+
+	function setStatus()
+	{
+		overlay.src = status ? 'chrome://annuus/skin/status-on.png' : 'chrome://annuus/skin/status-off.png';
+		event.status = status;
+		document.dispatchEvent(event);
+	}
+
+	setStatus();
 }, false);

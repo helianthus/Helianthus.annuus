@@ -445,66 +445,26 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 				
 				/* special settings start */
 				
-				var configTmpl = { name: 'an-config', version: 2 };
-				
 				$('#an-settings-tabs-extend').append('<li><a id="an-settings-tab-sepcial" href="javascript:" data-panel="an-settings-panel-special">特殊設定</a></li>');
 
 				$('\
 				<fieldset id="an-settings-panel-special"> \
 					<legend>特殊設定</legend> \
-					<h4><span>滙出滙入</span><hr /></h4> \
+					<h4><span>設定資料</span><hr /></h4> \
 					<div><textarea readonly id="an-settings-special-config" style="width: 95%; height: 200px; font-size: 80%"></textarea></div> \
-					<div><button id="an-settings-special-import">匯入所有設定(v2)</button> <button id="an-settings-special-export">匯出所有設定(v2)</button></div> \
+					<div><a id="an-settings-special-tofile" href="javascript:" download="Helianthus.annuus.txt" style="font-size: 80%; text-decoration: underline">儲存以上資料至檔案(另存下載)</a></div> \
 				</fieldset> \
 				')
-				.delegate('#an-settings-special-import', 'click', function()
-				{
-					var textarea = $('#an-settings-special-config');
-					
-					try {
-						var config = prompt('請輸入設定資料', '');
-						
-						if(!config) {
-							return;
-						}
-						
-						config = JSON.parse(decodeURI(window.atob(config)));
-					}
-					catch(e) {
-						return alert('資料剖析錯誤!');
-					}
-						
-					if(config.name !== configTmpl.name && config.version !== configTmpl.version) {
-						return alert('設定資料格式錯誤!');
-					}
-					
-					$.each(['an_data', 'an_switches', 'an_options'], function(i, name)
-					{
-						if(name in config) {
-							AN.util.storage(name, config[name]);
-						}
-					});
-					
-					fillOptions(true);
-					alert('滙入成功!');
-				})
-				.delegate('#an-settings-special-export', 'click', function()
-				{
-					var config = $.extend({}, configTmpl);
-					
-					$.each(['an_data', 'an_switches', 'an_options'], function(i, name)
-					{
-						config[name] = AN.util.storage(name);
-					});
-					
-					$('#an-settings-special-config').val(window.btoa(encodeURI(JSON.stringify(config))) || '').select();
-					alert('滙出成功! 請複製設定資料');
-				})
-				.delegate('#an-settings-special-config', 'click', function(event)
+				.on('click', '#an-settings-special-config', function(event)
 				{
 					event.target.select();
 				})
-				.appendTo('#an-settings-main-panels');
+				.on('mousedown', '#an-settings-special-tofile', function(event)
+				{
+					event.target.href = 'data:application/octet-stream;base64,' + window.btoa(unescape(encodeURIComponent($('#an-settings-special-config').val())));
+				})
+				.appendTo('#an-settings-main-panels')
+				.trigger('an-settings-special');
 				
 				/* special settings end */
 				
@@ -649,7 +609,7 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 						oSettings = JSON.parse(oSettings);
 					}
 					catch(e) {
-						return alert('資料剖析錯誤!');
+						return alert('設定資料剖析錯誤!');
 					}
 
 					var jScope = (bFillAll) ? $('#an-settings-main-panels') : jFieldsets.filter(':visible');

@@ -9,7 +9,7 @@ document.domain = 'hkgolden.com';
 
 document.addEventListener && (function()
 {
-	var keywords = /bmediaasia|pixel-?hk|imrworldwide|googlesyndication|_getTracker|(?:Page|Inline|Google|\b)[Aa]ds?\b|scorecardresearch/;
+	var keywords = /bmediaasia|pixel-?hk|imrworldwide|googlesyndication|_getTracker|(?:Page|Inline|Google|\b)[Aa]ds?\b|scorecardresearch|addthis/;
 
 	(window.opera || document).addEventListener(window.opera ? 'BeforeScript' : 'beforeload', function(event)
 	{

@@ -229,6 +229,199 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 	{
 		AN.util.stackStyle('.TransparentGrayBackground, .TransparentGrayBackground + * { z-index: 10; }');
 	}
+},
+
+'437b66e6-abe9-4b5a-ac0e-d132d0578521':
+{
+	desc: '特殊設定: 備份設定',
+	page: { 65535: 'comp' },
+	type: 1,
+	once: function()
+	{
+		$(document).one('an-settings-special', function(event)
+		{
+			var configTmpl = { name: 'an-config', version: 2.1 };
+			
+			$('\
+			<div> \
+				<h4><span>備份設定</span><hr /></h4> \
+				<div><button id="an-settings-special-export">備份所有設定</button> <button id="an-settings-special-import-text">還原所有設定(手動輸入)</button> <button id="an-settings-special-import-file">還原所有設定(從檔案)</button></div> \
+			</div> \
+			')
+			.appendTo(event.target)
+			.on('click', '#an-settings-special-export', function()
+			{
+				var config = $.extend({}, configTmpl);
+				
+				$.each(['an_data', 'an_switches', 'an_options'], function(i, name)
+				{
+					config[name] = AN.util.storage(name);
+				});
+				
+				$('#an-settings-special-config').val(window.btoa(unescape(encodeURIComponent(JSON.stringify(config)))) || '').select();
+				alert('滙出成功! 請複製設定資料');
+			})
+			.on('click', '#an-settings-special-import-text, #an-settings-special-import-file', function(event)
+			{
+				if(event.target.id === 'an-settings-special-import-text') {
+					var config = prompt('請輸入設定資料', '');
+					
+					if(!config) {
+						return;
+					}
+					
+					importConfig(config);
+				}
+				else {
+					$('<input type="file" />').one('change', function(event)
+					{
+						if(this.files && window.FileReader) {
+							var reader = new FileReader();
+							
+							reader.onload = function()
+							{
+								importConfig(reader.result);
+							};
+							
+							reader.onerror = function(config)
+							{
+								alert('讀取設定資料時發生錯誤!');
+							};
+							
+							reader.readAsText(this.files[0]);
+						}
+						else {
+							alert('你的瀏覽器不支持此功能!');
+						}
+					}).click();
+				}
+				
+				function importConfig(config)
+				{
+					try {
+						config = JSON.parse(decodeURIComponent(escape(window.atob(config))));
+					}
+					catch(e) {
+						return alert('設定資料剖析錯誤!');
+					}
+					
+					if(config.name !== configTmpl.name) {
+						return alert('設定資料格式錯誤!');
+					}
+					
+					if(config.version !== configTmpl.version) {
+						return alert('不相容的設定資料版本: ' + config.version);
+					}
+					
+					$.each(['an_data', 'an_switches', 'an_options'], function(i, name)
+					{
+						if(name in config) {
+							AN.util.storage(name, config[name]);
+						}
+					});
+					
+					fillOptions(true);
+					alert('滙入成功!');
+				}
+			});
+		});
+	}
+},
+
+'297a1341-587f-4076-bbfc-342c0b8140b1':
+{
+	desc: '特殊設定: 同步設定',
+	page: { 65535: 'comp' },
+	type: 1,
+	once: function()
+	{
+		$(document).one('an-settings-special', function(event)
+		{
+			$('\
+			<div> \
+				<h4><span>同步設定</span><hr /></h4> \
+				<div><button id="an-settings-special-sync">複製所有設定至其他伺服器</button> <span id="an-settings-special-sync-msg"></span></div> \
+			</div> \
+			')
+			.appendTo(event.target)
+			.on('click', '#an-settings-special-sync', function()
+			{
+				var msg = $('#an-settings-special-sync-msg').text('同步中, 請稍候...');
+				
+				var config = {};
+				
+				$.each(['an_data', 'an_switches', 'an_options'], function(i, name)
+				{
+					config[name] = AN.util.storage(name);
+				});
+				
+				var data = JSON.stringify({ type: 'an-sync-start', value: JSON.stringify(config) });
+				var curForum = AN.util.getForumNo();
+				var iframes = $();
+				var onload = function()
+				{
+					this.contentWindow.postMessage(data, '*');
+				};
+				var onerror = function()
+				{
+					done(this);
+				};
+				var done = function(iframe)
+				{
+					iframes = iframes.not(iframe);
+					$(iframe).remove();
+					
+					if(iframes.length === 0) {
+						msg.text('');
+						alert('同步完成!');
+					}
+				};
+				
+				$(window).on('message', function(event)
+				{
+					try {
+						if(JSON.parse(event.originalEvent.data).type === 'an-sync-end') {
+							done(event.originalEvent.source.frameElement);
+						}
+					}
+					catch(e) {}
+				});
+				
+				for(var i=1; i<=11; i++) {
+					if(i !== curForum) {
+						iframes = iframes.add($($.sprintf('<iframe src="http://forum%s.hkgolden.com/error.html?an_sync=1" style="display:none"></iframe>', i)));
+					}
+				}
+				
+				iframes.on({ load: onload, error: onerror }).appendTo('#an');
+			});
+		});
+		
+		if(location.search.indexOf('an_sync=1') !== -1) {
+			$(window).on('message', function(event)
+			{
+				try {
+					var data = JSON.parse(event.originalEvent.data);
+				}
+				catch(e) {
+					return;
+				}
+				
+				if(data.type === 'an-sync-start' && data.value) {
+					var config = JSON.parse(data.value);
+				
+					$.each(['an_data', 'an_switches', 'an_options'], function(i, name)
+					{
+						if(name in config) {
+							AN.util.storage(name, config[name]);
+						}
+					});
+					
+					event.originalEvent.source.postMessage(JSON.stringify({ type: 'an-sync-end' }), '*');
+				}
+			});
+		}
+	}
 }
 
 }};

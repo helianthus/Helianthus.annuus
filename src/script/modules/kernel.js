@@ -320,7 +320,7 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 						}
 					});
 					
-					fillOptions(true);
+					AN.shared.fillOptions(true);
 					alert('滙入成功!');
 				}
 			});

@@ -561,7 +561,7 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 					return true;
 				};
 
-				fillOptions = function(bFillAll, bUseDefault)
+				fillOptions = AN.shared.fillOptions = function(bFillAll, bUseDefault)
 				{
 					var jScope = (bFillAll) ? $('#an-settings-main-panels') : jFieldsets.filter(':visible');
 					var oDB = AN.modFn.getDB(bUseDefault);

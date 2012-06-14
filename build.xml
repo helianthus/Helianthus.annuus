@@ -86,11 +86,6 @@
 
 			<fileset file="src/script/intro.js" />
 
-			<!-- opera -->
-			<filelist dir="src/script/opera">
-				<file name="opera9.js" />
-				<file name="rubbish.js" />
-			</filelist>
 			<!-- lib -->
 			<fileset file="src/script/lib/jquery.js" />
 			<fileset file="src/script/lib/jquery.followup.js" />

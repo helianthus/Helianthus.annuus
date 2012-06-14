@@ -335,69 +335,108 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 	type: 1,
 	once: function()
 	{
+		var working = false;
+		
+		function iframeSync(type, data)
+		{
+			if(working) {
+				alert('同步進行中, 請等待工作完成');
+				return;
+			}
+			
+			working = true;
+			
+			var msg = $('#an-settings-special-sync-msg').text('同步中, 請稍候...');
+			
+			data = JSON.stringify({ type: type, value: data });
+			var curForum = AN.util.getForumNo();
+			var iframes = $();
+			var failed = [];
+			
+			var onerror = function()
+			{
+				failed.push($(this).data('forum'));
+				done(this);
+			};
+			
+			var done = function(iframe)
+			{
+				iframes = iframes.not(iframe);
+				$(iframe).remove();
+				
+				if(iframes.length === 0) {
+					msg.text('');
+					alert('同步完成!' + (failed.length ? '\n\n以下伺服器同步失敗:\n' + failed.sort() : ''));
+					working = false;
+				}
+			};
+			
+			$(window).on('message', function(event)
+			{
+				try {
+					var type = JSON.parse(event.originalEvent.data).type;
+				}
+				catch(e) {}
+				
+				if(type === 'an-sync-ready') {
+					event.originalEvent.source.postMessage(data, '*');
+				}
+				else if(type === 'an-sync-complete') {
+					done(event.originalEvent.source.frameElement);
+				}
+			});
+			
+			for(var i=1; i<=11; i++) {
+				if(i !== curForum) {
+					iframes = iframes.add($($.sprintf('<iframe src="http://forum%s.hkgolden.com/error.html?an_sync" data-forum="%s" style="display:none"></iframe>', i, i)));
+				}
+			}
+					
+			setTimeout(function()
+			{
+				$.each(iframes, function()
+				{
+					onerror.call(this);
+				});
+			}, 10000);
+			
+			iframes.on({ error: onerror }).appendTo('#an');
+		}
+		
 		$(document).one('an-settings-special', function(event)
 		{
 			$('\
 			<div> \
 				<h4><span>同步設定</span><hr /></h4> \
-				<div><button id="an-settings-special-sync">複製所有設定至其他伺服器</button> <span id="an-settings-special-sync-msg"></span></div> \
+				<div><button id="an-settings-special-sync-settings">同步所有設定至其他伺服器</button> <button id="an-settings-special-sync-cookies">同步登入資料至其他伺服器</button> <span id="an-settings-special-sync-msg"></span></div> \
 			</div> \
 			')
 			.appendTo(event.target)
-			.on('click', '#an-settings-special-sync', function()
+			.on('click', '#an-settings-special-sync-settings', function()
 			{
-				var msg = $('#an-settings-special-sync-msg').text('同步中, 請稍候...');
-				
-				var config = {};
+				var data = {};
 				
 				$.each(['an_data', 'an_switches', 'an_options'], function(i, name)
 				{
-					config[name] = AN.util.storage(name);
+					data[name] = AN.util.storage(name);
 				});
 				
-				var data = JSON.stringify({ type: 'an-sync-start', value: JSON.stringify(config) });
-				var curForum = AN.util.getForumNo();
-				var iframes = $();
-				var onload = function()
-				{
-					this.contentWindow.postMessage(data, '*');
-				};
-				var onerror = function()
-				{
-					done(this);
-				};
-				var done = function(iframe)
-				{
-					iframes = iframes.not(iframe);
-					$(iframe).remove();
-					
-					if(iframes.length === 0) {
-						msg.text('');
-						alert('同步完成!');
-					}
-				};
+				iframeSync('an-sync-settings', JSON.stringify(data));
+			})
+			.on('click', '#an-settings-special-sync-cookies', function()
+			{
+				var data = {};
 				
-				$(window).on('message', function(event)
+				$.each(['remember_pass', 'username', 'ep', 'companymode', 'sensermode', 'filtermode', 'fontsize'], function(i, name)
 				{
-					try {
-						if(JSON.parse(event.originalEvent.data).type === 'an-sync-end') {
-							done(event.originalEvent.source.frameElement);
-						}
-					}
-					catch(e) {}
+					data[name] = AN.util.cookie(name);
 				});
 				
-				for(var i=1; i<=11; i++) {
-					if(i !== curForum) {
-						iframes = iframes.add($($.sprintf('<iframe src="http://forum%s.hkgolden.com/error.html?an_sync=1" style="display:none"></iframe>', i)));
-					}
-				}
-				
-				iframes.on({ load: onload, error: onerror }).appendTo('#an');
+				iframeSync('an-sync-cookies', JSON.stringify(data));
 			});
 		});
 		
-		if(location.search.indexOf('an_sync=1') !== -1) {
+		if(top !== self && location.search.indexOf('an_sync') !== -1) {
 			$(window).on('message', function(event)
 			{
 				try {
@@ -407,19 +446,33 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 					return;
 				}
 				
-				if(data.type === 'an-sync-start' && data.value) {
-					var config = JSON.parse(data.value);
+				if(data.type === 'an-sync-settings') {
+					data = JSON.parse(data.value);
 				
 					$.each(['an_data', 'an_switches', 'an_options'], function(i, name)
 					{
-						if(name in config) {
-							AN.util.storage(name, config[name]);
+						if(name in data) {
+							AN.util.storage(name, data[name]);
 						}
 					});
 					
-					event.originalEvent.source.postMessage(JSON.stringify({ type: 'an-sync-end' }), '*');
+					event.originalEvent.source.postMessage(JSON.stringify({ type: 'an-sync-complete' }), '*');
+				}
+				else if(data.type === 'an-sync-cookies') {
+					data = JSON.parse(data.value);
+				
+					$.each(['remember_pass', 'username', 'ep', 'companymode', 'sensermode', 'filtermode', 'fontsize'], function(i, name)
+					{
+						if(name in data) {
+							AN.util.cookie(name, data[name]);
+						}
+					});
+					
+					event.originalEvent.source.postMessage(JSON.stringify({ type: 'an-sync-complete' }), '*');
 				}
 			});
+		
+			window.top.postMessage(JSON.stringify({ type: 'an-sync-ready' }), '*');
 		}
 	}
 }

@@ -135,6 +135,13 @@ AN.mod['Component Redesigner'] = { ver: 'N/A', author: '向日', fn: {
 		hideMode === 3 ? nRight : Math.ceil(($.winWidth() - nWidth) / 2),
 		nWidth - 149
 		));
+		
+		if(hideMode !== 3) {
+			$(window).resize(function()
+			{
+				$('#newmessage').css('right', Math.ceil(($.winWidth() - nWidth) / 2));
+			});
+		}
 
 		function toggleQR(toShow, callback)
 		{

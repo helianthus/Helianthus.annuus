@@ -461,7 +461,18 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 				})
 				.on('mousedown', '#an-settings-special-tofile', function(event)
 				{
-					event.target.href = 'data:text/plain;base64,' + window.btoa(unescape(encodeURIComponent($('#an-settings-special-config').val())));
+					var URL = window.URL || window.webkitURL;
+					var bb = window.BlobBuilder || window.WebKitBlobBuilder;
+					var data = $('#an-settings-special-config').val();
+					
+					if(URL && bb) {
+						bb = new bb();
+						bb.append(data);
+						event.target.href = URL.createObjectURL(bb.getBlob('text/plain'));
+					}
+					else {
+						event.target.href = 'data:text/plain;base64,' + window.btoa(unescape(encodeURIComponent(data)));
+					}
 				})
 				.appendTo('#an-settings-main-panels')
 				.trigger('an-settings-special');

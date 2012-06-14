@@ -58,6 +58,7 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	}
 },
 
+/*
 'a7dc713c-2d23-4254-be8b-16cf6e9bbe8f':
 {
 	desc: '優化addThis組件',
@@ -71,6 +72,7 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 		');
 	}
 },
+*/
 
 'bbd5f176-c024-4684-ba98-b72da376a6eb':
 {

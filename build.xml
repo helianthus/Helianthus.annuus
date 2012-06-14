@@ -200,6 +200,19 @@
 		</copy>
 		<copy file="test/annuus.js" tofile="test/crx/annuus.js" overwrite="true" />
 
+		<!-- oex -->
+		<copy todir="test" overwrite="true">
+			<fileset dir="src" includes="oex/" />
+		</copy>
+
+		<copy file="src/oex/config.xml" todir="test/oex" overwrite="true" encoding="UTF-8">
+			<filterchain>
+				<expandproperties/>
+			</filterchain>
+		</copy>
+    
+		<copy file="test/annuus.js" todir="test/oex/includes/" overwrite="true" />
+
 		<!-- privoxy -->
 		<copy todir="test/privoxy" overwrite="true" encoding="UTF-8">
 			<filterchain>
@@ -222,6 +235,9 @@
 			<!-- http://github.com/Constellation/crxmake -->
 			<arg value="/C crxmake --pack-extension=test/crx --pack-extension-key=build/key.pem --extension-out=${dist_dir}/annuus.crx" />
 		</exec>
+
+		<!-- oex -->
+		<zip destfile="${dist_dir}/annuus.oex" basedir="test/oex" />
 
 		<!-- xpi -->
 		<mkdir dir="test/xpi_package" />

@@ -11,7 +11,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		$.each(
 		{
 			65535: '\
-			#HKGTopAd { display: none; } \
+			#HKGTopAd, #ctl00_divLang + div { display: none; } \
 			',
 			// topics
 			4: '\

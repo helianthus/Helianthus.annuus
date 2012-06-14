@@ -452,7 +452,7 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 					<legend>特殊設定</legend> \
 					<h4><span>設定資料</span><hr /></h4> \
 					<div><textarea readonly id="an-settings-special-config" style="width: 95%; height: 200px; font-size: 80%"></textarea></div> \
-					<div><a id="an-settings-special-tofile" href="javascript:" download="Helianthus.annuus.txt" style="font-size: 80%; text-decoration: underline">儲存以上資料至檔案(另存下載)</a></div> \
+					<div><a id="an-settings-special-tofile" href="javascript:" target="_blank" download="Helianthus.annuus.txt" style="font-size: 80%; text-decoration: underline">儲存以上資料至檔案(另存下載)</a></div> \
 				</fieldset> \
 				')
 				.on('click', '#an-settings-special-config', function(event)
@@ -461,7 +461,7 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 				})
 				.on('mousedown', '#an-settings-special-tofile', function(event)
 				{
-					event.target.href = 'data:application/octet-stream;base64,' + window.btoa(unescape(encodeURIComponent($('#an-settings-special-config').val())));
+					event.target.href = 'data:text/plain;base64,' + window.btoa(unescape(encodeURIComponent($('#an-settings-special-config').val())));
 				})
 				.appendTo('#an-settings-main-panels')
 				.trigger('an-settings-special');

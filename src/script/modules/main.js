@@ -675,7 +675,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		AN.util.stackStyle('\
 		.an-bammed-msg { color: #999; font-size: 10px; text-align: center; } \
 		.an-bammed-msg > span { cursor: pointer; } \
-		.an-bammed > td { opacity: 0.5; } \
+		.an-bammed > td { opacity: 0.5; padding: 15px 7px; } \
 		.an-bammed > .repliers_left > div > a:first-child ~ *, .an-bammed > td > .repliers_right { display: none; } \
 		');
 

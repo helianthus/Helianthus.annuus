@@ -193,7 +193,7 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 					var jNewElements = $();
 
 					if(difference > 0) {
-						jNewElements = jNewElements.add(jNewReplies.slice(oldReplyNum).closest('table[width=100%]').insertAfter(pages[pages.last].children('table[width=100%]:last')));
+						jNewElements = jNewElements.add(jNewReplies.slice(oldReplyNum).closest('table[width="100%"]').insertAfter(pages[pages.last].children('table[width="100%"]:last')));
 						pages[pages.last].jReplies = null;
 						AN.shared('log', $.sprintf('加入%s個新回覆', difference));
 					}

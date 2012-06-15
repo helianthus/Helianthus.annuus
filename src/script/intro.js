@@ -2,6 +2,7 @@
 {
 
 var location = window.location;
+var history = window.history;
 
 if(!/(?:demoforum|groupon|forum\d+)\.hkgolden\.com$/i.test(location.hostname)) return;
 

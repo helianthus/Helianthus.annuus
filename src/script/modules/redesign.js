@@ -107,7 +107,7 @@ AN.mod['Component Redesigner'] = { ver: 'N/A', author: '向日', fn: {
 		sQRHideMethod: { desc: '隱藏方式', type: 'select', choices: ['完全隱藏', '隱藏於中下方, 懸浮切換顯示', '隱藏於中下方, 點擊切換顯示', '隱藏於右下角'], defaultValue: '隱藏於中下方, 點擊切換顯示' },
 		nQROpacity: { desc: '透明度 (10 = 移除半透明)', type: 'select', defaultValue: 10, choices: [10,9,8,7,6,5,4,3,2,1,0] }
 	},
-	once: function()
+	once: function(jDoc)
 	{
 		if(!AN.util.isLoggedIn()) return;
 
@@ -118,12 +118,13 @@ AN.mod['Component Redesigner'] = { ver: 'N/A', author: '向日', fn: {
 		jToggle = (hideMode === 0 ? jQR : jQR.find('tr:eq(2)')).hide(),
 		jPreview = $('#previewArea'),
 		jTextarea = $('#ctl00_ContentPlaceHolder1_messagetext'),
-		nWidth = 938, //jQR.width() + 1,
+		nWidth = 947, //jQR.width() + 1,
 		nRight = 50 - nWidth;
 		
 		jQRHeader.children()[0].nextSibling.nodeValue = '快速回覆';
 
 		AN.util.stackStyle($.sprintf('\
+		.PageMiddleBox { margin: 0 auto; padding: 9px 0; } \
 		#hkg_bottombar { z-index: 3; } \
 		#newmessage { %s; z-index: 2; position: fixed; width: %spx; bottom: 0px; right: %spx; } \
 		#an-qr-header { cursor: pointer; text-align: center; } \

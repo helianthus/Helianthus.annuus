@@ -154,29 +154,28 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 		{
  			AN.util.data('nLastChecked', $.time());
 
-			var sType = AN.util.getOptions('bAlsoCheckBeta') ? 'beta' : 'stable';
+			var type = AN.util.getOptions('bAlsoCheckBeta') ? 'beta' : 'stable';
+			var latest = oMain.ver[type].annuus.split('.');
+			var current = AN.version.split('.');
 
-			if(oMain.ver[sType]['annuus'] === undefined) return;
-
-			var aLastest = oMain.ver[sType]['annuus'].split('.');
-			var aCurrent = AN.version.split('.');
-
-			for(var i=0; i<aLastest.length; i++)
+			for(var i=0; i<latest.length; i++)
 			{
-				if(aCurrent[i] != aLastest[i])
+				if(current[i] !== latest[i])
 				{
-					if(+aCurrent[i] < +aLastest[i] && confirm('Helianthus.annuus:\n發現新版本!\n按確定進行更新'))
+					if(+current[i] < +latest[i])
 					{
-						var sPrefix = 'http://helianthus-annuus.googlecode.com/svn/dist/v3/' + sType + '/';
-
-						if(navigator.userAgent.indexOf('MAXTHON 2.0') !== -1) window.open(sPrefix + 'annuus.m2f', '_self');
-						else if ($.browser.mozilla) window.open(sPrefix + 'annuus.xpi', '_self');
-						else if(navigator.userAgent.indexOf('Chrome/') !== -1) window.open(sPrefix + 'annuus.crx', '_self');
-						else if(navigator.userAgent.indexOf('Opera/') !== -1) window.open(sPrefix + 'annuus.oex', '_self');
-
-						if(sType === 'stable') {
-							window.open('http://code.google.com/p/helianthus-annuus/wiki/Changelog', '_blank');
-						}
+						AN.util.addStyle('\
+						#an-update > div { margin: 20px 50px; } \
+						#an-update > div > a { padding: 0 5px; } \
+						');
+						
+						AN.shared.box('an-update', '發現新版本')
+						.append($.sprintf('\
+						<div><div>現在版本: %s</div><div>最新版本: %s %s</div></div> \
+						<div style="text-align: center"><a href="http://code.google.com/p/helianthus-annuus/wiki/HowToInstall">下載頁</a><a href="http://code.google.com/p/helianthus-annuus/wiki/Changelog">更新日誌</a></div> \
+						', AN.version, oMain.ver[type].annuus, type === 'stable' || oMain.ver.stable.annuus === oMain.ver.beta.annuus ? 'stable' : 'beta'));
+						
+						AN.shared.gray(true, 'an-update');
 					}
 
 					break;

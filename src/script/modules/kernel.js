@@ -172,8 +172,11 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 						if(navigator.userAgent.indexOf('MAXTHON 2.0') !== -1) window.open(sPrefix + 'annuus.m2f', '_self');
 						else if ($.browser.mozilla) window.open(sPrefix + 'annuus.xpi', '_self');
 						else if(navigator.userAgent.indexOf('Chrome/') !== -1) window.open(sPrefix + 'annuus.crx', '_self');
+						else if(navigator.userAgent.indexOf('Opera/') !== -1) window.open(sPrefix + 'annuus.oex', '_self');
 
-						window.open('http://code.google.com/p/helianthus-annuus/wiki/Changelog', '_blank');
+						if(sType === 'stable') {
+							window.open('http://code.google.com/p/helianthus-annuus/wiki/Changelog', '_blank');
+						}
 					}
 
 					break;

@@ -359,12 +359,13 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 				done(this);
 			};
 			
-			var done = function(iframe)
+			var done = function(iframe, event)
 			{
 				iframes = iframes.not(iframe);
 				$(iframe).remove();
 				
 				if(iframes.length === 0) {
+					$(window).off(event);
 					msg.text('');
 					alert('同步完成!' + (failed.length ? '\n\n以下伺服器同步失敗:\n' + failed.sort() : ''));
 					working = false;
@@ -382,7 +383,7 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 					event.originalEvent.source.postMessage(data, '*');
 				}
 				else if(type === 'an-sync-complete') {
-					done(event.originalEvent.source.frameElement);
+					done(event.originalEvent.source.frameElement, event);
 				}
 			});
 			

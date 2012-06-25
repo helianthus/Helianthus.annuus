@@ -206,6 +206,8 @@
 			</filterchain>
 		</copy>
 
+		<copy file="test/annuus.js" todir="test/oex/includes" overwrite="true" />
+
 		<!-- safariextz -->
 		<copy todir="test/annuus.safariextension" overwrite="true">
 			<fileset dir="src/safariextz" />

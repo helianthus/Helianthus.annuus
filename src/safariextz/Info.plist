@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Author</key>
+	<string>project.helianthus</string>
+	<key>CFBundleDisplayName</key>
+	<string>Helianthus.annuus</string>
+	<key>CFBundleIdentifier</key>
+	<string>org.project-helianthus.annuus</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleShortVersionString</key>
+	<string>${AN_VERSION}</string>
+	<key>CFBundleVersion</key>
+	<string>${AN_VERSION}</string>
+	<key>Chrome</key>
+	<dict/>
+	<key>Content</key>
+	<dict>
+		<key>Scripts</key>
+		<dict>
+			<key>Start</key>
+			<array>
+				<string>inject.js</string>
+			</array>
+		</dict>
+		<key>Whitelist</key>
+		<array>
+			<string>http://*.hkgolden.com/*</string>
+		</array>
+	</dict>
+	<key>Description</key>
+	<string>:o)</string>
+	<key>ExtensionInfoDictionaryVersion</key>
+	<string>1.0</string>
+	<key>Permissions</key>
+	<dict>
+		<key>Website Access</key>
+		<dict>
+			<key>Level</key>
+			<string>All</string>
+		</dict>
+	</dict>
+	<key>Website</key>
+	<string>http://code.google.com/p/helianthus-annuus/</string>
+</dict>
+</plist>

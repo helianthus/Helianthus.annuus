@@ -205,8 +205,19 @@
 				<expandproperties/>
 			</filterchain>
 		</copy>
-    
-		<copy file="test/annuus.js" todir="test/oex/includes/" overwrite="true" />
+
+		<!-- safariextz -->
+		<copy todir="test/annuus.safariextension" overwrite="true">
+			<fileset dir="src/safariextz" />
+		</copy>
+
+		<copy file="src/safariextz/Info.plist" todir="test/annuus.safariextension" overwrite="true" encoding="UTF-8">
+			<filterchain>
+				<expandproperties/>
+			</filterchain>
+		</copy>
+
+		<copy file="test/annuus.js" todir="test/annuus.safariextension/" overwrite="true" />
 
 		<!-- privoxy -->
 		<copy todir="test/privoxy" overwrite="true" encoding="UTF-8">

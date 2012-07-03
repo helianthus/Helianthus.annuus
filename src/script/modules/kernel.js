@@ -461,7 +461,7 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 										fields: 'id'
 									},
 									body: {
-										title: 'Helianthus.annuus.txt',
+										title: 'Helianthus.annuus.txt'
 									},
 									callback: function(res)
 									{

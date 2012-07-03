@@ -1,6 +1,7 @@
 {
 	"name": "Helianthus.annuus",
 	"version": "${AN_VERSION}",
+	"manifest_version": 2,
 	"description": ":o)",
 	"content_scripts": [
 		{
@@ -10,5 +11,6 @@
 			"all_frames": true
 		}
 	],
-	"permissions": ["http://*.hkgolden.com/*"]
+	"permissions": ["http://*.hkgolden.com/*"],
+	"web_accessible_resources": ["annuus.js"]
 }

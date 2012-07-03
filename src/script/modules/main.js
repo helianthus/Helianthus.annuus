@@ -471,29 +471,46 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	}
 },
 
-'4cdce143-74a5-4bdb-abca-0351638816fa':
+'4cdce143-74a5-4bdb-abca-0351638816fb':
 {
-	desc: '發表新帖子的主旨過長時進行提示',
-	page: { 256: true },
+	desc: '帖子主旨或內文過長時進行提示',
+	page: { 288: true },
 	type: 6,
 	once: function(jDoc)
 	{
-		if(location.search.indexOf('mt=N') != -1)
+		var states = {};
+
+		$('#ctl00_ContentPlaceHolder1_messagesubject, #ctl00_ContentPlaceHolder1_messagetext').on('keydown change', function()
 		{
-			$('#aspnetForm').submit(function()
+			var target = $(this);
+			var max = this.id === 'ctl00_ContentPlaceHolder1_messagesubject' ? 50 : 2000;
+			var text = $(this).val();
+			var n = 0;
+
+			for(var i=0; i<text.length; i++)
 			{
-				var sTitle = $('#ctl00_ContentPlaceHolder1_messagesubject').val();
-				var n = 0;
-				for(var i=0; i<sTitle.length; i++)
-				{
-					n += sTitle.charCodeAt(i) > 255 ? 2 : 1;
+				n += text.charCodeAt(i) > 255 ? 2 : 1;
+
+				if(n > max) {
+					target.css('background-color', 'pink');
+					states[this.id] = false
+					return;
 				}
-				if(n > 50 && !confirm('主旨過長!(位元組 > 50)\n將導致帖子發表失敗或主旨被裁剪!\n\n確定要進行發表?'))
-				{
+			}
+
+			target.css('background-color', '');
+			stats[this.id] = true;
+		});
+
+		$('#aspnetForm').submit(function()
+		{
+			for(var id in states) {
+				if(states[id] === false) {
+					alert('主旨或內文過長!');
 					return false;
 				}
-			});
-		}
+			}
+		});
 	}
 },
 
@@ -636,7 +653,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 
 					AN.util.data('aTopicFilter', aFilter);
 					jTarget.parent().remove();
-					
+
 					if(aFilter.length === 0) {
 						$(this).children().append('<li>沒有任何過濾器</li>');
 					}

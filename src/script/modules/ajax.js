@@ -9,7 +9,8 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 	{
 		viewAjaxDisplayMode: { desc: '顯示模式', type: 'select', choices: ['單頁模式', '延展模式', '延展模式(隱藏轉頁格)'], defaultValue: '延展模式' },
 		nCheckInterval: { desc: '自動更新間隔(秒)', defaultValue: 30, type: 'text' },
-		addViewAjaxPageLinks: { desc: '加入轉頁連結至連結元件', defaultValue: true, type: 'checkbox' }
+		addViewAjaxPageLinks: { desc: '加入轉頁連結至連結元件', defaultValue: true, type: 'checkbox' },
+		autoRetryAfterReplyFail: { desc: '回覆失敗時自動重試', defaultValue: false, type: 'checkbox' }
 		//bCheckOnBottom: { desc: '到頁底自動更新帖子', defaultValue: true, type: 'checkbox' },
 		//bAddCheckBtn: { desc: '加入更新帖子按扭', defaultValue: true, type: 'checkbox' },
 		//bAppendReplies: { desc: '延展帖子回覆', defaultValue: false, type: 'checkbox' },
@@ -24,26 +25,26 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 		});
 
 		AN.util.stackStyle('.hkg_bottombar_link[href^="javascript: BlockUser("] { display: none; }');
-		
+
 		var uid = 1001;
-		
+
 		$d.bind('mousedown.userlinkbox', function(event)
 		{
 			var jTarget = $(event.target);
 			if(!jTarget.is('a[href^="javascript: ToggleUserDetail"]')) return;
 
 			event.preventDefault();
-			
+
 			var id = jTarget.data('an-threadId');
-			
+
 			if(!id) {
 				id = uid++;
-				
+
 				jTarget.data('an-threadId', id)
 				.nextAll('div:first').attr('id', 'ThreadUser' + id)
 				.closest('tr[id^="Thread_No"]').attr('id', 'Thread_No' + id);
 			}
-			
+
 			window.ToggleUserDetail(id);
 		});
 
@@ -60,9 +61,9 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 		function handleNewPage(jScope, newPageNo)
 		{
 			var jDiv = $('.repliers:first', jScope).up('div');
-			
+
 			jDiv.find('script').remove();
-			
+
 			if(location.search.indexOf('type=FN') !== -1) {
 				var tables = $('.PageMiddlePanel > div', jScope).children();
 				if(tables.length > 1) {
@@ -73,11 +74,11 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 					});
 				}
 			}
-			
+
 			var extras = jDiv.find('#newmessage').prevAll('div:last').prev().nextAll().andSelf();
-			
+
 			jDiv.append(extras.slice(0, 2));
-			
+
 			extras = extras.slice(2);
 			if(jScope) {
 				extras.remove();
@@ -85,7 +86,7 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 			else {
 				extras.not('script').insertAfter(jDiv);
 			}
-			
+
 			jDiv.prepend(jDiv.prev());
 
 			if(displayMode != 2) {
@@ -102,7 +103,7 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 						break;
 					}
 				}
-				
+
 				if(pageNo > pages.last) jDiv.insertAfter(pages[pages.last]);
 
 				AN.modFn.execMods(jDiv);
@@ -174,7 +175,7 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 			$.getDoc(AN.util.getURL({ page: pages.last }), function(jNewDoc)
 			{
 				jNewDoc.find('script').remove();
-			
+
 				updateElements(jNewDoc);
 
 				var jNewReplies = jNewDoc.replies();
@@ -231,17 +232,22 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 				$d.trigger('workend');
 			});
 		}
-		
+
 		if(AN.util.isLoggedIn()) {
 			$('#aspnetForm').submit(function(event)
 			{
 				event.preventDefault();
 
+				$.doTimeout('autoRetryReply');
+
 				if(isWorking) {
 					AN.shared('log', '正在工作中, 完成將自動重試');
 					$d.one('workend', function()
 					{
-						$('#aspnetForm').submit();
+						$.doTimeout('autoRetryReply', 0, function()
+						{
+							$('#aspnetForm').submit();
+						});
 					});
 					return;
 				}
@@ -252,7 +258,16 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 				$.post(location.pathname + location.search, $('#aspnetForm').serialize() + '&ctl00%24ContentPlaceHolder1%24btn_Submit.x=0&ctl00%24ContentPlaceHolder1%24btn_Submit.y=0', function(sHTML)
 				{
 					if($.doc(sHTML).pageName() !== 'view') {
-						AN.shared('log', '回覆發送失敗!');
+						if(AN.util.getOptions('autoRetryAfterReplyFail')) {
+							AN.shared('log', '回覆發送失敗, 5秒後重新發送...');
+							$.doTimeout('autoRetryReply', 5000, function()
+							{
+								$('#aspnetForm').submit();
+							});
+						}
+						else {
+							AN.shared('log', '回覆發送失敗!');
+						}
 						$d.trigger('workend');
 						return;
 					}
@@ -381,11 +396,11 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 		var refreshTopics = function(nPage, url, continued)
 		{
 			clearTimeout(tRefresh);
-			
+
 			if(working && !continued) {
 				return;
 			}
-			
+
 			working = true;
 
 			if(isNaN(nPage))
@@ -410,7 +425,7 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 						AN.shared('log2', $.sprintf('%s秒後再次重新整埋....', nInterval));
 						setNextRefresh();
 					}
-					
+
 					working = false;
 				}
 				else

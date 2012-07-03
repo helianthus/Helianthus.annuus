@@ -168,13 +168,13 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 						#an-update > div { margin: 20px 50px; } \
 						#an-update > div > a { padding: 0 5px; } \
 						');
-						
+
 						AN.shared.box('an-update', '發現新版本')
 						.append($.sprintf('\
 						<div><div>現在版本: %s</div><div>最新版本: %s %s</div></div> \
 						<div style="text-align: center"><a href="http://code.google.com/p/helianthus-annuus/wiki/HowToInstall">下載頁</a><a href="http://code.google.com/p/helianthus-annuus/wiki/Changelog">更新日誌</a></div> \
 						', AN.version, oMain.ver[type].annuus, type === 'stable' || oMain.ver.stable.annuus === oMain.ver.beta.annuus ? 'stable' : 'beta'));
-						
+
 						AN.shared.gray(true, 'an-update');
 					}
 
@@ -233,63 +233,105 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 	}
 },
 
+'5d53720c-7f4f-4777-a511-cf57fed412cd':
+{
+	desc: '特殊設定: 初始化',
+	page: { 65535: 'comp' },
+	type: 1,
+	once: function()
+	{
+		var configTmpl = { name: 'an-config', version: 2.1 };
+
+		AN.shared.getConfig = function()
+		{
+			var config = $.extend({}, configTmpl);
+
+			$.each(['an_data', 'an_switches', 'an_options'], function(i, name)
+			{
+				config[name] = AN.util.storage(name);
+			});
+
+			return window.btoa(unescape(encodeURIComponent(JSON.stringify(config))));
+		};
+
+		AN.shared.setConfig = function(config)
+		{
+			try {
+				config = JSON.parse(decodeURIComponent(escape(window.atob(config))));
+			}
+			catch(e) {
+				return alert('設定資料剖析錯誤!');
+			}
+
+			if(config.name !== configTmpl.name) {
+				return alert('設定資料格式錯誤!');
+			}
+
+			if(config.version !== configTmpl.version) {
+				return alert('不相容的設定資料版本: ' + config.version);
+			}
+
+			$.each(['an_data', 'an_switches', 'an_options'], function(i, name)
+			{
+				if(name in config) {
+					AN.util.storage(name, config[name]);
+				}
+			});
+
+			AN.shared.fillOptions(true);
+			alert('設定還原成功!');
+		};
+	}
+},
+
 '437b66e6-abe9-4b5a-ac0e-d132d0578521':
 {
-	desc: '特殊設定: 備份設定',
+	desc: '特殊設定: 備份/還原設定',
 	page: { 65535: 'comp' },
 	type: 1,
 	once: function()
 	{
 		$(document).one('an-settings-special', function(event)
 		{
-			var configTmpl = { name: 'an-config', version: 2.1 };
-			
 			$('\
 			<div> \
-				<h4><span>備份設定</span><hr /></h4> \
+				<h4><span>備份/還原設定</span><hr /></h4> \
 				<div><button id="an-settings-special-export">備份所有設定</button> <button id="an-settings-special-import-text">還原所有設定(手動輸入)</button> <button id="an-settings-special-import-file">還原所有設定(從檔案)</button></div> \
 			</div> \
 			')
 			.appendTo(event.target)
 			.on('click', '#an-settings-special-export', function()
 			{
-				var config = $.extend({}, configTmpl);
-				
-				$.each(['an_data', 'an_switches', 'an_options'], function(i, name)
-				{
-					config[name] = AN.util.storage(name);
-				});
-				
-				$('#an-settings-special-config').val(window.btoa(unescape(encodeURIComponent(JSON.stringify(config)))) || '').select();
+				$('#an-settings-special-config').val(AN.shared.getConfig() || '').select();
 				alert('滙出成功! 請複製設定資料');
 			})
 			.on('click', '#an-settings-special-import-text, #an-settings-special-import-file', function(event)
 			{
 				if(event.target.id === 'an-settings-special-import-text') {
 					var config = prompt('請輸入設定資料', '');
-					
+
 					if(!config) {
 						return;
 					}
-					
-					importConfig(config);
+
+					AN.shared.setConfig(config);
 				}
 				else {
 					$('<input type="file" />').one('change', function(event)
 					{
 						if(this.files && window.FileReader) {
 							var reader = new FileReader();
-							
+
 							reader.onload = function()
 							{
-								importConfig(reader.result);
+								AN.shared.setConfig(reader.result);
 							};
-							
+
 							reader.onerror = function(config)
 							{
 								alert('讀取設定資料時發生錯誤!');
 							};
-							
+
 							reader.readAsText(this.files[0]);
 						}
 						else {
@@ -297,34 +339,173 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 						}
 					}).click();
 				}
-				
-				function importConfig(config)
-				{
-					try {
-						config = JSON.parse(decodeURIComponent(escape(window.atob(config))));
-					}
-					catch(e) {
-						return alert('設定資料剖析錯誤!');
-					}
-					
-					if(config.name !== configTmpl.name) {
-						return alert('設定資料格式錯誤!');
-					}
-					
-					if(config.version !== configTmpl.version) {
-						return alert('不相容的設定資料版本: ' + config.version);
-					}
-					
-					$.each(['an_data', 'an_switches', 'an_options'], function(i, name)
+			});
+		});
+	}
+},
+
+'a16e2bcd-ff21-47ba-b6d8-983514884bf3':
+{
+	desc: '特殊設定: 備份/還原設定 (Google Drive)',
+	page: { 65535: 'comp' },
+	type: 1,
+	once: function()
+	{
+		var authParams = { client_id: '877980184388.apps.googleusercontent.com', scope: 'https://www.googleapis.com/auth/drive.file', immediate: true };
+
+		$(document).one('an-settings-special', function(event)
+		{
+			$('\
+			<div> \
+				<h4><span>備份/還原設定 (Google Drive)</span><hr /></h4> \
+				<div><button data-action="init">初始化與Google Drive的連接</button></div> \
+				<div data-row="main" style="display:none"><button data-action="backup">備份所有設定至Google Drive</button> <button data-action="restore">從Google Drive還原所有設定</button> <span id="an-settings-special-gdrive-msg"></span></div> \
+			</div> \
+			')
+			.appendTo(event.target)
+			.on('click', 'button[data-action="init"]', function(event)
+			{
+				var container = $(event.target).parent();
+
+				container.text('請稍候...');
+
+				$.when(
+					window.google || $.Deferred(function(deferred)
 					{
-						if(name in config) {
-							AN.util.storage(name, config[name]);
+						$.ajax({ url: 'http://www.google.com/jsapi', dataType: 'script', cache: true }).then(function()
+						{
+							google.load('picker', '1', { callback: function(){ deferred.resolve(); } });
+						});
+					}),
+					window.gapi || $.Deferred(function(deferred)
+					{
+						var name = 'AN_SETTINGS_SPECIAL_GDRIVE_ONLOAD_CALLBACK';
+
+						window[name] = function()
+						{
+							delete window[name];
+
+							setTimeout(function(){
+								gapi.auth.authorize({ client_id: '877980184388.apps.googleusercontent.com', scope: 'https://www.googleapis.com/auth/drive.file', immediate: true }, function(){ deferred.resolve(); });
+							}, 0);
+						};
+
+						$.ajax({ url: 'https://apis.google.com/js/client.js?onload=' + name, dataType: 'script', cache: true });
+					})
+				).then(function()
+				{
+					container.hide().next().show();
+				});
+			})
+			.on('click', 'div[data-row="main"] > button', function(event)
+			{
+				$.Deferred(function(deferred)
+				{
+					if(!gapi.auth.getToken()) {
+						authParams.immediate = false;
+						gapi.auth.authorize(authParams, function(token)
+						{
+							deferred[token ? 'resolve' : 'reject']();
+						});
+					}
+					else {
+						deferred.resolve();
+					}
+				}).then(function()
+				{
+					var done = function(msg)
+					{
+						$('#an-settings-special-gdrive-msg').text('');
+
+						msg && alert(msg);
+					};
+
+					$('#an-settings-special-gdrive-msg').text('請稍候...');
+
+					var action = $(event.target).data('action');
+
+					$.Deferred(function(deferred)
+					{
+						gapi.client.request({
+							path: '/drive/v2/files',
+							params: {
+								maxResults: 1,
+								q: 'title=\'Helianthus.annuus.txt\'',
+								fields: 'items/id,items/downloadUrl'
+							},
+							callback: function(res)
+							{
+								if(res.error) {
+									deferred.reject();
+									done('發生錯誤: ' + res.error.message);
+									return;
+								}
+
+								if(res.items && res.items[0]) {
+									deferred.resolve(res.items[0]);
+									return;
+								}
+
+								if(action === 'restore') {
+									deferred.reject();
+									done('發生錯誤: 從Google Drive找不到設定資料!');
+									return;
+								}
+
+								gapi.client.request({
+									path: '/drive/v2/files',
+									method: 'POST',
+									params: {
+										fields: 'items/id'
+									},
+									body: {
+										title: 'Helianthus.annuus.txt',
+									},
+									callback: function(res)
+									{
+										if(res.error) {
+											deferred.reject();
+											done('發生錯誤: ' + res.error.message);
+										}
+										else {
+											deferred.resolve(res);
+										}
+									}
+								});
+							}
+						});
+					}).then(function(item)
+					{
+						if(action === 'backup') {
+							gapi.client.request({
+								path: '/upload/drive/v2/files/' + item.id + '?uploadType=media',
+								method: 'PUT',
+								body: AN.shared.getConfig(),
+								headers: {
+									'Content-Type': 'text/plain'
+								},
+								callback: function(res)
+								{
+									done('備份成功!');
+								}
+							});
+						}
+						else if(action === 'restore') {
+							$.ajax({ url: item.downloadUrl, headers: { Authorization: 'Bearer ' + gapi.auth.getToken().access_token } })
+							.then(
+								function(res)
+								{
+									AN.shared.setConfig(res);
+									done();
+								},
+								function(xhr)
+								{
+									done('發生錯誤: ' + xhr.statusText);
+								}
+							);
 						}
 					});
-					
-					AN.shared.fillOptions(true);
-					alert('滙入成功!');
-				}
+				});
 			});
 		});
 	}
@@ -338,34 +519,34 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 	once: function()
 	{
 		var working = false;
-		
+
 		function iframeSync(type, data)
 		{
 			if(working) {
 				alert('同步進行中, 請等待工作完成');
 				return;
 			}
-			
+
 			working = true;
-			
+
 			var msg = $('#an-settings-special-sync-msg').text('同步中, 請稍候...');
-			
+
 			data = JSON.stringify({ type: type, value: data });
 			var curForum = AN.util.getForumNo();
 			var iframes = $();
 			var failed = [];
-			
+
 			var onerror = function()
 			{
 				failed.push($(this).data('forum'));
 				done(this);
 			};
-			
+
 			var done = function(iframe, event)
 			{
 				iframes = iframes.not(iframe);
 				$(iframe).remove();
-				
+
 				if(iframes.length === 0) {
 					$(window).off(event);
 					msg.text('');
@@ -373,14 +554,14 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 					working = false;
 				}
 			};
-			
+
 			$(window).on('message', function(event)
 			{
 				try {
 					var type = JSON.parse(event.originalEvent.data).type;
 				}
 				catch(e) {}
-				
+
 				if(type === 'an-sync-ready') {
 					event.originalEvent.source.postMessage(data, '*');
 				}
@@ -388,13 +569,13 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 					done(event.originalEvent.source.frameElement, event);
 				}
 			});
-			
+
 			for(var i=1; i<=11; i++) {
 				if(i !== curForum) {
 					iframes = iframes.add($($.sprintf('<iframe src="http://forum%s.hkgolden.com/error.html?an_sync" data-forum="%s" style="display:none"></iframe>', i, i)));
 				}
 			}
-					
+
 			setTimeout(function()
 			{
 				$.each(iframes, function()
@@ -402,10 +583,10 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 					onerror.call(this);
 				});
 			}, 10000);
-			
+
 			iframes.on({ error: onerror }).appendTo('#an');
 		}
-		
+
 		$(document).one('an-settings-special', function(event)
 		{
 			$('\
@@ -418,27 +599,27 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 			.on('click', '#an-settings-special-sync-settings', function()
 			{
 				var data = {};
-				
+
 				$.each(['an_data', 'an_switches', 'an_options'], function(i, name)
 				{
 					data[name] = AN.util.storage(name);
 				});
-				
+
 				iframeSync('an-sync-settings', JSON.stringify(data));
 			})
 			.on('click', '#an-settings-special-sync-cookies', function()
 			{
 				var data = {};
-				
+
 				$.each(['remember_pass', 'username', 'ep', 'companymode', 'sensermode', 'filtermode', 'fontsize'], function(i, name)
 				{
 					data[name] = AN.util.cookie(name);
 				});
-				
+
 				iframeSync('an-sync-cookies', JSON.stringify(data));
 			});
 		});
-		
+
 		if(top !== self && location.search.indexOf('an_sync') !== -1) {
 			$(window).on('message', function(event)
 			{
@@ -448,33 +629,33 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 				catch(e) {
 					return;
 				}
-				
+
 				if(data.type === 'an-sync-settings') {
 					data = JSON.parse(data.value);
-				
+
 					$.each(['an_data', 'an_switches', 'an_options'], function(i, name)
 					{
 						if(name in data) {
 							AN.util.storage(name, data[name]);
 						}
 					});
-					
+
 					event.originalEvent.source.postMessage(JSON.stringify({ type: 'an-sync-complete' }), '*');
 				}
 				else if(data.type === 'an-sync-cookies') {
 					data = JSON.parse(data.value);
-				
+
 					$.each(['remember_pass', 'username', 'ep', 'companymode', 'sensermode', 'filtermode', 'fontsize'], function(i, name)
 					{
 						if(name in data) {
 							AN.util.cookie(name, data[name]);
 						}
 					});
-					
+
 					event.originalEvent.source.postMessage(JSON.stringify({ type: 'an-sync-complete' }), '*');
 				}
 			});
-		
+
 			window.top.postMessage(JSON.stringify({ type: 'an-sync-ready' }), '*');
 		}
 	}

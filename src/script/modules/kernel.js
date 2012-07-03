@@ -370,6 +370,7 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 				container.text('請稍候...');
 
 				$.when(
+					/*
 					window.google || $.Deferred(function(deferred)
 					{
 						$.ajax({ url: 'http://www.google.com/jsapi', dataType: 'script', cache: true }).then(function()
@@ -377,6 +378,7 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 							google.load('picker', '1', { callback: function(){ deferred.resolve(); } });
 						});
 					}),
+					*/
 					window.gapi || $.Deferred(function(deferred)
 					{
 						var name = 'AN_SETTINGS_SPECIAL_GDRIVE_ONLOAD_CALLBACK';
@@ -430,7 +432,7 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 							path: '/drive/v2/files',
 							params: {
 								maxResults: 1,
-								q: 'title=\'Helianthus.annuus.txt\'',
+								q: 'title = \'Helianthus.annuus.txt\' and trashed = false',
 								fields: 'items/id,items/downloadUrl'
 							},
 							callback: function(res)
@@ -456,7 +458,7 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 									path: '/drive/v2/files',
 									method: 'POST',
 									params: {
-										fields: 'items/id'
+										fields: 'id'
 									},
 									body: {
 										title: 'Helianthus.annuus.txt',

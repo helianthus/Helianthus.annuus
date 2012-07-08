@@ -1167,7 +1167,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			var jTarget = $(event.target);
 			if(jTarget.next('.an-videoified').length) {
 				event.preventDefault();
-				jTarget.next().next().toggle();
+				jTarget.next().next().remove().end().remove();
 			}
 			else if((event.type === 'videoconvert' || jTarget.is('.repliers_right > tbody > tr:first-child a')) && rLink.test(event.target.href)) {
 				event.preventDefault();

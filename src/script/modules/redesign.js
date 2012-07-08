@@ -120,7 +120,7 @@ AN.mod['Component Redesigner'] = { ver: 'N/A', author: '向日', fn: {
 		jTextarea = $('#ctl00_ContentPlaceHolder1_messagetext'),
 		nWidth = 947, //jQR.width() + 1,
 		nRight = 50 - nWidth;
-		
+
 		jQRHeader.children()[0].nextSibling.nodeValue = '快速回覆';
 
 		AN.util.stackStyle($.sprintf('\
@@ -136,7 +136,7 @@ AN.mod['Component Redesigner'] = { ver: 'N/A', author: '向日', fn: {
 		hideMode === 3 ? nRight : Math.ceil(($.winWidth() - nWidth) / 2),
 		nWidth - 149
 		));
-		
+
 		if(hideMode !== 3) {
 			$(window).resize(function()
 			{

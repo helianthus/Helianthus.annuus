@@ -127,10 +127,10 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	once: function()
 	{
 		var w = AN.util.getOptions('nPageWidth');
-		
+
 		AN.util.addStyle($.sprintf('\
 		.PageWidthContainer, /* type=FN */ #PageMiddlePanel > div[style] > table { width: %s; } \
-		.PageMiddleBox { width: auto; } \
+		.PageMiddleBox { width: auto; padding: 9px 0; } \
 		#ctl00_ContentPlaceHolder1_ProfileForm td[width="8"] { display: none; } \
 		',
 		w === 'auto' ? '100%' : w
@@ -178,7 +178,7 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 		AN.util.stackStyle('\
 		#ctl00_ContentPlaceHolder1_MiddleAdSpace1 > div { padding: 0 !important; } \
 		');
-		
+
 		if($d.pageName() == 'topics')
 			AN.util.stackStyle('\
 			.Topic_FunctionPanel { margin-top: 3px; } \
@@ -282,7 +282,7 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 		{
 			if(AN.util.getOptions(name)) css.push(selector);
 		});
-		
+
 		AN.util.stackStyle(css.join(',') + ' { display: none; }');
 	}
 },

@@ -499,7 +499,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			}
 
 			target.css('background-color', '');
-			stats[this.id] = true;
+			states[this.id] = true;
 		});
 
 		$('#aspnetForm').submit(function()

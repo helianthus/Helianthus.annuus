@@ -82,6 +82,7 @@
 		<concat destfile="${temp}" fixlastline="true" encoding="UTF-8">
 			<filterchain>
 				<expandproperties/>
+				<escapeunicode />
 			</filterchain>
 
 			<fileset file="src/script/intro.js" />
@@ -221,6 +222,23 @@
 
 		<copy file="test/annuus.js" todir="test/annuus.safariextension/" overwrite="true" />
 
+		<!-- mxaddon -->
+		<copy todir="test/mxaddon" overwrite="true">
+			<fileset dir="src/mxaddon" />
+		</copy>
+
+		<copy file="src/mxaddon/def.json" todir="test/mxaddon" overwrite="true" encoding="UnicodeLittle">
+			<filterchain>
+				<expandproperties/>
+			</filterchain>
+		</copy>
+
+		<copy file="src/mxaddon/inject.js" todir="test/mxaddon" overwrite="true" encoding="UTF-8">
+			<filterchain>
+				<expandproperties/>
+			</filterchain>
+		</copy>
+
 		<!-- privoxy -->
 		<copy todir="test/privoxy" overwrite="true" encoding="UTF-8">
 			<filterchain>
@@ -257,6 +275,13 @@
 		<replaceregexp file="test/xpi_package/chrome.manifest" match=" (?=(?:content|locale|skin)/)" replace=" jar:chrome/annuus.jar!/" flags="g" encoding="UTF-8" />
 
 		<zip destfile="${dist_dir}/annuus.xpi" basedir="test/xpi_package" />
+
+		<!-- mxaddon -->
+		<exec executable="build/MxPacker.exe">
+			<arg path="test/mxaddon" />
+		</exec>
+
+		<move file="test/mxaddon.mxaddon" tofile="${dist_dir}/annuus.mxaddon" />
 
 		<!-- m2f -->
 		<zip destfile="${dist_dir}/annuus.m2f" basedir="test/m2f" />

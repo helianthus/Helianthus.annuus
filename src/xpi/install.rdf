@@ -4,7 +4,6 @@
   <Description about="urn:mozilla:install-manifest">
     <em:id>project.helianthus@gmail.com</em:id>
     <em:type>2</em:type>
-    <em:iconURL>chrome://annuus/skin/icon.png</em:iconURL>
 
     <em:name>Helianthus.annuus</em:name>
     <em:version>${AN_VERSION}</em:version>
@@ -12,11 +11,12 @@
     <em:description>:o)</em:description>
     <em:homepageURL>http://code.google.com/p/helianthus-annuus/</em:homepageURL>
 
+	<em:bootstrap>true</em:bootstrap>
     <em:targetApplication>
       <Description>
         <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
-        <em:minVersion>3.5</em:minVersion>
-        <em:maxVersion>10.0.*</em:maxVersion>
+        <em:minVersion>4.0</em:minVersion>
+        <em:maxVersion>13.0.*</em:maxVersion>
       </Description>
     </em:targetApplication>
   </Description>

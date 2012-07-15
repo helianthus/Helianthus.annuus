@@ -1,1 +1,0 @@
-pref("extensions.annuus.status", true);

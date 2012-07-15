@@ -171,7 +171,7 @@
 			</filterchain>
 		</copy>
 
-		<copy file="test/annuus.js" todir="test/xpi/content/" />
+		<copy file="test/annuus.js" todir="test/xpi/resource/" />
 
 		<!-- m2f -->
 		<copy todir="test" overwrite="true">
@@ -266,15 +266,7 @@
 		<zip destfile="${dist_dir}/annuus.oex" basedir="test/oex" />
 
 		<!-- xpi -->
-		<mkdir dir="test/xpi_package" />
-		<mkdir dir="test/xpi_package/chrome" />
-		<zip destfile="test/xpi_package/chrome/annuus.jar" basedir="test/xpi" includes="content/*,locale/*,skin/*" />
-		<copy todir="test/xpi_package">
-			<fileset dir="test/xpi" includes="*/**" excludes="content/,locale/,skin/" />
-		</copy>
-		<replaceregexp file="test/xpi_package/chrome.manifest" match=" (?=(?:content|locale|skin)/)" replace=" jar:chrome/annuus.jar!/" flags="g" encoding="UTF-8" />
-
-		<zip destfile="${dist_dir}/annuus.xpi" basedir="test/xpi_package" />
+		<zip destfile="${dist_dir}/annuus.xpi" basedir="test/xpi" />
 
 		<!-- mxaddon -->
 		<exec executable="build/MxPacker.exe">

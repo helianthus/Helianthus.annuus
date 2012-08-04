@@ -145,12 +145,29 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	type: 3,
 	once: function()
 	{
-		AN.util.stackStyle('\
-		#ctl00_ContentPlaceHolder1_view_form > script:first-child + table + table tr:first-child, \
-		#ctl00_ContentPlaceHolder1_topics_form > script:first-child + table + table tr:first-child, \
-		.DivResizableBoxContainer \
-			{ display: none; } \
-		');
+		AN.util.stackStyle('#MainPageAd2 ~ .DivResizableBoxContainer { display: none; }');
+	}
+},
+
+'cc95985d-34df-409d-a574-e8dca1531a3d':
+{
+	desc: '隱藏精選文章',
+	page: { 4: false },
+	type: 3,
+	once: function()
+	{
+		AN.util.stackStyle('#MainPageAd2 ~ .DivResizableBoxContainer + iframe { display: none; }');
+	}
+},
+
+'a303eac3-106b-4534-96b7-92a771b1dc3b':
+{
+	desc: '隱藏GoGoGame',
+	page: { 4: false },
+	type: 3,
+	once: function()
+	{
+		AN.util.stackStyle('#MainPageAd2 ~ .DivResizableBoxContainer + iframe ~ * { display: none; }');
 	}
 },
 
@@ -181,7 +198,7 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 
 		if($d.pageName() == 'topics')
 			AN.util.stackStyle('\
-			.Topic_FunctionPanel { margin-top: 3px; } \
+			.Topic_FunctionPanel { margin-top: 0; } \
 			#ctl00_ContentPlaceHolder1_MiddleAdSpace1 { margin-top: 5px !important; } \
 			');
 		else

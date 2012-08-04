@@ -10,8 +10,8 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 		viewAjaxDisplayMode: { desc: '顯示模式', type: 'select', choices: ['單頁模式', '延展模式', '延展模式(隱藏轉頁格)'], defaultValue: '延展模式' },
 		nCheckInterval: { desc: '自動更新間隔(秒)', defaultValue: 30, type: 'text' },
 		addViewAjaxPageLinks: { desc: '加入轉頁連結至連結元件', defaultValue: true, type: 'checkbox' },
-		autoRetryAfterReplyFail: { desc: '回覆失敗時自動重試', defaultValue: false, type: 'checkbox' }
-		//bCheckOnBottom: { desc: '到頁底自動更新帖子', defaultValue: true, type: 'checkbox' },
+		autoRetryAfterReplyFail: { desc: '回覆失敗時自動重試', defaultValue: false, type: 'checkbox' },
+		checkOnBottom: { desc: '只有到頁底時才自動更新帖子', defaultValue: true, type: 'checkbox' }
 		//bAddCheckBtn: { desc: '加入更新帖子按扭', defaultValue: true, type: 'checkbox' },
 		//bAppendReplies: { desc: '延展帖子回覆', defaultValue: false, type: 'checkbox' },
 		//bAjaxifyReplying: { desc: 'AJAX化回覆', defaultValue: true, type: 'checkbox' },
@@ -329,9 +329,11 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 				$.doTimeout('checkbottom', 500, checkBottom);
 			}
 
+			var checkOnBottom = AN.util.getOptions('checkOnBottom');
+
 			function checkBottom()
 			{
-				if(pages[pages.last].offset().top + pages[pages.last].height() - $d.scrollTop() - $w.height() > 500) {
+				if(checkOnBottom && pages[pages.last].offset().top + pages[pages.last].height() - $d.scrollTop() - $w.height() > 500) {
 					return true;
 				}
 

@@ -20,7 +20,7 @@ function require(module)
 
 function startup(data)
 {
-	baseURI = Services.io.newFileURI(data.installPath);
+	baseURI = data.resourceURI;
 
 	require('noscript').enableJS();
 

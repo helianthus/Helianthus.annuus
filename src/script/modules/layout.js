@@ -138,6 +138,17 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	}
 },
 
+'1cbed44e-f3d5-4d53-b1e7-2d60e356f3f2':
+{
+	desc: '隱藏個人連結',
+	page: { 60: false },
+	type: 3,
+	once: function()
+	{
+		AN.util.stackStyle('#MainPageAd2 + br + div, #MainPageAd2 + div { display: none; }');
+	}
+},
+
 '1c63cc45-21f7-40ab-905a-730dabffc2ab':
 {
 	desc: '隱藏高登公告',

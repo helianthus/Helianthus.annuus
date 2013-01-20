@@ -139,7 +139,7 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 						tableHTML += $.sprintf('<tr><td><a href="%s">%s</a></td><td class="an-server-response"></td></tr>', sURL.replace(/demoforum|groupon|forum\d+/i, subs[i][0]), subs[i][1]);
 						imgHTML += '<img />';
 					}
-						
+
 					var jTestImages = $('<div>' + imgHTML + '</div>').children().bind('load error', function(event)
 					{
 						var jImg = $(event.target);
@@ -442,9 +442,9 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 
 				$('#an-settings-main-panels').append(sHTML);
 				sHTML = null;
-				
+
 				/* special settings start */
-				
+
 				$('#an-settings-tabs-extend').append('<li><a id="an-settings-tab-sepcial" href="javascript:" data-panel="an-settings-panel-special">特殊設定</a></li>');
 
 				$('\
@@ -464,7 +464,7 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 					var URL = window.URL || window.webkitURL;
 					var bb = window.BlobBuilder || window.WebKitBlobBuilder;
 					var data = $('#an-settings-special-config').val();
-					
+
 					if(URL && bb) {
 						bb = new bb();
 						bb.append(data);
@@ -476,9 +476,9 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 				})
 				.appendTo('#an-settings-main-panels')
 				.trigger('an-settings-special');
-				
+
 				/* special settings end */
-				
+
 
 				jFieldsets = $('#an-settings-main-panels fieldset'); // jQuery bug? $('#an-settings-main-panels > fieldset') got nth
 				jTabLinks = $('#an-settings-tabs a');
@@ -612,11 +612,11 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 				{
 					try {
 						var oSettings = prompt('請輸入設定資料', '');
-						
+
 						if(!oSettings) {
 							return;
 						}
-						
+
 						oSettings = JSON.parse(oSettings);
 					}
 					catch(e) {
@@ -920,7 +920,7 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 	{
 		bAddButtonsButton: { desc: '加入按扭元件開關按扭', defaultValue: false, type: 'checkbox' },
 		bAutoShowButtons: { desc: '自動顯示按扭元件', defaultValue: true, type: 'checkbox' }
-	 },
+	},
 	once: function()
 	{
 		var getMod = function()
@@ -944,11 +944,16 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 			});
 		}
 
-		AN.shared.addButton = function(sDesc, fHandler)
+		AN.shared.addButton = function(sDesc, uExtra)
 		{
 			var jButtons = getMod();
 			if(!sDesc) return;
-			jButtons.find('ul').append($('<li><a href="javascript:">' + sDesc + '</a></li>').click(fHandler));
+
+			jButtons.find('ul').append(
+				typeof uExtra === 'string' ?
+					$.sprintf('<li><a href="%s">%s</a></li>', uExtra, sDesc) :
+					$('<li><a href="javascript:">' + sDesc + '</a></li>').click(uExtra)
+			);
 		};
 	}
 },

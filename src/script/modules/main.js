@@ -419,6 +419,22 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
   }
 },
 
+'ec520b4e-8a4b-4414-acce-ed824bf806ce':
+{
+  desc: '加入個人連結按扭',
+  page: { 60: false },
+  type: 5,
+  once: function()
+  {
+    $('#ctl00_ContentPlaceHolder1_lb_UserName > a').each(function(i, link)
+    {
+      link = $(link);
+
+      AN.shared('addButton', ~link.attr('href').indexOf('login') ? '登入' : link.text(), link.attr('href'));
+    });
+  }
+},
+
 'aad1f3ac-e70c-4878-a1ef-678539ca7ee4':
 {
   desc: '加入前往吹水台的快速連結',

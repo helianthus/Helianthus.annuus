@@ -328,12 +328,12 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 
 '96df064c-efb6-44be-9251-4a7751a45504':
 {
-	desc: '隱藏Facebook Like按扭',
+	desc: '隱藏Facebook按扭',
 	page: { 32: false },
 	type: 3,
 	once: function()
 	{
-		AN.util.stackStyle('#DivMarkThread + iframe { display: none; }');
+		AN.util.stackStyle('#DivMarkThread + table { display: none; }');
 	}
 },
 

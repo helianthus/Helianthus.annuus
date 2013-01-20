@@ -229,7 +229,7 @@ $.fn.extend(
 
 		return this.sPageName =
 			$('#ctl00_ContentPlaceHolder1_SystemMessageBoard', this).length && 'message' ||
-			$('#aspnetForm', this).length && $('#aspnetForm', this).attr('action').match(/[a-z_]+(?=\.aspx)/i)[0].toLowerCase().replace(/_html$/, '') ||
+			$('#aspnetForm', this).length && $('#aspnetForm', this).attr('action').match(/[a-z0-9_]+(?=\.aspx)/i)[0].toLowerCase().replace(/_html$/, '') ||
 			$('body > :first', this).is('b') && 'terms' ||
 			'error';
 	},
@@ -243,7 +243,7 @@ $.fn.extend(
 
 		$.each(AN.box.oPageMap, function(sPage)
 		{
-			if(this.action == sPageName)
+			if(typeof this.action === 'string' ? this.action === sPageName : this.action.test(sPageName))
 			{
 				nPageCode = sPage * 1;
 				return false;
@@ -271,7 +271,7 @@ $.fn.extend(
 
 		var jContents = $();
 		var jNameLinks = $();
-		
+
 		var jReplies = this.jReplies = this.find('.repliers')
 		.filter(function()
 		{
@@ -283,11 +283,11 @@ $.fn.extend(
 				sUserid: jTr.attr('userid'),
 				sUserName: jTr.attr('username')
 			});
-			
+
 			if(jThis.data('sUserid')) {
 				jContents.push(jThis.data('jContent')[0]);
 				jNameLinks.push(jThis.data('jNameLink')[0]);
-				
+
 				return true;
 			}
 		})
@@ -317,10 +317,6 @@ $.fn.extend(
 				return false;
 			}
 		});
-		
-		if(!this.jTopicTable) {
-			console.log(this);
-		}
 
 		return this.jTopicTable;
 	},
@@ -329,7 +325,11 @@ $.fn.extend(
 	{
 		if(this.jTopics) return this.jTopics;
 
-		var jTopics = this.jTopics = this.topicTable().find('tr').filter(function(){ return !!$(this).children().children('a').length; });
+		var topicTable = this.topicTable();
+
+		if(!topicTable) return;
+
+		var jTopics = this.jTopics = topicTable.find('tr').filter(function(){ return !!$(this).children().children('a').length; });
 
 		jTopics
 		.extend(
@@ -398,7 +398,7 @@ $.extend(AN,
 			1: { action: 'error', desc: '所有錯誤頁' },
 			2: { action: 'default', desc: '主論壇頁' },
 			4: { action: 'topics', desc: '標題頁' },
-			8: {action: 'search',  desc: '搜尋頁' },
+			8: {action: /^search\d*$/,  desc: '搜尋頁' },
 			16: { action: 'tags', desc: '標籤搜尋頁' },
 			32: { action: 'view', desc: '帖子頁' },
 			64: { action: 'profilepage', desc: '用戶資料頁' },

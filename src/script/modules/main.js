@@ -535,6 +535,10 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	type: 6,
 	infinite: function(jDoc)
 	{
+		var topics = jDoc.topics()
+
+		if(!topics) return;
+
 		var rSmiley = /[#[](hehe|love|ass|sosad|good|hoho|kill|bye|adore|banghead|bouncer|bouncy|censored|flowerface|shocking|photo|fire|yipes|369|bomb|slick|no|kill2|offtopic)[\]#]/g;
 
 		var aConvertMap =
@@ -563,7 +567,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			{ regex: /fuck/g, result: 'fuck' }
 		];
 
-		jDoc.topics().jTitleCells.find('a:first-child').each(function()
+		topics.jTitleCells.find('a:first-child').each(function()
 		{
 			var jThis = $(this);
 			var sOri = sText = jThis.text();

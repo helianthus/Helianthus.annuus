@@ -231,6 +231,7 @@ $.fn.extend(
 			$('#ctl00_ContentPlaceHolder1_SystemMessageBoard', this).length && 'message' ||
 			$('#aspnetForm', this).length && $('#aspnetForm', this).attr('action').match(/[a-z0-9_]+(?=\.aspx)/i)[0].toLowerCase().replace(/_html$/, '') ||
 			$('body > :first', this).is('b') && 'terms' ||
+			$('#mytt', this).length && 'gogogame' ||
 			'error';
 	},
 

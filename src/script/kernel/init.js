@@ -244,7 +244,7 @@ $.fn.extend(
 
 		$.each(AN.box.oPageMap, function(sPage)
 		{
-			if(typeof this.action === 'string' ? this.action === sPageName : this.action.test(sPageName))
+			if(this.action && (typeof this.action === 'string' ? this.action === sPageName : this.action.test(sPageName)))
 			{
 				nPageCode = sPage * 1;
 				return false;

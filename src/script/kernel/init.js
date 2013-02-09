@@ -232,6 +232,7 @@ $.fn.extend(
 			$('#aspnetForm', this).length && $('#aspnetForm', this).attr('action').match(/[a-z0-9_]+(?=\.aspx)/i)[0].toLowerCase().replace(/_html$/, '') ||
 			$('body > :first', this).is('b') && 'terms' ||
 			$('#mytt', this).length && 'gogogame' ||
+			$('form[action$="aspx"]', this).length && 'unknown'||
 			'error';
 	},
 

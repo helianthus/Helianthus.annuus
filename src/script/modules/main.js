@@ -1317,7 +1317,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
             function writeLink(smileyNo, smiley)
             {
               tableHTML += $.sprintf(
-                '<a href="javascript:InsertText(\'%(code)s\',false)"><img style="border: 0" src="%(path)s/%(filename)s.gif" alt="%(code)s" /></a>&nbsp;',
+                '<a href="javascript:InsertText(\'%(code)s\',false)"><img style="border: 0" src="%(path)s/%(filename)s.gif" alt="%(code)s" /></a>&nbsp;&nbsp;',
                 { code: smiley[0], path: html.path, filename: smiley[1] }
               );
             }

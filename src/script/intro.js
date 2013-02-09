@@ -181,29 +181,50 @@ $s = [
 		html: {
 			path: 'faces/lomore',
 			table: [
-				[
-					['[:-[lm]', 'angry'],
-					['[:Dlm]', 'biggrin'],
-					['[:Olm]', 'oh'],
-					['[:Plm]', 'tongue'],
-					['#lovelm#', 'love'],
-					['#goodlm#', 'good'],
-					['#hoholm#', 'hoho'],
-					['#killlm#', 'kill'],
-					['[???lm]', 'wonder2'],
-					['[flowerfacelm]', 'flowerface'],
-					['[shockinglm]', 'shocking'],
-					['[yipeslm]', 'yipes'],
-					['[offtopiclm]', 'offtopic']
-				],
-				[
-					['[369lm]', '369'],
-					['[@_@lm]', '@'],
-					['#hehelm#', 'hehe'],
-					['[fucklm]', 'diu'],
-					['[bouncerlm]', 'bouncer'],
-					['[sosadlm]', 'sosad']
-				]
+        [
+          ['xx(lm', 'dead'],
+          [':)lm', 'smile'],
+          [':o)lm', 'clown'],
+          [':o)2lm', 'clown2'],
+          [':o)3lm', 'clown3'],
+          [':o)4lm', 'clown4'],
+          [':-(lm', 'frown'],
+          [':~(lm', 'cry'],
+          [';-)lm', 'wink'],
+          [':-[lm', 'angry'],
+          [':-]lm', 'devil'],
+          [':Dlm', 'biggrin'],
+          [':Olm', 'oh'],
+          [':Plm', 'tongue'],
+          ['^3^lm', 'kiss'],
+          ['?_?lm', 'wonder']
+        ],
+        [
+          ['#yup#lm', 'agree'],
+          ['#hehe#lm', 'hehe'],
+          ['#love#lm', 'love'],
+          ['#oh#lm', 'surprise'],
+          ['#ass#lm', 'ass'],
+          ['[sosad]lm', 'sosad'],
+          ['#good#lm', 'good'],
+          ['#hoho#lm', 'hoho'],
+          ['#kill#lm', 'kill'],
+          ['@_@lm', '@'],
+          ['#adore#lm', 'adore'],
+          ['???lm', 'wonder2'],
+          ['[banghead]lm', 'banghead'],
+          ['[bouncer]lm', 'bouncer'],
+          ['[flowerface]lm', 'flowerface'],
+          ['[shocking]lm', 'shocking'],
+          ['[photo]lm', 'photo'],
+          ['[yipes]lm', 'yipes'],
+          ['[369]lm', '369'],
+          ['[slick]lm', 'slick'],
+          ['fucklm', 'diu'],
+          ['fuck2lm', 'diu2'],
+          ['#kill2#lm', 'Kill2lm'],
+          ['[offtopic]lm', 'offtopic']
+        ]
 			]
 		}
 	},
@@ -243,6 +264,293 @@ $s = [
 			]
 		}
 	},
+  {
+    desc: '草泥馬表情圖示',
+    html: {
+      path: 'faces/alpaca',
+      table: [
+        [
+          [':~(al', 'cry'],
+          [':Oal', 'oh'],
+          [':Pal', 'tongue'],
+          ['#yup#al', 'agree'],
+          ['#ng#al', 'donno'],
+          ['#hehe#al', 'hehe'],
+          ['#love#al', 'love'],
+          ['#oh#al', 'surprise'],
+          ['#cn#al', 'chicken']
+        ],
+        [
+          ['#ass#al', 'ass'],
+          ['[sosad]al', 'sosad'],
+          ['#good#al', 'good'],
+          ['#kill#al', 'kill'],
+          ['#bye#al', 'bye'],
+          ['Z_Zal', 'z'],
+          ['@_@al', '@'],
+          ['#adore#al', 'adore'],
+          ['???al', 'wonder2'],
+          ['[banghead]al', 'banghead'],
+          ['[bouncer]al', 'bouncer'],
+          ['[bouncy]al', 'bouncy']
+        ],
+        [
+          ['[flowerface]al', 'flowerface'],
+          ['[shocking]al', 'shocking'],
+          ['[photo]al', 'photo'],
+          ['#fire#al', 'fire'],
+          ['[yipes]al', 'yipes'],
+          ['[369]al', '369'],
+          ['[bomb]al', 'bomb'],
+          ['[slick]al', 'slick'],
+          ['#alfuckal#', 'diu'],
+          ['#no#al', 'no'],
+          ['#kill2#al', 'kill2']
+        ]
+      ]
+    }
+  },
+  {
+    desc: '食鬼表情圖示',
+    html: {
+      path: 'faces/ghost',
+      table: [
+        [
+          ['O:-)g', 'angel'],
+          ['xx(g', 'dead'],
+          [':)g', 'smile'],
+          [':o)g', 'clown'],
+          [':-(g', 'frown'],
+          [':~(g', 'cry'],
+          [';-)g', 'wink'],
+          [':-[g', 'angry'],
+          [':-]g', 'devil'],
+          [':Dg', 'biggrin'],
+          [':Og', 'oh'],
+          [':Pg', 'tongue'],
+          ['^3^g', 'kiss'],
+          ['?_?g', 'wonder'],
+          ['#yup#g', 'agree'],
+          ['#ng#g', 'donno'],
+          ['#hehe#g', 'hehe'],
+          ['#love#g', 'love'],
+          ['#oh#g', 'surprise'],
+          ['#cn#g', 'chicken']
+        ],
+        [
+          ['#ass#g', 'ass'],
+          ['[sosad]g', 'sosad'],
+          ['#good#g', 'good'],
+          ['#hoho#g', 'hoho'],
+          ['#kill#g', 'kill'],
+          ['#bye#g', 'bye'],
+          ['Z_Zg', 'z'],
+          ['@_@g', '@'],
+          ['#adore#g', 'adore'],
+          ['???g', 'wonder2'],
+          ['[banghead]g', 'banghead'],
+          ['[bouncer]g', 'bouncer'],
+          ['[bouncy]g', 'bouncy'],
+          ['[offtopic]g', 'offtopic']
+        ],
+        [
+          ['[censored]g', 'censored'],
+          ['[flowerface]g', 'flowerface'],
+          ['[shocking]g', 'shocking'],
+          ['[photo]g', 'photo'],
+          ['#fire#g', 'fire'],
+          ['[yipes]g', 'yipes'],
+          ['[369]g', '369'],
+          ['[bomb]g', 'bomb'],
+          ['[slick]g', 'slick'],
+          ['fuckg', 'diu'],
+          ['#no#g', 'no'],
+          ['#kill2#g', 'kill2']
+        ]
+      ]
+    }
+  },
+  {
+    desc: '水彩表情圖示',
+    html: {
+      path: 'faces/draw',
+      table: [
+        [
+          ['O:-)dw', 'angel'],
+          ['xx(dw', 'dead'],
+          [':)dw', 'smile'],
+          [':o)dw', 'clown'],
+          [':-(dw', 'frown'],
+          [':~(dw', 'cry'],
+          [';-)dw', 'wink'],
+          [':-[dw', 'angry'],
+          [':-]dw', 'devil'],
+          [':Ddw', 'biggrin'],
+          [':Odw', 'oh'],
+          [':Pdw', 'tongue'],
+          ['^3^dw', 'kiss'],
+          ['?_?dw', 'wonder'],
+          ['#yup#dw', 'agree'],
+          ['#ng#dw', 'donno'],
+          ['#hehe#dw', 'hehe'],
+          ['#love#dw', 'love'],
+          ['#oh#dw', 'surprise']
+        ],
+        [
+          ['#cn#dw', 'chicken'],
+          ['#ass#dw', 'ass'],
+          ['[sosad]dw', 'sosad'],
+          ['#good#dw', 'good'],
+          ['#hoho#dw', 'hoho'],
+          ['#kill#dw', 'kill'],
+          ['#bye#dw', 'bye'],
+          ['Z_Zdw', 'z'],
+          ['@_@dw', '@'],
+          ['#adore#dw', 'adore'],
+          ['???dw', 'wonder2'],
+          ['[banghead]dw', 'banghead'],
+          ['[bouncer]dw', 'bouncer']
+        ],
+        [
+          ['[bouncy]dw', 'bouncy'],
+          ['[censored]dw', 'censored'],
+          ['[flowerface]dw', 'flowerface'],
+          ['[shocking]dw', 'shocking'],
+          ['[photo]dw', 'photo'],
+          ['#fire#dw', 'fire'],
+          ['[yipes]dw', 'yipes'],
+          ['[369]dw', '369'],
+          ['[bomb]dw', 'bomb'],
+          ['[slick]dw', 'slick'],
+          ['fuckdw', 'diu'],
+          ['#no#dw', 'no'],
+          ['#kill2#dw', 'kill2'],
+          ['[offtopic]dw', 'offtopic']
+        ]
+      ]
+    }
+  },
+  {
+    desc: '北極表情圖示',
+    html: {
+      path: 'faces/frozen',
+      table: [
+        [
+          ['O:-)fr', 'angel'],
+          ['xx(fr', 'dead'],
+          [':)fr', 'smile'],
+          [':o)fr', 'clown'],
+          [':-(fr', 'frown'],
+          [':~(fr', 'cry'],
+          [';-)fr', 'wink'],
+          [':-[fr', 'angry'],
+          [':-]fr', 'devil'],
+          [':Dfr', 'biggrin'],
+          [':Ofr', 'oh'],
+          [':Pfr', 'tongue'],
+          ['^3^fr', 'kiss'],
+          ['?_?fr', 'wonder'],
+          ['#yup#fr', 'agree'],
+          ['#ng#fr', 'donno'],
+          ['#hehe#fr', 'hehe'],
+          ['#love#fr', 'love'],
+          ['#oh#fr', 'surprise'],
+          ['#cn#fr', 'chicken']
+        ],
+        [
+          ['#ass#fr', 'ass'],
+          ['[sosad]fr', 'sosad'],
+          ['#good#fr', 'good'],
+          ['#hoho#fr', 'hoho'],
+          ['#kill#fr', 'kill'],
+          ['#bye#fr', 'bye'],
+          ['Z_Zfr', 'z'],
+          ['@_@fr', '@'],
+          ['#adore#fr', 'adore'],
+          ['???fr', 'wonder2'],
+          ['[banghead]fr', 'banghead'],
+          ['[banghead2]fr', 'banghead2'],
+          ['[bouncer]fr', 'bouncer'],
+          ['[bouncy]fr', 'bouncy'],
+          ['[offtopic]fr', 'offtopic']
+        ],
+        [
+          ['[censored]fr', 'censored'],
+          ['[flowerface]fr', 'flowerface'],
+          ['[shocking]fr', 'shocking'],
+          ['[photo]fr', 'photo'],
+          ['#fire#fr', 'fire'],
+          ['[yipes]fr', 'yipes'],
+          ['[369]fr', '369'],
+          ['[bomb]fr', 'bomb'],
+          ['[slick]fr', 'slick'],
+          ['fuckfr', 'diu'],
+          ['#no#fr', 'no'],
+          ['#kill2#fr', 'kill2']
+        ]
+      ]
+    }
+  },
+  {
+    desc: 'Pixel表情圖示',
+    html: {
+      path: 'faces/pixel',
+      table: [
+        [
+          ['O:-)px', 'angel'],
+          ['xx(px', 'dead'],
+          [':)px', 'smile'],
+          [':o)px', 'clown'],
+          [':-(px', 'frown'],
+          [':~(px', 'cry'],
+          [';-)px', 'wink'],
+          [':-[px', 'angry'],
+          [':-]px', 'devil'],
+          [':Dpx', 'biggrin'],
+          [':Opx', 'oh'],
+          [':Ppx', 'tongue'],
+          ['^3^px', 'kiss'],
+          ['?_?px', 'wonder'],
+          ['#yup#px', 'agree'],
+          ['#ng#px', 'donno'],
+          ['#hehe#px', 'hehe'],
+          ['#love#px', 'love'],
+          ['#oh#px', 'surprise'],
+          ['#cn#px', 'chicken']
+        ],
+        [
+          ['#ass#px', 'ass'],
+          ['[sosad]px', 'sosad'],
+          ['#good#px', 'good'],
+          ['#hoho#px', 'hoho'],
+          ['#kill#px', 'kill'],
+          ['#bye#px', 'bye'],
+          ['Z_Zpx', 'z'],
+          ['@_@px', '@'],
+          ['#adore#px', 'adore'],
+          ['???px', 'wonder2'],
+          ['[banghead]px', 'banghead'],
+          ['[bouncer]px', 'bouncer'],
+          ['[bouncy]px', 'bouncy'],
+          ['[offtopic]px', 'offtopic']
+        ],
+        [
+          ['[censored]px', 'censored'],
+          ['[flowerface]px', 'flowerface'],
+          ['[shocking]px', 'shocking'],
+          ['[photo]px', 'photo'],
+          ['#fire#px', 'fire'],
+          ['[yipes]px', 'yipes'],
+          ['[369]px', '369'],
+          ['[bomb]px', 'bomb'],
+          ['[slick]px', 'slick'],
+          ['fuckpx', 'diu'],
+          ['#no#px', 'no'],
+          ['#kill2#px', 'kill2']
+        ]
+      ]
+    }
+  },
 	{
 		desc: '特殊圖示',
 		html: {

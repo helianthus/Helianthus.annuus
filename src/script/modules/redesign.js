@@ -126,7 +126,7 @@ AN.mod['Component Redesigner'] = { ver: 'N/A', author: '向日', fn: {
 		AN.util.stackStyle($.sprintf('\
 		.PageMiddleBox { margin: 0 auto; padding: 9px 0; } \
 		#hkg_bottombar { z-index: 3; } \
-		#newmessage { %s; z-index: 2; position: fixed; width: %spx; bottom: 0px; right: %spx; } \
+		#newmessage { %s; z-index: 2; position: fixed; width: %spx; bottom: 0px; right: %spx; max-height: 100%; overflow: auto; } \
 		#an-qr-header { cursor: pointer; text-align: center; } \
 		#previewArea { display: block; overflow: auto; width: %spx; } \
 		#previewArea img[onload] { max-width: 300px; } \
@@ -173,7 +173,7 @@ AN.mod['Component Redesigner'] = { ver: 'N/A', author: '向日', fn: {
 			else {
 				toggle();
 			}
-		};
+		}
 
 		hideMode === 1
 		? jQR.bind('mouseenter mouseleave', function(event){ toggleQR(event.type === 'mouseenter'); })

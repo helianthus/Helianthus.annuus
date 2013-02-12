@@ -1342,6 +1342,8 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
         return tableHTML;
       });
 
+      var lastSelected = AN.util.data('lastSelectedSmiley');
+
       if(AN.util.getOptions('sSmileySelectMethod') === '列表') {
         var selectHTML = '<select><option>經典表情圖示</option>';
         $.each($s, function()
@@ -1350,10 +1352,17 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
         });
         selectHTML += '</select>';
 
-        $(selectHTML).change(function()
+        var select = $(selectHTML).change(function()
         {
+          AN.util.data('lastSelectedSmiley', this.selectedIndex);
+
           jSmileyTr.children(':last').children().hide().eq(this.selectedIndex).show();
         }).appendTo(jSmileyTr.children(':first').empty()).after(':');
+
+        if(lastSelected != null) {
+          select[0].selectedIndex = lastSelected;
+          select.change();
+        }
       }
       else {
         AN.util.addStyle('#an-smileyselector { list-style: none; margin: 0; padding: 0; font-size: 80%; }');
@@ -1365,13 +1374,21 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
         });
         listHTML += '</ul>';
 
-        $(listHTML).click(function(event)
+        var list = $(listHTML).click(function(event)
         {
           var jTarget = $(event.target);
           if(!jTarget.is('a')) return;
 
-          jSmileyTr.children(':last').children().hide().eq(jTarget.parent().index()).show();
+          var index = jTarget.parent().index();
+
+          AN.util.data('lastSelectedSmiley', index);
+
+          jSmileyTr.children(':last').children().hide().eq(index).show();
         }).appendTo(jSmileyTr.children(':first').empty());
+
+        if(lastSelected != null) {
+          list.children().eq(lastSelected).children('a').click();
+        }
       }
     });
   }

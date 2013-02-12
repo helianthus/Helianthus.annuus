@@ -38,6 +38,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
       .repliers_right > tbody > tr:first-child + tr { display: none; } \
       #Thread_No0 > td > .repliers_right > tbody > tr:first-child + tr { display: table-row; } \
       iframe[src^="http://groupbuy"], iframe[src^="http://groupbuy"] + br { display: none; } \
+      span[id^="tempAd"] { display: none; } \
       ',
       36: '\
       /* type=FN */ \

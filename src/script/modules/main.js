@@ -195,14 +195,18 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
   type: 4,
   once: function()
   {
+    var getSearch = Function('return ' + window.getSearch.toString().replace('window.location =', 'return'))();
+
+    window.getSearch = function()
+    {
+      window.open(getSearch());
+    };
+
+    var Search = Function('return ' + window.Search.toString().replace('window.location.href =', 'return'))();
+
     window.Search = function()
     {
-      var sType = $('#st').val();
-      var sQuery = escape($('#searchstring').val());
-
-      window.open(sType == 'tag' ? 'tags.aspx?tagword='.concat(sQuery) : $.sprintf('search.aspx?st=%s&searchstring=%s', sType, sQuery), '_blank');
-
-      $('#searchstring').val('');
+      window.open(Search());
     };
   }
 },

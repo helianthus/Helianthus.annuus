@@ -40,6 +40,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			iframe[src^="http://groupbuy"], iframe[src^="http://groupbuy"] + br { display: none; } \
 			span[id^="tempAd"] { display: none; } \
 			',
+			// topics, view
 			36: '\
 			/* type=FN */ \
 			table[width="1427px"] { width: auto } \
@@ -49,7 +50,14 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			',
 			// topics, search, tags, view
 			60: '\
-			#GenMainPageAd1, #MiddlePageAd1, #MainPageAd2, #MainPageAd2 ~ br, #ctl00_ContentPlaceHolder1_lb_NewPM + br, #ctl00_ContentPlaceHolder1_MiddleAdSpace1 div[style*="right"] { display: none; } \
+			#GenMainPageAd1, \
+			#MiddlePageAd1, \
+			#MainPageAd2, \
+			#MainPageAd2 ~ br, \
+			#ctl00_ContentPlaceHolder1_lb_NewPM + br, \
+			#ctl00_ContentPlaceHolder1_MiddleAdSpace1 div[style*="right"], \
+			td > script + ins \
+				{ display: none; } \
 			',
 			// profilepage
 			64: '\

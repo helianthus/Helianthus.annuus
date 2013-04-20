@@ -361,7 +361,7 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 			},
 			set: function(value)
 			{
-				AN.util.data('aTopicFilter', value.split(/\s*?\n\s*/g));
+				AN.util.data('aTopicFilter', value ? value.split(/\s*?\n\s*/g) : []);
 			}
 		});
 
@@ -377,7 +377,7 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 					throw Error('資料格式錯誤!');
 				}
 
-				AN.util.data('aBamList', value.split(/\s*?\n\s*/g));
+				AN.util.data('aBamList', value ? value.split(/\s*?\n\s*/g) : []);
 			}
 		});
 	}

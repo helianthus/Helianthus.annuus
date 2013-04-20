@@ -143,18 +143,19 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 
 'b6b232c8-1f26-449e-bb0d-2b7826bf95ef':
 {
-  desc: '去除論壇原有的圖片縮小功能',
+  desc: '自訂圖片縮小幅度',
   page: { 32: true, 192: true },
   type: 4,
+  options: { normalImgMaxHeight: { desc: '圖片最大高度', defaultValue: '100%', type: 'text' } },
   once: function()
   {
     window.DrawImage = $.noop;
 
-    AN.util.stackStyle('\
+    AN.util.stackStyle($.sprintf('\
     .repliers_right a[target] { display: inline-block; max-width: 100% } \
-    .repliers_right img[onload] { width: auto; height: auto; max-width: 100% } \
+    .repliers_right img[onload] { width: auto; height: auto; max-width: 100%; max-height: %s; } \
     .repliers_right > tbody > tr:first-child a[target]:focus { outline: 0; } \
-    ');
+    ', AN.util.getOptions('normalImgMaxHeight')));
   }
 },
 

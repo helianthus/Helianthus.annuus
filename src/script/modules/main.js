@@ -689,7 +689,6 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 				$.each(bamList, function(i, idFilter)
 				{
 					if(userId === idFilter) {
-						console.log(jThis);
 						nCount++;
 						jThis.hide();
 						logFiltered && AN.shared('log', $.sprintf('<a href="%s" title="%s">標題已被過濾(user): %s</a>',

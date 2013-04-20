@@ -447,18 +447,23 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 
 				$('#an-settings-tabs-extend').append('<li><a id="an-settings-tab-sepcial" href="javascript:" data-panel="an-settings-panel-special">特殊設定</a></li>');
 
+				AN.util.addStyle('\
+				#an-settings-panel-special span { font-size: 80%; } \
+				#an-settings-panel-special a { font-size: 80%; text-decoration: underline } \
+				#an-settings-special-config { width: 95%; height: 200px; font-size: 80%; } \
+				');
+
 				$('\
 				<fieldset id="an-settings-panel-special"> \
 					<legend>特殊設定</legend> \
 					<h4><span>設定資料</span><hr /></h4> \
-					<div><textarea readonly id="an-settings-special-config" style="width: 95%; height: 200px; font-size: 80%"></textarea></div> \
-					<div><a id="an-settings-special-tofile" href="javascript:" target="_blank" download="Helianthus.annuus.txt" style="font-size: 80%; text-decoration: underline">儲存以上資料至檔案(另存下載)</a></div> \
+					<div><textarea id="an-settings-special-config"></textarea></div> \
+					<div> \
+						<a id="an-settings-special-tofile" href="javascript:" target="_blank" download="Helianthus.annuus.txt">儲存以上資料至檔案(另存下載)</a> \
+						<a id="an-settings-special-fromfile" href="javascript:">從本地檔案讀取...</a> \
+					</div> \
 				</fieldset> \
 				')
-				.on('click', '#an-settings-special-config', function(event)
-				{
-					event.target.select();
-				})
 				.on('mousedown', '#an-settings-special-tofile', function(event)
 				{
 					var URL = window.URL || window.webkitURL;
@@ -473,6 +478,30 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 					else {
 						event.target.href = 'data:text/plain;base64,' + window.btoa(unescape(encodeURIComponent(data)));
 					}
+				})
+				.on('click', '#an-settings-special-fromfile', function(event)
+				{
+					$('<input type="file" />').one('change', function(event)
+					{
+						if(this.files && window.FileReader) {
+							var reader = new FileReader();
+
+							reader.onload = function()
+							{
+								$('#an-settings-special-config').val(reader.result);
+							};
+
+							reader.onerror = function(config)
+							{
+								alert('讀取設定資料時發生錯誤!');
+							};
+
+							reader.readAsText(this.files[0]);
+						}
+						else {
+							alert('你的瀏覽器不支持此功能!');
+						}
+					}).click();
 				})
 				.appendTo('#an-settings-main-panels')
 				.trigger('an-settings-special');

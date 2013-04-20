@@ -286,60 +286,99 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 
 '437b66e6-abe9-4b5a-ac0e-d132d0578521':
 {
-	desc: '特殊設定: 備份/還原設定',
+	desc: '特殊設定: 滙出/更新設定',
 	page: { 65535: 'comp' },
 	type: 1,
 	once: function()
 	{
+		var apis = [];
+
+		AN.shared.addDataApi = function(api)
+		{
+			apis.push(api);
+		};
+
 		$(document).one('an-settings-special', function(event)
 		{
 			$('\
 			<div> \
-				<h4><span>備份/還原設定</span><hr /></h4> \
-				<div><button id="an-settings-special-export">備份所有設定</button> <button id="an-settings-special-import-text">還原所有設定(手動輸入)</button> <button id="an-settings-special-import-file">還原所有設定(從檔案)</button></div> \
+				<h4><span>滙出/更新設定</span><hr /></h4> \
+				<div> \
+					<select id="an-settings-special-api-list"></select> \
+					<button id="an-settings-special-api-export">滙出</button> \
+					<button id="an-settings-special-api-update">更新</button> \
+					<span id="an-settings-special-api-message"></span> \
+				</div> \
 			</div> \
 			')
 			.appendTo(event.target)
-			.on('click', '#an-settings-special-export', function()
+			.on('click', 'button', function(event)
 			{
-				$('#an-settings-special-config').val(AN.shared.getConfig() || '').select();
-				alert('滙出成功! 請複製設定資料');
-			})
-			.on('click', '#an-settings-special-import-text, #an-settings-special-import-file', function(event)
-			{
-				if(event.target.id === 'an-settings-special-import-text') {
-					var config = prompt('請輸入設定資料', '');
+				var api = apis[$('#an-settings-special-api-list')[0].selectedIndex];
 
-					if(!config) {
-						return;
+				if(!api) return;
+
+				try {
+					if(event.target.id === 'an-settings-special-api-export') {
+						$('#an-settings-special-config').val(api.get()).select();
+						msg = '滙出成功! 請複製設定資料';
+					}
+					else {
+						api.set($.trim($('#an-settings-special-config').val()));
+						msg = '更新成功!';
 					}
 
-					AN.shared.setConfig(config);
+					$('#an-settings-special-api-message').text(msg).finish().show().delay(2000).fadeOut();
 				}
-				else {
-					$('<input type="file" />').one('change', function(event)
-					{
-						if(this.files && window.FileReader) {
-							var reader = new FileReader();
-
-							reader.onload = function()
-							{
-								AN.shared.setConfig(reader.result);
-							};
-
-							reader.onerror = function(config)
-							{
-								alert('讀取設定資料時發生錯誤!');
-							};
-
-							reader.readAsText(this.files[0]);
-						}
-						else {
-							alert('你的瀏覽器不支持此功能!');
-						}
-					}).click();
+				catch(e) {
+					alert(e.message);
 				}
 			});
+
+			$.each(apis, function(i, api)
+			{
+				$('#an-settings-special-api-list').append($.sprintf('<option>%s</option>', api.name));
+			});
+		});
+
+		AN.shared.addDataApi({
+			name: '所有設定',
+			get: function()
+			{
+				return AN.shared.getConfig();
+			},
+			set: function(value)
+			{
+				AN.shared.setConfig(value);
+			}
+		});
+
+		AN.shared.addDataApi({
+			name: '標題過濾名單',
+			get: function()
+			{
+				return (AN.util.data('aTopicFilter') || []).join('\n');
+			},
+			set: function(value)
+			{
+				AN.util.data('aTopicFilter', value.split(/\s*?\n\s*/g));
+			}
+		});
+
+		AN.shared.addDataApi({
+			name: '用戶封鎖名單',
+			get: function()
+			{
+				return (AN.util.data('aBamList') || []).join('\n');
+			},
+			set: function(value)
+			{
+				if(/[^\d\s]/.test(value)) {
+					throw Error('資料格式錯誤!');
+				}
+
+				AN.util.data('aBamList', value.split(/\s*?\n\s*/g));
+			}
 		});
 	}
 },

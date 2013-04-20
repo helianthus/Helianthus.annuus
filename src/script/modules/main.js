@@ -614,12 +614,18 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
   options:
   {
     bFilterListButton: { desc: '加入標題過濾列表按扭', defaultValue: true, type: 'checkbox' },
-    bAddFilterButton: { desc: '加入新增過濾器按扭', defauleValue: false, type: 'checkbox' }
+    bAddFilterButton: { desc: '加入新增過濾器按扭', defauleValue: false, type: 'checkbox' },
+    filterBlockedUsers: { desc: '同時過濾被封鎖用戶的標題', defaultValue: true, type: 'checkbox' },
+    logFilteredTopics: { desc: '記錄被過濾的標題', defaultValue: true, type: 'checkbox' }
   },
   once: function()
   {
-    var aFilter = AN.util.data('aTopicFilter') || [],
-    jHiddenImg,
+    var getFilters = function()
+    {
+      return AN.util.data('aTopicFilter') || [];
+    };
+
+    var jHiddenImg,
     jButton = $('<img />', { src: $r['cross-shield'], css: { 'margin-left': '-1.5px' } }).hoverize('#HotTopics tr:not(:first-child)', { autoPosition: false })
     .bind({
       entertarget: function()
@@ -637,11 +643,15 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
       }
     });
 
+    var logFiltered = AN.util.getOptions('logFilteredTopics');
+    var filterBlockedUsers = AN.util.getOptions('filterBlockedUsers');
+
     var addFilter = function(sTopicName)
     {
       var sFilter = prompt('請輸入過濾器', sTopicName || '');
       if(!sFilter) return;
 
+      var aFilter = getFilters();
       aFilter.push(sFilter);
       AN.util.data('aTopicFilter', aFilter);
       filterTopics();
@@ -649,18 +659,41 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 
     var filterTopics = this.filterTopics = function(jScope)
     {
-      if(!aFilter.length) return;
+      var aFilter = getFilters();
+      var bamList = AN.util.data('aBamList') || [];
+      if(!aFilter.length && !bamList.length) return;
 
       var nCount = 0;
       (jScope || $(document)).topics().each(function()
       {
+        var done = false;
         var jThis = $(this);
+        var link = jThis.find('a[href^="view."]:first').attr('href');
+
         var sTitle = jThis.data('sTitle').toLowerCase();
         $.each(aFilter, function(i, sFilter)
         {
           if(sTitle.indexOf(sFilter.toLowerCase()) != -1) {
             nCount++;
             jThis.hide();
+            logFiltered && AN.shared('log', $.sprintf('<a href="%s" title="%s">標題已被過濾(keyword): %s</a>',
+              link, sTitle, sFilter));
+            done = true;
+            return false;
+          }
+        });
+
+        if(done || !filterBlockedUsers) return;
+
+        var userId = jThis.data('jNameLink').attr('href').replace(/.+?userid=(\d+).*/, '$1');
+        $.each(bamList, function(i, idFilter)
+        {
+          if(userId === idFilter) {
+            console.log(jThis);
+            nCount++;
+            jThis.hide();
+            logFiltered && AN.shared('log', $.sprintf('<a href="%s" title="%s">標題已被過濾(user): %s</a>',
+              link, sTitle, jThis.data('sUserName')));
             return false;
           }
         });
@@ -689,6 +722,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
           if(!jTarget.is('span:first-child')) return;
 
           var nIndex = jTarget.closest('li').index();
+          var aFilter = getFilters();
           if(nIndex != -1) aFilter.splice(nIndex, 1);
 
           AN.util.data('aTopicFilter', aFilter);
@@ -701,6 +735,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
       }
 
       var sHTML = '';
+      var aFilter = getFilters();
       if(aFilter.length) {
         $.each(aFilter, function(i, sFilter)
         {
@@ -736,11 +771,15 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
     .an-bammed > .repliers_left > div > a[href] ~ *, .an-bammed > td > .repliers_right { display: none; } \
     ');
 
-    var bamList = this.bamList = AN.util.data('aBamList') || [],
+    var getBamList = function()
+    {
+      return AN.util.data('aBamList') || [];
+    };
 
-    jButton = $.userButton().bind({
+    var jButton = $.userButton().bind({
       click: function()
       {
+        var bamList = getBamList();
         var userid = jButton.data('userButton').jTarget.attr('userid');
         var index = $.inArray(userid, bamList);
         index === -1 ? bamList.push(userid) : bamList.splice(index, 1);
@@ -750,6 +789,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
       },
       buttonshow: function()
       {
+        var bamList = getBamList();
         var isBammed = $.inArray(jButton.data('userButton').jTarget.attr('userid'), bamList) !== -1;
         jButton.attr('src', $r[isBammed ? 'tick-shield' : 'cross-shield']).siblings().toggle(!isBammed);
       }
@@ -790,6 +830,8 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 
     var toggleReplies = this.toggleReplies = function(jScope)
     {
+      var bamList = getBamList();
+
       (jScope || $(document)).replies().each(function()
       {
         var jThis = $(this);
@@ -799,7 +841,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
   },
   infinite: function(jDoc)
   {
-    if(this.bamList.length) this.toggleReplies(jDoc);
+    this.toggleReplies(jDoc);
   }
 },
 

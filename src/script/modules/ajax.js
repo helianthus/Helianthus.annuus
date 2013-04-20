@@ -395,7 +395,7 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 	{
 		var working = false;
 		var tbodies = [];
-		var refreshTopics = function(nPage, url, continued)
+		var refreshTopics = function(nPage, url, continued, init)
 		{
 			clearTimeout(tRefresh);
 
@@ -408,7 +408,11 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 			if(isNaN(nPage))
 			{
 				nPage = 1;
-				AN.shared('log', '正在讀取最新列表...');
+				init || AN.shared('log', '正在讀取最新列表...');
+			}
+
+			if(init && !url) {
+				url = $('img[alt="next"][src="images/button-next.gif"]').parent().attr('href');
 			}
 
 			$.getDoc(url || location.href, function(jNewDoc)
@@ -417,14 +421,16 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 
 				if(nPage >= AN.util.getOptions('nNumOfTopicPage'))
 				{
-					$d.topicTable().empty().append(tbodies);
-					tbodies = [];
+					topicTable = $d.topicTable();
+					init || topicTable.empty();
+					topicTable.append(tbodies);
 					AN.modFn.execMods($(document).topicTable());
-					AN.shared('log', '列表更新完成');
+					tbodies = [];
+					init || AN.shared('log', '列表更新完成');
 
 					if(bAutoRefresh)
 					{
-						AN.shared('log2', $.sprintf('%s秒後再次重新整埋....', nInterval));
+						init || AN.shared('log2', $.sprintf('%s秒後再次重新整埋....', nInterval));
 						setNextRefresh();
 					}
 
@@ -432,14 +438,14 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 				}
 				else
 				{
-					refreshTopics(++nPage, jNewDoc.find('img[alt="next"][src="images/button-next.gif"]').parent().attr('href'), true);
+					refreshTopics(++nPage, jNewDoc.find('img[alt="next"][src="images/button-next.gif"]').parent().attr('href'), true, init);
 				}
 			});
 		};
 
 		if(AN.util.getOptions('nNumOfTopicPage') > 1)
 		{
-			setTimeout(function(){ refreshTopics(); }, 0);
+			setTimeout(function(){ refreshTopics(2, null, false, true); }, 0);
 		}
 
 		var setNextRefresh = function()

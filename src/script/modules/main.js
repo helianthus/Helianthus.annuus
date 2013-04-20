@@ -672,7 +672,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			if(!aFilter.length && !bamList.length) return;
 
 			var nCount = 0;
-			(jScope || $(document)).topics().each(function()
+			(jScope || $(document)).topics().not(':hidden').each(function()
 			{
 				var done = false;
 				var jThis = $(this);

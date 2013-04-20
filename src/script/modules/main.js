@@ -1119,7 +1119,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		.an-imagified + a > img { border: 0; } \
 		');
 
-		var rImg = /\.(?:jpe?g|gif|png|bmp)\b/i;
+		var rImg = /(?:na\.cx|uptow\.net)\/\w+$|\.(?:jpe?g|gif|png|bmp)\b/i;
 
 		$d.bind('click imageconvert', function(event)
 		{
@@ -1128,7 +1128,8 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 				event.preventDefault();
 				jTarget.next().next().toggle();
 			}
-			else if(jTarget.children().length === 0 && (event.type === 'imageconvert' || jTarget.is('.repliers_right > tbody > tr:first-child a')) && rImg.test(event.target.href)) {
+			else if(jTarget.children().length === 0 && (event.type === 'imageconvert' ||
+				jTarget.is('.repliers_right > tbody > tr:first-child a')) && rImg.test(event.target.href)) {
 				event.preventDefault();
 
 				$('<img title="已轉換連結為圖片" class="an-imagified" src="'+$r['image-export']+'" />')

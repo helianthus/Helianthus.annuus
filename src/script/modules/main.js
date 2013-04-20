@@ -624,7 +624,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		bFilterListButton: { desc: '加入標題過濾列表按扭', defaultValue: true, type: 'checkbox' },
 		bAddFilterButton: { desc: '加入新增過濾器按扭', defauleValue: false, type: 'checkbox' },
 		filterBlockedUsers: { desc: '同時過濾被封鎖用戶的標題', defaultValue: true, type: 'checkbox' },
-		logFilteredTopics: { desc: '記錄被過濾的標題', defaultValue: true, type: 'checkbox' }
+		logFilteredTopics: { desc: '記錄被過濾的標題', defaultValue: false, type: 'checkbox' }
 	},
 	once: function()
 	{

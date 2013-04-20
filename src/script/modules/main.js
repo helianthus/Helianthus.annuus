@@ -969,7 +969,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
   },
   infinite: function(jDoc)
   {
-    var rLink = /(?:https?|ftp):\/\/(?:[\w-]+\.)+[a-z]{2,3}(?![a-z])(?:\/[\w.\/?:;~!@#$%^&*()+=-]*)?/i;
+    var rLink = /(?:https?|ftp):\/\/(?:[\w-]+\.)+[a-z]{2,3}(?![a-z])[\w.\/?:;~!@#$%^&*()+=-]*/i;
     jDoc.replies().jContents.each(function()
     {
       if(rLink.test($(this).text())) {

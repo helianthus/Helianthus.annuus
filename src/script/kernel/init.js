@@ -232,7 +232,7 @@ $.fn.extend(
 			$('#aspnetForm', this).length && $('#aspnetForm', this).attr('action').match(/[a-z0-9_]+(?=\.aspx)/i)[0].toLowerCase().replace(/_html$/, '') ||
 			$('body > :first', this).is('b') && 'terms' ||
 			$('#mytt', this).length && 'gogogame' ||
-			$('form[action$="aspx"]', this).length && 'unknown'||
+			$('form[action*=".aspx"]', this).length && 'unknown'||
 			'error';
 	},
 
@@ -446,11 +446,6 @@ $.extend(AN,
 			this.jStyle[0].styleSheet ? this.jStyle[0].styleSheet.cssText += sStyle : this.jStyle.append(sStyle);
 		},
 
-		changeForum: function(nForum)
-		{
-			location.replace(location.href.replace(/forum\d+/, 'forum' + nForum));
-		},
-
 		cookie: function(sName, sValue, sDomain)
 		{
 			if(sValue === undefined) // GET
@@ -621,9 +616,10 @@ $.extend(AN,
 			return sOptionName ? oOptions[sOptionName] : oOptions;
 		},
 
-		getForumNo: function()
+		getForum: function()
 		{
-			return location.hostname.replace(/forum(\d+).+/, '$1') * 1;
+			var match = location.hostname.match(/^[^.]+/);
+			return match && match[0];
 		},
 
 		getPageNo: function(sURL)

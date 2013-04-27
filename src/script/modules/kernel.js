@@ -573,9 +573,25 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 			var msg = $('#an-settings-special-sync-msg').text('同步中, 請稍候...');
 
 			data = JSON.stringify({ type: type, value: data });
-			var curForum = AN.util.getForumNo();
+			var curForum = AN.util.getForum();
 			var iframes = $();
 			var failed = [];
+			var subs = ['search'];
+			var i;
+
+			for(i=1; i<=11; i++) {
+					subs.push('forum' + i);
+			}
+
+			for(i=0; i<subs.length; i++) {
+				var sub = subs[i];
+
+				if(sub !== curForum) {
+					iframes = iframes.add($($.sprintf(
+						'<iframe src="http://%s.hkgolden.com/error.html?an_sync" data-forum="%s" style="display:none"></iframe>',
+						sub, sub)));
+				}
+			}
 
 			var onerror = function()
 			{
@@ -610,12 +626,6 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 					done(event.originalEvent.source.frameElement, event);
 				}
 			});
-
-			for(var i=1; i<=11; i++) {
-				if(i !== curForum) {
-					iframes = iframes.add($($.sprintf('<iframe src="http://forum%s.hkgolden.com/error.html?an_sync" data-forum="%s" style="display:none"></iframe>', i, i)));
-				}
-			}
 
 			setTimeout(function()
 			{

@@ -330,7 +330,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 'fecb6345-232f-4781-b839-4919f845959a':
 {
 	desc: '強制設定論壇選項',
-	page: { 65534: false },
+	page: { 65534: 'disabled' },
 	type: 4,
 	options:
 	{

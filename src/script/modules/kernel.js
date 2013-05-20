@@ -643,7 +643,7 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 			$('\
 			<div> \
 				<h4><span>同步設定</span><hr /></h4> \
-				<div><button id="an-settings-special-sync-settings">同步所有設定至其他伺服器</button> <button id="an-settings-special-sync-cookies">同步登入資料至其他伺服器</button> <span id="an-settings-special-sync-msg"></span></div> \
+				<div><button id="an-settings-special-sync-settings">同步所有設定至其他伺服器</button> <span id="an-settings-special-sync-msg"></span></div> \
 			</div> \
 			')
 			.appendTo(event.target)
@@ -657,17 +657,6 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 				});
 
 				iframeSync('an-sync-settings', JSON.stringify(data));
-			})
-			.on('click', '#an-settings-special-sync-cookies', function()
-			{
-				var data = {};
-
-				$.each(['remember_pass', 'username', 'ep', 'companymode', 'sensermode', 'filtermode', 'fontsize'], function(i, name)
-				{
-					data[name] = AN.util.cookie(name);
-				});
-
-				iframeSync('an-sync-cookies', JSON.stringify(data));
 			});
 		});
 
@@ -688,18 +677,6 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 					{
 						if(name in data) {
 							AN.util.storage(name, data[name]);
-						}
-					});
-
-					event.originalEvent.source.postMessage(JSON.stringify({ type: 'an-sync-complete' }), '*');
-				}
-				else if(data.type === 'an-sync-cookies') {
-					data = JSON.parse(data.value);
-
-					$.each(['remember_pass', 'username', 'ep', 'companymode', 'sensermode', 'filtermode', 'fontsize'], function(i, name)
-					{
-						if(name in data) {
-							AN.util.cookie(name, data[name]);
 						}
 					});
 

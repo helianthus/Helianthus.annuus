@@ -167,7 +167,7 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	type: 3,
 	once: function()
 	{
-		AN.util.stackStyle('#MainPageAd2 ~ .DivResizableBoxContainer + iframe[src*="/TopArticle_"] { display: none; }');
+		AN.util.stackStyle('#MainPageAd2 ~ iframe[src*="/TopArticle_"] { display: none; }');
 	}
 },
 
@@ -178,7 +178,7 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	type: 3,
 	once: function()
 	{
-		AN.util.stackStyle('#MainPageAd2 ~ .DivResizableBoxContainer + iframe ~ * { display: none; }');
+		AN.util.stackStyle('#MainPageAd2 ~ iframe[src*="/TopArticle_"] ~ div { display: none; }');
 	}
 },
 

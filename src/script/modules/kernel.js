@@ -260,15 +260,15 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 				config = JSON.parse(decodeURIComponent(escape(window.atob(config))));
 			}
 			catch(e) {
-				return alert('設定資料剖析錯誤!');
+				throw Error('設定資料剖析錯誤!');
 			}
 
 			if(config.name !== configTmpl.name) {
-				return alert('設定資料格式錯誤!');
+				throw Error('設定資料格式錯誤!');
 			}
 
 			if(config.version !== configTmpl.version) {
-				return alert('不相容的設定資料版本: ' + config.version);
+				throw Error('不相容的設定資料版本: ' + config.version);
 			}
 
 			$.each(['an_data', 'an_switches', 'an_options'], function(i, name)
@@ -536,7 +536,13 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 							.then(
 								function(res)
 								{
-									AN.shared.setConfig(res);
+									try {
+										AN.shared.setConfig(res);
+									}
+									catch(e) {
+										alert(e.message);
+									}
+
 									done();
 								},
 								function(xhr)

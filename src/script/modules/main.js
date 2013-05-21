@@ -61,8 +61,8 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			',
 			// profilepage
 			64: '\
-			/* inline ads */\
-			#ctl00_ContentPlaceHolder1_PMPersonalTable .main_table1 tr:first-child ~ tr:not([style]) { display: none; } \
+			#PMInnerTable tr:first-child ~ tr:not([style]) { display: none; } \
+			.post_table tr:first-child ~ tr:not([style]) { display: none; } \
 			'
 		},
 		function(nPageCode){ $d.pageCode() & nPageCode && AN.util.stackStyle(this); });

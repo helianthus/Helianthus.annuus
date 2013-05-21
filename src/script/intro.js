@@ -5,7 +5,7 @@ var location = window.location;
 var history = window.history;
 var navigator = window.navigator;
 
-if(!/(?!www\.)[a-z0-9]+\.hkgolden\.com$/i.test(location.hostname) || window.AN) return;
+if(!/(?!(?:www|m)\.)[a-z0-9]+\.hkgolden\.com$/i.test(location.hostname) || window.AN) return;
 
 if(document.body && document.body.firstChild.className == 'webkit-line-gutter-backdrop' || /\.(?:gif|jpe?g|png|asmx)$/i.test(location.href)) return;
 

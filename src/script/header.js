@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010  向日
+ * Copyright (C) 2013  向日
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,6 +22,6 @@
 // @version ${AN_VERSION}
 // @build-time ${BUILD_TIME}
 // @include http://*.hkgolden.com/*
-// @run-at document-start
+// @run-at document-body
+// @grant none
 // ==/UserScript==
-

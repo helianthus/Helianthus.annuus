@@ -61,8 +61,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			',
 			// profilepage
 			64: '\
-			#PMInnerTable tr:first-child ~ tr:not([style]) { display: none; } \
-			.post_table tr:first-child ~ tr:not([style]) { display: none; } \
+			#ctl00_ContentPlaceHolder1_mainTab_body td[class*="_table"] tr:not(:first-child):not([style]) { display: none; } \
 			'
 		},
 		function(nPageCode){ $d.pageCode() & nPageCode && AN.util.stackStyle(this); });
@@ -1118,7 +1117,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		.an-imagified + a > img { border: 0; } \
 		');
 
-		var rImg = /(?:na\.cx|uptow\.net)\/\w+$|\.(?:jpe?g|gif|png|bmp)\b/i;
+		var rImg = /(?:na\.cx|uptow\.net|holland.pk)\/\w+$|\.(?:jpe?g|gif|png|bmp)\b/i;
 
 		$d.bind('click imageconvert', function(event)
 		{

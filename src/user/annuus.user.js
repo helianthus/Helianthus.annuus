@@ -4,8 +4,7 @@
 	head = document.getElementsByTagName('head'),
 	script = document.createElement('script');
 
-	//script.charset = 'utf-8';
-	//script.src = 'data:text/javascript;base64,' + encoded;
+	script.id = 'annuus-script-v3';
 	script.appendChild(document.createTextNode(atob(encoded)));
 
 	(function append()

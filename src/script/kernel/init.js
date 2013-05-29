@@ -755,6 +755,7 @@ $.extend(AN,
 						if(err.message) AN.shared.log('錯誤訊息: ' + err.message);
 						if(err.type) AN.shared.log('錯誤類型: ' + err.type);
 						if(err.lineNumber) AN.shared.log('錯誤行號: ' + err.lineNumber);
+						AN.shared.log('出現位置: ' + oArg.sDesc);
 						AN.shared.log('出現地址: ' + location.href);
 						AN.shared.log($.sprintf('發生錯誤: %s', oArg.sDesc));
 					}

@@ -32,7 +32,7 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 
 		if($d.pageName() == 'view') $('select[name=page]').val(AN.util.getPageNo(location.search)); // for FF3 where select box does not reset
 
-		$('script').empty();
+		$('script,noscript').empty();
 	}
 },
 

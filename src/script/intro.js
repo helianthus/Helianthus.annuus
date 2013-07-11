@@ -31,6 +31,19 @@ document.addEventListener && (function()
 	}, true);
 })();
 
+// for some reason the load event is fired prematurely under Tampermonkey
+window.addEventListener('load', function self()
+{
+  $ && $.holdReady(true);
+  window.removeEventListener('load', self, false);
+}, false);
+
+document.addEventListener('DOMContentLoaded', function self()
+{
+  $ && $.holdReady(false);
+  document.removeEventListener('DOMContentLoaded', self, false);
+}, false);
+
 var
 AN = window.AN = { mod: {}, version: '${AN_VERSION}' },
 jQuery, $, $d, $w,

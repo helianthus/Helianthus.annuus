@@ -22,6 +22,6 @@
 // @version ${AN_VERSION}
 // @build-time ${BUILD_TIME}
 // @include http://*.hkgolden.com/*
-// @run-at document-body
+// @run-at document-start
 // @grant none
 // ==/UserScript==

@@ -15,9 +15,13 @@ if(document.body && document.body.firstChild.className == 'webkit-line-gutter-ba
 
 document.domain = 'hkgolden.com';
 
+Object.defineProperty && Object.defineProperty(window, 'blockAdblockUser', {
+  value: function(){}
+});
+
 document.addEventListener && (function()
 {
-	var keywords = /bmediaasia|pixel-?hk|imrworldwide|googlesyndication|_getTracker|(?:Page|Inline|Google|\b)[Aa]ds?\b|scorecardresearch|addthis/;
+	var keywords = /jquery|bmediaasia|pixel-?hk|imrworldwide|googlesyndication|_getTracker|(?:Page|Inline|Google|\b)[Aa]ds?\b|scorecardresearch|addthis/;
 
 	(window.opera || document).addEventListener(window.opera ? 'BeforeScript' : 'beforeload', function(event)
 	{

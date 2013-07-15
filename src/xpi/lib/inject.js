@@ -9,7 +9,6 @@
 			return;
 		}
 
-		var head = doc.getElementsByTagName('head');
 		var script = doc.createElement('script');
 
 		script.id = id;
@@ -18,7 +17,7 @@
 
 		(function inject()
 		{
-			head[0] ? head[0].appendChild(script) : doc.defaultView.setTimeout(inject, 50);
+			doc.documentElement ? doc.documentElement.appendChild(script) : doc.defaultView.setTimeout(inject, 50);
 		})();
 	}
 
@@ -54,7 +53,7 @@
 		{
 			window = window.QueryInterface(Ci.nsIInterfaceRequestor).getInterface(Ci.nsIDOMWindowInternal);
 
-            window.addEventListener('load', function onload()
+			window.addEventListener('load', function onload()
 			{
 				window.removeEventListener('load', onload, false);
 

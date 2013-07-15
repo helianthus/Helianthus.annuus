@@ -1,7 +1,6 @@
 if(!document.getElementById('annuus') && /\.hkgolden\.com$/.test(location.hostname))
 {
 	var
-	head = document.getElementsByTagName('head'),
 	script = document.createElement('script');
 
 	script.id = 'annuus-script-v3';
@@ -10,6 +9,6 @@ if(!document.getElementById('annuus') && /\.hkgolden\.com$/.test(location.hostna
 
 	(function append()
 	{
-		head[0] ? head[0].appendChild(script) : setTimeout(append, 50);
+		document.documentElement ? document.documentElement.appendChild(script) : setTimeout(append, 50);
 	})();
 }

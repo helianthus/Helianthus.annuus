@@ -19,30 +19,36 @@ Object.defineProperty && Object.defineProperty(window, 'blockAdblockUser', {
   value: function(){}
 });
 
-document.addEventListener && (function()
-{
-	var keywords = /jquery|bmediaasia|pixel-?hk|imrworldwide|googlesyndication|_getTracker|(?:Page|Inline|Google|\b)[Aa]ds?\b|scorecardresearch|addthis/;
+if(document.addEventListener) {
+  (function()
+  {
+  	var keywords = /jquery|bmediaasia|pixel-?hk|imrworldwide|googlesyndication|_getTracker|(?:Page|Inline|Google|\b)[Aa]ds?\b|scorecardresearch|addthis/;
 
-	(window.opera || document).addEventListener(window.opera ? 'BeforeScript' : 'beforeload', function(event)
-	{
-		if(keywords.test(event.url || event.element.src || event.element.text)) {
-			event.preventDefault();
-		}
-	}, true);
-})();
+  	(window.opera || document).addEventListener(window.opera ? 'BeforeScript' : 'beforeload', function(event)
+  	{
+  		if(keywords.test(event.url || event.element.src || event.element.text)) {
+  			event.preventDefault();
+  		}
+  	}, true);
+  })();
 
-// for some reason the load event is fired prematurely under Tampermonkey
-window.addEventListener('load', function self()
-{
-  $ && $.holdReady(true);
-  window.removeEventListener('load', self, false);
-}, false);
+  // for some reason the load event is fired prematurely under Tampermonkey
+  var onload = function()
+  {
+    if($ && document.readyState === 'loading') {
+      $.holdReady(true);
 
-document.addEventListener('DOMContentLoaded', function self()
-{
-  $ && $.holdReady(false);
-  document.removeEventListener('DOMContentLoaded', self, false);
-}, false);
+      $(document).one('DOMContentLoaded', function()
+      {
+        $.holdReady(false);
+      });
+    }
+
+    window.removeEventListener('load', onload, false);
+  };
+
+  window.addEventListener('load', onload, false);
+}
 
 var
 AN = window.AN = { mod: {}, version: '${AN_VERSION}' },

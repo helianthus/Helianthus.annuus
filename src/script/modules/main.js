@@ -19,7 +19,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 				{ width: auto !important; } \
 			.ContentPanel > table > tbody > tr > td:first-child + td > *:not(:last-child), \
 			tr[id="Thread_No15"] + tr, \
-			.Topic_ListPanel > center \
+			.Topic_ListPanel > center, .Topic_ListPanel > center + br, .Topic_ListPanel > center + br + br \
 				{ display: none; } \
 			',
 			// search, tags

@@ -276,7 +276,9 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	type: 3,
 	once: function()
 	{
-		AN.util.stackStyle('.Topic_ListPanel > .DivBoxContainer { display: none; }');
+		AN.util.stackStyle('\
+			.Topic_ListPanel > .DivBoxContainer, .Topic_ListPanel > .DivBoxContainer + script + br \
+				{ display: none; }');
 	}
 },
 

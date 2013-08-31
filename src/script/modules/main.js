@@ -11,34 +11,30 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		$.each(
 		{
 			65535: '\
-			#HKGTopAd, #ctl00_divLang + div { display: none; } \
+			#HKGTopAd, #ctl00_divLang + div, noscript { display: none; } \
 			',
 			// topics
 			4: '\
-			.ContentPanel > table { width: 100%; } \
-			.ContentPanel > table > tbody > tr > td:first-child { width: auto !important; } \
-			.ContentPanel > table > tbody > tr > td:first-child + td, \
+			.ContentPanel > table > tbody > tr > td:first-child, .DivResizableBoxContainer \
+				{ width: auto !important; } \
+			.ContentPanel > table > tbody > tr > td:first-child + td > *:not(:last-child), \
 			tr[id="Thread_No15"] + tr, \
 			.Topic_ListPanel > center \
 				{ display: none; } \
-			.PageMiddleBox > table > tbody > tr > td:first-child { width: 100% !important; } \
-			.PageMiddleBox > table > tbody > tr > td:first-child + td { display: none; } \
 			',
 			// search, tags
 			24: '\
-			#ctl00_ContentPlaceHolder1_topics_form > script:first-child + div { width: 100% !important; } \
+			#ctl00_ContentPlaceHolder1_topics_form > script:first-child + div { width: auto !important; } \
 			#ctl00_ContentPlaceHolder1_topics_form > script:first-child + div + div { display: none; } \
 				{ display: none; } \
 			',
 			28: 'td[height="52"] { display: none; }',
 			// view
 			32: '\
-			#ctl00_ContentPlaceHolder1_view_form > script:first-child + div, #ctl00_ContentPlaceHolder1_view_form > div:first-child { width: 100% !important; } \
-			#ctl00_ContentPlaceHolder1_view_form > script:first-child + div + div, #ctl00_ContentPlaceHolder1_view_form > div:first-child + div { display: none; } \
+			td[width^="644"] { width: auto; } \
+			td[width^="644"] + td { display: none; } \
 			.repliers_right > tbody > tr:first-child + tr { display: none; } \
 			#Thread_No0 > td > .repliers_right > tbody > tr:first-child + tr { display: table-row; } \
-			iframe[src^="http://groupbuy"], iframe[src^="http://groupbuy"] + br { display: none; } \
-			span[id^="tempAd"] { display: none; } \
 			',
 			// topics, view
 			36: '\
@@ -50,14 +46,11 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			',
 			// topics, search, tags, view
 			60: '\
-			#GenMainPageAd1, \
-			#MiddlePageAd1, \
-			#MainPageAd2, \
+			[id*="PageAd"], \
 			#MainPageAd2 ~ br, \
 			#ctl00_ContentPlaceHolder1_lb_NewPM + br, \
-			#ctl00_ContentPlaceHolder1_MiddleAdSpace1 div[style*="right"], \
 			td > script + ins \
-				{ display: none; } \
+				{ display: none !important; } \
 			',
 			// profilepage
 			64: '\

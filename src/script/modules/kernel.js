@@ -207,7 +207,6 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 
 		if($(document).pageName() === 'view') {
 			css += '\
-			.repliers, .repliers_right { table-layout: fixed; } \
 			.repliers_right > tbody > tr:first-child > td { overflow-x: hidden; } \
 			';
 		}

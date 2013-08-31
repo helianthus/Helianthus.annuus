@@ -132,6 +132,9 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 		.PageWidthContainer, /* type=FN */ #PageMiddlePanel > div[style] > table { width: %s; } \
 		.PageMiddleBox { width: auto; padding: 9px 0; } \
 		#ctl00_ContentPlaceHolder1_ProfileForm td[width="8"] { display: none; } \
+		#ctl00_ContentPlaceHolder1_view_form > div[style*="width"], #mainTopicTable \
+			{ width: auto !important; } \
+		.repliers, .repliers_right, table[width^="954"] { width: 100% !important; } \
 		',
 		w === 'auto' ? '100%' : w
 		));
@@ -190,8 +193,7 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	once: function()
 	{
 		AN.util.stackStyle('\
-		#MainPageAd2 ~ link + script + div[style] \
-			{ display: none; } \
+			.ContentPanel > table > tbody > tr > td:first-child + td { display: none; } \
 		');
 	}
 },

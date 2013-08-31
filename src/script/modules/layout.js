@@ -177,7 +177,7 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 'a303eac3-106b-4534-96b7-92a771b1dc3b':
 {
 	desc: '隱藏GoGoGame',
-	page: { 4: false },
+	page: { 4: true },
 	type: 3,
 	once: function()
 	{

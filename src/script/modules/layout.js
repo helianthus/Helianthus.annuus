@@ -120,7 +120,7 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 */
 '02837e6a-3dd7-4c73-a155-90d6f6edd8f9':
 {
-	desc: '拉闊頁面',
+	desc: '設定頁面闊度',
 	page: { 65534: false },
 	type: 3,
 	options: { nPageWidth: { desc: '頁面闊度 [可設定為80%, 1000px等]', defaultValue: '100%', type: 'text' } },

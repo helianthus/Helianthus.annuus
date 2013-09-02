@@ -24,7 +24,7 @@ Object.defineProperty && Object.defineProperty(window, 'blockAdblockUser', {
 if(document.addEventListener) {
   (function()
   {
-  	var keywords = /jquery|bmediaasia|pixel-?hk|imrworldwide|googlesyndication|_getTracker|(?:Page|Inline|Google|\b)[Aa]ds?\b|scorecardresearch|addthis/;
+  	var keywords = /bmediaasia|pixel-?hk|imrworldwide|googlesyndication|_getTracker|(?:Page|Inline|Google|\b)[Aa]ds?\b|scorecardresearch|addthis/;
 
   	(window.opera || document).addEventListener(window.opera ? 'BeforeScript' : 'beforeload', function(event)
   	{

@@ -298,7 +298,7 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 		});
 
 		if(displayMode == 2) {
-			AN.util.stackStyle($.sprintf('%(pageDiv)s > div, %(pageDiv)s > br, %(pageDiv)s + br { display: none; }', { pageDiv: '#ctl00_ContentPlaceHolder1_view_form > div[style*="100%"]' }));
+			AN.util.stackStyle($.sprintf('%(pageDiv)s > div, %(pageDiv)s > br, %(pageDiv)s + br { display: none; }', { pageDiv: '#ctl00_ContentPlaceHolder1_view_form > div[style^="width"]' }));
 		}
 		else {
 			$d.bind('change', function(event)

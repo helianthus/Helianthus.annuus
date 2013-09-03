@@ -118,30 +118,25 @@ AN.mod['Component Redesigner'] = { ver: 'N/A', author: '向日', fn: {
 		jToggle = (hideMode === 0 ? jQR : jQR.find('tr:eq(2)')).hide(),
 		jPreview = $('#previewArea'),
 		jTextarea = $('#ctl00_ContentPlaceHolder1_messagetext'),
-		nWidth = 947, //jQR.width() + 1,
+		nWidth = 954, //jQR.width() + 1,
 		nRight = 50 - nWidth;
 
 		jQRHeader.children()[0].nextSibling.nodeValue = '快速回覆';
 
 		AN.util.stackStyle($.sprintf('\
-		.PageMiddleBox { margin: 0 auto; padding: 9px 0; } \
-		#hkg_bottombar { z-index: 3; } \
-		#newmessage { %s; z-index: 2; position: fixed; width: %spx; bottom: 0px; right: %spx; max-height: 100%; overflow: auto; } \
+		#newmessage { %s; z-index: 2; position: fixed; width: %spx; bottom: 0px; right: %s; max-height: 100%; overflow: auto; } \
 		#an-qr-header { cursor: pointer; text-align: center; } \
 		#previewArea { display: block; overflow: auto; width: %spx; } \
 		#previewArea img[onload] { max-width: 300px; } \
 		',
 		AN.util.getOpacityStr(AN.util.getOptions('nQROpacity')),
 		nWidth,
-		hideMode === 3 ? nRight : Math.ceil(($.winWidth() - nWidth) / 2),
+		hideMode === 3 ? nRight + 'px': '50%',
 		nWidth - 149
 		));
 
 		if(hideMode !== 3) {
-			$(window).resize(function()
-			{
-				$('#newmessage').css('right', Math.ceil(($.winWidth() - nWidth) / 2));
-			});
+			AN.util.stackStyle($.sprintf('#newmessage { margin-right: %spx; }', -nWidth / 2 - 9));
 		}
 
 		function toggleQR(toShow, callback)

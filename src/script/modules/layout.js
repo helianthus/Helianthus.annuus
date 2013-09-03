@@ -130,11 +130,11 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 
 		AN.util.addStyle($.sprintf('\
 		.PageWidthContainer, /* type=FN */ #PageMiddlePanel > div[style] > table { width: %s; } \
-		.PageMiddleBox { width: auto; padding: 9px 0; } \
-		#ctl00_ContentPlaceHolder1_view_form > div[style*="width"], #mainTopicTable, \
-		.ContentGrid, .repliers, .repliers_right, table[width^="954"] \
+		.PageMiddleBox, .ContentGrid, .repliers, .repliers_right, table[width^="954"], [style*="954px"] \
 			{ width: 100% !important; } \
 		#ctl00_ContentPlaceHolder1_ProfileForm td[width="8"] { display: none; } \
+		.PageMiddleBox \
+			{ box-sizing: border-box; -moz-box-sizing: border-box; } \
 		',
 		w === 'auto' ? '100%' : w
 		));

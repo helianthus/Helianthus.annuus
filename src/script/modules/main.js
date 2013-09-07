@@ -54,7 +54,9 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			',
 			// profilepage
 			64: '\
-			#ctl00_ContentPlaceHolder1_mainTab_body td[class*="_table"] tr:not(:first-child):not([style]) { display: none; } \
+			#ctl00_ContentPlaceHolder1_ProfileForm table[cellpadding="2"][cellspacing="1"] > \
+			tbody > tr:not(:first-child):not([style]) \
+				{ display: none; } \
 			'
 		},
 		function(nPageCode){ $d.pageCode() & nPageCode && AN.util.stackStyle(this); });

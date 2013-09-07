@@ -124,8 +124,8 @@ AN.mod['Style Editor'] = { ver: 'N/A', author: '向日', fn: {
 		/* annoucements, profilepage tabs */\
 		.DivBoxDetails, .DivResizableBoxDetails, .ProfileBoxDetails { border-color: %(sBlueSecBgColor)s; } \
 		*[style*="background-color: #CCDDEA"], *[style*="BACKGROUND-COLOR: #CCDDEA"], *[bgcolor="#ccddea"], .ajax__tab_tab, #advarea tr:first-child + tr td { background-color: %(sBlueSecBgColor)s !important; } \
-		.p__tab_xp .ajax__tab_tab { color: %(sMainFontColor)s; } \
-		.p__tab_xp .ajax__tab_active .ajax__tab_tab, .p__tab_xp .ajax__tab_hover .ajax__tab_tab { color: %(sMainHoverColor)s; } \
+		[class^="p__tab_xp"] .ajax__tab_tab { color: %(sMainFontColor)s; } \
+		[class^="p__tab_xp"] .ajax__tab_active .ajax__tab_tab, [class^="p__tab_xp"] .ajax__tab_hover .ajax__tab_tab { color: %(sMainHoverColor)s; } \
 		/* hightlight bg */\
 		*[style*="233, 236, 108"], *[style*="#E9EC6C"] { background-color: %(sHighlightBgColor)s !important; } \
 		/* time text */\

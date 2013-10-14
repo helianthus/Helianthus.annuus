@@ -1187,7 +1187,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	defer: 2, // after layout is fixed
 	options: {
 		videoConvertMode: { desc: '轉換模式', type: 'select', choices: ['自動轉換', '自動轉換(引用中的連結除外)', '手動轉換'], defaultValue: '自動轉換(引用中的連結除外)' },
-		videoMaxWidth: { desc: '播放器最大闊度 [可設定為80%, 1000px等]', type: 'text', defaultValue: '640px' }
+		videoMaxWidth: { desc: '播放器最大闊度 [可設定為80%, 1000px等]', type: 'text', defaultValue: '100%' }
 	},
 	once: function()
 	{
@@ -1256,7 +1256,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 				event.preventDefault();
 
 				sUrl = event.target.href;
-				var maxWidth = jTarget.up('td,div').width() || 640;
+				var maxWidth = jTarget.up('div').width();
 				nWidth = AN.util.getOptions('videoMaxWidth');
 				nWidth = /.+%/.test(nWidth) ? maxWidth * parseInt(nWidth) / 100 : parseInt(nWidth);
 				nWidth > maxWidth && (nWidth = maxWidth);

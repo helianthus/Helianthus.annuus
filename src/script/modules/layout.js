@@ -130,7 +130,7 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 
 		AN.util.addStyle($.sprintf('\
 		.PageWidthContainer, /* type=FN */ #PageMiddlePanel > div[style] > table { width: %s; } \
-		.PageMiddleBox, .ContentGrid, .repliers, .repliers_right, table[width^="954"], [style*="954px"] \
+		.PageMiddleBox, .repliers, table[width^="954"], [style*="954px"] \
 			{ width: 100% !important; } \
 		#ctl00_ContentPlaceHolder1_ProfileForm td[width="8"] { display: none; } \
 		.PageMiddleBox \

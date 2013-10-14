@@ -208,8 +208,8 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 		if($(document).pageName() === 'view') {
 			css += '\
 			.repliers_left { box-sizing: border-box; -moz-box-sizing: border-box; } \
-			.repliers_right { width: auto; } \
-			.repliers_right, .ContentGrid { overflow-x: hidden; } \
+			.repliers_right { table-layout: fixed; width: 100%; } \
+			.ContentGrid { width: auto; overflow-x: hidden; } \
 			';
 		}
 

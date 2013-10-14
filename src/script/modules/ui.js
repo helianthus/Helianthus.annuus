@@ -132,7 +132,7 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 					var tableHTML = '', imgHTML = '';
 
 					var subs = [['forum101', 'Forum 101'], ['search', 'Search'], ['m', 'Mobile']];
-					for(var i=11; i--;) {
+					for(var i=15; i--;) {
 						subs.unshift(['forum' + (i + 1), 'Forum ' + (i + 1)]);
 					}
 					for(var i=0; i<subs.length; i++) {

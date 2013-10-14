@@ -586,7 +586,7 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 			var subs = ['search'];
 			var i;
 
-			for(i=1; i<=11; i++) {
+			for(i=1; i<=15; i++) {
 					subs.push('forum' + i);
 			}
 

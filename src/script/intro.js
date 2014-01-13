@@ -17,10 +17,6 @@ if(document.body && document.body.firstChild.className == 'webkit-line-gutter-ba
 
 document.domain = 'hkgolden.com';
 
-Object.defineProperty && Object.defineProperty(window, 'blockAdblockUser', {
-  value: function(){}
-});
-
 if(document.addEventListener) {
   (function()
   {

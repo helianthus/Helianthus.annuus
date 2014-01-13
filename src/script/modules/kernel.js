@@ -213,7 +213,7 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 			';
 		}
 
-		AN.util.stackStyle(css);
+		AN.util.addStyle(css);
 	},
 	infinite: function(jDoc)
 	{

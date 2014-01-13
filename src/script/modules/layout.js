@@ -1,16 +1,5 @@
 AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 
-'4bf6619f-2cd8-4aa2-a54a-e7d72wgs8603':
-{
-	desc: '修正改變搜尋列時可能造成的顯示錯誤',
-	page: { 4: true },
-	type: 3,
-	once: function()
-	{
-		AN.util.stackStyle('.Topic_FunctionPanel > .ClearLeft { clear: both; } /*-> IE bug fix? ->*/ .Topic_FunctionPanel { overflow: hidden; }');
-	}
-},
-
 '5e173905-9c47-4f37-8d3f-4c31ea871115':
 {
 	desc: '隱藏頂部藍色列',
@@ -46,7 +35,7 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 
 'd0164ba6-a5a2-4850-ab67-658b840fd3ef':
 {
-	desc: '隱藏繁簡轉換/addThis列',
+	desc: '隱藏繁簡轉換列',
 	page: { 65534: false },
 	type: 3,
 	once: function()
@@ -57,22 +46,6 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 		');
 	}
 },
-
-/*
-'a7dc713c-2d23-4254-be8b-16cf6e9bbe8f':
-{
-	desc: '優化addThis組件',
-	page: { 65534: false },
-	type: 3,
-	once: function()
-	{
-		AN.util.stackStyle('\
-		.addthis_toolbox { padding-top: 3px; } \
-		.addthis_toolbox > a, .addthis_toolbox > span { font-family: arial !important; color: black; } \
-		');
-	}
-},
-*/
 
 'bbd5f176-c024-4684-ba98-b72da376a6eb':
 {
@@ -95,29 +68,7 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 		AN.util.stackStyle('.FooterPanel ~ br { display: none; }');
 	}
 },
-/*
-'8c317615-b5e7-4b1a-a140-b7319c5b0a5b':
-{
-	desc: '隱藏Bookmark Bar',
-	page: { 65534: false },
-	type: 3,
-	once: function()
-	{
-		AN.util.stackStyle('#hkg_bottombar { display: none; }');
-	}
-},
 
-'d1dc862f-a7b3-4b29-a50f-440fc9c5fef0':
-{
-	desc: '縮短Bookmark Bar',
-	page: { 65534: true },
-	type: 3,
-	once: function()
-	{
-		AN.util.stackStyle('#hkg_bottombar { width: auto; }');
-	}
-},
-*/
 '02837e6a-3dd7-4c73-a155-90d6f6edd8f9':
 {
 	desc: '設定頁面闊度',
@@ -159,7 +110,11 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	type: 3,
 	once: function()
 	{
-		AN.util.stackStyle('#MainPageAd2 ~ .DivResizableBoxContainer { display: none; }');
+		AN.util.stackStyle('\
+		#MainPageAd2 + br + div + div, #MainPageAd2 + br + div + div + div, \
+		#MainPageAd2 + div + div, #MainPageAd2 + div + div + div \
+			{ display: none; } \
+		');
 	}
 },
 
@@ -170,30 +125,10 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	type: 3,
 	once: function()
 	{
-		AN.util.stackStyle('#MainPageAd2 ~ iframe[src*="/TopArticle_"] { display: none; }');
-	}
-},
-
-'a303eac3-106b-4534-96b7-92a771b1dc3b':
-{
-	desc: '隱藏GoGoGame',
-	page: { 4: true },
-	type: 3,
-	once: function()
-	{
-		AN.util.stackStyle('#MainPageAd2 ~ iframe[src*="/TopArticle_"] ~ div { display: none; }');
-	}
-},
-
-'f6f55623-02e3-4174-8de6-5d66086a9846':
-{
-	desc: '隱藏投票格',
-	page: { 4: false },
-	type: 3,
-	once: function()
-	{
 		AN.util.stackStyle('\
-			.ContentPanel > table > tbody > tr > td:first-child + td { display: none; } \
+		#MainPageAd2 + br + div + div + div, #MainPageAd2 + br + div + div + div + div, \
+		#MainPageAd2 + div + div + div, #MainPageAd2 + div + div + div + div \
+			{ display: none; } \
 		');
 	}
 },
@@ -205,17 +140,11 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	type: 3,
 	once: function()
 	{
-		AN.util.stackStyle('\
-		#ctl00_ContentPlaceHolder1_MiddleAdSpace1 > div { padding: 0 !important; } \
-		');
-
-		if($d.pageName() == 'topics')
-			AN.util.stackStyle('\
-			.Topic_FunctionPanel { margin-top: 0; } \
-			#ctl00_ContentPlaceHolder1_MiddleAdSpace1 { margin-top: 5px !important; } \
-			');
+		if($d.pageName() === 'topics')
+			AN.util.stackStyle('.Topic_FunctionPanel { margin-top: 0; }');
 		else
 			AN.util.stackStyle('\
+			#ctl00_ContentPlaceHolder1_MiddleAdSpace1 > div { padding: 0 !important; } \
 			td[valign="bottom"] > br:first-child { display: none; } \
 			td[valign="bottom"] > p { margin: 0; } \
 			');
@@ -254,7 +183,7 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	type: 3,
 	once: function()
 	{
-		AN.util.stackStyle('#ctl00_ContentPlaceHolder1_MiddleAdSpace1 { display: none; }');
+		AN.util.stackStyle('#ctl00_ContentPlaceHolder1_votingThreadMsg, #ctl00_ContentPlaceHolder1_MiddleAdSpace1 { display: none; }');
 	}
 },
 

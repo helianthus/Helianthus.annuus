@@ -42,10 +42,10 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 
 				jTarget.data('an-threadId', id)
 				.nextAll('div:first').attr('id', 'ThreadUser' + id)
-				.closest('tr[id^="Thread_No"]').attr('id', 'Thread_No' + id);
+				.closest('tr[userid]').attr('id', id)
 			}
 
-			window.ToggleUserDetail(id);
+			window.ToggleUserDetail(id, '');
 		});
 
 		var pages = {};

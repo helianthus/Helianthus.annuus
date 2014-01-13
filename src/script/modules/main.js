@@ -11,16 +11,14 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		$.each(
 		{
 			65535: '\
-			#HKGTopAd, #ctl00_divLang + div, noscript { display: none; } \
+			#HKGTopAd, noscript { display: none; } \
 			',
 			// topics
 			4: '\
-			.ContentPanel > table > tbody > tr > td:first-child, .DivResizableBoxContainer \
-				{ width: auto !important; } \
-			.ContentPanel > table > tbody > tr > td:first-child + td > *:not(:last-child), \
-			tr[id="Thread_No15"] + tr, \
+			.ContentPanel > table > tbody > tr > td:first-child + td, \
 			.Topic_ListPanel > center, .Topic_ListPanel > center + br, .Topic_ListPanel > center + br + br \
 				{ display: none; } \
+			.Topic_FunctionPanel { overflow: hidden; } \
 			',
 			// search, tags
 			24: '\
@@ -33,20 +31,10 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			32: '\
 			td[width^="644"] { width: auto; } \
 			td[width^="644"] + td { display: none; } \
-			.repliers_right > tbody > tr:first-child + tr { display: none; } \
-			#Thread_No0 > td > .repliers_right > tbody > tr:first-child + tr { display: table-row; } \
-			',
-			// topics, view
-			36: '\
-			/* type=FN */ \
-			table[width="1427px"] { width: auto } \
-			#PageMiddlePanel > div[style] { width: auto !important; } \
-			#PageMiddlePanel > div[style] > table { margin: auto; } \
-			#PageMiddlePanel > div[style] > table > tbody > tr > td[width="236px"] { display: none; } \
 			',
 			// topics, search, tags, view
 			60: '\
-			[id*="PageAd"], \
+			[id*="PageAd"], [id*="tempAd"], \
 			#MainPageAd2 ~ br, \
 			#ctl00_ContentPlaceHolder1_lb_NewPM + br, \
 			td > script + ins \

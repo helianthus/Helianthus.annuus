@@ -26,26 +26,26 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 
 		AN.util.stackStyle('.hkg_bottombar_link[href^="javascript: BlockUser("] { display: none; }');
 
-		var uid = 1001;
+		var gBoxId = 1001;
 
-		$d.bind('mousedown.userlinkbox', function(event)
+		$d.bind('click.userlinkbox', function(event)
 		{
 			var jTarget = $(event.target);
 			if(!jTarget.is('a[href^="javascript: ToggleUserDetail"]')) return;
 
-			event.preventDefault();
+			event.preventDefault()
 
-			var id = jTarget.data('an-threadId');
+			var boxId = jTarget.data('an-boxId');
 
-			if(!id) {
-				id = uid++;
+			if(!boxId) {
+				boxId = gBoxId++;
 
-				jTarget.data('an-threadId', id)
-				.nextAll('div:first').attr('id', 'ThreadUser' + id)
-				.closest('tr[userid]').attr('id', id)
+				jTarget
+				.data('an-boxId', boxId)
+				.nextAll('div[id^=ThreadUser]').attr('id', 'ThreadUser' + boxId)
 			}
 
-			window.ToggleUserDetail(id, '');
+			window.ToggleUserDetail(boxId, jTarget.closest('[userid]')[0].id)
 		});
 
 		var pages = {};

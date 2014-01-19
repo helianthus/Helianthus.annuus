@@ -628,7 +628,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			},
 			click: function()
 			{
-				addFilter(jButton.data('hoverize').jTarget.find('a:first').html().replace(/<img[^>]+?alt="([^"]+)[^>]*>/ig, '$1'));
+				addFilter(jButton.data('hoverize').jTarget.find('a:first').html().trim().replace(/<img[^>]+?alt="([^"]+)[^>]*>/ig, '$1'));
 			}
 		});
 
@@ -637,11 +637,11 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 
 		var addFilter = function(sTopicName)
 		{
-			var sFilter = prompt('請輸入過濾器', sTopicName || '');
+			var sFilter = prompt('請輸入過濾器', sTopicName || '')
 			if(!sFilter) return;
 
 			var aFilter = getFilters();
-			aFilter.push(sFilter);
+			aFilter.push(sFilter.trim());
 			AN.util.data('aTopicFilter', aFilter);
 			filterTopics();
 		};

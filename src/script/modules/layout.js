@@ -187,6 +187,17 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	}
 },
 
+'7ca271bc-d036-49a5-b1c1-e93990ed847a':
+{
+	desc: '隱藏小圈子過濾提示',
+	page: { 4: false },
+	type: 3,
+	infinite: function(jDoc)
+	{
+		jDoc.find('td[colspan="6"][style*="6EA0C4"] > b').closest('tr').hide();
+	}
+},
+
 'f41e288e-cd1d-4649-a396-83d92d99ded8':
 {
 	desc: '隱藏紅人榜',

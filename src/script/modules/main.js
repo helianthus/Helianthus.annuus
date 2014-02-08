@@ -615,7 +615,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		};
 
 		var jHiddenImg,
-		jButton = $('<img />', { src: $r['cross-shield'], css: { 'margin-left': '-1.5px' } }).hoverize('#HotTopics tr:not(:first-child)', { autoPosition: false })
+		jButton = $('<img />', { src: $r['cross-shield'], css: { 'margin-left': '-1.5px' } }).hoverize('#HotTopics tr:has(td > a)', { autoPosition: false })
 		.bind({
 			entertarget: function()
 			{

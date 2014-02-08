@@ -395,6 +395,7 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 	{
 		var working = false;
 		var tbodies = [];
+		var apiCall = ($('#ctl00_ContentPlaceHolder1_jsLabel').html() || '').match(/PageMethods.+/m);
 		var refreshTopics = function(nPage, url, continued, init)
 		{
 			clearTimeout(tRefresh);
@@ -415,9 +416,35 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 				url = $('img[alt="next"][src="images/button-next.gif"]').parent().attr('href');
 			}
 
-			$.getDoc(url || location.href, function(jNewDoc)
+			$.Deferred(function(deferred)
 			{
-				tbodies.push(jNewDoc.topics().jTbody.find('script').remove().end()[0]);
+				if(!url && apiCall) {
+					var callParts = apiCall[0].split(/[()]/);
+					var fn = window;
+
+					$.each(callParts[0].split('.'), function(i, attr) {
+						fn = fn[attr];
+					});
+
+					fn.apply(null, callParts[1].replace(/'/g, '').split(/,\s*/).slice(0, 2).concat(function(rows)
+					{
+						deferred.resolve(
+							$('<tbody>')
+								.append(jDoc.topicTable().find('tr:has(th):first').prevAll().addBack().clone())
+								.append(rows)
+							,	jDoc);
+					}, $.noop));
+
+					return;
+				}
+
+				$.getDoc(url || location.href, function(jNewDoc)
+				{
+					deferred.resolve(jNewDoc.topics().jTbody.find('script').remove().end()[0], jNewDoc);
+				});
+			}).then(function(tbody, jDoc)
+			{
+				tbodies.push(tbody);
 
 				if(nPage >= AN.util.getOptions('nNumOfTopicPage'))
 				{
@@ -438,7 +465,7 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 				}
 				else
 				{
-					refreshTopics(++nPage, jNewDoc.find('img[alt="next"][src="images/button-next.gif"]').parent().attr('href'), true, init);
+					refreshTopics(++nPage, jDoc.find('img[alt="next"][src="images/button-next.gif"]').parent().attr('href'), true, init);
 				}
 			});
 		};

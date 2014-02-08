@@ -34,7 +34,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			',
 			// topics, search, tags, view
 			60: '\
-			[id*="PageAd"], [id*="tempAd"], \
+			[id*="PageAd"], [id*="tempAd"], span[id*="lineImage"], \
 			#MainPageAd2 ~ br, \
 			#ctl00_ContentPlaceHolder1_lb_NewPM + br, \
 			td > script + ins \

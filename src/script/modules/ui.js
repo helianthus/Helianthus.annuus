@@ -131,7 +131,7 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 						: location.href.replace(/topics_(bw)(?:_[^.]+)?\.htm(\??)/i, function($0, $1, $2){ return 'topics.aspx?type=' + $1.toUpperCase() + ($2 ? '&' : ''); });
 					var tableHTML = '', imgHTML = '';
 
-					var subs = [['forum101', 'Forum 101'], ['search', 'Search'], ['m', 'Mobile']];
+					var subs = [['forum101', 'Forum 101'], ['search', 'Search']];
 					for(var i=15; i--;) {
 						subs.unshift(['forum' + (i + 1), 'Forum ' + (i + 1)]);
 					}

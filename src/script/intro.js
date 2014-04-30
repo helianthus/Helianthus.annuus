@@ -9,11 +9,9 @@ var location = window.location;
 var history = window.history;
 var navigator = window.navigator;
 
-if(!/(?!(?:www|m|articlehtml)\.)[a-z0-9]+\.hkgolden\.com$/i.test(location.hostname)
-  || /HKGN_top/.test(location.pathname)
-  || window.AN) return;
-
-if(document.body && document.body.firstChild.className == 'webkit-line-gutter-backdrop' || /\.(?:gif|jpe?g|png|asmx)$/i.test(location.href)) return;
+if(window.AN
+  || !/^(?!(?:www|m\d*|articlehtml)\.)[a-z0-9]+\.hkgolden\.com$/i.test(location.hostname)
+  ) return;
 
 document.domain = 'hkgolden.com';
 

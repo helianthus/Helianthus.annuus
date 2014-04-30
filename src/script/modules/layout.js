@@ -81,7 +81,9 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 
 		AN.util.addStyle($.sprintf('\
 		.PageWidthContainer, /* type=FN */ #PageMiddlePanel > div[style] > table { width: %s; } \
-		.PageMiddleBox, .repliers, table[width^="954"], [style*="954px"] \
+		.PageMiddleBox, .repliers, table[width^="954"], \
+		#ctl00_ContentPlaceHolder1_view_form > div[style*="954px"], \
+		#ctl00_ContentPlaceHolder1_view_form > div[style*="954px"] > div[style*="954px"] \
 			{ width: 100% !important; } \
 		#ctl00_ContentPlaceHolder1_ProfileForm td[width="8"] { display: none; } \
 		.PageMiddleBox \

@@ -81,9 +81,9 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 
 		AN.util.addStyle($.sprintf('\
 		.PageWidthContainer, /* type=FN */ #PageMiddlePanel > div[style] > table { width: %s; } \
-		.PageMiddleBox, .repliers, table[width^="954"], \
-		#ctl00_ContentPlaceHolder1_view_form > div[style*="954px"], \
-		#ctl00_ContentPlaceHolder1_view_form > div[style*="954px"] > div[style*="954px"] \
+		.PageMiddleBox, .repliers, table[width^="954"], table[width^="947"], \
+		#ctl00_ContentPlaceHolder1_view_form > div[style*="945px"], \
+		#ctl00_ContentPlaceHolder1_view_form > div[style*="945px"] > div[style*="945px"] \
 			{ width: 100% !important; } \
 		#ctl00_ContentPlaceHolder1_ProfileForm td[width="8"] { display: none; } \
 		.PageMiddleBox \
@@ -101,7 +101,9 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	type: 3,
 	once: function()
 	{
-		AN.util.stackStyle('#MainPageAd2 + br + div, #MainPageAd2 + div { display: none; }');
+		AN.util.stackStyle('\
+		.ContentPanel table[width="954px"] b + div \
+				{ display: none; }');
 	}
 },
 
@@ -113,8 +115,7 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	once: function()
 	{
 		AN.util.stackStyle('\
-		#MainPageAd2 + br + div + div, #MainPageAd2 + br + div + div + div, \
-		#MainPageAd2 + div + div, #MainPageAd2 + div + div + div \
+		.ContentPanel table[width="954px"] b + div + div \
 			{ display: none; } \
 		');
 	}
@@ -128,8 +129,7 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	once: function()
 	{
 		AN.util.stackStyle('\
-		#MainPageAd2 + br + div + div + div, #MainPageAd2 + br + div + div + div + div, \
-		#MainPageAd2 + div + div + div, #MainPageAd2 + div + div + div + div \
+		.ContentPanel > table[width="954px"] b + div + div + div + div \
 			{ display: none; } \
 		');
 	}
@@ -142,14 +142,9 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	type: 3,
 	once: function()
 	{
-		if($d.pageName() === 'topics')
-			AN.util.stackStyle('.Topic_FunctionPanel { margin-top: 0; }');
-		else
-			AN.util.stackStyle('\
-			#ctl00_ContentPlaceHolder1_MiddleAdSpace1 > div { padding: 0 !important; } \
-			td[valign="bottom"] > br:first-child { display: none; } \
-			td[valign="bottom"] > p { margin: 0; } \
-			');
+		AN.util.stackStyle('\
+			.Topic_FunctionPanel { margin-top: 0; } \
+		');
 	}
 },
 
@@ -290,7 +285,7 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	type: 3,
 	once: function()
 	{
-		AN.util.stackStyle('#DivMarkThread + table { display: none; }');
+		AN.util.stackStyle('.fb-like { display: none !important; }');
 	}
 },
 

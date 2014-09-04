@@ -1,5 +1,5 @@
 /*
-//@ sourceURL=annuus.js
+//# sourceURL=annuus.js
 */
 
 (function()
@@ -10,7 +10,7 @@ var history = window.history;
 var navigator = window.navigator;
 
 if(window.AN
-  || !/^(?!(?:www|m\d*|articlehtml)\.)[a-z0-9]+\.hkgolden\.com$/i.test(location.hostname)
+  || !/^(?!(?:www|m\d*|articlehtml)\.)[^.]+\.hkgolden\.com\/(?![^.]+?_ad)/i.test(location.href)
   ) return;
 
 document.domain = 'hkgolden.com';
@@ -45,6 +45,25 @@ if(document.addEventListener) {
 
   window.addEventListener('load', onload, false);
 }
+
+document.head.appendChild(document.createElement('style')).appendChild(document.createTextNode('\
+a[href*="bmediaasia"], \
+div[id="Super Banner"] ~ *, \
+div[id^="Top Textlink"] ~ *, \
+span[id*="GoogleAd"], \
+span[id*="LineAd"], \
+span[id^="lineImage"], \
+\
+.ContentPanel > center, .ContentPanel > center + br, \
+#mainTopicTable > tbody > tr:nth-child(2) ~ tr:not([userid]), \
+td[colspan][height="52"], \
+#ctl00_ContentPlaceHolder1_view_form > div[style*="945px"] > table[width="100%"] > tbody > tr > td:not([align="left"]), \
+\
+noscript, \
+script + ins, \
+script + object \
+{ display: none !important; } \
+'));
 
 var
 AN = window.AN = { mod: {}, version: '${AN_VERSION}' },

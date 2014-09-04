@@ -3,60 +3,20 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 // 佈局設定 //
 '63d2407a-d8db-44cb-8666-64e5b76378a2':
 {
-	desc: '隱藏廣告',
+	desc: '隱藏廣告殘留物',
 	page: { 65535: true },
 	type: 3,
-	once: function()
-	{
-		$.each(
-		{
-			65535: '\
-			#HKGTopAd, noscript { display: none; } \
-			',
-			// topics
-			4: '\
-			.ContentPanel > table > tbody > tr > td:first-child + td, \
-			.Topic_ListPanel > center, .Topic_ListPanel > center + br, .Topic_ListPanel > center + br + br \
-				{ display: none; } \
-			.Topic_FunctionPanel { overflow: hidden; } \
-			',
-			// search, tags
-			24: '\
-			#ctl00_ContentPlaceHolder1_topics_form > script:first-child + div { width: auto !important; } \
-			#ctl00_ContentPlaceHolder1_topics_form > script:first-child + div + div { display: none; } \
-				{ display: none; } \
-			',
-			28: 'td[height="52"] { display: none; }',
-			// view
-			32: '\
-			td[width^="644"] { width: auto; } \
-			td[width^="644"] + td { display: none; } \
-			',
-			// topics, search, tags, view
-			60: '\
-			[id*="PageAd"], [id*="tempAd"], span[id*="lineImage"], \
-			#MainPageAd2 ~ br, \
-			#ctl00_ContentPlaceHolder1_lb_NewPM + br, \
-			td > script + ins \
-				{ display: none !important; } \
-			',
-			// profilepage
-			64: '\
-			#ctl00_ContentPlaceHolder1_ProfileForm table[cellpadding="2"][cellspacing="1"] > \
-			tbody > tr:not(:first-child):not([style]) \
-				{ display: none; } \
-			'
-		},
-		function(nPageCode){ $d.pageCode() & nPageCode && AN.util.stackStyle(this); });
-	},
 	infinite: function(jDoc)
 	{
-		if($d.pageCode() & 28)
+		if($d.pageCode() & 88)
 		{
-			jDoc.find('td[height="52"]').parent().hide();
+			jDoc.find('td[colspan][height="52"]').parent().hide();
 		}
 		else if($d.pageCode() === 32) {
-			jDoc.find('.repliers_left').parent().not('[userid]').closest('div > table[width]').hide();
+			(jDoc.is('div') ? jDoc : jDoc.find('#ctl00_ContentPlaceHolder1_view_form > div[style*="945px"]'))
+				.children('table[width="100%"]')
+				.has('> tbody > tr > td:not([align="left"])')
+				.hide();
 		}
 	}
 },
@@ -1283,12 +1243,12 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			if(!rUrl)
 			{
 				var parts = {
-					host: 'http://(?:[\\w-]+\\.)+[a-z]{2,4}(?![a-z])',
+					host: 'https?://(?:[\\w-]+\\.)+[a-z]{2,4}(?![a-z])',
 					codes: '\\[/?(?:img|url|quote|\\*|left|center|right|b|i|u|s|size|red|green|blue|purple|violet|brown|black|pink|orange|gold|maroon|teal|navy|limegreen)'
 				};
 
 				rUrl = new RegExp($.sprintf('%(host)s(?:/(?:(?!%(codes)s)\\S)*)?(?!(\\S*?| *)\\[/(?:img|url)])', parts), 'gi');
-				jUrlBtn = $('<button type="button" style="vertical-align: top; margin-left: 5px; display: none;" />').insertAfter('#ctl00_ContentPlaceHolder1_btn_Submit').click(function()
+				jUrlBtn = $('<button type="button" style="vertical-align: top; margin-left: 5px; display: none;" />').insertAfter('#ctl00_ContentPlaceHolder1_btn_Submit ~ :last-child').click(function()
 				{
 					jTextarea.val(text.replace(rUrl, '[url]$&[/url]')).change();
 				});

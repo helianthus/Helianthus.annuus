@@ -154,7 +154,7 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 						jTestImages.each(function(i)
 						{
 							var nTime = $.time();
-							$(this).data('nTime', nTime).attr('src', $.sprintf('http://%s.hkgolden.com/images/spacer.gif?tId=%s', subs[i][0], nTime));
+							$(this).data('nTime', nTime).attr('src', $.sprintf('http://%s.hkgolden.com/images/index_images/p.gif?tId=%s', subs[i][0], nTime));
 						});
 					})
 					.end().find('tbody').html(tableHTML);

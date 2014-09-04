@@ -75,19 +75,8 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 				}
 			}
 
-			var extras = jDiv.find('#newmessage').prevAll('div:last').prev().nextAll().andSelf();
-
-			jDiv.append(extras.slice(0, 2));
-
-			extras = extras.slice(2);
-			if(jScope) {
-				extras.remove();
-			}
-			else {
-				extras.not('script').insertAfter(jDiv);
-			}
-
-			jDiv.prepend(jDiv.prev());
+			jDiv.prev().prependTo(jDiv)
+			jDiv.next().appendTo(jDiv)
 
 			if(displayMode != 2) {
 				var jSelect = jDiv.find('select[name="page"]');

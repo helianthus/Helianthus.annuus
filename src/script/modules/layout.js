@@ -125,7 +125,7 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	once: function()
 	{
 		AN.util.stackStyle('\
-			.Topic_FunctionPanel { margin-top: 0; } \
+			.Topic_FunctionPanel { margin-top: 0; overflow: hidden; } \
 			.Topic_FunctionPanel > div:last-child { display: none; } \
 		');
 	}

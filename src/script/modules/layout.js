@@ -33,20 +33,6 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	}
 },
 
-'d0164ba6-a5a2-4850-ab67-658b840fd3ef':
-{
-	desc: '隱藏繁簡轉換列',
-	page: { 65534: false },
-	type: 3,
-	once: function()
-	{
-		AN.util.stackStyle('\
-		.PageMiddleFunctions { height: 5px; } \
-		.PageMiddleFunctions > div { display: none; } \
-		');
-	}
-},
-
 'bbd5f176-c024-4684-ba98-b72da376a6eb':
 {
 	desc: '隱藏最底頁腳',
@@ -54,18 +40,12 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	type: 3,
 	once: function()
 	{
-		AN.util.stackStyle('.FooterPanel { display: none; }');
-	}
-},
-
-'5fd907ce-21dc-44b9-b280-3cb145c53c92':
-{
-	desc: '隱藏頁底空白',
-	page: { 65534: false },
-	type: 3,
-	once: function()
-	{
-		AN.util.stackStyle('.FooterPanel ~ br { display: none; }');
+		AN.util.stackStyle('\
+			.PageMiddlePanel + br, \
+			.FooterPanel, \
+			.FooterPanel + div, \
+			.FooterPanel + div + div \
+				{ display: none; }');
 	}
 },
 
@@ -115,7 +95,8 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	once: function()
 	{
 		AN.util.stackStyle('\
-		.ContentPanel table[width="954px"] b + div + div \
+		.ContentPanel table[width="954px"] b + div + div, \
+		.ContentPanel table[width="954px"] b + div + div + div \
 			{ display: none; } \
 		');
 	}
@@ -129,6 +110,7 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	once: function()
 	{
 		AN.util.stackStyle('\
+		.ContentPanel > table[width="954px"] b + div + div + div, \
 		.ContentPanel > table[width="954px"] b + div + div + div + div \
 			{ display: none; } \
 		');
@@ -144,6 +126,7 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	{
 		AN.util.stackStyle('\
 			.Topic_FunctionPanel { margin-top: 0; } \
+			.Topic_FunctionPanel > div:last-child { display: none; } \
 		');
 	}
 },
@@ -202,7 +185,10 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	type: 3,
 	once: function()
 	{
-		AN.util.stackStyle('#ctl00_ContentPlaceHolder1_HotPeoples, #ctl00_ContentPlaceHolder1_HotPeoples + br { display: none; }');
+		AN.util.stackStyle('\
+			.ContentPanel > center + br, \
+			#ctl00_ContentPlaceHolder1_HotPeoples \
+				{ display: none; }');
 	}
 },
 
@@ -214,7 +200,25 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	once: function()
 	{
 		AN.util.stackStyle('\
-			.Topic_ListPanel > .DivBoxContainer, .Topic_ListPanel > .DivBoxContainer + script + br \
+			#ctl00_ContentPlaceHolder1_HotPeoples + br, \
+			.ContentPanel > center + br + br, \
+			.ContentPanel > .DivBoxContainer \
+				{ display: none; }');
+	}
+},
+
+'516426b3-da86-4ed5-b30a-c5678863bb09':
+{
+	desc: '隱藏討論區圖示說明',
+	page: { 28: false },
+	type: 3,
+	once: function()
+	{
+		AN.util.stackStyle('\
+			#ctl00_ContentPlaceHolder1_topics_form ~ br, \
+			#ctl00_ContentPlaceHolder1_topics_form ~ br + table, \
+			.ContentPanel > .DivBoxContainer + script + br, \
+			.ContentPanel > .DivBoxContainer + script + br + table \
 				{ display: none; }');
 	}
 },
@@ -353,39 +357,6 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 		if(AN.util.getOptions('bRemClassicRow')) jRows.eq(3).hide();
 		if(AN.util.getOptions('bRemTempRow') && jRows.length > 5) jRows.eq(3).nextAll(':not(:last)').hide();
 		if(AN.util.getOptions('bRemPreviewRow')) jRows.last().hide();
-	}
-},
-
-'c1daa2db-8315-48bb-b26b-7ea99481ce28':
-{
-	desc: '隱藏私人訊息列表',
-	page: { 64: false },
-	type: 3,
-	once: function()
-	{
-		AN.util.stackStyle('#ctl00_ContentPlaceHolder1_UpdatePanelPM, #ctl00_ContentPlaceHolder1_UpdatePanelPM + br { display: none; }');
-	}
-},
-
-'1e2a7c96-a096-4a45-9909-c196ddabc286':
-{
-	desc: '隱藏紅人榜記錄',
-	page: { 64: false },
-	type: 3,
-	once: function()
-	{
-		AN.util.stackStyle('#ctl00_ContentPlaceHolder1_HotPeoples, #ctl00_ContentPlaceHolder1_HotPeoples + br { display: none; }');
-	}
-},
-
-'222f0c01-1ebd-49d6-b7f4-b1b7fc60ca40':
-{
-	desc: '隱藏起底列表',
-	page: { 64: false },
-	type: 3,
-	once: function()
-	{
-		AN.util.stackStyle('#ctl00_ContentPlaceHolder1_BookmarkTable { display: none; }');
 	}
 },
 

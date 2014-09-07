@@ -10,7 +10,7 @@ var history = window.history;
 var navigator = window.navigator;
 
 if(window.AN
-  || !/^(?!(?:www|m\d*|articlehtml)\.)[^.]+\.hkgolden\.com\/(?![^.]+?_ad)/i.test(location.href)
+  || !/^http:\/\/(?!(?:www|m\d*|articlehtml)\.)[^.]+\.hkgolden\.com\/(?![^.]+?_ad)/i.test(location.href)
   ) return;
 
 document.domain = 'hkgolden.com';
@@ -54,7 +54,8 @@ span[id*="GoogleAd"], \
 span[id*="LineAd"], \
 span[id^="lineImage"], \
 \
-.ContentPanel > center, .ContentPanel > center + br, \
+.PageMiddleFunctions, \
+.Topic_ListPanel + table + table + br, .ContentPanel > center, \
 #mainTopicTable > tbody > tr:nth-child(2) ~ tr:not([userid]), \
 td[colspan][height="52"], \
 #ctl00_ContentPlaceHolder1_view_form > div[style*="945px"] > table[width="100%"] > tbody > tr > td:not([align="left"]), \

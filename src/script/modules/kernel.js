@@ -205,7 +205,7 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 
 		if($(document).pageName() === 'view') {
 			css += '\
-			.repliers_right { table-layout: fixed; } \
+			.repliers_right { table-layout: fixed; width: 100%; } \
 			.ContentGrid { width: auto; overflow-x: hidden; } \
 			';
 		}

@@ -76,7 +76,6 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 			}
 
 			jDiv.prev().prependTo(jDiv)
-			jDiv.next().appendTo(jDiv)
 
 			if(displayMode != 2) {
 				var jSelect = jDiv.find('select[name="page"]');

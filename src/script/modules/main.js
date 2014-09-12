@@ -13,7 +13,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 			jDoc.find('td[colspan][height="52"]').parent().hide();
 		}
 		else if($d.pageCode() === 32) {
-			(jDoc.is('div') ? jDoc : jDoc.find('#ctl00_ContentPlaceHolder1_view_form > div[style*="945px"]'))
+			(jDoc.is('div') ? jDoc : jDoc.find('#ctl00_ContentPlaceHolder1_view_form > div[style*="954px"]'))
 				.children('table[width="100%"]')
 				.has('> tbody > tr > td:not([align="left"])')
 				.hide();

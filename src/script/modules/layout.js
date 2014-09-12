@@ -43,8 +43,8 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 		AN.util.stackStyle('\
 			.PageMiddlePanel + br, \
 			.FooterPanel, \
-			.FooterPanel + div, \
-			.FooterPanel + div + div \
+			.FooterPanel + br, \
+			.FooterPanel + br + br \
 				{ display: none; }');
 	}
 },
@@ -60,12 +60,10 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 		var w = AN.util.getOptions('nPageWidth');
 
 		AN.util.addStyle($.sprintf('\
-		.PageWidthContainer, /* type=FN */ #PageMiddlePanel > div[style] > table { width: %s; } \
+		.PageWidthContainer { width: %s; } \
 		.PageMiddleBox, .repliers, table[width^="954"], table[width^="947"], \
-		#ctl00_ContentPlaceHolder1_view_form > div[style*="945px"], \
-		#ctl00_ContentPlaceHolder1_view_form > div[style*="945px"] > div[style*="945px"] \
+		#ctl00_ContentPlaceHolder1_view_form > div[style*="954px"] \
 			{ width: 100% !important; } \
-		#ctl00_ContentPlaceHolder1_ProfileForm td[width="8"] { display: none; } \
 		.PageMiddleBox \
 			{ box-sizing: border-box; -moz-box-sizing: border-box; } \
 		',
@@ -95,8 +93,10 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	once: function()
 	{
 		AN.util.stackStyle('\
-		.ContentPanel table[width="954px"] b + div + div, \
-		.ContentPanel table[width="954px"] b + div + div + div \
+		.ContentPanel table[width="954px"] b + br + div + div, \
+		.ContentPanel table[width="954px"] b + br + div + div + div, \
+		#MainPageAd2 + div + .DivResizableBoxContainer, \
+		#ctl00_ContentPlaceHolder1_view_form > table[width="954px"] .DivResizableBoxContainer \
 			{ display: none; } \
 		');
 	}
@@ -110,8 +110,8 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	once: function()
 	{
 		AN.util.stackStyle('\
-		.ContentPanel > table[width="954px"] b + div + div + div, \
-		.ContentPanel > table[width="954px"] b + div + div + div + div \
+		.ContentPanel > table[width="954px"] b + br + div + div + div, \
+		.ContentPanel > table[width="954px"] b + br + div + div + div + div \
 			{ display: none; } \
 		');
 	}
@@ -127,6 +127,10 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 		AN.util.stackStyle('\
 			.Topic_FunctionPanel { margin-top: 0; overflow: hidden; } \
 			.Topic_FunctionPanel > div:last-child { display: none; } \
+			#ctl00_ContentPlaceHolder1_topics_form > div + table { position: relative; } \
+			#ctl00_ContentPlaceHolder1_topics_form > div + table table:first-child br { display: none; } \
+			#ctl00_ContentPlaceHolder1_topics_form > div + table p { margin: 0; } \
+			#ctl00_ContentPlaceHolder1_topics_form #forum_list { position: absolute; } \
 		');
 	}
 },
@@ -186,8 +190,8 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	once: function()
 	{
 		AN.util.stackStyle('\
-			.ContentPanel > center + br, \
-			#ctl00_ContentPlaceHolder1_HotPeoples \
+			#ctl00_ContentPlaceHolder1_HotPeoples, \
+			#ctl00_ContentPlaceHolder1_HotPeoples + br \
 				{ display: none; }');
 	}
 },
@@ -200,9 +204,8 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	once: function()
 	{
 		AN.util.stackStyle('\
-			#ctl00_ContentPlaceHolder1_HotPeoples + br, \
-			.ContentPanel > center + br + br, \
-			.ContentPanel > .DivBoxContainer \
+			.Topic_ListPanel > .DivBoxContainer, \
+			.Topic_ListPanel > .DivBoxContainer + script + br \
 				{ display: none; }');
 	}
 },
@@ -217,8 +220,8 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 		AN.util.stackStyle('\
 			#ctl00_ContentPlaceHolder1_topics_form ~ br, \
 			#ctl00_ContentPlaceHolder1_topics_form ~ br + table, \
-			.ContentPanel > .DivBoxContainer + script + br, \
-			.ContentPanel > .DivBoxContainer + script + br + table \
+			.Topic_ListPanel > table:last-child, \
+			.Topic_ListPanel + div \
 				{ display: none; }');
 	}
 },

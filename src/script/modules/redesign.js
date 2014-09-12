@@ -118,7 +118,7 @@ AN.mod['Component Redesigner'] = { ver: 'N/A', author: '向日', fn: {
 		jToggle = (hideMode === 0 ? jQR : jQR.find('tr:eq(2)')).hide(),
 		jPreview = $('#previewArea'),
 		jTextarea = $('#ctl00_ContentPlaceHolder1_messagetext'),
-		nWidth = 945, //jQR.width() + 1,
+		nWidth = 954,
 		nRight = 50 - nWidth;
 
 		jQRHeader.children()[0].nextSibling.nodeValue = '快速回覆';
@@ -136,7 +136,7 @@ AN.mod['Component Redesigner'] = { ver: 'N/A', author: '向日', fn: {
 		));
 
 		if(hideMode !== 3) {
-			AN.util.stackStyle($.sprintf('#newmessage { margin-right: %spx; }', -nWidth / 2 - 4));
+			AN.util.stackStyle($.sprintf('#newmessage { margin-right: %spx; }', -nWidth / 2 - 9));
 		}
 
 		function toggleQR(toShow, callback)

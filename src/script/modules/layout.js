@@ -43,8 +43,8 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 		AN.util.stackStyle('\
 			.PageMiddlePanel + br, \
 			.FooterPanel, \
-			.FooterPanel + br, \
-			.FooterPanel + br + br \
+			.FooterPanel + div, \
+			.FooterPanel + div + div \
 				{ display: none; }');
 	}
 },
@@ -62,7 +62,8 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 		AN.util.addStyle($.sprintf('\
 		.PageWidthContainer { width: %s; } \
 		.PageMiddleBox, .repliers, table[width^="954"], table[width^="947"], \
-		#ctl00_ContentPlaceHolder1_view_form > div[style*="954px"] \
+		#ctl00_ContentPlaceHolder1_view_form > div[style*="945px"], \
+		#ctl00_ContentPlaceHolder1_view_form > div[style*="945px"] > div[style*="945px"] \
 			{ width: 100% !important; } \
 		.PageMiddleBox \
 			{ box-sizing: border-box; -moz-box-sizing: border-box; } \
@@ -93,9 +94,8 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	once: function()
 	{
 		AN.util.stackStyle('\
-		.ContentPanel table[width="954px"] b + br + div + div, \
-		.ContentPanel table[width="954px"] b + br + div + div + div, \
-		#MainPageAd2 + div + .DivResizableBoxContainer, \
+		.ContentPanel table[width="954px"] b + div + div[style*="280px"], \
+		#ctl00_ContentPlaceHolder1_topics_form .DivResizableBoxContainer, \
 		#ctl00_ContentPlaceHolder1_view_form > table[width="954px"] .DivResizableBoxContainer \
 			{ display: none; } \
 		');
@@ -110,8 +110,7 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	once: function()
 	{
 		AN.util.stackStyle('\
-		.ContentPanel > table[width="954px"] b + br + div + div + div, \
-		.ContentPanel > table[width="954px"] b + br + div + div + div + div \
+		.ContentPanel table[width="954px"] b + div + div + div + div[style*="255px"] \
 			{ display: none; } \
 		');
 	}
@@ -204,8 +203,8 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	once: function()
 	{
 		AN.util.stackStyle('\
-			.Topic_ListPanel > .DivBoxContainer, \
-			.Topic_ListPanel > .DivBoxContainer + script + br \
+			.ContentPanel > .DivBoxContainer, \
+			.ContentPanel > .DivBoxContainer + script + br \
 				{ display: none; }');
 	}
 },
@@ -220,8 +219,7 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 		AN.util.stackStyle('\
 			#ctl00_ContentPlaceHolder1_topics_form ~ br, \
 			#ctl00_ContentPlaceHolder1_topics_form ~ br + table, \
-			.Topic_ListPanel > table:last-child, \
-			.Topic_ListPanel + div \
+			.ContentPanel > .DivBoxContainer + script + br + table \
 				{ display: none; }');
 	}
 },

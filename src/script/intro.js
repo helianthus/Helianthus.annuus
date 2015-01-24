@@ -55,8 +55,7 @@ span[id*="LineAd"], \
 span[id^="lineImage"], \
 \
 .PageMiddleFunctions, \
-.ContentPanel table[width="954px"] b, .ContentPanel table[width="954px"] b + br, \
-.Topic_ListPanel > center + br, .Topic_ListPanel > center + br + br, \
+.ContentPanel > center + br, .ContentPanel > center + br + br, \
 #mainTopicTable > tbody > tr:nth-child(2) ~ tr:not([userid]), \
 td[colspan][height="52"], \
 #ctl00_ContentPlaceHolder1_view_form > div[style*="945px"] > table[width="100%"] > tbody > tr > td:not([align="left"]), \

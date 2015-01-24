@@ -80,6 +80,8 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 			if(displayMode != 2) {
 				var jSelect = jDiv.find('select[name="page"]');
 				jSelect.data('an-pageno', jSelect.val());
+
+				$('select[name="page"]:last').replaceWith(jSelect.first().clone(true))
 			}
 
 			updateElements(jDiv);

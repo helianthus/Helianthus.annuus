@@ -78,10 +78,12 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 			jDiv.prev().prependTo(jDiv)
 
 			if(displayMode != 2) {
-				var jSelect = jDiv.find('select[name="page"]');
+				var jSelect = jDiv.parent().find('select[name="page"]');
 				jSelect.data('an-pageno', jSelect.val());
 
-				$('select[name="page"]:last').replaceWith(jSelect.first().clone(true))
+				if(newPageNo > pages.last) {
+					$('select[name="page"]:last').up('div', 3).replaceWith(jSelect.first().up('div', 3).clone(true))
+				}
 			}
 
 			updateElements(jDiv);
@@ -202,7 +204,9 @@ AN.mod['Ajax Integrator'] = { ver: 'N/A', author: '向日', fn: {
 								}
 							});
 
-							jNewElements = jNewElements.add(jNewSelect.up('div', 3).replaceAll(pages[pages.last].find('select[name="page"]').up('div', 3)));
+							pages[pages.last].find('select[name="page"]').add($('select[name="page"]:last'))
+								.up('div', 3)
+								.replaceWith(jNewSelect.data('an-pageno', pages.last).up('div', 3));
 						}
 
 						if(displayMode === 0) {

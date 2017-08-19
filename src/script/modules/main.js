@@ -420,62 +420,6 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 },
 
 // 其他功能 //
-'4cdce143-74a5-4bdb-abca-0351638816fb':
-{
-	desc: '帖子主旨或內文出現錯誤時進行提示',
-	page: { 288: true },
-	type: 6,
-	once: function(jDoc)
-	{
-		$('#ctl00_ContentPlaceHolder1_messagesubject').css('width', '95%').attr('maxlength', '50');
-
-		var states = {};
-
-		$('#ctl00_ContentPlaceHolder1_messagesubject, #ctl00_ContentPlaceHolder1_messagetext').on('keyup change', function()
-		{
-			var target = $(this);
-			var max = this.id === 'ctl00_ContentPlaceHolder1_messagesubject' ? 50 : 2000;
-			var text = $(this).val();
-			var n = 0;
-
-			if(this.id === 'ctl00_ContentPlaceHolder1_messagesubject') {
-				if(text.length !== window.convert_text(text).length) {
-					target.css('background-color', '#1BB5E0');
-					states[this.id] = 1;
-					return;
-				}
-			}
-			else {
-				text = window.convert_text(text);
-			}
-
-			for(var i=0; i<text.length; i++)
-			{
-				n += text.charCodeAt(i) > 255 ? 2 : 1;
-
-				if(n > max) {
-					target.css('background-color', 'pink');
-					states[this.id] = 2;
-					return;
-				}
-			}
-
-			target.css('background-color', '');
-			states[this.id] = 0;
-		});
-
-		$('#aspnetForm').submit(function()
-		{
-			for(var id in states) {
-				if(states[id]) {
-					alert(states[id] === 1 ? '主旨存在香港字!' : '主旨或內文過長!');
-					return false;
-				}
-			}
-		});
-	}
-},
-
 '86d24fc8-476a-4de3-95e1-5e0eb02b3353':
 {
 	desc: '轉換表情碼為圖片',

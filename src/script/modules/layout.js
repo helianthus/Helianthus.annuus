@@ -116,6 +116,21 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	}
 },
 
+'e36193f3-1f61-4807-91f6-3352c0efef31':
+{
+	desc: '隱藏上層右側欄',
+	page: { 65535: false },
+	type: 3,
+	once: function()
+	{
+		AN.util.stackStyle('\
+		.ContentPanel table[width="954px"] td[style*="width: 310px"] \
+			{ display: none; } \
+		.tabcontainer { width: auto; } \
+		');
+	}
+},
+
 'b44ee3a6-950e-4b2a-b99a-399b6384bcce':
 {
 	desc: '隱藏搜尋列上下空白',

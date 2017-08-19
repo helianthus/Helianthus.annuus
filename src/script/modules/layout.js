@@ -130,24 +130,6 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	}
 },
 
-'b44ee3a6-950e-4b2a-b99a-399b6384bcce':
-{
-	desc: '隱藏搜尋列上下空白',
-	page: { 28: false },
-	type: 3,
-	once: function()
-	{
-		AN.util.stackStyle('\
-			.Topic_FunctionPanel { margin-top: 0; overflow: hidden; } \
-			.Topic_FunctionPanel > div:last-child { display: none; } \
-			#ctl00_ContentPlaceHolder1_topics_form > div + table { position: relative; } \
-			#ctl00_ContentPlaceHolder1_topics_form > div + table table:first-child br { display: none; } \
-			#ctl00_ContentPlaceHolder1_topics_form > div + table p { margin: 0; } \
-			#ctl00_ContentPlaceHolder1_topics_form #forum_list { position: absolute; } \
-		');
-	}
-},
-
 '1ada74ac-9bae-47b2-914b-f1556dbab1a2':
 {
 	desc: '隱藏討論區選單',

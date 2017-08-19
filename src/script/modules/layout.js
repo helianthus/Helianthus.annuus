@@ -105,12 +105,12 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 'cc95985d-34df-409d-a574-e8dca1531a3d':
 {
 	desc: '隱藏精選文章',
-	page: { 4: false },
+	page: { 65535: false },
 	type: 3,
 	once: function()
 	{
 		AN.util.stackStyle('\
-		.ContentPanel table[width="954px"] b + div + div + div + div[style*="255px"] \
+		.ContentPanel table[width="954px"] b + div + div ~ div \
 			{ display: none; } \
 		');
 	}

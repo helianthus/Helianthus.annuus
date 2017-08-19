@@ -95,19 +95,6 @@
 			<fileset file="src/user/annuus.user.js" />
 		</concat>
 
-		<!-- xpi -->
-		<copy todir="test" overwrite="true">
-			<fileset dir="src" includes="xpi/" />
-		</copy>
-
-		<copy file="src/xpi/install.rdf" todir="test/xpi" overwrite="true" encoding="UTF-8">
-			<filterchain>
-				<expandproperties/>
-			</filterchain>
-		</copy>
-
-		<copy file="test/annuus.js" todir="test/xpi/resource/" />
-
 		<!-- crx -->
 		<copy todir="test" overwrite="true">
 			<fileset dir="src" includes="crx/" />
@@ -141,9 +128,6 @@
 			<fileset dir="test" includes="annuus.js" />
 			<fileset dir="test/user" includes="annuus.user.js" />
 		</copy>
-
-		<!-- xpi -->
-		<zip destfile="${dist_dir}/annuus.xpi" basedir="test/xpi" />
 	</target>
 
 	<target name="_clean">

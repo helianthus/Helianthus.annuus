@@ -94,10 +94,9 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	once: function()
 	{
 		AN.util.stackStyle('\
-		.ContentPanel table[width="954px"] b + div + div[style*="280px"], \
-		#ctl00_ContentPlaceHolder1_topics_form .DivResizableBoxContainer, \
-		#ctl00_ContentPlaceHolder1_view_form > table[width="954px"] .DivResizableBoxContainer \
+		.ContentPanel table[width="954px"] b + div + div \
 			{ display: none; } \
+		.Topic_FunctionPanel { margin-top: 0 } \
 		');
 	}
 },

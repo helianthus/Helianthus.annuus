@@ -128,6 +128,9 @@
 			<fileset dir="test" includes="annuus.js" />
 			<fileset dir="test/user" includes="annuus.user.js" />
 		</copy>
+
+		<!-- we -->
+		<zip destfile="${dist_dir}/annuus.we.zip" basedir="test/we" />
 	</target>
 
 	<target name="_clean">

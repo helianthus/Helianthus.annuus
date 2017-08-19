@@ -2,7 +2,10 @@
 	"name": "Helianthus.annuus",
 	"version": "${AN_VERSION}",
 	"manifest_version": 2,
-	"description": ":o)",
+	"description": "Greatly enhance the experience of HKGolden Forum",
+	"icons": {
+		"48": "icon.png"
+	},
 	"content_scripts": [
 		{
 			"matches": ["http://forum.hkgolden.com/*","https://forum.hkgolden.com/*"],

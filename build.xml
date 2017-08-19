@@ -109,13 +109,16 @@
 		<copy file="test/annuus.js" todir="test/xpi/resource/" />
 
 		<!-- crx -->
-		<copy todir="test" overwrite="true" encoding="UTF-8">
+		<copy todir="test" overwrite="true">
+			<fileset dir="src" includes="crx/" />
+		</copy>
+
+		<copy file="src/crx/manifest.json" todir="test/crx" overwrite="true" encoding="UTF-8">
 			<filterchain>
 				<expandproperties/>
 			</filterchain>
-
-			<fileset dir="src" includes="crx/" />
 		</copy>
+
 		<copy file="test/annuus.js" tofile="test/crx/annuus.js" overwrite="true" />
 
 		<!-- safariextz -->

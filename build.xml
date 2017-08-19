@@ -2,7 +2,7 @@
 	<tempfile property="temp" destdir="test" suffix=".js" deleteonexit="true" />
 	<tempfile property="temp2" destdir="test" suffix=".js" deleteonexit="true" />
 
-	<property name="dist_prefix" value="../dist/v3" />
+	<property name="dist_prefix" value="dist/v3" />
 
 	<target name="stable" depends="_stable, _clean, build, _dist">
 		<!-- duplicate as beta -->

@@ -1,2 +1,3 @@
-test/
-build.ini
+/test
+/dist
+/build.ini

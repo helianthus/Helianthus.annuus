@@ -162,7 +162,7 @@ AN.mod['Layout Designer'] = { ver: 'N/A', author: '向日', fn: {
 	type: 3,
 	once: function()
 	{
-		AN.util.stackStyle('#ctl00_ContentPlaceHolder1_votingThreadMsg, #ctl00_ContentPlaceHolder1_MiddleAdSpace1 { display: none; }');
+		AN.util.stackStyle('#ctl00_ContentPlaceHolder1_nominateLabel { display: none; }');
 	}
 },
 

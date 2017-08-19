@@ -1130,7 +1130,7 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 				$.each({
 					'名稱': 'Helianthus.annuus',
 					'作者': '<a target="_blank" href="ProfilePage.aspx?userid=148720">向日</a>',
-					'主頁': '<a target="_blank" href="http://code.google.com/p/helianthus-annuus/">http://code.google.com/p/helianthus-annuus/</a>',
+					'主頁': '<a target="_blank" href="https://github.com/helianthus/Helianthus.annuus">https://github.com/helianthus/Helianthus.annuus</a>',
 					'版本': AN.version,
 					'儲存方式': $.sprintf('<select id="an-about-storage"><option>Flash</option></select>'),
 					'除錯模式': AN.box.debugMode ? '啟用' : '停用'

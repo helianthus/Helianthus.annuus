@@ -1132,7 +1132,6 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 					'作者': '<a target="_blank" href="ProfilePage.aspx?userid=148720">向日</a>',
 					'主頁': '<a target="_blank" href="https://github.com/helianthus/Helianthus.annuus">https://github.com/helianthus/Helianthus.annuus</a>',
 					'版本': AN.version,
-					'儲存方式': $.sprintf('<select id="an-about-storage"><option>Flash</option></select>'),
 					'除錯模式': AN.box.debugMode ? '啟用' : '停用'
 				}, function(sName, sValue)
 				{
@@ -1188,13 +1187,6 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 				});
 
 				jAbout.find('dl').append(sHTML);
-
-				if($.support.localStorage) $('#an-about-storage').append('<option>DOM</option>');
-				$('#an-about-storage').val(AN.box.storageMode).change(function()
-				{
-					AN.util.cookie('an-storagemode', $(this).val());
-					location.reload();
-				});
 			}
 
 			AN.shared.gray(true, 'an-about');

@@ -542,16 +542,6 @@ $.extend(AN,
 			}
 		},
 
-		getData: function(sFile, fToExec)
-		{
-			var oExternal = $.make('o', AN.box, 'external');
-			if(oExternal[sFile]) fToExec(oExternal[sFile]);
-			else $.getScript($.sprintf('http://helianthus-annuus.googlecode.com/svn/other/an.v3.%s.js', sFile), function()
-			{
-				fToExec(oExternal[sFile]);
-			});
-		},
-
 		getOpenerInfo: function(jDoc, fToExec)
 		{
 			var oInfo = arguments.callee.oInfo;
@@ -840,18 +830,7 @@ $(function()
 		AN.modFn.execMods();
 	}
 
-	if(!$.support.localStorage || AN.util.cookie('an-storagemode') === 'Flash')
-	{
-		var sURL = 'http://helianthus-annuus.googlecode.com/svn/other/lso.swf';
-		if($.browser.msie) sURL += '?' + $.time();
-		AN.box.eLSO = $('#an-lso').toFlash(sURL)[0];
-
-		(function(){ AN.box.eLSO.get && AN.box.eLSO.set('default', 'an_test_for_safari', ':o)') && AN.box.eLSO.get('default', 'an_test_for_safari') ? exec('Flash') : setTimeout(arguments.callee, 50); })();
-	}
-	else
-	{
-		exec('DOM');
-	}
+	exec('DOM');
 });
 
 //////////////////// END OF - [Initialization] ////////////////////

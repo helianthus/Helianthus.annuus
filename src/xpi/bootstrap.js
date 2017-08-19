@@ -22,8 +22,6 @@ function startup(data)
 {
 	baseURI = data.resourceURI;
 
-	require('noscript').enableJS();
-
 	require('resource').setResource(Services.io.newURI('resource/', null, baseURI));
 	require('adblock').setEnabled(true);
 	require('inject').setEnabled(true);

@@ -1149,13 +1149,6 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 					licenseUrl: 'http://docs.jquery.com/License'
 				},
 				{
-					name: 'json2.js',
-					author: 'Douglas Crockford',
-					url: 'http://www.json.org/js.html',
-					license: 'Public Domain',
-					licenseUrl: '#'
-				},
-				{
 					name: 'jquery.sprintf',
 					author: 'Sabin Iacob',
 					url: 'http://plugins.jquery.com/project/printf',

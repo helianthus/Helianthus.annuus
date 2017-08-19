@@ -231,7 +231,7 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 
 '437b66e6-abe9-4b5a-ac0e-d132d0578521':
 {
-	desc: '特殊設定: 滙出/更新設定',
+	desc: '特殊設定: 滙出/滙入設定',
 	page: { 65535: 'comp' },
 	type: 1,
 	once: function()
@@ -247,11 +247,11 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 		{
 			$('\
 			<div> \
-				<h4><span>滙出/更新設定</span><hr /></h4> \
+				<h4><span>滙出/滙入設定</span><hr /></h4> \
 				<div> \
 					<select id="an-settings-special-api-list"></select> \
 					<button id="an-settings-special-api-export">滙出</button> \
-					<button id="an-settings-special-api-update">更新</button> \
+					<button id="an-settings-special-api-update">滙入</button> \
 					<span id="an-settings-special-api-message"></span> \
 				</div> \
 			</div> \
@@ -270,7 +270,7 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 					}
 					else {
 						api.set($.trim($('#an-settings-special-config').val()));
-						msg = '更新成功!';
+						msg = '滙入成功!';
 					}
 
 					$('#an-settings-special-api-message').text(msg).finish().show().delay(2000).fadeOut();

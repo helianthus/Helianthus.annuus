@@ -48,25 +48,33 @@ if(document.addEventListener) {
 
 document.head.appendChild(document.createElement('style')).appendChild(document.createTextNode('\
 a[href*="bmediaasia"], \
-div[id="Super Banner"] ~ *, \
-div[id^="Top Textlink"] ~ *, \
+iframe[src*="bmediaasia"], \
+iframe[src*="/pagead/"], \
+iframe[src^="mtg"], \
+div[id="Super Banner"], \
+div[id^="Top Textlink"], \
+div[id="Crazy Ads Zone"], \
+div[id="Large Rectangle"], \
 span[id*="GoogleAd"], \
 span[id*="LineAd"], \
 span[id^="lineImage"], \
 \
 .PageMiddleFunctions, \
-.ContentPanel > center + br, .ContentPanel > center + br + br, \
+/* .ContentPanel > center + br, .ContentPanel > center + br + br, */ \
+.Topic_FunctionPanel > div[style*="margin-top"], \
 #mainTopicTable > tbody > tr:nth-child(2) ~ tr:not([userid]), \
 td[colspan][height="52"], \
+.ContentPanel > div[style*="width:728px"], .ContentPanel > div[style*="width:728px"] + br, .ContentPanel > div[style*="width:728px"] + br + br, \
 #ctl00_ContentPlaceHolder1_view_form > div[style*="945px"] > table[width="100%"] > tbody > tr > td:not([align="left"]), \
+.FooterPanel, \
 \
 noscript, \
 script + ins, \
 script + object \
 { display: none !important; } \
 \
-#ctl00_ContentPlaceHolder1_view_form > div[style*="954px"] > div:first-child \
-  { width: auto !important; } \
+/* #ctl00_ContentPlaceHolder1_view_form > div[style*="954px"] > div:first-child \
+  { width: auto !important; } */\
 '));
 
 var

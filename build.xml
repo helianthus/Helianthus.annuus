@@ -95,18 +95,18 @@
 			<fileset file="src/user/annuus.user.js" />
 		</concat>
 
-		<!-- crx -->
+		<!-- we -->
 		<copy todir="test" overwrite="true">
-			<fileset dir="src" includes="crx/" />
+			<fileset dir="src" includes="we/" />
 		</copy>
 
-		<copy file="src/crx/manifest.json" todir="test/crx" overwrite="true" encoding="UTF-8">
+		<copy file="src/we/manifest.json" todir="test/we" overwrite="true" encoding="UTF-8">
 			<filterchain>
 				<expandproperties/>
 			</filterchain>
 		</copy>
 
-		<copy file="test/annuus.js" tofile="test/crx/annuus.js" overwrite="true" />
+		<copy file="test/annuus.js" tofile="test/we/annuus.js" overwrite="true" />
 
 		<!-- safariextz -->
 		<copy todir="test/annuus.safariextension" overwrite="true">

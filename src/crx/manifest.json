@@ -5,12 +5,12 @@
 	"description": ":o)",
 	"content_scripts": [
 		{
-			"matches": ["http://*.hkgolden.com/*"],
+			"matches": ["http://forum.hkgolden.com/*","https://forum.hkgolden.com/*"],
 			"js": ["inject.js"],
 			"run_at": "document_start",
 			"all_frames": true
 		}
 	],
-	"permissions": ["http://*.hkgolden.com/*"],
+	"permissions": ["http://forum.hkgolden.com/*","https://forum.hkgolden.com/*"],
 	"web_accessible_resources": ["annuus.js"]
 }

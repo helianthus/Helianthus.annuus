@@ -1,4 +1,4 @@
-if(!document.getElementById('annuus') && /\.hkgolden\.com$/.test(location.hostname))
+if(!document.getElementById('annuus') && /forum\.hkgolden\.com$/.test(location.hostname))
 {
 	var
 	script = document.createElement('script');

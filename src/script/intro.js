@@ -10,7 +10,7 @@ var history = window.history;
 var navigator = window.navigator;
 
 if(window.AN
-  || !/^http:\/\/(?!(?:www|m\d*|articlehtml)\.)[^.]+\.hkgolden\.com\/(?![^.]+?_ad)/i.test(location.href)
+  || !/^https?:\/\/forum\.hkgolden\.com\/(?![^.]+?_ad)/i.test(location.href)
   ) return;
 
 document.domain = 'hkgolden.com';

@@ -1,6 +1,6 @@
 (function()
 {
-	var rTarget = /\.hkgolden\.com$/i;
+	var rTarget = /forum\.hkgolden\.com$/i;
 	var id = 'annuus-script-v3';
 
 	function injectScript(doc)

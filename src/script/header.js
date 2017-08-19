@@ -21,7 +21,8 @@
 // @description by 向日
 // @version ${AN_VERSION}
 // @build-time ${BUILD_TIME}
-// @include http://*.hkgolden.com/*
+// @include http://forum.hkgolden.com/*
+// @include https://forum.hkgolden.com/*
 // @run-at document-start
 // @grant none
 // ==/UserScript==

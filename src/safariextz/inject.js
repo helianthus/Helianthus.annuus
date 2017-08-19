@@ -1,4 +1,4 @@
-if(/\.hkgolden\.com$/.test(location.hostname))
+if(/forum\.hkgolden\.com$/.test(location.hostname))
 {
 	var head = document.getElementsByTagName('head');
 	var script = document.createElement('script');

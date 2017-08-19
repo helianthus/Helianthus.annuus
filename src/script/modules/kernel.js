@@ -130,59 +130,6 @@ AN.mod['Kernel'] = { ver: 'N/A', author: '向日', fn: {
 	}
 },
 
-'78af3c29-9bf2-47ee-80bf-a3575b711c73':
-{
-	desc: '自動檢查更新',
-	defer: 5,
-	page: { 4: true },
-	type: 1,
-	options:
-	{
-		bAlsoCheckBeta: { desc: '同時檢查Beta版本', defaultValue: false, type: 'checkbox' },
-		nCheckUpdateInterval: { desc: '檢查更新間隔(小時)', defaultValue: 1, type: 'text' }
-	},
-	once: function()
-	{
-		var nInterval = AN.util.getOptions('nCheckUpdateInterval');
-		if(isNaN(nInterval) || nInterval < 1) nInterval = 1;
-		var nLastChecked = AN.util.data('nLastChecked') || 0;
-		if($.time() - nLastChecked < 3600000 * nInterval) return;
-
-		AN.util.getData('main', function(oMain)
-		{
- 			AN.util.data('nLastChecked', $.time());
-
-			var type = AN.util.getOptions('bAlsoCheckBeta') ? 'beta' : 'stable';
-			var latest = oMain.ver[type].annuus.split('.');
-			var current = AN.version.split('.');
-
-			for(var i=0; i<latest.length; i++)
-			{
-				if(current[i] !== latest[i])
-				{
-					if(+current[i] < +latest[i])
-					{
-						AN.util.addStyle('\
-						#an-update > div { margin: 20px 50px; } \
-						#an-update > div > a { padding: 0 5px; } \
-						');
-
-						AN.shared.box('an-update', '發現新版本')
-						.append($.sprintf('\
-						<div><div>現在版本: %s</div><div>最新版本: %s %s</div></div> \
-						<div style="text-align: center"><a href="http://code.google.com/p/helianthus-annuus/wiki/HowToInstall">下載頁</a><a href="http://code.google.com/p/helianthus-annuus/wiki/Changelog">更新日誌</a></div> \
-						', AN.version, oMain.ver[type].annuus, type === 'stable' || oMain.ver.stable.annuus === oMain.ver.beta.annuus ? 'stable' : 'beta'));
-
-						AN.shared.gray(true, 'an-update');
-					}
-
-					break;
-				}
-			}
-		});
-	}
-},
-
 'c217bf55-6d44-42d1-8fc2-2cd1662d604a':
 {
 	desc: '轉頁後再次運行功能',

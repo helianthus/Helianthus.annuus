@@ -112,61 +112,6 @@ AN.mod['User Interface'] = { ver: 'N/A', author: '向日', fn: {
 	{
 		(function()
 		{
-			AN.shared.serverTable = function()
-			{
-				if(!$('#an-server').length)
-				{
-					AN.util.addStyle('\
-					#an-server div { padding: 0.5em; } \
-					#an-server caption { padding-top: 0.5em; text-align: center; caption-side: bottom; } \
-					#an-server caption a { display: inline-block; border-width: 1px; padding: 0.2em; } \
-					#an-server table { text-align: center; } \
-					#an-server td { font-size: 80%; } \
-					');
-
-					AN.shared.box('an-server', '伺服器狀態', 300).append('<div><table><caption><a href="javascript:">進行測試</a></caption><thead><tr><td>伺服器</td><td>回應時間</td></tr></thead><tbody></tbody></table></div>');
-
-					var sURL = location.search.indexOf('error') !== -1
-						? $.sprintf('http://%s/topics.aspx?type=BW', location.hostname)
-						: location.href.replace(/topics_(bw)(?:_[^.]+)?\.htm(\??)/i, function($0, $1, $2){ return 'topics.aspx?type=' + $1.toUpperCase() + ($2 ? '&' : ''); });
-					var tableHTML = '', imgHTML = '';
-
-					var subs = [['forum101', 'Forum 101'], ['search', 'Search']];
-					for(var i=15; i--;) {
-						subs.unshift(['forum' + (i + 1), 'Forum ' + (i + 1)]);
-					}
-					for(var i=0; i<subs.length; i++) {
-						tableHTML += $.sprintf('<tr><td><a href="%s">%s</a></td><td class="an-server-response"></td></tr>', sURL.replace(/\w+(?=\.hkgolden)/i, subs[i][0]), subs[i][1]);
-						imgHTML += '<img />';
-					}
-
-					var jTestImages = $('<div>' + imgHTML + '</div>').children().bind('load error', function(event)
-					{
-						var jImg = $(event.target);
-						$('#an-server .an-server-response').eq(jImg.index()).html(event.type == 'load' ? $.sprintf('~%s ms', $.time() - jImg.data('nTime')) : '發生錯誤');
-					});
-
-					$('#an-server')
-					.find('caption').click(function()
-					{
-						$('#an-server .an-server-response').html('等待回應中...');
-
-						jTestImages.each(function(i)
-						{
-							var nTime = $.time();
-							$(this).data('nTime', nTime).attr('src', $.sprintf('http://%s.hkgolden.com/images/index_images/p.gif?tId=%s', subs[i][0], nTime));
-						});
-					})
-					.end().find('tbody').html(tableHTML);
-				}
-
-				AN.shared.gray(true, 'an-server');
-				$('#an-server caption').trigger('click');
-			};
-		})();
-
-		(function()
-		{
 			var jHoverObjects, objectSets = [], recordOffset = function()
 			{
 				var data = $(this).data('hoverize');

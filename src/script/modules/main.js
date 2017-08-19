@@ -345,17 +345,6 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	}
 },
 
-'f47e77c8-6f1a-43b2-8493-f43de222b3b4':
-{
-	desc: '加入伺服器狀態顯示按扭',
-	page: { 65534: true },
-	type: 5,
-	once: function()
-	{
-		AN.shared('addButton', '伺服器狀態', AN.shared.serverTable);
-	}
-},
-
 '7de28ca9-9c44-4949-ad4a-31f38a984715':
 {
 	desc: '加入一鍵留名按扭',
@@ -431,18 +420,6 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 },
 
 // 其他功能 //
-'3f693a9e-e79d-4d14-b639-a57bee36079a':
-{
-	desc: '自動顯示伺服器狀態檢查視窗',
-	page: { 1: true },
-	type: 6,
-	defer: 5,
-	once: function()
-	{
-		AN.shared('serverTable');
-	}
-},
-
 '4cdce143-74a5-4bdb-abca-0351638816fb':
 {
 	desc: '帖子主旨或內文出現錯誤時進行提示',

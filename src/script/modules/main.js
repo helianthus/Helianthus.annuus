@@ -854,7 +854,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 '7b36188f-c566-46eb-b48d-5680a4331c1f':
 {
 	desc: '轉換論壇連結的伺服器位置',
-	page: { 32: true },
+	page: { 65535: true },
 	type: 6,
 	once: function()
 	{
@@ -862,7 +862,7 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 		$d.mousedown(function(event)
 		{
 			var jTarget = $(event.target);
-			if(!( jTarget.is('.repliers_right > tbody > tr:first-child a') && rForum.test(jTarget.attr('href')) )) return;
+			if(!( jTarget.is('.ContentPanel a') && rForum.test(jTarget.attr('href')) )) return;
 
 			jTarget.attr('href', jTarget.attr('href').replace(rForum, ''));
 		});

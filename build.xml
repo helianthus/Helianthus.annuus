@@ -131,6 +131,9 @@
 
 		<!-- we -->
 		<zip destfile="${dist_dir}/annuus.we.zip" basedir="test/we" />
+
+		<!-- safariextz -->
+		<zip destfile="${dist_dir}/annuus.safariextension.zip" basedir="test/annuus.safariextension" />
 	</target>
 
 	<target name="_clean">

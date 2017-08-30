@@ -858,13 +858,13 @@ AN.mod['Main Script'] = { ver: 'N/A', author: '向日', fn: {
 	type: 6,
 	once: function()
 	{
-		var rForum = /(?:demoforum|groupon|search|m\d*|forum\d*)\.hkgolden\.com/i;
+		var rForum = /^https?:\/\/(?:demoforum|groupon|search|m\d*|forum\d*)\.hkgolden\.com/i;
 		$d.mousedown(function(event)
 		{
 			var jTarget = $(event.target);
 			if(!( jTarget.is('.repliers_right > tbody > tr:first-child a') && rForum.test(jTarget.attr('href')) )) return;
 
-			jTarget.attr('href', jTarget.attr('href').replace(rForum, location.hostname));
+			jTarget.attr('href', jTarget.attr('href').replace(rForum, ''));
 		});
 	}
 },

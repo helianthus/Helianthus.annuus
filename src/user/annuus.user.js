@@ -8,6 +8,6 @@
 
 	(function append()
 	{
-		document.documentElement ? document.documentElement.appendChild(script) : setTimeout(append, 50);
+		document.head ? document.head.appendChild(script) : setTimeout(append, 50);
 	})();
 })('${ENCODED_SCRIPT_CONTENT}');
